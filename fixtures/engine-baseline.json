@@ -2472,7 +2472,7 @@
           },
           {
             "key": "today",
-            "count": 6,
+            "count": 4,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -2493,20 +2493,6 @@
                 "group": "몸",
                 "axis": "사실",
                 "timing_hours": 6,
-                "irreversible": false
-              },
-              {
-                "id": "support-housing",
-                "group": "지낼 곳",
-                "axis": "제도",
-                "timing_hours": null,
-                "irreversible": false
-              },
-              {
-                "id": "support-supplies",
-                "group": "지낼 곳",
-                "axis": "제도",
-                "timing_hours": null,
                 "irreversible": false
               },
               {
@@ -2554,7 +2540,7 @@
           },
           {
             "key": "this_week",
-            "count": 6,
+            "count": 5,
             "items": [
               {
                 "id": "fire-cert",
@@ -2587,13 +2573,6 @@
               {
                 "id": "no-personal-insurance-building-path",
                 "group": "보험과 돈",
-                "axis": "제도",
-                "timing_hours": null,
-                "irreversible": false
-              },
-              {
-                "id": "support-psych",
-                "group": "몸",
                 "axis": "제도",
                 "timing_hours": null,
                 "irreversible": false
@@ -2691,14 +2670,6 @@
             "status": "해당",
             "blocked_by": [
               "investigation-report"
-            ]
-          },
-          {
-            "id": "support-waste",
-            "status": "해당",
-            "blocked_by": [
-              "scene-release",
-              "photo-before-cleanup"
             ]
           },
           {
@@ -2749,7 +2720,7 @@
           },
           {
             "key": "today",
-            "count": 6,
+            "count": 4,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -2770,20 +2741,6 @@
                 "group": "몸",
                 "axis": "사실",
                 "timing_hours": 6,
-                "irreversible": false
-              },
-              {
-                "id": "support-housing",
-                "group": "지낼 곳",
-                "axis": "제도",
-                "timing_hours": null,
-                "irreversible": false
-              },
-              {
-                "id": "support-supplies",
-                "group": "지낼 곳",
-                "axis": "제도",
-                "timing_hours": null,
                 "irreversible": false
               },
               {
@@ -2831,7 +2788,7 @@
           },
           {
             "key": "this_week",
-            "count": 6,
+            "count": 5,
             "items": [
               {
                 "id": "fire-cert",
@@ -2864,13 +2821,6 @@
               {
                 "id": "no-personal-insurance-building-path",
                 "group": "보험과 돈",
-                "axis": "제도",
-                "timing_hours": null,
-                "irreversible": false
-              },
-              {
-                "id": "support-psych",
-                "group": "몸",
                 "axis": "제도",
                 "timing_hours": null,
                 "irreversible": false
@@ -2968,14 +2918,6 @@
             "status": "해당",
             "blocked_by": [
               "investigation-report"
-            ]
-          },
-          {
-            "id": "support-waste",
-            "status": "해당",
-            "blocked_by": [
-              "scene-release",
-              "photo-before-cleanup"
             ]
           },
           {
@@ -3026,7 +2968,7 @@
           },
           {
             "key": "today",
-            "count": 6,
+            "count": 4,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -3047,20 +2989,6 @@
                 "group": "몸",
                 "axis": "사실",
                 "timing_hours": 6,
-                "irreversible": false
-              },
-              {
-                "id": "support-housing",
-                "group": "지낼 곳",
-                "axis": "제도",
-                "timing_hours": null,
-                "irreversible": false
-              },
-              {
-                "id": "support-supplies",
-                "group": "지낼 곳",
-                "axis": "제도",
-                "timing_hours": null,
                 "irreversible": false
               },
               {
@@ -3108,7 +3036,7 @@
           },
           {
             "key": "this_week",
-            "count": 6,
+            "count": 5,
             "items": [
               {
                 "id": "fire-cert",
@@ -3141,13 +3069,6 @@
               {
                 "id": "no-personal-insurance-building-path",
                 "group": "보험과 돈",
-                "axis": "제도",
-                "timing_hours": null,
-                "irreversible": false
-              },
-              {
-                "id": "support-psych",
-                "group": "몸",
                 "axis": "제도",
                 "timing_hours": null,
                 "irreversible": false
@@ -3245,14 +3166,6 @@
             "status": "해당",
             "blocked_by": [
               "investigation-report"
-            ]
-          },
-          {
-            "id": "support-waste",
-            "status": "해당",
-            "blocked_by": [
-              "scene-release",
-              "photo-before-cleanup"
             ]
           },
           {

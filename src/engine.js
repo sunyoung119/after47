@@ -17,7 +17,14 @@ export function matches(cond, state) {
 // 조례마다 보험 제외 방식이 4변종이라 Action에 하드코딩할 수 없다.
 // 해당 구의 규칙을 런타임에 적용한다.
 function districtExclusion(action, district, state) {
-  if (!action.ordinance_based || !district) return null;
+  if (!action.ordinance_based) return null;
+
+  // 자치구를 모르면 조례 판정 자체가 불가능하다. 여기서 통과시키면
+  // 조례가 있는지도 모르는 사람에게 "지원 대상"이라고 말하게 된다.
+  // 판정에 필요한 입력이 없는데 결과가 낙관 쪽으로 기우는 것 —
+  // D-014가 registered_resident에서 잡았던 것과 같은 오류다.
+  // 엔진이 UI의 district_needed notice에 기대고 있던 것을 끊는다.
+  if (!district) return { skip: true };
 
   // 이 구가 이 항목을 지원하지 않으면 애초에 적용 대상 아님
   if (!district.support_items.includes(action.support_item)) {
