@@ -11240,6 +11240,945 @@
           }
         ]
       }
+    },
+    "P14": {
+      "_desc": "강남 — 수손 상황 미확인 (역할 중립 항목만 떠야 한다)",
+      "_state": {
+        "adjuster_present": false,
+        "compensated": false,
+        "completed": [],
+        "district": "gangnam",
+        "fire_at": "2026-03-01T12:00:00.000Z",
+        "housing_type": "officetel",
+        "insurance_dwelling": true,
+        "insurance_self": false,
+        "origin_area": "common",
+        "other_units_affected": false,
+        "powder_present": true,
+        "product_maker_contacted": false,
+        "product_suspected": "unknown",
+        "registered_resident": true,
+        "residence_possible": false,
+        "scene_preserved": false,
+        "tenure": "renter",
+        "water_damage_role": "unknown",
+        "wet_appliances": true
+      },
+      "+3h": {
+        "sections": [
+          {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "irreversible": true
+              }
+            ]
+          },
+          {
+            "key": "today",
+            "count": 6,
+            "items": [
+              {
+                "id": "photo-before-cleanup",
+                "group": "보험과 돈",
+                "axis": "사실",
+                "timing_hours": 0,
+                "irreversible": true
+              },
+              {
+                "id": "scene-release",
+                "group": "집 정리",
+                "axis": "제도",
+                "timing_hours": 0,
+                "irreversible": false
+              },
+              {
+                "id": "ppe-powder",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 6,
+                "irreversible": false
+              },
+              {
+                "id": "support-housing",
+                "group": "지낼 곳",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "support-supplies",
+                "group": "지낼 곳",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "tenant-notify-landlord",
+                "group": "집주인과 계약",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              }
+            ]
+          },
+          {
+            "key": "standing",
+            "count": 4,
+            "items": [
+              {
+                "id": "wet-appliance-power",
+                "group": "집 정리",
+                "axis": "사실",
+                "timing_hours": 0,
+                "irreversible": true
+              },
+              {
+                "id": "preserve-product",
+                "group": "책임과 분쟁",
+                "axis": "사실",
+                "timing_hours": 0,
+                "irreversible": true
+              },
+              {
+                "id": "product-handover-caution",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": 0,
+                "irreversible": true
+              },
+              {
+                "id": "tenant-dont-do",
+                "group": "집주인과 계약",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
+            "key": "this_week",
+            "count": 7,
+            "items": [
+              {
+                "id": "fire-cert",
+                "group": "서류",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "investigation-report",
+                "group": "서류",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "adjuster-position",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "building-group-fire-insurance",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "no-personal-insurance-building-path",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "support-psych",
+                "group": "몸",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "water-damage-appears-later",
+                "group": "집 정리",
+                "axis": "사실",
+                "timing_hours": null,
+                "irreversible": false
+              }
+            ]
+          },
+          {
+            "key": "anytime",
+            "count": 5,
+            "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "legal-aid-klac",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "small-claims",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "housing-mgmt-dispute-committee",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              }
+            ]
+          },
+          {
+            "key": "after_report",
+            "count": 3,
+            "items": [
+              {
+                "id": "common-area-liability",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "sillhwa-act-water-damage",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "tenant-restoration-scope",
+                "group": "집주인과 계약",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              }
+            ]
+          }
+        ],
+        "waiting": [],
+        "blocked": [
+          {
+            "id": "powder-removal",
+            "status": "해당",
+            "blocked_by": [
+              "scene-release",
+              "photo-before-cleanup"
+            ]
+          },
+          {
+            "id": "dry-water",
+            "status": "해당",
+            "blocked_by": [
+              "scene-release"
+            ]
+          },
+          {
+            "id": "textile-caution",
+            "status": "해당",
+            "blocked_by": [
+              "photo-before-cleanup"
+            ]
+          },
+          {
+            "id": "investigation-report-wait",
+            "status": "해당",
+            "blocked_by": [
+              "investigation-report"
+            ]
+          },
+          {
+            "id": "support-waste",
+            "status": "해당",
+            "blocked_by": [
+              "scene-release",
+              "photo-before-cleanup"
+            ]
+          },
+          {
+            "id": "water-damage-document-now",
+            "status": "해당",
+            "blocked_by": [
+              "photo-before-cleanup"
+            ]
+          },
+          {
+            "id": "water-damage-liability-structure",
+            "status": "해당",
+            "blocked_by": [
+              "investigation-report"
+            ]
+          },
+          {
+            "id": "tenant-burden-of-proof",
+            "status": "해당",
+            "blocked_by": [
+              "investigation-report"
+            ]
+          },
+          {
+            "id": "tenant-contract-termination",
+            "status": "해당",
+            "blocked_by": [
+              "tenant-burden-of-proof"
+            ]
+          },
+          {
+            "id": "evidence-court-referral",
+            "status": "해당",
+            "blocked_by": [
+              "investigation-report"
+            ]
+          },
+          {
+            "id": "common-area-management-role",
+            "status": "해당",
+            "blocked_by": [
+              "common-area-liability"
+            ]
+          }
+        ],
+        "excluded": []
+      },
+      "+5d": {
+        "sections": [
+          {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "irreversible": true
+              }
+            ]
+          },
+          {
+            "key": "today",
+            "count": 6,
+            "items": [
+              {
+                "id": "photo-before-cleanup",
+                "group": "보험과 돈",
+                "axis": "사실",
+                "timing_hours": 0,
+                "irreversible": true
+              },
+              {
+                "id": "scene-release",
+                "group": "집 정리",
+                "axis": "제도",
+                "timing_hours": 0,
+                "irreversible": false
+              },
+              {
+                "id": "ppe-powder",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 6,
+                "irreversible": false
+              },
+              {
+                "id": "support-housing",
+                "group": "지낼 곳",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "support-supplies",
+                "group": "지낼 곳",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "tenant-notify-landlord",
+                "group": "집주인과 계약",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              }
+            ]
+          },
+          {
+            "key": "standing",
+            "count": 4,
+            "items": [
+              {
+                "id": "wet-appliance-power",
+                "group": "집 정리",
+                "axis": "사실",
+                "timing_hours": 0,
+                "irreversible": true
+              },
+              {
+                "id": "preserve-product",
+                "group": "책임과 분쟁",
+                "axis": "사실",
+                "timing_hours": 0,
+                "irreversible": true
+              },
+              {
+                "id": "product-handover-caution",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": 0,
+                "irreversible": true
+              },
+              {
+                "id": "tenant-dont-do",
+                "group": "집주인과 계약",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
+            "key": "this_week",
+            "count": 7,
+            "items": [
+              {
+                "id": "fire-cert",
+                "group": "서류",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "investigation-report",
+                "group": "서류",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "adjuster-position",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "building-group-fire-insurance",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "no-personal-insurance-building-path",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "support-psych",
+                "group": "몸",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "water-damage-appears-later",
+                "group": "집 정리",
+                "axis": "사실",
+                "timing_hours": null,
+                "irreversible": false
+              }
+            ]
+          },
+          {
+            "key": "anytime",
+            "count": 5,
+            "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "legal-aid-klac",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "small-claims",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "housing-mgmt-dispute-committee",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              }
+            ]
+          },
+          {
+            "key": "after_report",
+            "count": 3,
+            "items": [
+              {
+                "id": "common-area-liability",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "sillhwa-act-water-damage",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "tenant-restoration-scope",
+                "group": "집주인과 계약",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              }
+            ]
+          }
+        ],
+        "waiting": [],
+        "blocked": [
+          {
+            "id": "powder-removal",
+            "status": "해당",
+            "blocked_by": [
+              "scene-release",
+              "photo-before-cleanup"
+            ]
+          },
+          {
+            "id": "dry-water",
+            "status": "해당",
+            "blocked_by": [
+              "scene-release"
+            ]
+          },
+          {
+            "id": "textile-caution",
+            "status": "해당",
+            "blocked_by": [
+              "photo-before-cleanup"
+            ]
+          },
+          {
+            "id": "investigation-report-wait",
+            "status": "해당",
+            "blocked_by": [
+              "investigation-report"
+            ]
+          },
+          {
+            "id": "support-waste",
+            "status": "해당",
+            "blocked_by": [
+              "scene-release",
+              "photo-before-cleanup"
+            ]
+          },
+          {
+            "id": "water-damage-document-now",
+            "status": "해당",
+            "blocked_by": [
+              "photo-before-cleanup"
+            ]
+          },
+          {
+            "id": "water-damage-liability-structure",
+            "status": "해당",
+            "blocked_by": [
+              "investigation-report"
+            ]
+          },
+          {
+            "id": "tenant-burden-of-proof",
+            "status": "해당",
+            "blocked_by": [
+              "investigation-report"
+            ]
+          },
+          {
+            "id": "tenant-contract-termination",
+            "status": "해당",
+            "blocked_by": [
+              "tenant-burden-of-proof"
+            ]
+          },
+          {
+            "id": "evidence-court-referral",
+            "status": "해당",
+            "blocked_by": [
+              "investigation-report"
+            ]
+          },
+          {
+            "id": "common-area-management-role",
+            "status": "해당",
+            "blocked_by": [
+              "common-area-liability"
+            ]
+          }
+        ],
+        "excluded": []
+      },
+      "+90d": {
+        "sections": [
+          {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "irreversible": true
+              }
+            ]
+          },
+          {
+            "key": "today",
+            "count": 6,
+            "items": [
+              {
+                "id": "photo-before-cleanup",
+                "group": "보험과 돈",
+                "axis": "사실",
+                "timing_hours": 0,
+                "irreversible": true
+              },
+              {
+                "id": "scene-release",
+                "group": "집 정리",
+                "axis": "제도",
+                "timing_hours": 0,
+                "irreversible": false
+              },
+              {
+                "id": "ppe-powder",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 6,
+                "irreversible": false
+              },
+              {
+                "id": "support-housing",
+                "group": "지낼 곳",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "support-supplies",
+                "group": "지낼 곳",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "tenant-notify-landlord",
+                "group": "집주인과 계약",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              }
+            ]
+          },
+          {
+            "key": "standing",
+            "count": 4,
+            "items": [
+              {
+                "id": "wet-appliance-power",
+                "group": "집 정리",
+                "axis": "사실",
+                "timing_hours": 0,
+                "irreversible": true
+              },
+              {
+                "id": "preserve-product",
+                "group": "책임과 분쟁",
+                "axis": "사실",
+                "timing_hours": 0,
+                "irreversible": true
+              },
+              {
+                "id": "product-handover-caution",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": 0,
+                "irreversible": true
+              },
+              {
+                "id": "tenant-dont-do",
+                "group": "집주인과 계약",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
+            "key": "this_week",
+            "count": 7,
+            "items": [
+              {
+                "id": "fire-cert",
+                "group": "서류",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "investigation-report",
+                "group": "서류",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "adjuster-position",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "building-group-fire-insurance",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "no-personal-insurance-building-path",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "support-psych",
+                "group": "몸",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "water-damage-appears-later",
+                "group": "집 정리",
+                "axis": "사실",
+                "timing_hours": null,
+                "irreversible": false
+              }
+            ]
+          },
+          {
+            "key": "anytime",
+            "count": 5,
+            "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "legal-aid-klac",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "small-claims",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "housing-mgmt-dispute-committee",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              }
+            ]
+          },
+          {
+            "key": "after_report",
+            "count": 3,
+            "items": [
+              {
+                "id": "common-area-liability",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "sillhwa-act-water-damage",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              },
+              {
+                "id": "tenant-restoration-scope",
+                "group": "집주인과 계약",
+                "axis": "제도",
+                "timing_hours": null,
+                "irreversible": false
+              }
+            ]
+          }
+        ],
+        "waiting": [],
+        "blocked": [
+          {
+            "id": "powder-removal",
+            "status": "해당",
+            "blocked_by": [
+              "scene-release",
+              "photo-before-cleanup"
+            ]
+          },
+          {
+            "id": "dry-water",
+            "status": "해당",
+            "blocked_by": [
+              "scene-release"
+            ]
+          },
+          {
+            "id": "textile-caution",
+            "status": "해당",
+            "blocked_by": [
+              "photo-before-cleanup"
+            ]
+          },
+          {
+            "id": "investigation-report-wait",
+            "status": "해당",
+            "blocked_by": [
+              "investigation-report"
+            ]
+          },
+          {
+            "id": "support-waste",
+            "status": "해당",
+            "blocked_by": [
+              "scene-release",
+              "photo-before-cleanup"
+            ]
+          },
+          {
+            "id": "water-damage-document-now",
+            "status": "해당",
+            "blocked_by": [
+              "photo-before-cleanup"
+            ]
+          },
+          {
+            "id": "water-damage-liability-structure",
+            "status": "해당",
+            "blocked_by": [
+              "investigation-report"
+            ]
+          },
+          {
+            "id": "tenant-burden-of-proof",
+            "status": "해당",
+            "blocked_by": [
+              "investigation-report"
+            ]
+          },
+          {
+            "id": "tenant-contract-termination",
+            "status": "해당",
+            "blocked_by": [
+              "tenant-burden-of-proof"
+            ]
+          },
+          {
+            "id": "evidence-court-referral",
+            "status": "해당",
+            "blocked_by": [
+              "investigation-report"
+            ]
+          },
+          {
+            "id": "common-area-management-role",
+            "status": "해당",
+            "blocked_by": [
+              "common-area-liability"
+            ]
+          }
+        ],
+        "excluded": []
+      }
     }
   }
 }

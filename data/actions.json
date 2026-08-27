@@ -764,7 +764,8 @@
     "applies_when": {
       "water_damage_role": [
         "victim",
-        "causer"
+        "causer",
+        "unknown"
       ]
     },
     "excluded_when": null,
@@ -795,7 +796,8 @@
     "applies_when": {
       "water_damage_role": [
         "victim",
-        "causer"
+        "causer",
+        "unknown"
       ]
     },
     "excluded_when": null,
@@ -856,7 +858,8 @@
     "applies_when": {
       "water_damage_role": [
         "victim",
-        "causer"
+        "causer",
+        "unknown"
       ]
     },
     "excluded_when": null,
@@ -917,7 +920,8 @@
     "applies_when": {
       "water_damage_role": [
         "victim",
-        "causer"
+        "causer",
+        "unknown"
       ]
     },
     "excluded_when": null,

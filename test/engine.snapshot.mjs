@@ -98,6 +98,12 @@ const PERSONAS = [
     { district: "gangnam", insurance_self: true }],
   ["P13", "구로 — 주택이 아님 (housing_only → 제외. 보험보다 먼저 걸린다)",
     { district: "guro", housing_type: "other" }],
+
+  // P14는 D-016(water_damage_role의 "모르겠다" 분리)을 지키는 자리다.
+  // 역할 특정 3개(victim 2 / causer 1)가 여기 뜨면 반대 지시가 섞인 것이다.
+  // unknown을 both처럼 배열로 펼치는 실수가 정확히 그렇게 나타난다.
+  ["P14", "강남 — 수손 상황 미확인 (역할 중립 항목만 떠야 한다)",
+    { district: "gangnam", water_damage_role: "unknown" }],
 ];
 
 const CLOCKS = [
