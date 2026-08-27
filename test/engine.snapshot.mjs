@@ -11,7 +11,8 @@
 //
 // engine.test.mjs의 ref()를 import하지 않는다. 그쪽은 데모용이라 앞으로
 // 바뀔 수 있고, 그때 기준선이 같이 흔들리면 계기판의 의미가 없다.
-// 페르소나 정의는 이 파일이 스스로 갖는다.
+// 페르소나 정의는 이 파일이 스스로 갖는다. 그리고 그 정의를 기준선에
+// 통째로 박아, 코드와 기준선이 어긋나면 실패로 잡는다.
 //
 //   node test/engine.snapshot.mjs            비교. 다르면 exit 1
 //   node test/engine.snapshot.mjs --update   기준선 갱신
@@ -75,6 +76,28 @@ const PERSONAS = [
   ["P6", "강남 — 수손 피해자", { district: "gangnam", water_damage_role: "victim" }],
   ["P7", "강남 — 수손 가해자", { district: "gangnam", water_damage_role: "causer" }],
   ["P8", "강남 — 수손 가해·피해 양쪽", { district: "gangnam", water_damage_role: "both" }],
+
+  // P9~P13은 excluded를 보기 위한 것이다.
+  // P1~P8만으로는 D-011의 세 상태 중 `조건부`와 `제외`가 39조합 어디에도
+  // 나타나지 않았다. 조례 판정 경로를 건드릴 때 무엇이 깨져도 못 잡는
+  // 계기판이라는 뜻이다. 다섯 자치구의 제외 변종을 하나씩 밟는다.
+  //
+  //   P9  거주 요건    P10 enrolled_dwelling   P11 compensated + 예외 항목
+  //   P12 enrolled_self                        P13 housing_only
+  //
+  // districtExclusion()의 판정 순서가 support_items → housing_only →
+  // residency → exclusion_exempt_items → insurance라, 먼저 걸리는 것이
+  // 뒤를 가린다. 페르소나를 하나씩 떼어놓은 이유다.
+  ["P9", "성북 — 주민등록·실거주 미충족 (긴급 예외 있는 유일한 구 → 조건부)",
+    { district: "seongbuk", registered_resident: false }],
+  ["P10", "구로 — 건물 보험 가입 (enrolled_dwelling → 제외)",
+    { district: "guro" }],
+  ["P11", "양천 — 보상금 수령 (compensated → 제외, 단 psych·housing은 예외 항목)",
+    { district: "yangcheon", compensated: true }],
+  ["P12", "강남 — 본인 보험 가입 (enrolled_self → 제외)",
+    { district: "gangnam", insurance_self: true }],
+  ["P13", "구로 — 주택이 아님 (housing_only → 제외. 보험보다 먼저 걸린다)",
+    { district: "guro", housing_type: "other" }],
 ];
 
 const CLOCKS = [
@@ -117,11 +140,19 @@ function capture(state, now) {
   };
 }
 
+// 키를 정렬해 담는다. 페르소나마다 덮어쓰는 키가 달라 자연 순서가
+// 제각각이면 입력이 같은데도 기록이 달라 보인다.
+const sortKeys = (o) =>
+  Object.fromEntries(Object.keys(o).sort().map((k) => [k, o[k]]));
+
 function build() {
   const cases = {};
   for (const [pid, desc, over] of PERSONAS) {
     const state = { ...BASE, ...over };
-    cases[pid] = { _desc: desc, _state: over };
+    // 덮어쓴 부분(over)이 아니라 완전한 state를 박는다. 페르소나 정의가
+    // 코드 안에만 있으면, 코드가 바뀔 때 기준선이 조용히 다른 입력의
+    // 것이 된다. 계기판이 자기가 무엇을 쟀는지 기록해야 한다.
+    cases[pid] = { _desc: desc, _state: sortKeys(state) };
     for (const [label, hours] of CLOCKS) {
       cases[pid][label] = capture(state, at(hours));
     }
@@ -164,6 +195,21 @@ function diffList(before, after, format) {
     lines.push(`      ↕ 순서만 바뀜`);
     lines.push(`          전: ${bIds.join(" > ")}`);
     lines.push(`          후: ${aIds.join(" > ")}`);
+  }
+  return lines;
+}
+
+// 페르소나의 입력이 기준선과 어긋났는지. 판정 결과가 같아도 입력이
+// 다르면 그 결과는 다른 사람의 것이다.
+function diffState(before, after) {
+  const b = before || {}, a = after || {};
+  const lines = [];
+  for (const k of [...new Set([...Object.keys(b), ...Object.keys(a)])].sort()) {
+    const bv = JSON.stringify(b[k]), av = JSON.stringify(a[k]);
+    if (bv === av) continue;
+    if (!(k in b)) lines.push(`      + ${k}: ${av}`);
+    else if (!(k in a)) lines.push(`      - ${k}: ${bv}`);
+    else lines.push(`      ~ ${k}: ${bv} → ${av}`);
   }
   return lines;
 }
@@ -245,6 +291,12 @@ for (const [pid, desc] of PERSONAS.map((p) => [p[0], p[1]])) {
     failed++;
     continue;
   }
+  const stateLines = diffState(ob._state, fresh.cases[pid]._state);
+  if (stateLines.length) {
+    console.log(`\n  FAIL  ${pid} — 페르소나 입력이 기준선과 다르다  (${desc})`);
+    stateLines.forEach((l) => console.log(l));
+    failed++;
+  }
   for (const [label] of CLOCKS) {
     const lines = ob[label] ? diffCase(ob[label], fresh.cases[pid][label]) : ["    (기준선에 이 시각이 없다)"];
     if (!lines.length) continue;
@@ -255,6 +307,15 @@ for (const [pid, desc] of PERSONAS.map((p) => [p[0], p[1]])) {
 }
 
 console.log(`\n${"=".repeat(62)}`);
+// 코드에서 지워진 페르소나가 기준선에만 남아 있으면 조용히 사라진다
+const known = new Set(PERSONAS.map((p) => p[0]));
+for (const pid of Object.keys(old.cases || {})) {
+  if (known.has(pid)) continue;
+  console.log(`\n  FAIL  ${pid} — 기준선에는 있는데 코드에서 사라진 페르소나다`);
+  console.log(`        ${old.cases[pid]._desc ?? ""}`);
+  failed++;
+}
+
 if (failed) {
   console.log(`스냅샷 불일치 ${failed}건`);
   console.log("의도한 변화라면:  node test/engine.snapshot.mjs --update");
