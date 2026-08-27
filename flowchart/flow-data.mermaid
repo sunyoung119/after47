@@ -1,43 +1,57 @@
+%%{init: {"theme":"base","themeVariables":{"background":"#ffffff","primaryColor":"#f7f7f7","primaryTextColor":"#1a1a1a","primaryBorderColor":"#8a8a8a","lineColor":"#555555","secondaryColor":"#efefef","tertiaryColor":"#ffffff","edgeLabelBackground":"#ffffff","clusterBkg":"#fafafa","clusterBorder":"#bbbbbb","titleColor":"#1a1a1a","nodeTextColor":"#1a1a1a"}}}%%
 flowchart TD
     subgraph 입력
-      Q["questions.json<br/>17문항"] --> ST["state<br/>17개 키"]
-      URLD["?d= 자치구"] --> ST
-      COMP["completed[]<br/>완료 체크"] --> ST
+      Q["questions.json 17문항<br/>ask_when으로 14~17개만 묻는다<br/>생략돼도 default로 값은 남는다 — D-014"] --> ST["state<br/>답 17키 + district + completed"]
+      URLD["?d= 자치구<br/>(저장값이 있으면 저장값이 이김)"] --> ST
+      COMP["completed 배열<br/>저장 계층에서"] --> ST
     end
 
-    ST --> DERIVE["deriveState()<br/>파생값 계산"]
-    DJ["districts.json<br/>자치구 5개"] --> DERIVE
-    DERIVE --> ST2["state + 파생 4개<br/>elapsed_hours<br/>district_residency<br/>district_insurance_exclusion<br/>district_has_ordinance"]
+    ST --> DERIVE["deriveState(state, data, now)<br/>· elapsed_hours = now − fire_at (1/4에서 now 주입)<br/>· both → victim·causer 양쪽으로 펼침<br/>· unknown은 안 펼친다 — D-016<br/>· 자치구 파생 3키"]
+    DJ["districts.json 5개 구"] --> DERIVE
 
-    AJ["actions.json<br/>57개"] --> MATCH
-    ST2 --> MATCH["applies_when 매칭<br/>키=AND, 배열=OR"]
+    AJ["actions.json 57개"] --> AUD
+    DERIVE --> AUD{"audience가<br/>피해자인가"}
+    AUD -->|조사관 1개| HIDE["화면에서 뺌 — D-008"]
+    AUD -->|피해자 56개| MATCH["applies_when 매칭 — D-010<br/>다른 키 AND · 같은 키 배열 OR<br/>'unknown'은 조건에 명시된 Action만 켠다<br/>(D-013 키별 표 · D-016 water는 역할 중립만)"]
 
     MATCH -->|안 맞음| GONE["결과에 없음"]
-    MATCH -->|맞음| EXC{"제외 조건에<br/>걸리나"}
+    MATCH -->|맞음| ORD{"조례 지원 항목인가<br/>ordinance_based 4개<br/>psych·waste·housing·supplies"}
 
-    EXC -->|아니오| OK["해당"]
-    EXC -->|걸림 + 긴급예외 있음| COND["조건부<br/>'구청에 문의'"]
-    EXC -->|걸림 + 예외 없음| OUT["제외<br/>사유 표시"]
+    ORD -->|예| DX["districtExclusion() — 순서대로<br/>1 자치구 미지정이면 뺌 (1/4 C)<br/>2 구가 지원 안 하는 항목이면 뺌<br/>3 housing_only  4 residency<br/>5 예외 항목이면 통과 (양천 psych·housing)<br/>6 보험 제외 4변종"]
+    ORD -->|아니오| EXCA
 
-    OK --> DEP{"depends_on이<br/>다 끝났나"}
-    DEP -->|아니오| BLOCK["아직 못 함"]
+    DX -->|걸림 + 구에 긴급예외<br/>현재 성북만| COND["조건부 — D-011<br/>'원칙 제외지만 문의'"]
+    DX -->|걸림 + 예외 없음| OUT["제외 + 사유 + 기한"]
+    DX -->|안 걸림| EXCA{"Action 자체의<br/>excluded_when"}
+
+    EXCA -->|현재 쓰는 Action 0개<br/>죽은 분기| OK["해당"]
+
+    OK --> DEP{"depends_on 선행이<br/>completed에 다 있나"}
+    DEP -->|아니오| BLOCK["아직 못 함(접힘)<br/>blocks_reason은 17개 중 5개뿐<br/>※ irreversible도 여기 갇힌다<br/>water-damage-document-now 등 → 4/4 결정"]
     DEP -->|예| CAT{"category"}
 
-    CAT -->|대기| WAIT["기다리는 중<br/>예상 소요일"]
-    CAT -->|기관자율| HIDE["화면에서 뺌"]
-    CAT -->|신청·판단| WHEN["when으로 배치"]
+    CAT -->|대기| WAIT["기다리는 중<br/>※ 유일한 대기 항목이 선행에 막혀<br/>지금은 항상 blocked로 먼저 걸러짐"]
+    CAT -->|신청·판단| WHEN["when 필드 그대로 배치 — 정적<br/>※ elapsed_hours를 아무도 안 읽는다(측정 확인)<br/>화재 3시간째나 90일째나 화면이 같다<br/>→ 3/4에서 재배치: 시간 있으면 시간,<br/>없으면 axis·category / missed는 irreversible 기준"]
 
-    WHEN --> S1["혹시 아직 안 하셨다면"]
-    WHEN --> S2["오늘 하실 것"]
-    WHEN --> S3["당분간 하지 마실 것"]
-    WHEN --> S4["이번 주에"]
-    WHEN --> S5["계속 신경 쓸 것"]
-    WHEN --> S6["조사서 나온 뒤에"]
+    WHEN --> S1["혹시 아직 안 하셨다면 missed"]
+    WHEN --> S2["오늘 하실 것 today"]
+    WHEN --> S3["당분간 하지 마실 것 standing<br/>금지 전용"]
+    WHEN --> S4["이번 주에 this_week"]
+    WHEN --> S5["계속 신경 쓸 것 anytime"]
+    WHEN --> S6["조사서 나온 뒤에 after_report<br/>※ 조사서 수령을 아는 키가 아직 없다<br/>→ 3/4에서 report_received 신설"]
 
-    S1 & S2 & S3 & S4 & S5 & S6 --> GROUP["분야로 묶기<br/>몸 · 지낼 곳 · 집 정리<br/>서류 · 보험과 돈<br/>집주인과 계약 · 책임과 분쟁"]
+    S1 & S2 & S3 & S4 & S5 & S6 --> GROUP["섹션 안: timing_hours로 정렬 후<br/>분야 domain_group 로 묶기<br/>몸 · 지낼 곳 · 집 정리 · 서류<br/>보험과 돈 · 집주인과 계약 · 책임과 분쟁"]
 
-    style GONE fill:#eee
-    style HIDE fill:#eee
-    style COND fill:#fff4e5
-    style OUT fill:#fce8e6
-    style GROUP fill:#e6f4ea
+    GROUP --> RET["반환 sections · waiting · blocked · excluded<br/>행마다 deadline_days, excluded엔 reason<br/>※ SCHEMA.md의 옛 계약 now/later 와 다름 — 문서가 낡음"]
+
+    RET -.-> DASH["계기판 test/engine.snapshot.mjs<br/>14 페르소나 × 3시각 = 42조합 고정<br/>+ 조건부·제외 바닥 불변식<br/>2/4-D에서 17 × 3 = 51조합 예정"]
+
+    style GONE fill:#eee,stroke:#8a8a8a,color:#1a1a1a
+    style HIDE fill:#eee,stroke:#8a8a8a,color:#1a1a1a
+    style COND fill:#fff4e5,stroke:#8a8a8a,color:#1a1a1a
+    style OUT fill:#fce8e6,stroke:#8a8a8a,color:#1a1a1a
+    style GROUP fill:#e6f4ea,stroke:#8a8a8a,color:#1a1a1a
+    style WHEN fill:#fdf2d0,stroke:#8a8a8a,color:#1a1a1a
+    style WAIT fill:#fdf2d0,stroke:#8a8a8a,color:#1a1a1a
+    style BLOCK fill:#fdf2d0,stroke:#8a8a8a,color:#1a1a1a
+    style DASH fill:#e8f0fe,stroke:#8a8a8a,color:#1a1a1a

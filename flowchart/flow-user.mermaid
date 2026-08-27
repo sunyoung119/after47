@@ -1,3 +1,4 @@
+%%{init: {"theme":"base","themeVariables":{"background":"#ffffff","primaryColor":"#f7f7f7","primaryTextColor":"#1a1a1a","primaryBorderColor":"#8a8a8a","lineColor":"#555555","secondaryColor":"#efefef","tertiaryColor":"#ffffff","edgeLabelBackground":"#ffffff","clusterBkg":"#fafafa","clusterBorder":"#bbbbbb","titleColor":"#1a1a1a","nodeTextColor":"#1a1a1a"}}}%%
 flowchart TD
     QR["화재조사관 명함 QR<br/>?d=mapo"] --> OPEN
     WEB["검색·직접 방문<br/>주소만"] --> OPEN
@@ -6,33 +7,36 @@ flowchart TD
     OPEN["openSession()<br/>주소를 읽는다"] --> TOK{"?t= 토큰이<br/>유효한가"}
 
     TOK -->|있다| LOAD["loadState(token)"]
-    TOK -->|없다| LAST{"이 기기에<br/>마지막 토큰이<br/>남아 있나"}
-    LAST -->|있다| LOAD
-    LAST -->|없다| NEW["newToken()<br/>새로 발급"]
+    TOK -->|없거나 깨진 값<br/>token_invalid 알림| LAST{"이 기기에<br/>마지막 토큰이<br/>남아 있나"}
+    LAST -->|있다<br/>resumed 알림| LOAD
+    LAST -->|없다| NEW["newToken() 새로 발급<br/>anchorSession()으로 즉시<br/>이 기기에 붙인다 — D-015 0층"]
 
     LOAD --> DIST{"저장된<br/>자치구가 있나"}
     NEW --> DIST
-    DIST -->|있다| WIN["저장값이 이긴다<br/>?d=와 다르면 알림"]
+    DIST -->|있다| WIN["저장값이 이긴다<br/>?d=와 다르면<br/>district_conflict 알림"]
     DIST -->|없다| HINT{"?d= 가<br/>쓸 만한가"}
     HINT -->|유효| USE["힌트로 채운다"]
-    HINT -->|없거나 모르는 값| PICK["자치구 선택 화면"]
+    HINT -->|없거나 모르는 값| PICK["자치구 선택 화면<br/>district_needed 알림"]
 
     WIN --> SURVEY
     USE --> SURVEY
     PICK --> SURVEY
 
-    SURVEY["설문<br/>14~17문항<br/>ask_when으로 건너뛴다"] --> SAVE["saveState()<br/>답할 때마다"]
-    SAVE --> ENGINE["evaluate()"]
-    ENGINE --> SCREEN["결과 화면"]
+    SURVEY["설문 14~17문항<br/>ask_when으로 건너뛰되<br/>default가 있으면 값은 채운다 — D-014"] --> SAVE["saveState() 답할 때마다<br/>persisted:false(저장 막힌 브라우저)면<br/>즉시 주소 경고 — D-015 예외"]
+    SAVE --> ENGINE["evaluate(state, data, now)<br/>※ now 주입 가능해졌지만(3단계 1/4)<br/>아직 아무도 경과 시간을 안 읽는다<br/>→ 3/4 when 재배치에서 소비 예정"]
+    ENGINE --> SCREEN["결과 화면<br/>sections / waiting / blocked / excluded"]
 
-    SCREEN --> DONE["완료 체크"]
+    SCREEN -.-> ADDR["주소 저장 3중 방어 — D-015<br/>0층 기기 자동복원(무행동)<br/>1층 결과 첫 도달 시 안내 1회<br/>2층 헤더에 작게 상시"]
+    SCREEN --> DONE["완료 체크 → completed 배열<br/>※ 아직 목록에서 빠지지는 않는다<br/>done 버킷은 4/4 예정"]
     DONE --> SAVE
 
     SCREEN -.->|며칠~몇 주 뒤| KAKAO
     SCREEN -.->|조사서 받고<br/>답을 고침| SURVEY
 
-    style QR fill:#e8f0fe
-    style WEB fill:#e8f0fe
-    style KAKAO fill:#e8f0fe
-    style SCREEN fill:#fff4e5
-    style PICK fill:#fce8e6
+    style QR fill:#e8f0fe,stroke:#8a8a8a,color:#1a1a1a
+    style WEB fill:#e8f0fe,stroke:#8a8a8a,color:#1a1a1a
+    style KAKAO fill:#e8f0fe,stroke:#8a8a8a,color:#1a1a1a
+    style SCREEN fill:#fff4e5,stroke:#8a8a8a,color:#1a1a1a
+    style PICK fill:#fce8e6,stroke:#8a8a8a,color:#1a1a1a
+    style ENGINE fill:#fdf2d0,stroke:#8a8a8a,color:#1a1a1a
+    style DONE fill:#fdf2d0,stroke:#8a8a8a,color:#1a1a1a
