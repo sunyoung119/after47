@@ -216,13 +216,26 @@ export function evaluate(state, data, now = Date.now()) {
       }
     }
 
-    const blockedBy = (a.depends_on || []).filter((id) => !done.has(id));
+    // 선행의 제목을 함께 싣는다. UI가 "'OO'을(를) 먼저 하세요"를 조합할 수
+    // 있어야 actions.json을 다시 뒤지지 않는다(D-019). 막힘 문구를 콘텐츠로
+    // 새로 쓰지 않는 이유이기도 하다 — 제목이 이미 그 일을 한다.
+    const blockedBy = (a.depends_on || [])
+      .filter((id) => !done.has(id))
+      .map((id) => ({ id, title: actions.find((x) => x.id === id)?.title ?? null }));
     const whenNow = placement(a, s.elapsed_hours, deadlineDays);
     rows.push({
       action: a,
       status,
       reason,
       blockedBy,
+      // 왜 이 순서인지를 덧붙이는 특수 설명. 5건에만 있고 나머지는 null이다 —
+      // 선행 제목으로 충분한 자리에 문구를 새로 쓰지 않는다.
+      blocks_reason: a.blocks_reason ?? null,
+      // 조례 항목의 문의처와 금액 확인 여부. D-003의 degrade("지원 대상이지만
+      // 금액은 구청 문의")를 UI가 districts.json을 안 열고 그릴 수 있어야 한다.
+      // excluded만이 아니라 `해당` 행에서도 필요하므로 rows 수준에 둔다.
+      dept: a.ordinance_based ? district?.dept ?? null : null,
+      amount_known: a.ordinance_based ? district?.amount_known ?? null : null,
       deadline_days: deadlineDays,
       // 3층 타임라인. 데이터의 when이 아니라 여기서 계산된 값이 화면 위치다(D-001)
       when: whenNow,

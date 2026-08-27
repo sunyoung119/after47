@@ -164,9 +164,14 @@ const at = (hours) => new Date(Date.parse(FIRE_AT) + hours * 36e5).toISOString()
 // 읽히지 않는다. group은 화면 묶음 경계라 순서와 함께 뜻이 생긴다.
 const bucketRow = (x) => ({
   id: x.action.id,
-  status: x.status,
+  // 선행의 id와 title. UI가 "'OO'을(를) 먼저 하세요"를 조합한다.
   blocked_by: x.blockedBy ?? [],
+  blocks_reason: x.blocks_reason ?? null,
+  status: x.status,
   deadline_days: x.deadline_days ?? null,
+  // 조례 항목만 값이 있다. 나머지는 null(2/4-C의 키 일관성 규칙).
+  dept: x.dept ?? null,
+  amount_known: x.amount_known ?? null,
 });
 
 // `reason`은 excluded에만 담는다. sections·blocked 행은 전부 `해당` 상태라
@@ -199,6 +204,9 @@ function capture(state, now) {
           irreversible: x.action.irreversible === true,
           // 금지(standing)만 false다. UI가 계산 없이 읽는다(D-018).
           checkable: x.checkable === true,
+          // D-003의 degrade는 `해당` 상태의 조례 행에서 그려진다.
+          dept: x.dept ?? null,
+          amount_known: x.amount_known ?? null,
         }))
       ),
     })),
@@ -243,7 +251,8 @@ const fmt = (it) =>
 const fmtBucket = (it) =>
   `${it.id}  [${it.status}` +
   `${it.deadline_days ? ` · 기한 ${it.deadline_days}일` : ""}` +
-  `${it.blocked_by?.length ? " · 막힘:" + it.blocked_by.join(",") : ""}]` +
+  `${it.blocked_by?.length ? " · 막힘:" + it.blocked_by.map((d) => d.id).join(",") : ""}]` +
+  `${it.dept ? ` · ${it.dept}` : ""}` +
   `${it.reason ? `
           사유: ${it.reason}` : ""}`;
 
