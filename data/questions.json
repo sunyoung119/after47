@@ -314,6 +314,31 @@
     "help": "물 피해는 받은 쪽과 준 쪽이 해야 할 일이 정반대라 꼭 여쭤봅니다. 아직 확인이 안 됐으면 마지막 항목을 고르세요. 어느 쪽이든 공통으로 해야 할 것만 안내해 드립니다."
   },
   {
+    "id": "q-report",
+    "key": "report_received",
+    "text": "화재현장조사서를 받으셨나요?",
+    "type": "single",
+    "default": false,
+    "options": [
+      {
+        "value": true,
+        "label": "받았습니다"
+      },
+      {
+        "value": false,
+        "label": "아직 못 받았습니다"
+      }
+    ],
+    "ask_when": {
+      "elapsed_bucket": [
+        "first_month",
+        "months",
+        "years"
+      ]
+    },
+    "help": "조사서에 적힌 원인에 따라 달라지는 안내가 있습니다. 보통 보름에서 두 달쯤 걸립니다."
+  },
+  {
     "id": "q-adjuster",
     "key": "adjuster_present",
     "text": "보험사나 제조사에서 손해사정사가 나왔나요?",

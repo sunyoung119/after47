@@ -27,6 +27,7 @@ const DERIVED = [
   "district_residency",
   "district_insurance_exclusion",
   "elapsed_hours",
+  "elapsed_bucket",
 ];
 const NOT_ASKED = { district: "URL 파라미터 ?d=", completed: "저장 계층" };
 

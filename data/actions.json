@@ -410,7 +410,9 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
-    "applies_when": {},
+    "applies_when": {
+      "report_received": false
+    },
     "excluded_when": null,
     "exception_available": false,
     "exclusion_reason": null,
@@ -439,7 +441,9 @@
       60
     ],
     "irreversible": false,
-    "applies_when": {},
+    "applies_when": {
+      "report_received": false
+    },
     "excluded_when": null,
     "exception_available": false,
     "exclusion_reason": null,

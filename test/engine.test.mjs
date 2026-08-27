@@ -15,6 +15,7 @@ const ref = (district, over={}) => ({
   scene_preserved:false, wet_appliances:true, powder_present:true,
   other_units_affected:false,
   water_damage_role:"none", adjuster_present:false, product_maker_contacted:false,
+  report_received:false,
   completed:[], ...over,
 });
 function show(label, state, opened=1) {
