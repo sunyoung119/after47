@@ -282,6 +282,8 @@ export function evaluate(state, data, now = Date.now()) {
       // 켜진다. 기본값을 여기 두는 것은 키 일관성 때문이다 — 섹션 행마다
       // 있고 없고 하면 UI가 undefined를 만난다.
       locked: false,
+      // 화면을 가로지르는 순위(D-019 §2). 섹션이 정해진 뒤에 매긴다.
+      rank: null,
     });
   }
 
@@ -346,6 +348,50 @@ export function evaluate(state, data, now = Date.now()) {
     pool.push(r);
   }
 
+  // ── 순위 (D-019 §2) ─────────────────────────────
+  // 화면을 가로지르는 값이다. **엔진은 자르지 않는다** — UI가 rank <= N만
+  // 펴고 나머지는 라벨+개수로 접는다(D-011: Action은 사라지지 않는다).
+  // 순위도 순서이므로 D-001이 이미 답을 갖고 있다 — 계산은 엔진의 일이다.
+  // UI가 이것을 다시 계산하면 규칙이 두 곳에 흩어지고 계기판이 못 본다.
+  //
+  // standing은 타임라인 밖 별도 밴드라 순위 경쟁에 없다(D-019 §0). rank는 null.
+  const BLOCK_ORDER = SECTIONS.map(([k]) => k);
+  const dataIndex = new Map(actions.map((a, i) => [a.id, i]));
+  // Infinity - Infinity가 NaN이라 뺄셈으로 비교하지 않는다. NaN이 falsy라
+  // 우연히 다음 규칙으로 넘어가기는 하지만, 우연에 기대면 규칙을 하나 더
+  // 얹을 때 조용히 깨진다.
+  const cmp = (x, y) => (x < y ? -1 : x > y ? 1 : 0);
+  // "얼마나 급한가". timing_hours: 0은 만료가 아니라 즉시성의 표시인데
+  // (D-017 §2) 정렬에서는 그 뜻 그대로 가장 급한 값이 된다. R2의 `> 0`
+  // 가드와 어긋나지 않는다 — 그쪽은 만료 판정이고 이쪽은 정렬이다.
+  const urgency = (r) =>
+    r.action.timing_hours ??
+    (r.deadline_days != null ? r.deadline_days * 24 : null) ??
+    Infinity;
+  const tier = (r) => {
+    if (r.when === "missed") return 1;              // 되돌릴 수 없고 시한이 지났다
+    if (r.action.irreversible) return 2;            // 되돌릴 수 없는데 아직 할 수 있다
+    const hasClock = r.action.timing_hours != null || r.deadline_days != null;
+    if (!hasClock) return 4;
+    const e = expiry(r.action, s.elapsed_hours, r.deadline_days);
+    return e.timing || e.deadline ? 4 : 3;          // 시한이 있고 아직 안 지났다
+  };
+  pool
+    .filter((r) => r.when !== "standing")
+    .sort(
+      (a, b) =>
+        cmp(tier(a), tier(b)) ||
+        // 지금 할 수 있는 것이 앞이다
+        cmp(a.locked === true ? 1 : 0, b.locked === true ? 1 : 0) ||
+        cmp(urgency(a), urgency(b)) ||
+        cmp(BLOCK_ORDER.indexOf(a.when), BLOCK_ORDER.indexOf(b.when)) ||
+        // 최종 tie-break. 이 줄이 있어야 같은 입력이 항상 같은 순위를 낸다
+        cmp(dataIndex.get(a.action.id), dataIndex.get(b.action.id))
+    )
+    .forEach((r, i) => { r.rank = i + 1; });
+
+  // 섹션 안쪽 정렬은 rank와 별개로 그대로 둔다. 순위는 화면을 가로지르는
+  // 값이고 이것은 블록 안의 값이다 — 하나로 합치면 분야 묶음이 깨진다.
   const byTiming = (a, b) =>
     (a.action.timing_hours ?? 9999) - (b.action.timing_hours ?? 9999);
 

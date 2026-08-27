@@ -231,6 +231,9 @@ function capture(state, now) {
           // 3/4 재배치가 이 값을 입력으로 쓰기로 돼 있어 기록해 둔다.
           deadline_days: x.deadline_days ?? null,
           irreversible: x.action.irreversible === true,
+          // 화면을 가로지르는 순위(D-019 §2). standing 밴드는 null이다.
+          // UI가 rank <= 5만 펴면 §1의 "1+4"가 나온다 — 자르는 것은 UI다.
+          rank: x.rank ?? null,
           // 선행이 안 끝나 잠긴 채로 제자리에 있는 행(D-019 §5).
           // blocked 버킷에 남는 것은 `irreversible`이 아닌 것뿐이므로,
           // 이 값이 켜진 행은 전부 여기 섹션에만 있다.
