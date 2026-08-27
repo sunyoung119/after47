@@ -121,7 +121,13 @@ const bucketRow = (x) => ({
   id: x.action.id,
   status: x.status,
   blocked_by: x.blockedBy ?? [],
+  deadline_days: x.deadline_days ?? null,
 });
+
+// `reason`은 excluded에만 담는다. sections·blocked 행은 전부 `해당` 상태라
+// 42조합에서 하나도 남김없이 null이었다(측정). 여기가 null이 아니게 되면
+// 내가 모르는 판정 경로가 생긴 것이므로 그때 이 결정을 다시 봐야 한다.
+const excludedRow = (x) => ({ ...bucketRow(x), reason: x.reason ?? null });
 
 function capture(state, now) {
   const r = evaluate(state, data, now);
@@ -136,13 +142,16 @@ function capture(state, now) {
           group: g.group,
           axis: x.action.axis,
           timing_hours: x.action.timing_hours ?? null,
+          // 행 수준 값이다. 조례 기반 항목은 자치구에서 온다(양천만 30일).
+          // 3/4 재배치가 이 값을 입력으로 쓰기로 돼 있어 기록해 둔다.
+          deadline_days: x.deadline_days ?? null,
           irreversible: x.action.irreversible === true,
         }))
       ),
     })),
     waiting: r.waiting.map(bucketRow),
     blocked: r.blocked.map(bucketRow),
-    excluded: r.excluded.map(bucketRow),
+    excluded: r.excluded.map(excludedRow),
   };
 }
 
@@ -175,9 +184,14 @@ function build() {
 const fmt = (it) =>
   `${it.id}` +
   `  [${it.axis} · ${it.group} · timing=${it.timing_hours ?? "-"}` +
+  `${it.deadline_days ? ` · 기한 ${it.deadline_days}일` : ""}` +
   `${it.irreversible ? " · 불가역" : ""}]`;
 const fmtBucket = (it) =>
-  `${it.id}  [${it.status}${it.blocked_by?.length ? " · 막힘:" + it.blocked_by.join(",") : ""}]`;
+  `${it.id}  [${it.status}` +
+  `${it.deadline_days ? ` · 기한 ${it.deadline_days}일` : ""}` +
+  `${it.blocked_by?.length ? " · 막힘:" + it.blocked_by.join(",") : ""}]` +
+  `${it.reason ? `
+          사유: ${it.reason}` : ""}`;
 
 const byId = (arr) => new Map((arr || []).map((x) => [x.id, x]));
 
@@ -260,8 +274,49 @@ function diffCase(before, after) {
   return out;
 }
 
+// ── 불변식 ──────────────────────────────────────────
+// 스냅샷 비교는 "지난번과 같은가"만 본다. 계기판이 눈을 잃어도
+// 기준선이 같이 바뀌면 통과해 버린다.
+//
+// 지금 `조건부` 전체가 자치구 하나에 매달려 있다 — 5개 구 중
+// emergency_exception이 성북만 true이고, Action 경로(excluded_when +
+// exception_available)는 해당 Action이 0개다. 성북 데이터가 바뀌면
+// `조건부`가 42조합에서 조용히 사라지고 비교는 통과한다.
+//
+// 그래서 비교와 별개로 둔다. **숫자는 못 박지 않는다** — 12건·33건은
+// 데이터가 늘면 자연히 변한다. 0이 되는 것만 막는다.
+function checkInvariants(snapshot) {
+  const rows = [];
+  for (const pid of Object.keys(snapshot.cases || {})) {
+    for (const [label] of CLOCKS) {
+      const c = snapshot.cases[pid][label];
+      if (c) rows.push(...(c.excluded || []));
+    }
+  }
+  const fails = [];
+  if (!rows.length) fails.push("excluded 버킷이 어느 조합에도 없다");
+  for (const st of ["조건부", "제외"]) {
+    if (!rows.some((x) => x.status === st))
+      fails.push(`\`${st}\` 상태를 밟는 조합이 하나도 없다`);
+  }
+  return fails;
+}
+
 // ── 실행 ────────────────────────────────────────────
 const fresh = build();
+
+const broken = checkInvariants(fresh);
+if (broken.length) {
+  console.log("=".repeat(62));
+  console.log("  FAIL  계기판이 이 상태를 더 이상 관측하지 못한다");
+  broken.forEach((f) => console.log(`          · ${f}`));
+  console.log("");
+  console.log("        페르소나가 사라졌거나 판정 경로가 끊긴 것이다.");
+  console.log("        스냅샷 비교로는 못 잡는다 — 기준선도 같이 바뀌면");
+  console.log("        통과하기 때문에 따로 둔 검사다. --update로도 넘어가지 않는다.");
+  console.log("=".repeat(62));
+  process.exit(1);
+}
 
 if (UPDATE || !existsSync(BASELINE)) {
   if (!existsSync(BASELINE) && !UPDATE) {
