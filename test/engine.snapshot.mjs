@@ -390,7 +390,10 @@ function checkInvariants(snapshot) {
   }
   const fails = [];
   if (!rows.length) fails.push("excluded 버킷이 어느 조합에도 없다");
-  for (const st of ["조건부", "제외"]) {
+  // `미판정`은 P4(자치구 미지정)와 P5(보험 unknown) 둘에만 걸린다.
+  // 어느 한쪽 페르소나가 사라지거나 districtExclusion의 unknown 가지가
+  // 지워지면 D-019 §6이 조용히 원상복구되는데, 비교로는 못 잡는다.
+  for (const st of ["조건부", "제외", "미판정"]) {
     if (!rows.some((x) => x.status === st))
       fails.push(`\`${st}\` 상태를 밟는 조합이 하나도 없다`);
   }

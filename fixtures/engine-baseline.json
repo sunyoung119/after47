@@ -7430,7 +7430,69 @@
             "wait_days": null
           }
         ],
-        "excluded": []
+        "excluded": [
+          {
+            "id": "support-psych",
+            "blocked_by": [],
+            "blocks_reason": null,
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "몸",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "자치구를 알려주시면 지원 대상인지 확인해 드립니다"
+          },
+          {
+            "id": "support-waste",
+            "blocked_by": [
+              {
+                "id": "scene-release",
+                "title": "현장 정리를 시작해도 되는지 확인하세요"
+              },
+              {
+                "id": "photo-before-cleanup",
+                "title": "치우기 전에 방마다 사진·영상을 남기세요"
+              }
+            ],
+            "blocks_reason": "현장보존 해제와 증거 촬영이 먼저입니다",
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "집 정리",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "자치구를 알려주시면 지원 대상인지 확인해 드립니다"
+          },
+          {
+            "id": "support-housing",
+            "blocked_by": [],
+            "blocks_reason": null,
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "지낼 곳",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "자치구를 알려주시면 지원 대상인지 확인해 드립니다"
+          },
+          {
+            "id": "support-supplies",
+            "blocked_by": [],
+            "blocks_reason": null,
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "지낼 곳",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "자치구를 알려주시면 지원 대상인지 확인해 드립니다"
+          }
+        ]
       },
       "+5d": {
         "sections": [
@@ -7855,7 +7917,69 @@
             "wait_days": null
           }
         ],
-        "excluded": []
+        "excluded": [
+          {
+            "id": "support-psych",
+            "blocked_by": [],
+            "blocks_reason": null,
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "몸",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "자치구를 알려주시면 지원 대상인지 확인해 드립니다"
+          },
+          {
+            "id": "support-waste",
+            "blocked_by": [
+              {
+                "id": "scene-release",
+                "title": "현장 정리를 시작해도 되는지 확인하세요"
+              },
+              {
+                "id": "photo-before-cleanup",
+                "title": "치우기 전에 방마다 사진·영상을 남기세요"
+              }
+            ],
+            "blocks_reason": "현장보존 해제와 증거 촬영이 먼저입니다",
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "집 정리",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "자치구를 알려주시면 지원 대상인지 확인해 드립니다"
+          },
+          {
+            "id": "support-housing",
+            "blocked_by": [],
+            "blocks_reason": null,
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "지낼 곳",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "자치구를 알려주시면 지원 대상인지 확인해 드립니다"
+          },
+          {
+            "id": "support-supplies",
+            "blocked_by": [],
+            "blocks_reason": null,
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "지낼 곳",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "자치구를 알려주시면 지원 대상인지 확인해 드립니다"
+          }
+        ]
       },
       "+14d": {
         "sections": [
@@ -8280,7 +8404,69 @@
             "wait_days": null
           }
         ],
-        "excluded": []
+        "excluded": [
+          {
+            "id": "support-psych",
+            "blocked_by": [],
+            "blocks_reason": null,
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "몸",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "자치구를 알려주시면 지원 대상인지 확인해 드립니다"
+          },
+          {
+            "id": "support-waste",
+            "blocked_by": [
+              {
+                "id": "scene-release",
+                "title": "현장 정리를 시작해도 되는지 확인하세요"
+              },
+              {
+                "id": "photo-before-cleanup",
+                "title": "치우기 전에 방마다 사진·영상을 남기세요"
+              }
+            ],
+            "blocks_reason": "현장보존 해제와 증거 촬영이 먼저입니다",
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "집 정리",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "자치구를 알려주시면 지원 대상인지 확인해 드립니다"
+          },
+          {
+            "id": "support-housing",
+            "blocked_by": [],
+            "blocks_reason": null,
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "지낼 곳",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "자치구를 알려주시면 지원 대상인지 확인해 드립니다"
+          },
+          {
+            "id": "support-supplies",
+            "blocked_by": [],
+            "blocks_reason": null,
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "지낼 곳",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "자치구를 알려주시면 지원 대상인지 확인해 드립니다"
+          }
+        ]
       },
       "+90d": {
         "sections": [
@@ -8698,7 +8884,69 @@
             "wait_days": null
           }
         ],
-        "excluded": []
+        "excluded": [
+          {
+            "id": "support-psych",
+            "blocked_by": [],
+            "blocks_reason": null,
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "몸",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "자치구를 알려주시면 지원 대상인지 확인해 드립니다"
+          },
+          {
+            "id": "support-waste",
+            "blocked_by": [
+              {
+                "id": "scene-release",
+                "title": "현장 정리를 시작해도 되는지 확인하세요"
+              },
+              {
+                "id": "photo-before-cleanup",
+                "title": "치우기 전에 방마다 사진·영상을 남기세요"
+              }
+            ],
+            "blocks_reason": "현장보존 해제와 증거 촬영이 먼저입니다",
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "집 정리",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "자치구를 알려주시면 지원 대상인지 확인해 드립니다"
+          },
+          {
+            "id": "support-housing",
+            "blocked_by": [],
+            "blocks_reason": null,
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "지낼 곳",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "자치구를 알려주시면 지원 대상인지 확인해 드립니다"
+          },
+          {
+            "id": "support-supplies",
+            "blocked_by": [],
+            "blocks_reason": null,
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "지낼 곳",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "자치구를 알려주시면 지원 대상인지 확인해 드립니다"
+          }
+        ]
       },
       "+1200d": {
         "sections": [
@@ -9116,7 +9364,69 @@
             "wait_days": null
           }
         ],
-        "excluded": []
+        "excluded": [
+          {
+            "id": "support-psych",
+            "blocked_by": [],
+            "blocks_reason": null,
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "몸",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "자치구를 알려주시면 지원 대상인지 확인해 드립니다"
+          },
+          {
+            "id": "support-waste",
+            "blocked_by": [
+              {
+                "id": "scene-release",
+                "title": "현장 정리를 시작해도 되는지 확인하세요"
+              },
+              {
+                "id": "photo-before-cleanup",
+                "title": "치우기 전에 방마다 사진·영상을 남기세요"
+              }
+            ],
+            "blocks_reason": "현장보존 해제와 증거 촬영이 먼저입니다",
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "집 정리",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "자치구를 알려주시면 지원 대상인지 확인해 드립니다"
+          },
+          {
+            "id": "support-housing",
+            "blocked_by": [],
+            "blocks_reason": null,
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "지낼 곳",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "자치구를 알려주시면 지원 대상인지 확인해 드립니다"
+          },
+          {
+            "id": "support-supplies",
+            "blocked_by": [],
+            "blocks_reason": null,
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "지낼 곳",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "자치구를 알려주시면 지원 대상인지 확인해 드립니다"
+          }
+        ]
       }
     },
     "P5": {
@@ -9147,7 +9457,7 @@
         "sections": [
           {
             "key": "today",
-            "count": 7,
+            "count": 5,
             "unlocked": true,
             "items": [
               {
@@ -9193,28 +9503,6 @@
                 "checkable": true,
                 "dept": null,
                 "amount_known": null
-              },
-              {
-                "id": "support-housing",
-                "group": "지낼 곳",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": "안전교통국 재난안전과",
-                "amount_known": false
-              },
-              {
-                "id": "support-supplies",
-                "group": "지낼 곳",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": "안전교통국 재난안전과",
-                "amount_known": false
               },
               {
                 "id": "tenant-notify-landlord",
@@ -9293,7 +9581,7 @@
           },
           {
             "key": "this_week",
-            "count": 7,
+            "count": 6,
             "unlocked": true,
             "items": [
               {
@@ -9361,17 +9649,6 @@
                 "checkable": true,
                 "dept": null,
                 "amount_known": null
-              },
-              {
-                "id": "support-psych",
-                "group": "몸",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": "안전교통국 재난안전과",
-                "amount_known": false
               }
             ]
           },
@@ -9557,27 +9834,6 @@
             ]
           },
           {
-            "id": "support-waste",
-            "blocked_by": [
-              {
-                "id": "scene-release",
-                "title": "현장 정리를 시작해도 되는지 확인하세요"
-              },
-              {
-                "id": "photo-before-cleanup",
-                "title": "치우기 전에 방마다 사진·영상을 남기세요"
-              }
-            ],
-            "blocks_reason": "현장보존 해제와 증거 촬영이 먼저입니다",
-            "status": "해당",
-            "deadline_days": null,
-            "dept": "안전교통국 재난안전과",
-            "amount_known": false,
-            "group": "집 정리",
-            "category": "신청",
-            "wait_days": null
-          },
-          {
             "id": "tenant-burden-of-proof",
             "blocked_by": [
               {
@@ -9629,7 +9885,69 @@
             "wait_days": null
           }
         ],
-        "excluded": []
+        "excluded": [
+          {
+            "id": "support-psych",
+            "blocked_by": [],
+            "blocks_reason": null,
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": "안전교통국 재난안전과",
+            "amount_known": false,
+            "group": "몸",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "본인 화재보험 가입 여부에 따라 달라집니다"
+          },
+          {
+            "id": "support-waste",
+            "blocked_by": [
+              {
+                "id": "scene-release",
+                "title": "현장 정리를 시작해도 되는지 확인하세요"
+              },
+              {
+                "id": "photo-before-cleanup",
+                "title": "치우기 전에 방마다 사진·영상을 남기세요"
+              }
+            ],
+            "blocks_reason": "현장보존 해제와 증거 촬영이 먼저입니다",
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": "안전교통국 재난안전과",
+            "amount_known": false,
+            "group": "집 정리",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "본인 화재보험 가입 여부에 따라 달라집니다"
+          },
+          {
+            "id": "support-housing",
+            "blocked_by": [],
+            "blocks_reason": null,
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": "안전교통국 재난안전과",
+            "amount_known": false,
+            "group": "지낼 곳",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "본인 화재보험 가입 여부에 따라 달라집니다"
+          },
+          {
+            "id": "support-supplies",
+            "blocked_by": [],
+            "blocks_reason": null,
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": "안전교통국 재난안전과",
+            "amount_known": false,
+            "group": "지낼 곳",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "본인 화재보험 가입 여부에 따라 달라집니다"
+          }
+        ]
       },
       "+5d": {
         "sections": [
@@ -9653,7 +9971,7 @@
           },
           {
             "key": "today",
-            "count": 6,
+            "count": 4,
             "unlocked": true,
             "items": [
               {
@@ -9688,28 +10006,6 @@
                 "checkable": true,
                 "dept": null,
                 "amount_known": null
-              },
-              {
-                "id": "support-housing",
-                "group": "지낼 곳",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": "안전교통국 재난안전과",
-                "amount_known": false
-              },
-              {
-                "id": "support-supplies",
-                "group": "지낼 곳",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": "안전교통국 재난안전과",
-                "amount_known": false
               },
               {
                 "id": "tenant-notify-landlord",
@@ -9788,7 +10084,7 @@
           },
           {
             "key": "this_week",
-            "count": 7,
+            "count": 6,
             "unlocked": true,
             "items": [
               {
@@ -9856,17 +10152,6 @@
                 "checkable": true,
                 "dept": null,
                 "amount_known": null
-              },
-              {
-                "id": "support-psych",
-                "group": "몸",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": "안전교통국 재난안전과",
-                "amount_known": false
               }
             ]
           },
@@ -10052,27 +10337,6 @@
             ]
           },
           {
-            "id": "support-waste",
-            "blocked_by": [
-              {
-                "id": "scene-release",
-                "title": "현장 정리를 시작해도 되는지 확인하세요"
-              },
-              {
-                "id": "photo-before-cleanup",
-                "title": "치우기 전에 방마다 사진·영상을 남기세요"
-              }
-            ],
-            "blocks_reason": "현장보존 해제와 증거 촬영이 먼저입니다",
-            "status": "해당",
-            "deadline_days": null,
-            "dept": "안전교통국 재난안전과",
-            "amount_known": false,
-            "group": "집 정리",
-            "category": "신청",
-            "wait_days": null
-          },
-          {
             "id": "tenant-burden-of-proof",
             "blocked_by": [
               {
@@ -10124,7 +10388,69 @@
             "wait_days": null
           }
         ],
-        "excluded": []
+        "excluded": [
+          {
+            "id": "support-psych",
+            "blocked_by": [],
+            "blocks_reason": null,
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": "안전교통국 재난안전과",
+            "amount_known": false,
+            "group": "몸",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "본인 화재보험 가입 여부에 따라 달라집니다"
+          },
+          {
+            "id": "support-waste",
+            "blocked_by": [
+              {
+                "id": "scene-release",
+                "title": "현장 정리를 시작해도 되는지 확인하세요"
+              },
+              {
+                "id": "photo-before-cleanup",
+                "title": "치우기 전에 방마다 사진·영상을 남기세요"
+              }
+            ],
+            "blocks_reason": "현장보존 해제와 증거 촬영이 먼저입니다",
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": "안전교통국 재난안전과",
+            "amount_known": false,
+            "group": "집 정리",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "본인 화재보험 가입 여부에 따라 달라집니다"
+          },
+          {
+            "id": "support-housing",
+            "blocked_by": [],
+            "blocks_reason": null,
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": "안전교통국 재난안전과",
+            "amount_known": false,
+            "group": "지낼 곳",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "본인 화재보험 가입 여부에 따라 달라집니다"
+          },
+          {
+            "id": "support-supplies",
+            "blocked_by": [],
+            "blocks_reason": null,
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": "안전교통국 재난안전과",
+            "amount_known": false,
+            "group": "지낼 곳",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "본인 화재보험 가입 여부에 따라 달라집니다"
+          }
+        ]
       },
       "+14d": {
         "sections": [
@@ -10148,7 +10474,7 @@
           },
           {
             "key": "today",
-            "count": 6,
+            "count": 4,
             "unlocked": true,
             "items": [
               {
@@ -10183,28 +10509,6 @@
                 "checkable": true,
                 "dept": null,
                 "amount_known": null
-              },
-              {
-                "id": "support-housing",
-                "group": "지낼 곳",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": "안전교통국 재난안전과",
-                "amount_known": false
-              },
-              {
-                "id": "support-supplies",
-                "group": "지낼 곳",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": "안전교통국 재난안전과",
-                "amount_known": false
               },
               {
                 "id": "tenant-notify-landlord",
@@ -10283,7 +10587,7 @@
           },
           {
             "key": "this_week",
-            "count": 7,
+            "count": 6,
             "unlocked": true,
             "items": [
               {
@@ -10351,17 +10655,6 @@
                 "checkable": true,
                 "dept": null,
                 "amount_known": null
-              },
-              {
-                "id": "support-psych",
-                "group": "몸",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": "안전교통국 재난안전과",
-                "amount_known": false
               }
             ]
           },
@@ -10547,27 +10840,6 @@
             ]
           },
           {
-            "id": "support-waste",
-            "blocked_by": [
-              {
-                "id": "scene-release",
-                "title": "현장 정리를 시작해도 되는지 확인하세요"
-              },
-              {
-                "id": "photo-before-cleanup",
-                "title": "치우기 전에 방마다 사진·영상을 남기세요"
-              }
-            ],
-            "blocks_reason": "현장보존 해제와 증거 촬영이 먼저입니다",
-            "status": "해당",
-            "deadline_days": null,
-            "dept": "안전교통국 재난안전과",
-            "amount_known": false,
-            "group": "집 정리",
-            "category": "신청",
-            "wait_days": null
-          },
-          {
             "id": "tenant-burden-of-proof",
             "blocked_by": [
               {
@@ -10619,7 +10891,69 @@
             "wait_days": null
           }
         ],
-        "excluded": []
+        "excluded": [
+          {
+            "id": "support-psych",
+            "blocked_by": [],
+            "blocks_reason": null,
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": "안전교통국 재난안전과",
+            "amount_known": false,
+            "group": "몸",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "본인 화재보험 가입 여부에 따라 달라집니다"
+          },
+          {
+            "id": "support-waste",
+            "blocked_by": [
+              {
+                "id": "scene-release",
+                "title": "현장 정리를 시작해도 되는지 확인하세요"
+              },
+              {
+                "id": "photo-before-cleanup",
+                "title": "치우기 전에 방마다 사진·영상을 남기세요"
+              }
+            ],
+            "blocks_reason": "현장보존 해제와 증거 촬영이 먼저입니다",
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": "안전교통국 재난안전과",
+            "amount_known": false,
+            "group": "집 정리",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "본인 화재보험 가입 여부에 따라 달라집니다"
+          },
+          {
+            "id": "support-housing",
+            "blocked_by": [],
+            "blocks_reason": null,
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": "안전교통국 재난안전과",
+            "amount_known": false,
+            "group": "지낼 곳",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "본인 화재보험 가입 여부에 따라 달라집니다"
+          },
+          {
+            "id": "support-supplies",
+            "blocked_by": [],
+            "blocks_reason": null,
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": "안전교통국 재난안전과",
+            "amount_known": false,
+            "group": "지낼 곳",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "본인 화재보험 가입 여부에 따라 달라집니다"
+          }
+        ]
       },
       "+90d": {
         "sections": [
@@ -10643,7 +10977,7 @@
           },
           {
             "key": "today",
-            "count": 6,
+            "count": 4,
             "unlocked": true,
             "items": [
               {
@@ -10678,527 +11012,6 @@
                 "checkable": true,
                 "dept": null,
                 "amount_known": null
-              },
-              {
-                "id": "support-housing",
-                "group": "지낼 곳",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": "안전교통국 재난안전과",
-                "amount_known": false
-              },
-              {
-                "id": "support-supplies",
-                "group": "지낼 곳",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": "안전교통국 재난안전과",
-                "amount_known": false
-              },
-              {
-                "id": "tenant-notify-landlord",
-                "group": "집주인과 계약",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              }
-            ]
-          },
-          {
-            "key": "standing",
-            "count": 5,
-            "unlocked": true,
-            "items": [
-              {
-                "id": "wet-appliance-power",
-                "group": "집 정리",
-                "axis": "사실",
-                "timing_hours": 0,
-                "deadline_days": null,
-                "irreversible": true,
-                "checkable": false,
-                "dept": null,
-                "amount_known": null
-              },
-              {
-                "id": "scene-preserved-hold",
-                "group": "집 정리",
-                "axis": "제도",
-                "timing_hours": 0,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": false,
-                "dept": null,
-                "amount_known": null
-              },
-              {
-                "id": "preserve-product",
-                "group": "책임과 분쟁",
-                "axis": "사실",
-                "timing_hours": 0,
-                "deadline_days": null,
-                "irreversible": true,
-                "checkable": false,
-                "dept": null,
-                "amount_known": null
-              },
-              {
-                "id": "product-handover-caution",
-                "group": "책임과 분쟁",
-                "axis": "제도",
-                "timing_hours": 0,
-                "deadline_days": null,
-                "irreversible": true,
-                "checkable": false,
-                "dept": null,
-                "amount_known": null
-              },
-              {
-                "id": "tenant-dont-do",
-                "group": "집주인과 계약",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": true,
-                "checkable": false,
-                "dept": null,
-                "amount_known": null
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 13,
-            "unlocked": true,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
-                "id": "support-psych",
-                "group": "몸",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": "안전교통국 재난안전과",
-                "amount_known": false
-              },
-              {
-                "id": "fire-cert",
-                "group": "서류",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
-                "id": "investigation-report",
-                "group": "서류",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
-                "id": "adjuster-position",
-                "group": "보험과 돈",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
-                "id": "insurance-claim-limitation",
-                "group": "보험과 돈",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": 1095,
-                "irreversible": true,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
-                "id": "building-group-fire-insurance",
-                "group": "보험과 돈",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
-                "id": "no-personal-insurance-building-path",
-                "group": "보험과 돈",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
-                "id": "origin-unknown",
-                "group": "책임과 분쟁",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
-                "id": "legal-aid-klac",
-                "group": "책임과 분쟁",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
-                "id": "small-claims",
-                "group": "책임과 분쟁",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
-                "id": "housing-mgmt-dispute-committee",
-                "group": "책임과 분쟁",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              }
-            ]
-          },
-          {
-            "key": "after_report",
-            "count": 2,
-            "unlocked": false,
-            "items": [
-              {
-                "id": "tenant-restoration-scope",
-                "group": "집주인과 계약",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
-                "id": "smoke-soot-spread-liability",
-                "group": "책임과 분쟁",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              }
-            ]
-          }
-        ],
-        "done": [],
-        "waiting": [],
-        "blocked": [
-          {
-            "id": "powder-removal",
-            "blocked_by": [
-              {
-                "id": "scene-release",
-                "title": "현장 정리를 시작해도 되는지 확인하세요"
-              },
-              {
-                "id": "photo-before-cleanup",
-                "title": "치우기 전에 방마다 사진·영상을 남기세요"
-              }
-            ],
-            "blocks_reason": "현장보존 해제와 증거 촬영이 먼저입니다",
-            "status": "해당",
-            "deadline_days": null,
-            "dept": null,
-            "amount_known": null,
-            "group": "집 정리",
-            "category": "판단",
-            "wait_days": null
-          },
-          {
-            "id": "dry-water",
-            "blocked_by": [
-              {
-                "id": "scene-release",
-                "title": "현장 정리를 시작해도 되는지 확인하세요"
-              }
-            ],
-            "blocks_reason": "현장보존이 해제되어야 합니다",
-            "status": "해당",
-            "deadline_days": null,
-            "dept": null,
-            "amount_known": null,
-            "group": "집 정리",
-            "category": "판단",
-            "wait_days": null
-          },
-          {
-            "id": "textile-caution",
-            "blocked_by": [
-              {
-                "id": "photo-before-cleanup",
-                "title": "치우기 전에 방마다 사진·영상을 남기세요"
-              }
-            ],
-            "blocks_reason": "옮기기 전에 촬영이 먼저입니다",
-            "status": "해당",
-            "deadline_days": null,
-            "dept": null,
-            "amount_known": null,
-            "group": "집 정리",
-            "category": "판단",
-            "wait_days": null
-          },
-          {
-            "id": "investigation-report-wait",
-            "blocked_by": [
-              {
-                "id": "investigation-report",
-                "title": "화재현장조사서를 정보공개청구로 신청하세요"
-              }
-            ],
-            "blocks_reason": "먼저 정보공개청구를 해야 합니다",
-            "status": "해당",
-            "deadline_days": null,
-            "dept": null,
-            "amount_known": null,
-            "group": "서류",
-            "category": "대기",
-            "wait_days": [
-              15,
-              60
-            ]
-          },
-          {
-            "id": "support-waste",
-            "blocked_by": [
-              {
-                "id": "scene-release",
-                "title": "현장 정리를 시작해도 되는지 확인하세요"
-              },
-              {
-                "id": "photo-before-cleanup",
-                "title": "치우기 전에 방마다 사진·영상을 남기세요"
-              }
-            ],
-            "blocks_reason": "현장보존 해제와 증거 촬영이 먼저입니다",
-            "status": "해당",
-            "deadline_days": null,
-            "dept": "안전교통국 재난안전과",
-            "amount_known": false,
-            "group": "집 정리",
-            "category": "신청",
-            "wait_days": null
-          },
-          {
-            "id": "tenant-burden-of-proof",
-            "blocked_by": [
-              {
-                "id": "investigation-report",
-                "title": "화재현장조사서를 정보공개청구로 신청하세요"
-              }
-            ],
-            "blocks_reason": null,
-            "status": "해당",
-            "deadline_days": null,
-            "dept": null,
-            "amount_known": null,
-            "group": "집주인과 계약",
-            "category": "판단",
-            "wait_days": null
-          },
-          {
-            "id": "tenant-contract-termination",
-            "blocked_by": [
-              {
-                "id": "tenant-burden-of-proof",
-                "title": "빌린 공간 밖으로 번진 손해는 임대인이 임차인 잘못을 증명해야 합니다"
-              }
-            ],
-            "blocks_reason": null,
-            "status": "해당",
-            "deadline_days": null,
-            "dept": null,
-            "amount_known": null,
-            "group": "집주인과 계약",
-            "category": "판단",
-            "wait_days": null
-          },
-          {
-            "id": "evidence-court-referral",
-            "blocked_by": [
-              {
-                "id": "investigation-report",
-                "title": "화재현장조사서를 정보공개청구로 신청하세요"
-              }
-            ],
-            "blocks_reason": null,
-            "status": "해당",
-            "deadline_days": null,
-            "dept": null,
-            "amount_known": null,
-            "group": "책임과 분쟁",
-            "category": "신청",
-            "wait_days": null
-          }
-        ],
-        "excluded": []
-      },
-      "+1200d": {
-        "sections": [
-          {
-            "key": "missed",
-            "count": 2,
-            "unlocked": true,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
-                "id": "insurance-claim-limitation",
-                "group": "보험과 돈",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": 1095,
-                "irreversible": true,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              }
-            ]
-          },
-          {
-            "key": "today",
-            "count": 6,
-            "unlocked": true,
-            "items": [
-              {
-                "id": "photo-before-cleanup",
-                "group": "보험과 돈",
-                "axis": "사실",
-                "timing_hours": 0,
-                "deadline_days": null,
-                "irreversible": true,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
-                "id": "scene-release",
-                "group": "집 정리",
-                "axis": "제도",
-                "timing_hours": 0,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
-                "id": "ppe-powder",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 6,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
-                "id": "support-housing",
-                "group": "지낼 곳",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": "안전교통국 재난안전과",
-                "amount_known": false
-              },
-              {
-                "id": "support-supplies",
-                "group": "지낼 곳",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": "안전교통국 재난안전과",
-                "amount_known": false
               },
               {
                 "id": "tenant-notify-landlord",
@@ -11303,15 +11116,511 @@
                 "amount_known": null
               },
               {
-                "id": "support-psych",
-                "group": "몸",
+                "id": "fire-cert",
+                "group": "서류",
                 "axis": "제도",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
                 "checkable": true,
-                "dept": "안전교통국 재난안전과",
-                "amount_known": false
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "investigation-report",
+                "group": "서류",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "adjuster-position",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "insurance-claim-limitation",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": 1095,
+                "irreversible": true,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "building-group-fire-insurance",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "no-personal-insurance-building-path",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "origin-unknown",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "legal-aid-klac",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "small-claims",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "housing-mgmt-dispute-committee",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              }
+            ]
+          },
+          {
+            "key": "after_report",
+            "count": 2,
+            "unlocked": false,
+            "items": [
+              {
+                "id": "tenant-restoration-scope",
+                "group": "집주인과 계약",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "smoke-soot-spread-liability",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              }
+            ]
+          }
+        ],
+        "done": [],
+        "waiting": [],
+        "blocked": [
+          {
+            "id": "powder-removal",
+            "blocked_by": [
+              {
+                "id": "scene-release",
+                "title": "현장 정리를 시작해도 되는지 확인하세요"
+              },
+              {
+                "id": "photo-before-cleanup",
+                "title": "치우기 전에 방마다 사진·영상을 남기세요"
+              }
+            ],
+            "blocks_reason": "현장보존 해제와 증거 촬영이 먼저입니다",
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "집 정리",
+            "category": "판단",
+            "wait_days": null
+          },
+          {
+            "id": "dry-water",
+            "blocked_by": [
+              {
+                "id": "scene-release",
+                "title": "현장 정리를 시작해도 되는지 확인하세요"
+              }
+            ],
+            "blocks_reason": "현장보존이 해제되어야 합니다",
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "집 정리",
+            "category": "판단",
+            "wait_days": null
+          },
+          {
+            "id": "textile-caution",
+            "blocked_by": [
+              {
+                "id": "photo-before-cleanup",
+                "title": "치우기 전에 방마다 사진·영상을 남기세요"
+              }
+            ],
+            "blocks_reason": "옮기기 전에 촬영이 먼저입니다",
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "집 정리",
+            "category": "판단",
+            "wait_days": null
+          },
+          {
+            "id": "investigation-report-wait",
+            "blocked_by": [
+              {
+                "id": "investigation-report",
+                "title": "화재현장조사서를 정보공개청구로 신청하세요"
+              }
+            ],
+            "blocks_reason": "먼저 정보공개청구를 해야 합니다",
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "서류",
+            "category": "대기",
+            "wait_days": [
+              15,
+              60
+            ]
+          },
+          {
+            "id": "tenant-burden-of-proof",
+            "blocked_by": [
+              {
+                "id": "investigation-report",
+                "title": "화재현장조사서를 정보공개청구로 신청하세요"
+              }
+            ],
+            "blocks_reason": null,
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "집주인과 계약",
+            "category": "판단",
+            "wait_days": null
+          },
+          {
+            "id": "tenant-contract-termination",
+            "blocked_by": [
+              {
+                "id": "tenant-burden-of-proof",
+                "title": "빌린 공간 밖으로 번진 손해는 임대인이 임차인 잘못을 증명해야 합니다"
+              }
+            ],
+            "blocks_reason": null,
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "집주인과 계약",
+            "category": "판단",
+            "wait_days": null
+          },
+          {
+            "id": "evidence-court-referral",
+            "blocked_by": [
+              {
+                "id": "investigation-report",
+                "title": "화재현장조사서를 정보공개청구로 신청하세요"
+              }
+            ],
+            "blocks_reason": null,
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "책임과 분쟁",
+            "category": "신청",
+            "wait_days": null
+          }
+        ],
+        "excluded": [
+          {
+            "id": "support-psych",
+            "blocked_by": [],
+            "blocks_reason": null,
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": "안전교통국 재난안전과",
+            "amount_known": false,
+            "group": "몸",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "본인 화재보험 가입 여부에 따라 달라집니다"
+          },
+          {
+            "id": "support-waste",
+            "blocked_by": [
+              {
+                "id": "scene-release",
+                "title": "현장 정리를 시작해도 되는지 확인하세요"
+              },
+              {
+                "id": "photo-before-cleanup",
+                "title": "치우기 전에 방마다 사진·영상을 남기세요"
+              }
+            ],
+            "blocks_reason": "현장보존 해제와 증거 촬영이 먼저입니다",
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": "안전교통국 재난안전과",
+            "amount_known": false,
+            "group": "집 정리",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "본인 화재보험 가입 여부에 따라 달라집니다"
+          },
+          {
+            "id": "support-housing",
+            "blocked_by": [],
+            "blocks_reason": null,
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": "안전교통국 재난안전과",
+            "amount_known": false,
+            "group": "지낼 곳",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "본인 화재보험 가입 여부에 따라 달라집니다"
+          },
+          {
+            "id": "support-supplies",
+            "blocked_by": [],
+            "blocks_reason": null,
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": "안전교통국 재난안전과",
+            "amount_known": false,
+            "group": "지낼 곳",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "본인 화재보험 가입 여부에 따라 달라집니다"
+          }
+        ]
+      },
+      "+1200d": {
+        "sections": [
+          {
+            "key": "missed",
+            "count": 2,
+            "unlocked": true,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "insurance-claim-limitation",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": 1095,
+                "irreversible": true,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              }
+            ]
+          },
+          {
+            "key": "today",
+            "count": 4,
+            "unlocked": true,
+            "items": [
+              {
+                "id": "photo-before-cleanup",
+                "group": "보험과 돈",
+                "axis": "사실",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": true,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "scene-release",
+                "group": "집 정리",
+                "axis": "제도",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "ppe-powder",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 6,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "tenant-notify-landlord",
+                "group": "집주인과 계약",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              }
+            ]
+          },
+          {
+            "key": "standing",
+            "count": 5,
+            "unlocked": true,
+            "items": [
+              {
+                "id": "wet-appliance-power",
+                "group": "집 정리",
+                "axis": "사실",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": true,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "scene-preserved-hold",
+                "group": "집 정리",
+                "axis": "제도",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "preserve-product",
+                "group": "책임과 분쟁",
+                "axis": "사실",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": true,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "product-handover-caution",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": true,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "tenant-dont-do",
+                "group": "집주인과 계약",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": true,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              }
+            ]
+          },
+          {
+            "key": "anytime",
+            "count": 11,
+            "unlocked": true,
+            "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
               },
               {
                 "id": "fire-cert",
@@ -11523,27 +11832,6 @@
             ]
           },
           {
-            "id": "support-waste",
-            "blocked_by": [
-              {
-                "id": "scene-release",
-                "title": "현장 정리를 시작해도 되는지 확인하세요"
-              },
-              {
-                "id": "photo-before-cleanup",
-                "title": "치우기 전에 방마다 사진·영상을 남기세요"
-              }
-            ],
-            "blocks_reason": "현장보존 해제와 증거 촬영이 먼저입니다",
-            "status": "해당",
-            "deadline_days": null,
-            "dept": "안전교통국 재난안전과",
-            "amount_known": false,
-            "group": "집 정리",
-            "category": "신청",
-            "wait_days": null
-          },
-          {
             "id": "tenant-burden-of-proof",
             "blocked_by": [
               {
@@ -11595,7 +11883,69 @@
             "wait_days": null
           }
         ],
-        "excluded": []
+        "excluded": [
+          {
+            "id": "support-psych",
+            "blocked_by": [],
+            "blocks_reason": null,
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": "안전교통국 재난안전과",
+            "amount_known": false,
+            "group": "몸",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "본인 화재보험 가입 여부에 따라 달라집니다"
+          },
+          {
+            "id": "support-waste",
+            "blocked_by": [
+              {
+                "id": "scene-release",
+                "title": "현장 정리를 시작해도 되는지 확인하세요"
+              },
+              {
+                "id": "photo-before-cleanup",
+                "title": "치우기 전에 방마다 사진·영상을 남기세요"
+              }
+            ],
+            "blocks_reason": "현장보존 해제와 증거 촬영이 먼저입니다",
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": "안전교통국 재난안전과",
+            "amount_known": false,
+            "group": "집 정리",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "본인 화재보험 가입 여부에 따라 달라집니다"
+          },
+          {
+            "id": "support-housing",
+            "blocked_by": [],
+            "blocks_reason": null,
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": "안전교통국 재난안전과",
+            "amount_known": false,
+            "group": "지낼 곳",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "본인 화재보험 가입 여부에 따라 달라집니다"
+          },
+          {
+            "id": "support-supplies",
+            "blocked_by": [],
+            "blocks_reason": null,
+            "status": "미판정",
+            "deadline_days": null,
+            "dept": "안전교통국 재난안전과",
+            "amount_known": false,
+            "group": "지낼 곳",
+            "category": "신청",
+            "wait_days": null,
+            "reason": "본인 화재보험 가입 여부에 따라 달라집니다"
+          }
+        ]
       }
     },
     "P6": {

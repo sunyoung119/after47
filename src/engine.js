@@ -19,12 +19,19 @@ export function matches(cond, state) {
 function districtExclusion(action, district, state) {
   if (!action.ordinance_based) return null;
 
-  // 자치구를 모르면 조례 판정 자체가 불가능하다. 여기서 통과시키면
-  // 조례가 있는지도 모르는 사람에게 "지원 대상"이라고 말하게 된다.
-  // 판정에 필요한 입력이 없는데 결과가 낙관 쪽으로 기우는 것 —
-  // D-014가 registered_resident에서 잡았던 것과 같은 오류다.
-  // 엔진이 UI의 district_needed notice에 기대고 있던 것을 끊는다.
-  if (!district) return { skip: true };
+  // 자치구를 모르면 조례 판정 자체가 불가능하다. 통과시키면 조례가 있는지도
+  // 모르는 사람에게 "지원 대상"이라고 말하게 되고, 반대로 `skip`으로 지우면
+  // 지원 제도가 있다는 것 자체가 안 보인다 — 1/4-C가 후자를 골랐고
+  // D-011 아래에 미결로 남겨 뒀던 자리다.
+  //
+  // 네 번째 상태 `미판정`이 그 미결을 닫는다(D-019 §6). 판정 이전이라는 것을
+  // 그대로 말하고, 사유가 무엇을 물어야 하는지를 가리킨다.
+  if (!district) {
+    return {
+      undetermined: true,
+      reason: "자치구를 알려주시면 지원 대상인지 확인해 드립니다",
+    };
+  }
 
   // 이 구가 이 항목을 지원하지 않으면 애초에 적용 대상 아님
   if (!district.support_items.includes(action.support_item)) {
@@ -42,16 +49,31 @@ function districtExclusion(action, district, state) {
   // 단, 이 구가 해당 항목을 제외 예외로 두면 통과 (양천: 심리·임시거처)
   if (district.exclusion_exempt_items.includes(action.support_item)) return null;
 
+  // `unknown`이면 판정을 못 한다 — 그런데 **그 구가 실제로 보는 키만**이다.
+  // 조례마다 보험 제외가 4변종이라 같은 `unknown`이 구에 따라 판정을 막기도
+  // 하고 아무 상관이 없기도 하다. 성북(none)은 보험을 안 보므로 모르는 채로도
+  // `해당`이 확정이고, 키 단위로 일괄 적용하면 그 구에서까지 안내가 사라진다.
+  //
+  // 확정 제외를 먼저 본다. `enrolled_dwelling` 구에서 본인 보험이 `true`면
+  // 건물 보험을 몰라도 제외가 확정이다 — 확정 사유를 불확실한 사유로 덮지
+  // 않는다(D-017 §3이 기한 도과에서 세운 것과 같은 원칙).
+  const unknownIns = { undetermined: true, reason: "화재보험 가입 여부에 따라 달라집니다" };
   switch (district.insurance_exclusion) {
     case "enrolled_self":
       if (state.insurance_self === true)
         return { excluded: true, reason: "본인 화재보험 가입자는 제외됩니다" };
+      if (state.insurance_self === "unknown")
+        return { ...unknownIns, reason: "본인 화재보험 가입 여부에 따라 달라집니다" };
       break;
     case "enrolled_dwelling":
       if (state.insurance_dwelling === true || state.insurance_self === true)
         return { excluded: true, reason: "해당 주택이 화재보험에 가입되어 있으면 제외됩니다" };
+      if (state.insurance_dwelling === "unknown" || state.insurance_self === "unknown")
+        return { ...unknownIns, reason: "그 주택의 화재보험 가입 여부에 따라 달라집니다" };
       break;
     case "compensated":
+      // compensated는 3상태 키가 아니다(q-compensated의 값은 true/false뿐).
+      // 여기에 `unknown` 가지가 생기면 설문부터 바뀐 것이다.
       if (state.compensated === true)
         return { excluded: true, reason: "보험금·보상금을 이미 받은 경우 제외됩니다" };
       break;
@@ -199,7 +221,14 @@ export function evaluate(state, data, now = Date.now()) {
       a.deadline_days ?? (a.ordinance_based ? district?.deadline_days : null) ?? null;
 
     let status = "해당", reason = null;
-    if (dx?.excluded) {
+    if (dx?.undetermined) {
+      // 네 번째 상태(D-019 §6). `제외`와 다르다 — 이건 판정 결과가 아니라
+      // 판정 이전이다. emergency_exception을 보지 않는 이유이기도 하다.
+      // 구청장 예외는 제외된 사람에게 열리는 문이고, 여기는 아직 제외인지
+      // 아닌지를 모른다. 자치구 미지정이면 district 자체가 null이다.
+      status = "미판정";
+      reason = dx.reason;
+    } else if (dx?.excluded) {
       status = district.emergency_exception ? "조건부" : "제외";
       reason = dx.reason;
     } else if (a.excluded_when && matches(a.excluded_when, s)) {
@@ -284,6 +313,10 @@ export function evaluate(state, data, now = Date.now()) {
       out.done.push({ ...r, status: "완료", status_if_pending: r.status });
       continue;
     }
+    // `미판정`도 여기로 온다. 새 버킷을 만들지 않는다(D-019 §6) —
+    // excluded는 "목록에서 빠졌지만 사라지지는 않은 것"을 모으는 자리이고
+    // 미판정이 정확히 그것이다. 버킷을 늘리면 UI가 자리를 하나 더 그려야
+    // 하는데 그럴 값이 없다. 무엇인지는 status가 말한다.
     if (r.status !== "해당") { out.excluded.push(r); continue; }
     if (r.blockedBy.length) { out.blocked.push(r); continue; }
     if (r.action.category === "대기") { out.waiting.push(r); continue; }
