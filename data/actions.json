@@ -306,7 +306,7 @@
     "source_grade": "해외공적",
     "source_url": "https://www.fsis.usda.gov/",
     "checked_at": "2026-08-26",
-    "when": "missed",
+    "when": "today",
     "summary": "정전 4시간이 지난 냉장·냉동식품은 폐기하세요.",
     "domain_group": "몸"
   },
@@ -1443,7 +1443,7 @@
     "domain_group": "책임과 분쟁",
     "category": "신청",
     "audience": "피해자",
-    "axis": "사실",
+    "axis": "제도",
     "when": "this_week",
     "timing_hours": null,
     "deadline_days": null,

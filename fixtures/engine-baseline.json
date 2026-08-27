@@ -35,22 +35,8 @@
       "+3h": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 4,
+            "count": 5,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -67,6 +53,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -320,22 +314,8 @@
       "+5d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 4,
+            "count": 5,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -352,6 +332,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -605,22 +593,8 @@
       "+14d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 4,
+            "count": 5,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -637,6 +611,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -890,22 +872,8 @@
       "+90d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 4,
+            "count": 5,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -922,6 +890,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -1175,22 +1151,8 @@
       "+1200d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 4,
+            "count": 5,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -1207,6 +1169,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -1484,22 +1454,8 @@
       "+3h": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -1516,6 +1472,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -1794,22 +1758,8 @@
       "+5d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -1826,6 +1776,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -2104,22 +2062,8 @@
       "+14d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -2136,6 +2080,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -2414,22 +2366,8 @@
       "+90d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -2446,6 +2384,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -2724,22 +2670,8 @@
       "+1200d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -2756,6 +2688,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -3058,22 +2998,8 @@
       "+3h": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -3090,6 +3016,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -3368,22 +3302,8 @@
       "+5d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -3400,6 +3320,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -3678,22 +3606,8 @@
       "+14d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -3710,6 +3624,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -3988,22 +3910,8 @@
       "+90d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -4020,6 +3928,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -4298,22 +4214,8 @@
       "+1200d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -4330,6 +4232,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -4631,22 +4541,8 @@
       "+3h": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 4,
+            "count": 5,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -4663,6 +4559,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -4908,22 +4812,8 @@
       "+5d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 4,
+            "count": 5,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -4940,6 +4830,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -5185,22 +5083,8 @@
       "+14d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 4,
+            "count": 5,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -5217,6 +5101,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -5462,22 +5354,8 @@
       "+90d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 4,
+            "count": 5,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -5494,6 +5372,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -5739,22 +5625,8 @@
       "+1200d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 4,
+            "count": 5,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -5771,6 +5643,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -6040,22 +5920,8 @@
       "+3h": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -6072,6 +5938,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -6366,22 +6240,8 @@
       "+5d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -6398,6 +6258,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -6692,22 +6560,8 @@
       "+14d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -6724,6 +6578,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -7018,22 +6880,8 @@
       "+90d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -7050,6 +6898,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -7344,22 +7200,8 @@
       "+1200d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -7376,6 +7218,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -7694,22 +7544,8 @@
       "+3h": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 7,
+            "count": 8,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -7726,6 +7562,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -8052,22 +7896,8 @@
       "+5d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 7,
+            "count": 8,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -8084,6 +7914,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -8410,22 +8248,8 @@
       "+14d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 7,
+            "count": 8,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -8442,6 +8266,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -8768,22 +8600,8 @@
       "+90d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 7,
+            "count": 8,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -8800,6 +8618,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -9126,22 +8952,8 @@
       "+1200d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 7,
+            "count": 8,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -9158,6 +8970,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -9508,22 +9328,8 @@
       "+3h": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -9540,6 +9346,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -9858,22 +9672,8 @@
       "+5d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -9890,6 +9690,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -10208,22 +10016,8 @@
       "+14d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -10240,6 +10034,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -10558,22 +10360,8 @@
       "+90d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -10590,6 +10378,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -10908,22 +10704,8 @@
       "+1200d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -10940,6 +10722,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -11282,22 +11072,8 @@
       "+3h": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 7,
+            "count": 8,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -11314,6 +11090,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -11648,22 +11432,8 @@
       "+5d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 7,
+            "count": 8,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -11680,6 +11450,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -12014,22 +11792,8 @@
       "+14d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 7,
+            "count": 8,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -12046,6 +11810,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -12380,22 +12152,8 @@
       "+90d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 7,
+            "count": 8,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -12412,6 +12170,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -12746,22 +12512,8 @@
       "+1200d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 7,
+            "count": 8,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -12778,6 +12530,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -13136,22 +12896,8 @@
       "+3h": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 4,
+            "count": 5,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -13168,6 +12914,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -13445,22 +13199,8 @@
       "+5d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 4,
+            "count": 5,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -13477,6 +13217,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -13754,22 +13502,8 @@
       "+14d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 4,
+            "count": 5,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -13786,6 +13520,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -14063,22 +13805,8 @@
       "+90d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 4,
+            "count": 5,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -14095,6 +13823,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -14372,22 +14108,8 @@
       "+1200d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 4,
+            "count": 5,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -14404,6 +14126,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -14705,22 +14435,8 @@
       "+3h": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 4,
+            "count": 5,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -14737,6 +14453,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -15004,22 +14728,8 @@
       "+5d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 4,
+            "count": 5,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -15036,6 +14746,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -15303,22 +15021,8 @@
       "+14d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 4,
+            "count": 5,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -15335,6 +15039,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -15602,22 +15314,8 @@
       "+90d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 4,
+            "count": 5,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -15634,6 +15332,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -15901,22 +15607,8 @@
       "+1200d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 4,
+            "count": 5,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -15933,6 +15625,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -16224,22 +15924,8 @@
       "+3h": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 5,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -16256,6 +15942,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -16528,22 +16222,8 @@
       "+5d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 5,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -16560,6 +16240,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -16832,22 +16520,8 @@
       "+14d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 5,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -16864,6 +16538,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -17136,22 +16818,8 @@
       "+90d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 5,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -17168,6 +16836,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -17440,22 +17116,8 @@
       "+1200d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 5,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -17472,6 +17134,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -17768,22 +17438,8 @@
       "+3h": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 4,
+            "count": 5,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -17800,6 +17456,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -18093,22 +17757,8 @@
       "+5d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 4,
+            "count": 5,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -18125,6 +17775,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -18418,22 +18076,8 @@
       "+14d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 4,
+            "count": 5,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -18450,6 +18094,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -18743,22 +18395,8 @@
       "+90d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 4,
+            "count": 5,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -18775,6 +18413,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -19068,22 +18714,8 @@
       "+1200d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 4,
+            "count": 5,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -19100,6 +18732,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -19417,22 +19057,8 @@
       "+3h": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 4,
+            "count": 5,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -19449,6 +19075,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -19692,22 +19326,8 @@
       "+5d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 4,
+            "count": 5,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -19724,6 +19344,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -19967,22 +19595,8 @@
       "+14d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 4,
+            "count": 5,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -19999,6 +19613,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -20242,22 +19864,8 @@
       "+90d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 4,
+            "count": 5,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -20274,6 +19882,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -20517,22 +20133,8 @@
       "+1200d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 4,
+            "count": 5,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -20549,6 +20151,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -20816,22 +20426,8 @@
       "+3h": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -20848,6 +20444,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -21158,22 +20762,8 @@
       "+5d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -21190,6 +20780,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -21500,22 +21098,8 @@
       "+14d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -21532,6 +21116,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -21842,22 +21434,8 @@
       "+90d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -21874,6 +21452,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -22184,22 +21770,8 @@
       "+1200d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -22216,6 +21788,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -22550,22 +22130,8 @@
       "+3h": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -22582,6 +22148,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -22710,7 +22284,7 @@
               {
                 "id": "recall-lookup",
                 "group": "책임과 분쟁",
-                "axis": "사실",
+                "axis": "제도",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false
@@ -22900,22 +22474,8 @@
       "+5d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -22932,6 +22492,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -23060,7 +22628,7 @@
               {
                 "id": "recall-lookup",
                 "group": "책임과 분쟁",
-                "axis": "사실",
+                "axis": "제도",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false
@@ -23250,22 +22818,8 @@
       "+14d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -23282,6 +22836,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -23410,7 +22972,7 @@
               {
                 "id": "recall-lookup",
                 "group": "책임과 분쟁",
-                "axis": "사실",
+                "axis": "제도",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false
@@ -23600,22 +23162,8 @@
       "+90d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -23632,6 +23180,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -23760,7 +23316,7 @@
               {
                 "id": "recall-lookup",
                 "group": "책임과 분쟁",
-                "axis": "사실",
+                "axis": "제도",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false
@@ -23950,22 +23506,8 @@
       "+1200d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -23982,6 +23524,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -24110,7 +23660,7 @@
               {
                 "id": "recall-lookup",
                 "group": "책임과 분쟁",
-                "axis": "사실",
+                "axis": "제도",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false
@@ -24324,22 +23874,8 @@
       "+3h": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -24356,6 +23892,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -24658,22 +24202,8 @@
       "+5d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -24690,6 +24220,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -24992,22 +24530,8 @@
       "+14d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -25024,6 +24548,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -25326,22 +24858,8 @@
       "+90d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -25358,6 +24876,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -25660,22 +25186,8 @@
       "+1200d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -25692,6 +25204,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -26018,22 +25538,8 @@
       "+3h": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -26050,6 +25556,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -26336,22 +25850,8 @@
       "+5d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -26368,6 +25868,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -26654,22 +26162,8 @@
       "+14d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -26686,6 +26180,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -26972,22 +26474,8 @@
       "+90d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -27004,6 +26492,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -27290,22 +26786,8 @@
       "+1200d": {
         "sections": [
           {
-            "key": "missed",
-            "count": 1,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              }
-            ]
-          },
-          {
             "key": "today",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -27322,6 +26804,14 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
               },
               {
                 "id": "ppe-powder",
