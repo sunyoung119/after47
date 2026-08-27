@@ -166,6 +166,10 @@ const bucketRow = (x) => ({
 // 내가 모르는 판정 경로가 생긴 것이므로 그때 이 결정을 다시 봐야 한다.
 const excludedRow = (x) => ({ ...bucketRow(x), reason: x.reason ?? null });
 
+// done 행에는 그 시점 placement가 계산한 when을 함께 남긴다 —
+// "원래 어느 블록 일이었나"를 UI가 보여줄 수 있어야 한다.
+const doneRow = (x) => ({ ...bucketRow(x), when: x.when, checkable: x.checkable === true });
+
 function capture(state, now) {
   const r = evaluate(state, data, now);
   return {
@@ -185,9 +189,12 @@ function capture(state, now) {
           // 3/4 재배치가 이 값을 입력으로 쓰기로 돼 있어 기록해 둔다.
           deadline_days: x.deadline_days ?? null,
           irreversible: x.action.irreversible === true,
+          // 금지(standing)만 false다. UI가 계산 없이 읽는다(D-018).
+          checkable: x.checkable === true,
         }))
       ),
     })),
+    done: r.done.map(doneRow),
     waiting: r.waiting.map(bucketRow),
     blocked: r.blocked.map(bucketRow),
     excluded: r.excluded.map(excludedRow),
@@ -307,7 +314,7 @@ function diffCase(before, after) {
   if (bo !== ao && bs.size === as.size)
     out.push(`    ▼ 섹션 순서\n        전: ${bo}\n        후: ${ao}`);
 
-  for (const bucket of ["waiting", "blocked", "excluded"]) {
+  for (const bucket of ["done", "waiting", "blocked", "excluded"]) {
     const lines = diffList(before[bucket], after[bucket], fmtBucket);
     if (!lines.length) continue;
     out.push(`    ▼ ${bucket}  ${(before[bucket] || []).length} → ${(after[bucket] || []).length}`);

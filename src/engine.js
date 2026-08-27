@@ -217,6 +217,7 @@ export function evaluate(state, data, now = Date.now()) {
     }
 
     const blockedBy = (a.depends_on || []).filter((id) => !done.has(id));
+    const whenNow = placement(a, s.elapsed_hours, deadlineDays);
     rows.push({
       action: a,
       status,
@@ -224,7 +225,9 @@ export function evaluate(state, data, now = Date.now()) {
       blockedBy,
       deadline_days: deadlineDays,
       // 3층 타임라인. 데이터의 when이 아니라 여기서 계산된 값이 화면 위치다(D-001)
-      when: placement(a, s.elapsed_hours, deadlineDays),
+      when: whenNow,
+      // 금지는 완료 개념이 없다. "전원 넣지 않기 ✓"는 이상하다(D-018).
+      checkable: whenNow !== "standing",
     });
   }
 
@@ -241,9 +244,17 @@ export function evaluate(state, data, now = Date.now()) {
     ["after_report", "조사서가 나온 뒤에"],
   ];
 
-  const out = { sections: [], waiting: [], blocked: [], excluded: [] };
+  const out = { sections: [], done: [], waiting: [], blocked: [], excluded: [] };
   const pool = [];
   for (const r of rows) {
+    // done이 어떤 판정보다도 먼저다 — excluded보다도(D-018).
+    // 양천에서 30일 안에 신청을 마치고 체크한 사람이 +90d에 열었을 때
+    // "기한이 지났습니다"가 아니라 "완료"를 봐야 한다.
+    // 체크는 사용자가 한 일의 기록이고 판정은 시스템의 추정이다.
+    //
+    // checkable을 함께 보는 것은 방어다. UI가 막겠지만 completed에
+    // standing 항목 id가 들어와도 무시하고 그 블록에 남긴다.
+    if (done.has(r.action.id) && r.checkable) { out.done.push(r); continue; }
     if (r.status !== "해당") { out.excluded.push(r); continue; }
     if (r.blockedBy.length) { out.blocked.push(r); continue; }
     if (r.action.category === "대기") { out.waiting.push(r); continue; }
