@@ -1,0 +1,43 @@
+flowchart TD
+    subgraph 입력
+      Q["questions.json<br/>17문항"] --> ST["state<br/>17개 키"]
+      URLD["?d= 자치구"] --> ST
+      COMP["completed[]<br/>완료 체크"] --> ST
+    end
+
+    ST --> DERIVE["deriveState()<br/>파생값 계산"]
+    DJ["districts.json<br/>자치구 5개"] --> DERIVE
+    DERIVE --> ST2["state + 파생 4개<br/>elapsed_hours<br/>district_residency<br/>district_insurance_exclusion<br/>district_has_ordinance"]
+
+    AJ["actions.json<br/>57개"] --> MATCH
+    ST2 --> MATCH["applies_when 매칭<br/>키=AND, 배열=OR"]
+
+    MATCH -->|안 맞음| GONE["결과에 없음"]
+    MATCH -->|맞음| EXC{"제외 조건에<br/>걸리나"}
+
+    EXC -->|아니오| OK["해당"]
+    EXC -->|걸림 + 긴급예외 있음| COND["조건부<br/>'구청에 문의'"]
+    EXC -->|걸림 + 예외 없음| OUT["제외<br/>사유 표시"]
+
+    OK --> DEP{"depends_on이<br/>다 끝났나"}
+    DEP -->|아니오| BLOCK["아직 못 함"]
+    DEP -->|예| CAT{"category"}
+
+    CAT -->|대기| WAIT["기다리는 중<br/>예상 소요일"]
+    CAT -->|기관자율| HIDE["화면에서 뺌"]
+    CAT -->|신청·판단| WHEN["when으로 배치"]
+
+    WHEN --> S1["혹시 아직 안 하셨다면"]
+    WHEN --> S2["오늘 하실 것"]
+    WHEN --> S3["당분간 하지 마실 것"]
+    WHEN --> S4["이번 주에"]
+    WHEN --> S5["계속 신경 쓸 것"]
+    WHEN --> S6["조사서 나온 뒤에"]
+
+    S1 & S2 & S3 & S4 & S5 & S6 --> GROUP["분야로 묶기<br/>몸 · 지낼 곳 · 집 정리<br/>서류 · 보험과 돈<br/>집주인과 계약 · 책임과 분쟁"]
+
+    style GONE fill:#eee
+    style HIDE fill:#eee
+    style COND fill:#fff4e5
+    style OUT fill:#fce8e6
+    style GROUP fill:#e6f4ea

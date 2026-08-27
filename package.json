@@ -1,0 +1,12 @@
+{
+  "name": "after47",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node test/engine.test.mjs && node test/questions.test.mjs && node test/storage.test.mjs",
+    "test:engine": "node test/engine.test.mjs",
+    "test:questions": "node test/questions.test.mjs",
+    "test:storage": "node test/storage.test.mjs"
+  }
+}

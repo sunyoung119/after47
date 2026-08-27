@@ -1,0 +1,38 @@
+flowchart TD
+    QR["화재조사관 명함 QR<br/>?d=mapo"] --> OPEN
+    WEB["검색·직접 방문<br/>주소만"] --> OPEN
+    KAKAO["예전에 저장해둔 주소<br/>?d=mapo&t=ab3k9m"] --> OPEN
+
+    OPEN["openSession()<br/>주소를 읽는다"] --> TOK{"?t= 토큰이<br/>유효한가"}
+
+    TOK -->|있다| LOAD["loadState(token)"]
+    TOK -->|없다| LAST{"이 기기에<br/>마지막 토큰이<br/>남아 있나"}
+    LAST -->|있다| LOAD
+    LAST -->|없다| NEW["newToken()<br/>새로 발급"]
+
+    LOAD --> DIST{"저장된<br/>자치구가 있나"}
+    NEW --> DIST
+    DIST -->|있다| WIN["저장값이 이긴다<br/>?d=와 다르면 알림"]
+    DIST -->|없다| HINT{"?d= 가<br/>쓸 만한가"}
+    HINT -->|유효| USE["힌트로 채운다"]
+    HINT -->|없거나 모르는 값| PICK["자치구 선택 화면"]
+
+    WIN --> SURVEY
+    USE --> SURVEY
+    PICK --> SURVEY
+
+    SURVEY["설문<br/>14~17문항<br/>ask_when으로 건너뛴다"] --> SAVE["saveState()<br/>답할 때마다"]
+    SAVE --> ENGINE["evaluate()"]
+    ENGINE --> SCREEN["결과 화면"]
+
+    SCREEN --> DONE["완료 체크"]
+    DONE --> SAVE
+
+    SCREEN -.->|며칠~몇 주 뒤| KAKAO
+    SCREEN -.->|조사서 받고<br/>답을 고침| SURVEY
+
+    style QR fill:#e8f0fe
+    style WEB fill:#e8f0fe
+    style KAKAO fill:#e8f0fe
+    style SCREEN fill:#fff4e5
+    style PICK fill:#fce8e6
