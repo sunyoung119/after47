@@ -61,6 +61,65 @@ function districtExclusion(action, district, state) {
   return null;
 }
 
+// ── 시한 만료 판정 (D-017 R2) ───────────────────────
+// timing_hours는 0보다 클 때만 만료 시각으로 쓴다. 0인 항목 6개 중
+// 하나도 "0시간 후 만료"라는 뜻이 아니다 — 넷은 standing(금지)이라
+// R0이 막고, 나머지 둘(photo-before-cleanup "치우기 전에",
+// scene-release "조사관에게 확인")은 즉시성의 표시다. 0을 만료로 읽으면
+// photo-before-cleanup이 irreversible이라 화재 3시간째에 missed로
+// 내려가고 D-006이 뒤집힌다. 한 필드에 두 뜻이 있다는 것은 D-017 §2에
+// 적어 두었다.
+function expiry(action, elapsedHours, deadlineDays) {
+  return {
+    timing:
+      action.timing_hours != null &&
+      action.timing_hours > 0 &&
+      elapsedHours > action.timing_hours,
+    deadline: deadlineDays != null && elapsedHours / 24 > deadlineDays,
+  };
+}
+
+// ── when 재배치 (D-017) ─────────────────────────────
+// 순수 함수다. `해당` 항목이 어느 블록에 들어가는지만 정한다.
+// deadline_days를 인자로 받는 이유는 조례 항목의 기한이 자치구에서
+// 오기 때문이다(행 수준 값).
+//
+// 제외 판정은 여기서 하지 않는다. excluded는 when이 아니라 status다.
+export function placement(action, elapsedHours, deadlineDays = null) {
+  if (action.when === "standing") return "standing";           // R0 금지는 안 움직인다
+  if (action.when === "after_report") return "after_report";   // R1 report_received로만
+
+  const e = expiry(action, elapsedHours, deadlineDays);        // R2
+  if (e.timing || e.deadline) {
+    return action.irreversible ? "missed" : action.when;       // R3 / R4
+  }
+  // R5 — 시간 필드가 없는 this_week만. 사실 축은 스케일이 짧아 먼저 닫힌다(D-001)
+  if (action.timing_hours == null && deadlineDays == null && action.when === "this_week") {
+    const limitDays = action.axis === "사실" ? 7 : 30;
+    if (elapsedHours / 24 > limitDays) return "anytime";
+  }
+  return action.when;
+}
+
+// ── 기한 도과 제외 (D-017 §3) ───────────────────────
+// 신청 기한이 지난 것은 제자리에도 missed에도 두지 않는다. 신청할 수
+// 없는 것을 "오늘 하실 것"에 두면 화면이 거짓말을 하고, missed는
+// irreversible 전용이다(원칙 2). D-011의 세 상태를 그대로 쓴다.
+//
+// 기산점은 화재일이다. 조례가 기산점을 화재일로 정하는지 피해 확정일·
+// 신고일로 정하는지 아직 확인하지 못해 문구에 헤지를 둔다 — 단정하면
+// 실제로 신청할 수 있는 사람을 돌려세운다(D-006).
+function deadlineExclusion(action, elapsedHours, deadlineDays, district) {
+  if (action.irreversible) return null;   // 시효는 R3이 missed로 가져간다
+  if (!expiry(action, elapsedHours, deadlineDays).deadline) return null;
+  return {
+    excluded: true,
+    reason: `신청 기한(${deadlineDays}일)이 지났을 수 있습니다 — ${
+      district ? district.name + " " : ""
+    }재난안전과에 문의하세요`,
+  };
+}
+
 // ── 파생 state ──────────────────────────────────────
 // 사용자에게 묻지 않고 데이터에서 나오는 값들.
 // 질문 계층(ask_when)도 이 값을 읽으므로 evaluate 바깥에서 쓸 수 있게 분리한다.
@@ -104,6 +163,10 @@ export function evaluate(state, data, now = Date.now()) {
     const dx = districtExclusion(a, district, s);
     if (dx?.skip) continue;
 
+    // 자치구 신청기한은 조례 기반 항목에만 적용된다
+    const deadlineDays =
+      a.deadline_days ?? (a.ordinance_based ? district?.deadline_days : null) ?? null;
+
     let status = "해당", reason = null;
     if (dx?.excluded) {
       status = district.emergency_exception ? "조건부" : "제외";
@@ -111,6 +174,15 @@ export function evaluate(state, data, now = Date.now()) {
     } else if (a.excluded_when && matches(a.excluded_when, s)) {
       status = a.exception_available ? "조건부" : "제외";
       reason = a.exclusion_reason;
+    } else {
+      // 자격 제외를 통과한 것만 기한을 본다. 자격 제외는 시간과 무관하게
+      // 확정적이고 기한 도과는 기산점이 불확실해 헤지가 붙는다 —
+      // 확정 사유를 불확실한 사유로 덮으면 정보가 나빠진다(D-017 §3).
+      const dl = deadlineExclusion(a, s.elapsed_hours, deadlineDays, district);
+      if (dl) {
+        status = district?.emergency_exception ? "조건부" : "제외";
+        reason = dl.reason;
+      }
     }
 
     const blockedBy = (a.depends_on || []).filter((id) => !done.has(id));
@@ -119,8 +191,9 @@ export function evaluate(state, data, now = Date.now()) {
       status,
       reason,
       blockedBy,
-      // 자치구 신청기한은 조례 기반 항목에만 적용된다
-      deadline_days: a.deadline_days ?? (a.ordinance_based ? district?.deadline_days : null) ?? null,
+      deadline_days: deadlineDays,
+      // 3층 타임라인. 데이터의 when이 아니라 여기서 계산된 값이 화면 위치다(D-001)
+      when: placement(a, s.elapsed_hours, deadlineDays),
     });
   }
 
@@ -150,7 +223,7 @@ export function evaluate(state, data, now = Date.now()) {
     (a.action.timing_hours ?? 9999) - (b.action.timing_hours ?? 9999);
 
   for (const [key, label] of SECTIONS) {
-    const items = pool.filter((r) => r.action.when === key);
+    const items = pool.filter((r) => r.when === key);
     if (!items.length) continue;
     // 분야로 묶기 — 등장 순서를 유지해 순위가 뒤집히지 않게 한다
     const groups = [];

@@ -314,8 +314,22 @@
       "+5d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 5,
+            "count": 4,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -332,14 +346,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -593,8 +599,22 @@
       "+14d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 5,
+            "count": 4,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -611,14 +631,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -872,8 +884,22 @@
       "+90d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 5,
+            "count": 4,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -890,14 +916,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -956,9 +974,25 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 6,
+            "key": "anytime",
+            "count": 11,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -1003,28 +1037,6 @@
                 "id": "no-ordinance-fallback",
                 "group": "지낼 곳",
                 "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 5,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
-                "axis": "사실",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false
@@ -1151,8 +1163,22 @@
       "+1200d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 5,
+            "count": 4,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -1169,14 +1195,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -1235,9 +1253,25 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 6,
+            "key": "anytime",
+            "count": 11,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -1282,28 +1316,6 @@
                 "id": "no-ordinance-fallback",
                 "group": "지낼 곳",
                 "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 5,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
-                "axis": "사실",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false
@@ -1758,8 +1770,22 @@
       "+5d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -1776,14 +1802,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -2062,8 +2080,22 @@
       "+14d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -2080,14 +2112,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -2366,8 +2390,22 @@
       "+90d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -2384,14 +2422,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -2466,9 +2496,33 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 6,
+            "key": "anytime",
+            "count": 11,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "support-psych",
+                "group": "몸",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -2505,36 +2559,6 @@
                 "id": "no-personal-insurance-building-path",
                 "group": "보험과 돈",
                 "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "support-psych",
-                "group": "몸",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 5,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
-                "axis": "사실",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false
@@ -2670,8 +2694,22 @@
       "+1200d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -2688,14 +2726,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -2770,9 +2800,33 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 6,
+            "key": "anytime",
+            "count": 11,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "support-psych",
+                "group": "몸",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -2809,36 +2863,6 @@
                 "id": "no-personal-insurance-building-path",
                 "group": "보험과 돈",
                 "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "support-psych",
-                "group": "몸",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 5,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
-                "axis": "사실",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false
@@ -3302,8 +3326,22 @@
       "+5d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -3320,14 +3358,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -3606,8 +3636,22 @@
       "+14d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -3624,14 +3668,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -3910,8 +3946,22 @@
       "+90d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -3928,14 +3978,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -4010,9 +4052,33 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 6,
+            "key": "anytime",
+            "count": 11,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "support-psych",
+                "group": "몸",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -4049,36 +4115,6 @@
                 "id": "no-personal-insurance-building-path",
                 "group": "보험과 돈",
                 "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "support-psych",
-                "group": "몸",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 5,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
-                "axis": "사실",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false
@@ -4214,8 +4250,22 @@
       "+1200d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -4232,14 +4282,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -4314,9 +4356,33 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 6,
+            "key": "anytime",
+            "count": 11,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "support-psych",
+                "group": "몸",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -4353,36 +4419,6 @@
                 "id": "no-personal-insurance-building-path",
                 "group": "보험과 돈",
                 "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "support-psych",
-                "group": "몸",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 5,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
-                "axis": "사실",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false
@@ -4812,8 +4848,22 @@
       "+5d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 5,
+            "count": 4,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -4830,14 +4880,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -5083,8 +5125,22 @@
       "+14d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 5,
+            "count": 4,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -5101,14 +5157,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -5354,8 +5402,22 @@
       "+90d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 5,
+            "count": 4,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -5372,14 +5434,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -5438,9 +5492,25 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 5,
+            "key": "anytime",
+            "count": 10,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -5477,28 +5547,6 @@
                 "id": "no-personal-insurance-building-path",
                 "group": "보험과 돈",
                 "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 5,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
-                "axis": "사실",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false
@@ -5625,8 +5673,22 @@
       "+1200d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 5,
+            "count": 4,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -5643,14 +5705,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -5709,9 +5763,25 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 5,
+            "key": "anytime",
+            "count": 10,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -5748,28 +5818,6 @@
                 "id": "no-personal-insurance-building-path",
                 "group": "보험과 돈",
                 "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 5,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
-                "axis": "사실",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false
@@ -6240,8 +6288,22 @@
       "+5d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -6258,14 +6320,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -6560,8 +6614,22 @@
       "+14d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -6578,14 +6646,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -6880,8 +6940,22 @@
       "+90d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -6898,14 +6972,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -6988,9 +7054,33 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 7,
+            "key": "anytime",
+            "count": 13,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "support-psych",
+                "group": "몸",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -7016,6 +7106,14 @@
                 "irreversible": false
               },
               {
+                "id": "insurance-claim-limitation",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": 1095,
+                "irreversible": true
+              },
+              {
                 "id": "building-group-fire-insurance",
                 "group": "보험과 돈",
                 "axis": "제도",
@@ -7038,44 +7136,6 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "support-psych",
-                "group": "몸",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 6,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "insurance-claim-limitation",
-                "group": "보험과 돈",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": 1095,
-                "irreversible": true
               },
               {
                 "id": "legal-aid-klac",
@@ -7200,8 +7260,30 @@
       "+1200d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 2,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              },
+              {
+                "id": "insurance-claim-limitation",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": 1095,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -7218,14 +7300,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -7308,9 +7382,33 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 7,
+            "key": "anytime",
+            "count": 12,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "support-psych",
+                "group": "몸",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -7358,44 +7456,6 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "support-psych",
-                "group": "몸",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 6,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "insurance-claim-limitation",
-                "group": "보험과 돈",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": 1095,
-                "irreversible": true
               },
               {
                 "id": "legal-aid-klac",
@@ -7896,8 +7956,22 @@
       "+5d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 8,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -7914,14 +7988,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -8248,8 +8314,22 @@
       "+14d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 8,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -8266,14 +8346,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -8357,7 +8429,7 @@
           },
           {
             "key": "this_week",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "fire-cert",
@@ -8406,20 +8478,12 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "water-damage-appears-later",
-                "group": "집 정리",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
               }
             ]
           },
           {
             "key": "anytime",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "smoke-inhalation-watch",
@@ -8432,6 +8496,14 @@
               {
                 "id": "cleanup-exposure-watch",
                 "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "water-damage-appears-later",
+                "group": "집 정리",
                 "axis": "사실",
                 "timing_hours": null,
                 "deadline_days": null,
@@ -8600,8 +8672,22 @@
       "+90d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 8,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -8618,14 +8704,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -8708,9 +8786,33 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 7,
+            "key": "anytime",
+            "count": 13,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "support-psych",
+                "group": "몸",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -8752,38 +8854,8 @@
                 "irreversible": false
               },
               {
-                "id": "support-psych",
-                "group": "몸",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
                 "id": "water-damage-appears-later",
                 "group": "집 정리",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 6,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
                 "axis": "사실",
                 "timing_hours": null,
                 "deadline_days": null,
@@ -8952,8 +9024,22 @@
       "+1200d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 8,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -8970,14 +9056,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -9060,9 +9138,33 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 7,
+            "key": "anytime",
+            "count": 13,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "support-psych",
+                "group": "몸",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -9104,38 +9206,8 @@
                 "irreversible": false
               },
               {
-                "id": "support-psych",
-                "group": "몸",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
                 "id": "water-damage-appears-later",
                 "group": "집 정리",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 6,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
                 "axis": "사실",
                 "timing_hours": null,
                 "deadline_days": null,
@@ -9672,8 +9744,22 @@
       "+5d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -9690,14 +9776,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -10016,8 +10094,22 @@
       "+14d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -10034,14 +10126,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -10125,7 +10209,7 @@
           },
           {
             "key": "this_week",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "fire-cert",
@@ -10174,20 +10258,12 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "water-damage-appears-later",
-                "group": "집 정리",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
               }
             ]
           },
           {
             "key": "anytime",
-            "count": 5,
+            "count": 6,
             "items": [
               {
                 "id": "smoke-inhalation-watch",
@@ -10200,6 +10276,14 @@
               {
                 "id": "cleanup-exposure-watch",
                 "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "water-damage-appears-later",
+                "group": "집 정리",
                 "axis": "사실",
                 "timing_hours": null,
                 "deadline_days": null,
@@ -10360,8 +10444,22 @@
       "+90d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -10378,14 +10476,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -10468,9 +10558,33 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 7,
+            "key": "anytime",
+            "count": 12,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "support-psych",
+                "group": "몸",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -10512,38 +10626,8 @@
                 "irreversible": false
               },
               {
-                "id": "support-psych",
-                "group": "몸",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
                 "id": "water-damage-appears-later",
                 "group": "집 정리",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 5,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
                 "axis": "사실",
                 "timing_hours": null,
                 "deadline_days": null,
@@ -10704,8 +10788,22 @@
       "+1200d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -10722,14 +10820,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -10812,9 +10902,33 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 7,
+            "key": "anytime",
+            "count": 12,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "support-psych",
+                "group": "몸",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -10856,38 +10970,8 @@
                 "irreversible": false
               },
               {
-                "id": "support-psych",
-                "group": "몸",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
                 "id": "water-damage-appears-later",
                 "group": "집 정리",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 5,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
                 "axis": "사실",
                 "timing_hours": null,
                 "deadline_days": null,
@@ -11432,8 +11516,22 @@
       "+5d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 8,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -11450,14 +11548,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -11792,8 +11882,22 @@
       "+14d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 8,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -11810,14 +11914,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -11909,7 +12005,7 @@
           },
           {
             "key": "this_week",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "fire-cert",
@@ -11958,20 +12054,12 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "water-damage-appears-later",
-                "group": "집 정리",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
               }
             ]
           },
           {
             "key": "anytime",
-            "count": 6,
+            "count": 7,
             "items": [
               {
                 "id": "smoke-inhalation-watch",
@@ -11984,6 +12072,14 @@
               {
                 "id": "cleanup-exposure-watch",
                 "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "water-damage-appears-later",
+                "group": "집 정리",
                 "axis": "사실",
                 "timing_hours": null,
                 "deadline_days": null,
@@ -12152,8 +12248,22 @@
       "+90d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 8,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -12170,14 +12280,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -12268,9 +12370,33 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 7,
+            "key": "anytime",
+            "count": 13,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "support-psych",
+                "group": "몸",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -12312,38 +12438,8 @@
                 "irreversible": false
               },
               {
-                "id": "support-psych",
-                "group": "몸",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
                 "id": "water-damage-appears-later",
                 "group": "집 정리",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 6,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
                 "axis": "사실",
                 "timing_hours": null,
                 "deadline_days": null,
@@ -12512,8 +12608,22 @@
       "+1200d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 8,
+            "count": 7,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -12530,14 +12640,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -12628,9 +12730,33 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 7,
+            "key": "anytime",
+            "count": 13,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "support-psych",
+                "group": "몸",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -12672,38 +12798,8 @@
                 "irreversible": false
               },
               {
-                "id": "support-psych",
-                "group": "몸",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
                 "id": "water-damage-appears-later",
                 "group": "집 정리",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 6,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
                 "axis": "사실",
                 "timing_hours": null,
                 "deadline_days": null,
@@ -13199,8 +13295,22 @@
       "+5d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 5,
+            "count": 4,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -13217,14 +13327,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -13502,8 +13604,22 @@
       "+14d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 5,
+            "count": 4,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -13520,14 +13636,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -13805,8 +13913,22 @@
       "+90d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 5,
+            "count": 4,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -13823,14 +13945,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -13889,9 +14003,25 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 5,
+            "key": "anytime",
+            "count": 10,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -13928,28 +14058,6 @@
                 "id": "no-personal-insurance-building-path",
                 "group": "보험과 돈",
                 "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 5,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
-                "axis": "사실",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false
@@ -14108,8 +14216,22 @@
       "+1200d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 5,
+            "count": 4,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -14126,14 +14248,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -14192,9 +14306,25 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 5,
+            "key": "anytime",
+            "count": 10,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -14231,28 +14361,6 @@
                 "id": "no-personal-insurance-building-path",
                 "group": "보험과 돈",
                 "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 5,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
-                "axis": "사실",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false
@@ -14728,8 +14836,22 @@
       "+5d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 5,
+            "count": 4,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -14746,14 +14868,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -15021,8 +15135,22 @@
       "+14d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 5,
+            "count": 4,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -15039,14 +15167,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -15314,8 +15434,22 @@
       "+90d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 5,
+            "count": 4,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -15332,14 +15466,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -15398,9 +15524,25 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 5,
+            "key": "anytime",
+            "count": 10,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -15437,28 +15579,6 @@
                 "id": "no-personal-insurance-building-path",
                 "group": "보험과 돈",
                 "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 5,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
-                "axis": "사실",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false
@@ -15607,8 +15727,22 @@
       "+1200d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 5,
+            "count": 4,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -15625,14 +15759,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -15691,9 +15817,25 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 5,
+            "key": "anytime",
+            "count": 10,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -15730,28 +15872,6 @@
                 "id": "no-personal-insurance-building-path",
                 "group": "보험과 돈",
                 "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 5,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
-                "axis": "사실",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false
@@ -16222,8 +16342,22 @@
       "+5d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 6,
+            "count": 5,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -16240,14 +16374,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -16520,8 +16646,22 @@
       "+14d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 6,
+            "count": 5,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -16538,14 +16678,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -16818,8 +16950,22 @@
       "+90d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 6,
+            "count": 4,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -16838,27 +16984,11 @@
                 "irreversible": false
               },
               {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              },
-              {
                 "id": "ppe-powder",
                 "group": "몸",
                 "axis": "사실",
                 "timing_hours": 6,
                 "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "support-housing",
-                "group": "지낼 곳",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": 30,
                 "irreversible": false
               },
               {
@@ -16910,9 +17040,25 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 6,
+            "key": "anytime",
+            "count": 10,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -16949,36 +17095,6 @@
                 "id": "no-personal-insurance-building-path",
                 "group": "보험과 돈",
                 "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "support-psych",
-                "group": "몸",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": 30,
-                "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 5,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
-                "axis": "사실",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false
@@ -17102,6 +17218,13 @@
         ],
         "excluded": [
           {
+            "id": "support-psych",
+            "status": "제외",
+            "blocked_by": [],
+            "deadline_days": 30,
+            "reason": "신청 기한(30일)이 지났을 수 있습니다 — 양천구 재난안전과에 문의하세요"
+          },
+          {
             "id": "support-waste",
             "status": "제외",
             "blocked_by": [
@@ -17110,14 +17233,35 @@
             ],
             "deadline_days": 30,
             "reason": "보험금·보상금을 이미 받은 경우 제외됩니다"
+          },
+          {
+            "id": "support-housing",
+            "status": "제외",
+            "blocked_by": [],
+            "deadline_days": 30,
+            "reason": "신청 기한(30일)이 지났을 수 있습니다 — 양천구 재난안전과에 문의하세요"
           }
         ]
       },
       "+1200d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 6,
+            "count": 4,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -17136,27 +17280,11 @@
                 "irreversible": false
               },
               {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
-              },
-              {
                 "id": "ppe-powder",
                 "group": "몸",
                 "axis": "사실",
                 "timing_hours": 6,
                 "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "support-housing",
-                "group": "지낼 곳",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": 30,
                 "irreversible": false
               },
               {
@@ -17208,9 +17336,25 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 6,
+            "key": "anytime",
+            "count": 10,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -17247,36 +17391,6 @@
                 "id": "no-personal-insurance-building-path",
                 "group": "보험과 돈",
                 "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "support-psych",
-                "group": "몸",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": 30,
-                "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 5,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
-                "axis": "사실",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false
@@ -17400,6 +17514,13 @@
         ],
         "excluded": [
           {
+            "id": "support-psych",
+            "status": "제외",
+            "blocked_by": [],
+            "deadline_days": 30,
+            "reason": "신청 기한(30일)이 지났을 수 있습니다 — 양천구 재난안전과에 문의하세요"
+          },
+          {
             "id": "support-waste",
             "status": "제외",
             "blocked_by": [
@@ -17408,6 +17529,13 @@
             ],
             "deadline_days": 30,
             "reason": "보험금·보상금을 이미 받은 경우 제외됩니다"
+          },
+          {
+            "id": "support-housing",
+            "status": "제외",
+            "blocked_by": [],
+            "deadline_days": 30,
+            "reason": "신청 기한(30일)이 지났을 수 있습니다 — 양천구 재난안전과에 문의하세요"
           }
         ]
       }
@@ -17757,8 +17885,22 @@
       "+5d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 5,
+            "count": 4,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -17775,14 +17917,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -18076,8 +18210,22 @@
       "+14d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 5,
+            "count": 4,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -18094,14 +18242,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -18395,8 +18535,22 @@
       "+90d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 5,
+            "count": 4,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -18413,14 +18567,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -18479,9 +18625,25 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 5,
+            "key": "anytime",
+            "count": 12,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -18515,36 +18677,6 @@
                 "irreversible": false
               },
               {
-                "id": "building-group-fire-insurance",
-                "group": "보험과 돈",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 7,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
                 "id": "insurance-claim-limitation",
                 "group": "보험과 돈",
                 "axis": "제도",
@@ -18554,6 +18686,14 @@
               },
               {
                 "id": "financial-dispute-mediation",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "building-group-fire-insurance",
                 "group": "보험과 돈",
                 "axis": "제도",
                 "timing_hours": null,
@@ -18714,8 +18854,30 @@
       "+1200d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 2,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              },
+              {
+                "id": "insurance-claim-limitation",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": 1095,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 5,
+            "count": 4,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -18732,14 +18894,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -18798,9 +18952,25 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 5,
+            "key": "anytime",
+            "count": 11,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -18834,45 +19004,15 @@
                 "irreversible": false
               },
               {
-                "id": "building-group-fire-insurance",
-                "group": "보험과 돈",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 7,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "insurance-claim-limitation",
-                "group": "보험과 돈",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": 1095,
-                "irreversible": true
-              },
-              {
                 "id": "financial-dispute-mediation",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "building-group-fire-insurance",
                 "group": "보험과 돈",
                 "axis": "제도",
                 "timing_hours": null,
@@ -19326,8 +19466,22 @@
       "+5d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 5,
+            "count": 4,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -19344,14 +19498,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -19595,8 +19741,22 @@
       "+14d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 5,
+            "count": 4,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -19613,14 +19773,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -19864,8 +20016,22 @@
       "+90d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 5,
+            "count": 4,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -19882,14 +20048,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -19948,9 +20106,25 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 4,
+            "key": "anytime",
+            "count": 8,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -19979,28 +20153,6 @@
                 "id": "no-personal-insurance-building-path",
                 "group": "보험과 돈",
                 "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 4,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
-                "axis": "사실",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false
@@ -20133,8 +20285,22 @@
       "+1200d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 5,
+            "count": 4,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -20151,14 +20317,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -20217,9 +20375,25 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 4,
+            "key": "anytime",
+            "count": 8,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -20248,28 +20422,6 @@
                 "id": "no-personal-insurance-building-path",
                 "group": "보험과 돈",
                 "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 4,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
-                "axis": "사실",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false
@@ -20762,8 +20914,22 @@
       "+5d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -20780,14 +20946,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -21098,8 +21256,22 @@
       "+14d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -21116,14 +21288,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -21199,7 +21363,7 @@
           },
           {
             "key": "this_week",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "fire-cert",
@@ -21248,20 +21412,12 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "water-damage-appears-later",
-                "group": "집 정리",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
               }
             ]
           },
           {
             "key": "anytime",
-            "count": 5,
+            "count": 6,
             "items": [
               {
                 "id": "smoke-inhalation-watch",
@@ -21274,6 +21430,14 @@
               {
                 "id": "cleanup-exposure-watch",
                 "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "water-damage-appears-later",
+                "group": "집 정리",
                 "axis": "사실",
                 "timing_hours": null,
                 "deadline_days": null,
@@ -21434,8 +21598,22 @@
       "+90d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -21452,14 +21630,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -21534,9 +21704,33 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 7,
+            "key": "anytime",
+            "count": 12,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "support-psych",
+                "group": "몸",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -21578,38 +21772,8 @@
                 "irreversible": false
               },
               {
-                "id": "support-psych",
-                "group": "몸",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
                 "id": "water-damage-appears-later",
                 "group": "집 정리",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 5,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
                 "axis": "사실",
                 "timing_hours": null,
                 "deadline_days": null,
@@ -21770,8 +21934,22 @@
       "+1200d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -21788,14 +21966,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -21870,9 +22040,33 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 7,
+            "key": "anytime",
+            "count": 12,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "support-psych",
+                "group": "몸",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -21914,38 +22108,8 @@
                 "irreversible": false
               },
               {
-                "id": "support-psych",
-                "group": "몸",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
                 "id": "water-damage-appears-later",
                 "group": "집 정리",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 5,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
                 "axis": "사실",
                 "timing_hours": null,
                 "deadline_days": null,
@@ -22474,8 +22638,22 @@
       "+5d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -22492,14 +22670,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -22818,8 +22988,22 @@
       "+14d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -22836,14 +23020,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -23162,8 +23338,22 @@
       "+90d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -23180,14 +23370,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -23262,9 +23444,33 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 7,
+            "key": "anytime",
+            "count": 13,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "support-psych",
+                "group": "몸",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -23306,12 +23512,12 @@
                 "irreversible": false
               },
               {
-                "id": "support-psych",
-                "group": "몸",
+                "id": "product-claim-limitation",
+                "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
+                "deadline_days": 1095,
+                "irreversible": true
               },
               {
                 "id": "recall-lookup",
@@ -23320,36 +23526,6 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 6,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "product-claim-limitation",
-                "group": "책임과 분쟁",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": 1095,
-                "irreversible": true
               },
               {
                 "id": "legal-aid-klac",
@@ -23506,8 +23682,30 @@
       "+1200d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 2,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              },
+              {
+                "id": "product-claim-limitation",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": 1095,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -23524,14 +23722,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -23606,9 +23796,33 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 7,
+            "key": "anytime",
+            "count": 12,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "support-psych",
+                "group": "몸",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -23650,50 +23864,12 @@
                 "irreversible": false
               },
               {
-                "id": "support-psych",
-                "group": "몸",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
                 "id": "recall-lookup",
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 6,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "product-claim-limitation",
-                "group": "책임과 분쟁",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": 1095,
-                "irreversible": true
               },
               {
                 "id": "legal-aid-klac",
@@ -24202,8 +24378,22 @@
       "+5d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -24220,14 +24410,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -24530,8 +24712,22 @@
       "+14d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -24548,14 +24744,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -24858,8 +25046,22 @@
       "+90d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -24876,14 +25078,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -24958,9 +25152,33 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 6,
+            "key": "anytime",
+            "count": 11,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "support-psych",
+                "group": "몸",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -24997,36 +25215,6 @@
                 "id": "no-personal-insurance-building-path",
                 "group": "보험과 돈",
                 "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "support-psych",
-                "group": "몸",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 5,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
-                "axis": "사실",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false
@@ -25186,8 +25374,22 @@
       "+1200d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -25204,14 +25406,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -25286,9 +25480,33 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 6,
+            "key": "anytime",
+            "count": 11,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "support-psych",
+                "group": "몸",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -25325,36 +25543,6 @@
                 "id": "no-personal-insurance-building-path",
                 "group": "보험과 돈",
                 "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "support-psych",
-                "group": "몸",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 5,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
-                "axis": "사실",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false
@@ -25850,8 +26038,22 @@
       "+5d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -25868,14 +26070,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -26162,8 +26356,22 @@
       "+14d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -26180,14 +26388,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -26474,8 +26674,22 @@
       "+90d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -26492,14 +26706,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -26574,9 +26780,33 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 6,
+            "key": "anytime",
+            "count": 11,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "support-psych",
+                "group": "몸",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -26613,36 +26843,6 @@
                 "id": "no-personal-insurance-building-path",
                 "group": "보험과 돈",
                 "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "support-psych",
-                "group": "몸",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 5,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
-                "axis": "사실",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false
@@ -26786,8 +26986,22 @@
       "+1200d": {
         "sections": [
           {
+            "key": "missed",
+            "count": 1,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true
+              }
+            ]
+          },
+          {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "items": [
               {
                 "id": "photo-before-cleanup",
@@ -26804,14 +27018,6 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false
-              },
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true
               },
               {
                 "id": "ppe-powder",
@@ -26886,9 +27092,33 @@
             ]
           },
           {
-            "key": "this_week",
-            "count": 6,
+            "key": "anytime",
+            "count": 11,
             "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
+              {
+                "id": "support-psych",
+                "group": "몸",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false
+              },
               {
                 "id": "fire-cert",
                 "group": "서류",
@@ -26925,36 +27155,6 @@
                 "id": "no-personal-insurance-building-path",
                 "group": "보험과 돈",
                 "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "support-psych",
-                "group": "몸",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 5,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
-                "axis": "사실",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false
