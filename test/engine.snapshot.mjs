@@ -52,6 +52,7 @@ const BASE = {
   water_damage_role: "none",
   adjuster_present: false,
   product_maker_contacted: false,
+  report_received: false,
   completed: [],
 };
 
@@ -161,6 +162,8 @@ function capture(state, now) {
     sections: r.sections.map((sec) => ({
       key: sec.key,
       count: sec.count,
+      // after_report만 조건부다(조사서 수령). 나머지는 항상 true.
+      unlocked: sec.unlocked,
       // groups를 화면 순서 그대로 편다. group을 항목에 붙여 경계를 보존한다.
       items: sec.groups.flatMap((g) =>
         g.items.map((x) => ({
@@ -276,6 +279,9 @@ function diffCase(before, after) {
   for (const key of [...new Set([...bs.keys(), ...as.keys()])]) {
     const b = bs.get(key), a = as.get(key);
     const label = `${SECTION_LABEL[key] ?? key} (${key})`;
+    if (b && a && b.unlocked !== a.unlocked) {
+      out.push(`    ▼ ${label}  ${b.unlocked ? "활성" : "잠김"} → ${a.unlocked ? "활성" : "잠김"}`);
+    }
     if (!b) { out.push(`    ▼ ${label}  섹션이 새로 생김 (${a.count}건)`);
       a.items.forEach((x) => out.push(`      + ${fmt(x)}`)); continue; }
     if (!a) { out.push(`    ▼ ${label}  섹션이 사라짐 (${b.count}건)`);
