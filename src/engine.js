@@ -131,6 +131,9 @@ function deadlineExclusion(action, elapsedHours, deadlineDays, district) {
 // Date를 넘기므로 한쪽으로 강제하면 호출부마다 변환이 흩어진다.
 export function deriveState(state, data, now = Date.now()) {
   const district = (data.districts || []).find((d) => d.id === state.district) || null;
+  const elapsed = state.fire_at
+    ? Math.floor((+new Date(now) - new Date(state.fire_at)) / 36e5)
+    : 0;
   return {
     ...state,
     // 수손 가해·피해를 동시에 겪는 경우가 있다. both는 양쪽 조건에 모두 걸리게 한다.
@@ -139,10 +142,27 @@ export function deriveState(state, data, now = Date.now()) {
     district_has_ordinance: district ? district.has_ordinance : null,
     district_residency: district ? district.residency : null,
     district_insurance_exclusion: district ? district.insurance_exclusion : null,
-    elapsed_hours: state.fire_at
-      ? Math.floor((+new Date(now) - new Date(state.fire_at)) / 36e5)
-      : 0,
+    elapsed_hours: elapsed,
+    elapsed_bucket: bucketOf(elapsed),
   };
+}
+
+// D-017 §1. 경계 4h·48h·30d·1095d는 데이터에 실재하는 값이고
+// 7d만 임의다(this_week가 가리키는 기간일 뿐 근거가 없다).
+//
+// **재배치는 이 키를 쓰지 않는다.** placement는 항목마다 자기 시간 필드와
+// elapsed_hours를 직접 비교한다 — 구간으로 뭉개면 같은 구간 안의 4시간과
+// 24시간이 구별되지 않는다. 이 키의 소비자는 ask_when 하나다.
+// 데이터의 조건은 범위 비교를 못 하므로(D-010) 시점별 설문 분할은
+// 이산값을 배열 OR로 받아야 한다.
+function bucketOf(h) {
+  const d = h / 24;
+  if (h < 4) return "immediate";
+  if (h < 48) return "first_hours";
+  if (d < 7) return "first_week";
+  if (d < 30) return "first_month";
+  if (d < 1095) return "months";
+  return "years";
 }
 
 // ── 평가 ────────────────────────────────────────────
@@ -154,6 +174,17 @@ export function evaluate(state, data, now = Date.now()) {
 
   const s = deriveState(state, data, now);
   const done = new Set(state.completed || []);
+
+  // 조사서를 받았으면 "조사서를 신청하세요"는 화면에서 사라진다(결정 2).
+  // 그런데 blocked 판정은 completed 배열만 보므로, 사라진 항목은 체크할
+  // 수도 없고 거기 매달린 넷은 영원히 blocked가 된다 — 조사서를 받은
+  // 사람이 정확히 그것들을 봐야 하는 사람인데.
+  // 조사서가 손에 있다는 것이 그 신청의 목적 달성이므로 충족으로 본다.
+  //
+  // **이 규칙은 investigation-report 한 항목에만 적용된다.**
+  // "applies 안 되는 선행은 충족으로 본다"로 일반화하지 마라 —
+  // scene-release가 안 뜨는 사람의 청소 금지가 그 일반화에서 풀린다.
+  if (s.report_received === true) done.add("investigation-report");
 
   const rows = [];
   for (const a of actions) {
@@ -232,7 +263,14 @@ export function evaluate(state, data, now = Date.now()) {
       if (g) g.items.push(r);
       else groups.push({ group: r.action.domain_group, items: [r] });
     }
-    out.sections.push({ key, label, count: items.length, groups });
+    // 조사서를 받아야 뜻이 생기는 블록인지. after_report 항목은 재배치하지
+    // 않고(결정 1) 여기 그대로 두되, "나오면 할 수 있는 것"과 "이제 할 수
+    // 있는 것" 중 무엇으로 부를지는 UI가 이 값으로 정한다.
+    //
+    // 모든 섹션에 넣는다. 섹션 객체의 모양이 일정해야 UI가 분기 없이 읽고,
+    // 나중에 다른 블록에 잠금 조건이 생겨도 구조를 안 바꾼다.
+    const unlocked = key === "after_report" ? s.report_received === true : true;
+    out.sections.push({ key, label, count: items.length, unlocked, groups });
   }
 
   return out;
