@@ -1341,9 +1341,7 @@
     "excluded_when": null,
     "exception_available": false,
     "exclusion_reason": null,
-    "depends_on": [
-      "preserve-product"
-    ],
+    "depends_on": [],
     "blocks_reason": null,
     "knowledge_level": "전문",
     "source_grade": "공적",
@@ -1399,9 +1397,7 @@
     "excluded_when": null,
     "exception_available": false,
     "exclusion_reason": null,
-    "depends_on": [
-      "preserve-product"
-    ],
+    "depends_on": [],
     "blocks_reason": null,
     "knowledge_level": "전문",
     "source_grade": "공적",
@@ -1429,9 +1425,7 @@
     "excluded_when": null,
     "exception_available": false,
     "exclusion_reason": null,
-    "depends_on": [
-      "product-handover-caution"
-    ],
+    "depends_on": [],
     "blocks_reason": null,
     "knowledge_level": "상식",
     "source_grade": "출처필요",

@@ -24612,7 +24612,7 @@
           },
           {
             "key": "anytime",
-            "count": 6,
+            "count": 7,
             "unlocked": true,
             "items": [
               {
@@ -24640,6 +24640,15 @@
                 "timing_hours": null,
                 "deadline_days": 1095,
                 "irreversible": true,
+                "checkable": true
+              },
+              {
+                "id": "consumer-dispute-mediation",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
                 "checkable": true
               },
               {
@@ -24673,7 +24682,7 @@
           },
           {
             "key": "after_report",
-            "count": 3,
+            "count": 4,
             "unlocked": false,
             "items": [
               {
@@ -24687,6 +24696,15 @@
               },
               {
                 "id": "dispute-mediation",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true
+              },
+              {
+                "id": "product-defect-presumption",
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": null,
@@ -24764,22 +24782,6 @@
             "status": "해당",
             "blocked_by": [
               "tenant-burden-of-proof"
-            ],
-            "deadline_days": null
-          },
-          {
-            "id": "product-defect-presumption",
-            "status": "해당",
-            "blocked_by": [
-              "preserve-product"
-            ],
-            "deadline_days": null
-          },
-          {
-            "id": "consumer-dispute-mediation",
-            "status": "해당",
-            "blocked_by": [
-              "preserve-product"
             ],
             "deadline_days": null
           },
@@ -24996,7 +24998,7 @@
           },
           {
             "key": "anytime",
-            "count": 6,
+            "count": 7,
             "unlocked": true,
             "items": [
               {
@@ -25024,6 +25026,15 @@
                 "timing_hours": null,
                 "deadline_days": 1095,
                 "irreversible": true,
+                "checkable": true
+              },
+              {
+                "id": "consumer-dispute-mediation",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
                 "checkable": true
               },
               {
@@ -25057,7 +25068,7 @@
           },
           {
             "key": "after_report",
-            "count": 3,
+            "count": 4,
             "unlocked": false,
             "items": [
               {
@@ -25071,6 +25082,15 @@
               },
               {
                 "id": "dispute-mediation",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true
+              },
+              {
+                "id": "product-defect-presumption",
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": null,
@@ -25148,22 +25168,6 @@
             "status": "해당",
             "blocked_by": [
               "tenant-burden-of-proof"
-            ],
-            "deadline_days": null
-          },
-          {
-            "id": "product-defect-presumption",
-            "status": "해당",
-            "blocked_by": [
-              "preserve-product"
-            ],
-            "deadline_days": null
-          },
-          {
-            "id": "consumer-dispute-mediation",
-            "status": "해당",
-            "blocked_by": [
-              "preserve-product"
             ],
             "deadline_days": null
           },
@@ -25380,7 +25384,7 @@
           },
           {
             "key": "anytime",
-            "count": 6,
+            "count": 7,
             "unlocked": true,
             "items": [
               {
@@ -25408,6 +25412,15 @@
                 "timing_hours": null,
                 "deadline_days": 1095,
                 "irreversible": true,
+                "checkable": true
+              },
+              {
+                "id": "consumer-dispute-mediation",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
                 "checkable": true
               },
               {
@@ -25441,7 +25454,7 @@
           },
           {
             "key": "after_report",
-            "count": 3,
+            "count": 4,
             "unlocked": false,
             "items": [
               {
@@ -25455,6 +25468,15 @@
               },
               {
                 "id": "dispute-mediation",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true
+              },
+              {
+                "id": "product-defect-presumption",
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": null,
@@ -25536,22 +25558,6 @@
             "deadline_days": null
           },
           {
-            "id": "product-defect-presumption",
-            "status": "해당",
-            "blocked_by": [
-              "preserve-product"
-            ],
-            "deadline_days": null
-          },
-          {
-            "id": "consumer-dispute-mediation",
-            "status": "해당",
-            "blocked_by": [
-              "preserve-product"
-            ],
-            "deadline_days": null
-          },
-          {
             "id": "evidence-court-referral",
             "status": "해당",
             "blocked_by": [
@@ -25583,6 +25589,394 @@
                 "axis": "사실",
                 "timing_hours": 4,
                 "deadline_days": null,
+                "irreversible": true,
+                "checkable": true
+              }
+            ]
+          },
+          {
+            "key": "today",
+            "count": 6,
+            "unlocked": true,
+            "items": [
+              {
+                "id": "photo-before-cleanup",
+                "group": "보험과 돈",
+                "axis": "사실",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": true,
+                "checkable": true
+              },
+              {
+                "id": "scene-release",
+                "group": "집 정리",
+                "axis": "제도",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true
+              },
+              {
+                "id": "ppe-powder",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 6,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true
+              },
+              {
+                "id": "support-housing",
+                "group": "지낼 곳",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true
+              },
+              {
+                "id": "support-supplies",
+                "group": "지낼 곳",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true
+              },
+              {
+                "id": "tenant-notify-landlord",
+                "group": "집주인과 계약",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true
+              }
+            ]
+          },
+          {
+            "key": "standing",
+            "count": 4,
+            "unlocked": true,
+            "items": [
+              {
+                "id": "wet-appliance-power",
+                "group": "집 정리",
+                "axis": "사실",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": true,
+                "checkable": false
+              },
+              {
+                "id": "preserve-product",
+                "group": "책임과 분쟁",
+                "axis": "사실",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": true,
+                "checkable": false
+              },
+              {
+                "id": "product-handover-caution",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": true,
+                "checkable": false
+              },
+              {
+                "id": "tenant-dont-do",
+                "group": "집주인과 계약",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": true,
+                "checkable": false
+              }
+            ]
+          },
+          {
+            "key": "anytime",
+            "count": 14,
+            "unlocked": true,
+            "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true
+              },
+              {
+                "id": "support-psych",
+                "group": "몸",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true
+              },
+              {
+                "id": "fire-cert",
+                "group": "서류",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true
+              },
+              {
+                "id": "investigation-report",
+                "group": "서류",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true
+              },
+              {
+                "id": "adjuster-position",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true
+              },
+              {
+                "id": "building-group-fire-insurance",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true
+              },
+              {
+                "id": "no-personal-insurance-building-path",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true
+              },
+              {
+                "id": "product-claim-limitation",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": 1095,
+                "irreversible": true,
+                "checkable": true
+              },
+              {
+                "id": "consumer-dispute-mediation",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true
+              },
+              {
+                "id": "recall-lookup",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true
+              },
+              {
+                "id": "legal-aid-klac",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true
+              },
+              {
+                "id": "small-claims",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true
+              },
+              {
+                "id": "housing-mgmt-dispute-committee",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true
+              }
+            ]
+          },
+          {
+            "key": "after_report",
+            "count": 4,
+            "unlocked": false,
+            "items": [
+              {
+                "id": "common-area-liability",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true
+              },
+              {
+                "id": "dispute-mediation",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true
+              },
+              {
+                "id": "product-defect-presumption",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true
+              },
+              {
+                "id": "tenant-restoration-scope",
+                "group": "집주인과 계약",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true
+              }
+            ]
+          }
+        ],
+        "done": [],
+        "waiting": [],
+        "blocked": [
+          {
+            "id": "powder-removal",
+            "status": "해당",
+            "blocked_by": [
+              "scene-release",
+              "photo-before-cleanup"
+            ],
+            "deadline_days": null
+          },
+          {
+            "id": "dry-water",
+            "status": "해당",
+            "blocked_by": [
+              "scene-release"
+            ],
+            "deadline_days": null
+          },
+          {
+            "id": "textile-caution",
+            "status": "해당",
+            "blocked_by": [
+              "photo-before-cleanup"
+            ],
+            "deadline_days": null
+          },
+          {
+            "id": "investigation-report-wait",
+            "status": "해당",
+            "blocked_by": [
+              "investigation-report"
+            ],
+            "deadline_days": null
+          },
+          {
+            "id": "support-waste",
+            "status": "해당",
+            "blocked_by": [
+              "scene-release",
+              "photo-before-cleanup"
+            ],
+            "deadline_days": null
+          },
+          {
+            "id": "tenant-burden-of-proof",
+            "status": "해당",
+            "blocked_by": [
+              "investigation-report"
+            ],
+            "deadline_days": null
+          },
+          {
+            "id": "tenant-contract-termination",
+            "status": "해당",
+            "blocked_by": [
+              "tenant-burden-of-proof"
+            ],
+            "deadline_days": null
+          },
+          {
+            "id": "evidence-court-referral",
+            "status": "해당",
+            "blocked_by": [
+              "investigation-report"
+            ],
+            "deadline_days": null
+          },
+          {
+            "id": "common-area-management-role",
+            "status": "해당",
+            "blocked_by": [
+              "common-area-liability"
+            ],
+            "deadline_days": null
+          }
+        ],
+        "excluded": []
+      },
+      "+1200d": {
+        "sections": [
+          {
+            "key": "missed",
+            "count": 2,
+            "unlocked": true,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true,
+                "checkable": true
+              },
+              {
+                "id": "product-claim-limitation",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": 1095,
                 "irreversible": true,
                 "checkable": true
               }
@@ -25770,12 +26164,12 @@
                 "checkable": true
               },
               {
-                "id": "product-claim-limitation",
+                "id": "consumer-dispute-mediation",
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": null,
-                "deadline_days": 1095,
-                "irreversible": true,
+                "deadline_days": null,
+                "irreversible": false,
                 "checkable": true
               },
               {
@@ -25818,384 +26212,7 @@
           },
           {
             "key": "after_report",
-            "count": 3,
-            "unlocked": false,
-            "items": [
-              {
-                "id": "common-area-liability",
-                "group": "책임과 분쟁",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true
-              },
-              {
-                "id": "dispute-mediation",
-                "group": "책임과 분쟁",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true
-              },
-              {
-                "id": "tenant-restoration-scope",
-                "group": "집주인과 계약",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true
-              }
-            ]
-          }
-        ],
-        "done": [],
-        "waiting": [],
-        "blocked": [
-          {
-            "id": "powder-removal",
-            "status": "해당",
-            "blocked_by": [
-              "scene-release",
-              "photo-before-cleanup"
-            ],
-            "deadline_days": null
-          },
-          {
-            "id": "dry-water",
-            "status": "해당",
-            "blocked_by": [
-              "scene-release"
-            ],
-            "deadline_days": null
-          },
-          {
-            "id": "textile-caution",
-            "status": "해당",
-            "blocked_by": [
-              "photo-before-cleanup"
-            ],
-            "deadline_days": null
-          },
-          {
-            "id": "investigation-report-wait",
-            "status": "해당",
-            "blocked_by": [
-              "investigation-report"
-            ],
-            "deadline_days": null
-          },
-          {
-            "id": "support-waste",
-            "status": "해당",
-            "blocked_by": [
-              "scene-release",
-              "photo-before-cleanup"
-            ],
-            "deadline_days": null
-          },
-          {
-            "id": "tenant-burden-of-proof",
-            "status": "해당",
-            "blocked_by": [
-              "investigation-report"
-            ],
-            "deadline_days": null
-          },
-          {
-            "id": "tenant-contract-termination",
-            "status": "해당",
-            "blocked_by": [
-              "tenant-burden-of-proof"
-            ],
-            "deadline_days": null
-          },
-          {
-            "id": "product-defect-presumption",
-            "status": "해당",
-            "blocked_by": [
-              "preserve-product"
-            ],
-            "deadline_days": null
-          },
-          {
-            "id": "consumer-dispute-mediation",
-            "status": "해당",
-            "blocked_by": [
-              "preserve-product"
-            ],
-            "deadline_days": null
-          },
-          {
-            "id": "evidence-court-referral",
-            "status": "해당",
-            "blocked_by": [
-              "investigation-report"
-            ],
-            "deadline_days": null
-          },
-          {
-            "id": "common-area-management-role",
-            "status": "해당",
-            "blocked_by": [
-              "common-area-liability"
-            ],
-            "deadline_days": null
-          }
-        ],
-        "excluded": []
-      },
-      "+1200d": {
-        "sections": [
-          {
-            "key": "missed",
-            "count": 2,
-            "unlocked": true,
-            "items": [
-              {
-                "id": "fridge-4h",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 4,
-                "deadline_days": null,
-                "irreversible": true,
-                "checkable": true
-              },
-              {
-                "id": "product-claim-limitation",
-                "group": "책임과 분쟁",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": 1095,
-                "irreversible": true,
-                "checkable": true
-              }
-            ]
-          },
-          {
-            "key": "today",
-            "count": 6,
-            "unlocked": true,
-            "items": [
-              {
-                "id": "photo-before-cleanup",
-                "group": "보험과 돈",
-                "axis": "사실",
-                "timing_hours": 0,
-                "deadline_days": null,
-                "irreversible": true,
-                "checkable": true
-              },
-              {
-                "id": "scene-release",
-                "group": "집 정리",
-                "axis": "제도",
-                "timing_hours": 0,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true
-              },
-              {
-                "id": "ppe-powder",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": 6,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true
-              },
-              {
-                "id": "support-housing",
-                "group": "지낼 곳",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true
-              },
-              {
-                "id": "support-supplies",
-                "group": "지낼 곳",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true
-              },
-              {
-                "id": "tenant-notify-landlord",
-                "group": "집주인과 계약",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true
-              }
-            ]
-          },
-          {
-            "key": "standing",
             "count": 4,
-            "unlocked": true,
-            "items": [
-              {
-                "id": "wet-appliance-power",
-                "group": "집 정리",
-                "axis": "사실",
-                "timing_hours": 0,
-                "deadline_days": null,
-                "irreversible": true,
-                "checkable": false
-              },
-              {
-                "id": "preserve-product",
-                "group": "책임과 분쟁",
-                "axis": "사실",
-                "timing_hours": 0,
-                "deadline_days": null,
-                "irreversible": true,
-                "checkable": false
-              },
-              {
-                "id": "product-handover-caution",
-                "group": "책임과 분쟁",
-                "axis": "제도",
-                "timing_hours": 0,
-                "deadline_days": null,
-                "irreversible": true,
-                "checkable": false
-              },
-              {
-                "id": "tenant-dont-do",
-                "group": "집주인과 계약",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": true,
-                "checkable": false
-              }
-            ]
-          },
-          {
-            "key": "anytime",
-            "count": 12,
-            "unlocked": true,
-            "items": [
-              {
-                "id": "smoke-inhalation-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true
-              },
-              {
-                "id": "cleanup-exposure-watch",
-                "group": "몸",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true
-              },
-              {
-                "id": "support-psych",
-                "group": "몸",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true
-              },
-              {
-                "id": "fire-cert",
-                "group": "서류",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true
-              },
-              {
-                "id": "investigation-report",
-                "group": "서류",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true
-              },
-              {
-                "id": "adjuster-position",
-                "group": "보험과 돈",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true
-              },
-              {
-                "id": "building-group-fire-insurance",
-                "group": "보험과 돈",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true
-              },
-              {
-                "id": "no-personal-insurance-building-path",
-                "group": "보험과 돈",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true
-              },
-              {
-                "id": "recall-lookup",
-                "group": "책임과 분쟁",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true
-              },
-              {
-                "id": "legal-aid-klac",
-                "group": "책임과 분쟁",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true
-              },
-              {
-                "id": "small-claims",
-                "group": "책임과 분쟁",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true
-              },
-              {
-                "id": "housing-mgmt-dispute-committee",
-                "group": "책임과 분쟁",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true
-              }
-            ]
-          },
-          {
-            "key": "after_report",
-            "count": 3,
             "unlocked": false,
             "items": [
               {
@@ -26209,6 +26226,15 @@
               },
               {
                 "id": "dispute-mediation",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true
+              },
+              {
+                "id": "product-defect-presumption",
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": null,
@@ -26286,22 +26312,6 @@
             "status": "해당",
             "blocked_by": [
               "tenant-burden-of-proof"
-            ],
-            "deadline_days": null
-          },
-          {
-            "id": "product-defect-presumption",
-            "status": "해당",
-            "blocked_by": [
-              "preserve-product"
-            ],
-            "deadline_days": null
-          },
-          {
-            "id": "consumer-dispute-mediation",
-            "status": "해당",
-            "blocked_by": [
-              "preserve-product"
             ],
             "deadline_days": null
           },
@@ -28252,7 +28262,7 @@
           },
           {
             "key": "standing",
-            "count": 4,
+            "count": 5,
             "unlocked": true,
             "items": [
               {
@@ -28280,6 +28290,15 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": true,
+                "checkable": false
+              },
+              {
+                "id": "product-maker-position-may-change",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
                 "checkable": false
               },
               {
@@ -28490,14 +28509,6 @@
             "status": "해당",
             "blocked_by": [
               "tenant-burden-of-proof"
-            ],
-            "deadline_days": null
-          },
-          {
-            "id": "product-maker-position-may-change",
-            "status": "해당",
-            "blocked_by": [
-              "product-handover-caution"
             ],
             "deadline_days": null
           },
@@ -28601,7 +28612,7 @@
           },
           {
             "key": "standing",
-            "count": 4,
+            "count": 5,
             "unlocked": true,
             "items": [
               {
@@ -28629,6 +28640,15 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": true,
+                "checkable": false
+              },
+              {
+                "id": "product-maker-position-may-change",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
                 "checkable": false
               },
               {
@@ -28839,14 +28859,6 @@
             "status": "해당",
             "blocked_by": [
               "tenant-burden-of-proof"
-            ],
-            "deadline_days": null
-          },
-          {
-            "id": "product-maker-position-may-change",
-            "status": "해당",
-            "blocked_by": [
-              "product-handover-caution"
             ],
             "deadline_days": null
           },
@@ -28950,7 +28962,7 @@
           },
           {
             "key": "standing",
-            "count": 4,
+            "count": 5,
             "unlocked": true,
             "items": [
               {
@@ -28978,6 +28990,15 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": true,
+                "checkable": false
+              },
+              {
+                "id": "product-maker-position-may-change",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
                 "checkable": false
               },
               {
@@ -29192,14 +29213,6 @@
             "deadline_days": null
           },
           {
-            "id": "product-maker-position-may-change",
-            "status": "해당",
-            "blocked_by": [
-              "product-handover-caution"
-            ],
-            "deadline_days": null
-          },
-          {
             "id": "evidence-court-referral",
             "status": "해당",
             "blocked_by": [
@@ -29299,7 +29312,7 @@
           },
           {
             "key": "standing",
-            "count": 4,
+            "count": 5,
             "unlocked": true,
             "items": [
               {
@@ -29327,6 +29340,15 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": true,
+                "checkable": false
+              },
+              {
+                "id": "product-maker-position-may-change",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
                 "checkable": false
               },
               {
@@ -29530,14 +29552,6 @@
             "status": "해당",
             "blocked_by": [
               "tenant-burden-of-proof"
-            ],
-            "deadline_days": null
-          },
-          {
-            "id": "product-maker-position-may-change",
-            "status": "해당",
-            "blocked_by": [
-              "product-handover-caution"
             ],
             "deadline_days": null
           },
@@ -29641,7 +29655,7 @@
           },
           {
             "key": "standing",
-            "count": 4,
+            "count": 5,
             "unlocked": true,
             "items": [
               {
@@ -29669,6 +29683,15 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": true,
+                "checkable": false
+              },
+              {
+                "id": "product-maker-position-may-change",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
                 "checkable": false
               },
               {
@@ -29872,14 +29895,6 @@
             "status": "해당",
             "blocked_by": [
               "tenant-burden-of-proof"
-            ],
-            "deadline_days": null
-          },
-          {
-            "id": "product-maker-position-may-change",
-            "status": "해당",
-            "blocked_by": [
-              "product-handover-caution"
             ],
             "deadline_days": null
           },
