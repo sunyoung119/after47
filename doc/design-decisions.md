@@ -1438,6 +1438,13 @@ JSON 수준에서 완전히 같아야 한다.
 
 ## 갱신 로그
 
+- 2026-08-27 v14. 페이로드 확장(4/4-B). `blocked_by`가 `{id, title}` 배열이
+  되어 UI가 막힘 문구를 선행 제목으로 조합한다 — 콘텐츠 신규 작성 0건.
+  `blocks_reason`(5건)은 "왜 이 순서인지"를 덧붙이는 특수 설명으로만 쓴다.
+  `dept`·`amount_known`을 모든 행에 실어 D-003의 degrade를 UI가
+  `districts.json` 없이 그린다. `evidence-court-referral`의 `when`을
+  `after_report`로 고쳐 `unlocked` 보호 안으로 넣었다. 스냅샷에 P20 추가
+  (20 × 5 = 100조합) — **D-018의 "done이 excluded보다 먼저"가 처음 관측된다.**
 - 2026-08-27 v13. D-018(done 버킷) 추가. 완료 항목이 목록에서 빠진다.
   체크 범위는 `standing`만 제외이고 엔진이 `checkable`을 실어 보낸다.
   done이 `excluded`보다 먼저다 — 사용자가 한 일이 시스템 추정보다 앞선다.

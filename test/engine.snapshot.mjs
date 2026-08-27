@@ -140,6 +140,17 @@ const PERSONAS = [
   // 비로소 waiting에 도달한다.
   ["P19", "강남 — 조사서 신청 완료 (done과 waiting이 함께 열린다)",
     { district: "gangnam", completed: ["investigation-report"] }],
+
+  // P20은 D-018의 핵심 규칙 — done이 excluded보다 먼저다 — 를 관측하는
+  // 유일한 자리다. 양천은 신청 기한이 30일인 유일한 구라서, +90d 이후
+  // 조례 항목이 기한 도과로 excluded가 된다. 그런데 psych는 체크돼
+  // 있으므로 done에 남아야 한다. 30일 안에 신청을 마친 사람이 3개월 뒤
+  // 열었을 때 "기한이 지났습니다"가 아니라 "완료"를 봐야 한다.
+  //
+  // housing은 체크하지 않았으므로 +90d부터 excluded로 간다.
+  // 같은 구의 두 항목이 체크 하나로 갈리는 것까지가 관측 대상이다.
+  ["P20", "양천 — 심리지원 신청 완료 (기한이 지나도 done이 이긴다)",
+    { district: "yangcheon", completed: ["support-psych"] }],
 ];
 
 // +1200d는 deadline 축의 양성 케이스를 만들기 위한 것이다.
