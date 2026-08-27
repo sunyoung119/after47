@@ -1522,7 +1522,7 @@
     "category": "신청",
     "audience": "피해자",
     "axis": "제도",
-    "when": "anytime",
+    "when": "after_report",
     "timing_hours": null,
     "deadline_days": null,
     "wait_days": null,

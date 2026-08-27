@@ -39647,7 +39647,7 @@
           },
           {
             "key": "anytime",
-            "count": 6,
+            "count": 5,
             "unlocked": true,
             "items": [
               {
@@ -39695,17 +39695,6 @@
                 "amount_known": null
               },
               {
-                "id": "evidence-court-referral",
-                "group": "책임과 분쟁",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
                 "id": "housing-mgmt-dispute-committee",
                 "group": "책임과 분쟁",
                 "axis": "제도",
@@ -39720,11 +39709,22 @@
           },
           {
             "key": "after_report",
-            "count": 3,
+            "count": 4,
             "unlocked": true,
             "items": [
               {
                 "id": "common-area-liability",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "evidence-court-referral",
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": null,
@@ -40065,7 +40065,7 @@
           },
           {
             "key": "anytime",
-            "count": 6,
+            "count": 5,
             "unlocked": true,
             "items": [
               {
@@ -40113,17 +40113,6 @@
                 "amount_known": null
               },
               {
-                "id": "evidence-court-referral",
-                "group": "책임과 분쟁",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
                 "id": "housing-mgmt-dispute-committee",
                 "group": "책임과 분쟁",
                 "axis": "제도",
@@ -40138,11 +40127,22 @@
           },
           {
             "key": "after_report",
-            "count": 3,
+            "count": 4,
             "unlocked": true,
             "items": [
               {
                 "id": "common-area-liability",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "evidence-court-referral",
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": null,
@@ -40483,7 +40483,7 @@
           },
           {
             "key": "anytime",
-            "count": 6,
+            "count": 5,
             "unlocked": true,
             "items": [
               {
@@ -40531,17 +40531,6 @@
                 "amount_known": null
               },
               {
-                "id": "evidence-court-referral",
-                "group": "책임과 분쟁",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
                 "id": "housing-mgmt-dispute-committee",
                 "group": "책임과 분쟁",
                 "axis": "제도",
@@ -40556,11 +40545,22 @@
           },
           {
             "key": "after_report",
-            "count": 3,
+            "count": 4,
             "unlocked": true,
             "items": [
               {
                 "id": "common-area-liability",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "evidence-court-referral",
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": null,
@@ -40839,7 +40839,7 @@
           },
           {
             "key": "anytime",
-            "count": 11,
+            "count": 10,
             "unlocked": true,
             "items": [
               {
@@ -40942,17 +40942,6 @@
                 "amount_known": null
               },
               {
-                "id": "evidence-court-referral",
-                "group": "책임과 분쟁",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
                 "id": "housing-mgmt-dispute-committee",
                 "group": "책임과 분쟁",
                 "axis": "제도",
@@ -40967,11 +40956,22 @@
           },
           {
             "key": "after_report",
-            "count": 3,
+            "count": 4,
             "unlocked": true,
             "items": [
               {
                 "id": "common-area-liability",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "evidence-court-referral",
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": null,
@@ -41250,7 +41250,7 @@
           },
           {
             "key": "anytime",
-            "count": 11,
+            "count": 10,
             "unlocked": true,
             "items": [
               {
@@ -41353,17 +41353,6 @@
                 "amount_known": null
               },
               {
-                "id": "evidence-court-referral",
-                "group": "책임과 분쟁",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
                 "id": "housing-mgmt-dispute-committee",
                 "group": "책임과 분쟁",
                 "axis": "제도",
@@ -41378,11 +41367,22 @@
           },
           {
             "key": "after_report",
-            "count": 3,
+            "count": 4,
             "unlocked": true,
             "items": [
               {
                 "id": "common-area-liability",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "evidence-court-referral",
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": null,
@@ -41743,7 +41743,7 @@
           },
           {
             "key": "anytime",
-            "count": 6,
+            "count": 5,
             "unlocked": true,
             "items": [
               {
@@ -41791,17 +41791,6 @@
                 "amount_known": null
               },
               {
-                "id": "evidence-court-referral",
-                "group": "책임과 분쟁",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
                 "id": "housing-mgmt-dispute-committee",
                 "group": "책임과 분쟁",
                 "axis": "제도",
@@ -41816,11 +41805,22 @@
           },
           {
             "key": "after_report",
-            "count": 3,
+            "count": 4,
             "unlocked": false,
             "items": [
               {
                 "id": "common-area-liability",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "evidence-court-referral",
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": null,
@@ -42183,7 +42183,7 @@
           },
           {
             "key": "anytime",
-            "count": 6,
+            "count": 5,
             "unlocked": true,
             "items": [
               {
@@ -42231,17 +42231,6 @@
                 "amount_known": null
               },
               {
-                "id": "evidence-court-referral",
-                "group": "책임과 분쟁",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
                 "id": "housing-mgmt-dispute-committee",
                 "group": "책임과 분쟁",
                 "axis": "제도",
@@ -42256,11 +42245,22 @@
           },
           {
             "key": "after_report",
-            "count": 3,
+            "count": 4,
             "unlocked": false,
             "items": [
               {
                 "id": "common-area-liability",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "evidence-court-referral",
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": null,
@@ -42623,7 +42623,7 @@
           },
           {
             "key": "anytime",
-            "count": 6,
+            "count": 5,
             "unlocked": true,
             "items": [
               {
@@ -42671,17 +42671,6 @@
                 "amount_known": null
               },
               {
-                "id": "evidence-court-referral",
-                "group": "책임과 분쟁",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
                 "id": "housing-mgmt-dispute-committee",
                 "group": "책임과 분쟁",
                 "axis": "제도",
@@ -42696,11 +42685,22 @@
           },
           {
             "key": "after_report",
-            "count": 3,
+            "count": 4,
             "unlocked": false,
             "items": [
               {
                 "id": "common-area-liability",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "evidence-court-referral",
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": null,
@@ -43001,7 +43001,7 @@
           },
           {
             "key": "anytime",
-            "count": 11,
+            "count": 10,
             "unlocked": true,
             "items": [
               {
@@ -43104,17 +43104,6 @@
                 "amount_known": null
               },
               {
-                "id": "evidence-court-referral",
-                "group": "책임과 분쟁",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
                 "id": "housing-mgmt-dispute-committee",
                 "group": "책임과 분쟁",
                 "axis": "제도",
@@ -43129,11 +43118,22 @@
           },
           {
             "key": "after_report",
-            "count": 3,
+            "count": 4,
             "unlocked": false,
             "items": [
               {
                 "id": "common-area-liability",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "evidence-court-referral",
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": null,
@@ -43434,7 +43434,7 @@
           },
           {
             "key": "anytime",
-            "count": 11,
+            "count": 10,
             "unlocked": true,
             "items": [
               {
@@ -43537,17 +43537,6 @@
                 "amount_known": null
               },
               {
-                "id": "evidence-court-referral",
-                "group": "책임과 분쟁",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
                 "id": "housing-mgmt-dispute-committee",
                 "group": "책임과 분쟁",
                 "axis": "제도",
@@ -43562,11 +43551,22 @@
           },
           {
             "key": "after_report",
-            "count": 3,
+            "count": 4,
             "unlocked": false,
             "items": [
               {
                 "id": "common-area-liability",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "evidence-court-referral",
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": null,
