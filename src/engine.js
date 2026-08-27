@@ -58,7 +58,12 @@ function districtExclusion(action, district, state) {
 // 사용자에게 묻지 않고 데이터에서 나오는 값들.
 // 질문 계층(ask_when)도 이 값을 읽으므로 evaluate 바깥에서 쓸 수 있게 분리한다.
 // 예: "주민등록 요건이 있는 구에서만 주민등록을 묻는다"
-export function deriveState(state, data) {
+//
+// now를 인자로 받는 이유는 elapsed_hours를 고정할 수 있어야 하기 때문이다.
+// 안에서 Date.now()를 부르면 같은 state가 실행할 때마다 다른 결과를 낸다.
+// 숫자(Date.now())와 Date 객체를 둘 다 받는다 — applyDefaults·openSession이
+// Date를 넘기므로 한쪽으로 강제하면 호출부마다 변환이 흩어진다.
+export function deriveState(state, data, now = Date.now()) {
   const district = (data.districts || []).find((d) => d.id === state.district) || null;
   return {
     ...state,
@@ -69,17 +74,19 @@ export function deriveState(state, data) {
     district_residency: district ? district.residency : null,
     district_insurance_exclusion: district ? district.insurance_exclusion : null,
     elapsed_hours: state.fire_at
-      ? Math.floor((Date.now() - new Date(state.fire_at)) / 36e5)
+      ? Math.floor((+new Date(now) - new Date(state.fire_at)) / 36e5)
       : 0,
   };
 }
 
 // ── 평가 ────────────────────────────────────────────
-export function evaluate(state, data) {
+// now는 안쪽 deriveState까지 흘려보낸다. 여기서 끊으면 주입한 시각이
+// 안에서 Date.now()로 조용히 덮여 "고정한 줄 알았는데 안 된" 상태가 된다.
+export function evaluate(state, data, now = Date.now()) {
   const { actions, districts } = data;
   const district = districts.find((d) => d.id === state.district) || null;
 
-  const s = deriveState(state, data);
+  const s = deriveState(state, data, now);
   const done = new Set(state.completed || []);
 
   const rows = [];

@@ -299,7 +299,7 @@ for (const [label, answers, expect] of SCENES) {
   t("엔진이 읽는 키에 빈 값이 없다", holes.length === 0, `비어 있음: ${holes.join(", ")}`);
 
   // (c) 레퍼런스 케이스 문서가 이 장면에 있어야 한다고 적은 안내가 나오는가
-  const b = buckets(evaluate(s, data));
+  const b = buckets(evaluate(state, data));
   for (const id of expect) t(`  ${id}`, b.has(id), "화면 어디에도 없다");
 }
 
@@ -318,7 +318,7 @@ const base = runSurvey(
 
 const byDistrict = {};
 for (const d of data.districts) {
-  const r = evaluate(deriveState({ ...base, district: d.id }, data), data);
+  const r = evaluate({ ...base, district: d.id }, data);
   byDistrict[d.id] = [...buckets(r).keys()].filter(
     (id) => id.startsWith("support-") || id === "no-ordinance-fallback"
   );
@@ -333,7 +333,7 @@ Object.entries(byDistrict).forEach(([d, ids]) =>
 );
 
 // 건물 보험만 있는 이 케이스가 구로에서는 제외된다 - insurance_dwelling이 판정에 실제로 쓰인다
-const guro = evaluate(deriveState({ ...base, district: "guro" }, data), data);
+const guro = evaluate({ ...base, district: "guro" }, data);
 t(
   "건물 보험 가입 -> 구로에서는 제외 판정이 뜬다",
   guro.excluded.length > 0,
@@ -351,7 +351,7 @@ let stepOk = true;
 let stepDetail = "";
 for (let i = 0; i <= order.length; i++) {
   try {
-    const r = evaluate(deriveState(applyDefaults(questions, partial), data), data);
+    const r = evaluate(applyDefaults(questions, partial), data);
     if (!Array.isArray(r.sections)) throw new Error("sections 없음");
   } catch (e) {
     stepOk = false;
@@ -363,10 +363,7 @@ for (let i = 0; i <= order.length; i++) {
 }
 t("한 문항씩 답해 나가는 모든 중간 상태에서 화면이 나온다", stepOk, stepDetail);
 
-const noAnswer = evaluate(
-  deriveState(applyDefaults(questions, { district: "mapo", completed: [] }), data),
-  data
-);
+const noAnswer = evaluate(applyDefaults(questions, { district: "mapo", completed: [] }), data);
 t("아무것도 답하지 않아도 안내가 나온다", noAnswer.sections.length > 0);
 t(
   "아무것도 답하지 않아도 '제품 버리지 마세요'가 뜬다 (모름 기본값)",

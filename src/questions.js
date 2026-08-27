@@ -24,8 +24,11 @@ export function readParam(source, name) {
 
 // ── 지금 물어야 할 질문 ─────────────────────────────
 // ask_when은 앞선 답변과 자치구 파생값을 본다. 배열 순서가 곧 질문 순서다.
-export function visibleQuestions(questions, state, data) {
-  const s = deriveState(state, data);
+// now를 받는 이유는 지금이 아니라 다음이다. ask_when이 경과 시간을 읽게 되면
+// (D-014 재검토 조건) 여기가 실제 시각으로 새는 자리가 된다. 규약은
+// applyDefaults와 같다 — 마지막 인자, 기본값 있음.
+export function visibleQuestions(questions, state, data, now = Date.now()) {
+  const s = deriveState(state, data, now);
   return questions.filter((q) => matches(q.ask_when, s));
 }
 
@@ -38,15 +41,15 @@ export function applyDefaults(questions, state, now = new Date()) {
   for (const q of questions) {
     if (out[q.key] !== undefined) continue;
     if (!("default" in q)) continue;
-    out[q.key] = q.default === "today" && q.type === "date" ? now.toISOString() : q.default;
+    out[q.key] = q.default === "today" && q.type === "date" ? new Date(now).toISOString() : q.default;
   }
   return out;
 }
 
 // ── 아직 답이 없는 키 ───────────────────────────────
 // 설문 진행률과 "다음 질문"에 쓴다.
-export function unansweredKeys(questions, state, data) {
-  return visibleQuestions(questions, state, data)
+export function unansweredKeys(questions, state, data, now = Date.now()) {
+  return visibleQuestions(questions, state, data, now)
     .filter((q) => state[q.key] === undefined)
     .map((q) => q.key);
 }
