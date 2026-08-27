@@ -183,6 +183,12 @@ const bucketRow = (x) => ({
   // 조례 항목만 값이 있다. 나머지는 null(2/4-C의 키 일관성 규칙).
   dept: x.dept ?? null,
   amount_known: x.amount_known ?? null,
+  // 섹션 행은 groups가 group을 주지만 버킷 행에는 없었다. 여기서 기록하지
+  // 않으면 blocked·excluded의 분야와 종류가 계기판에 안 보인다.
+  group: x.group ?? null,
+  category: x.category ?? null,
+  // `대기` 항목의 eta. investigation-report-wait 하나만 값이 있다.
+  wait_days: x.wait_days ?? null,
 });
 
 // `reason`은 excluded에만 담는다. sections·blocked 행은 전부 `해당` 상태라
@@ -192,7 +198,16 @@ const excludedRow = (x) => ({ ...bucketRow(x), reason: x.reason ?? null });
 
 // done 행에는 그 시점 placement가 계산한 when을 함께 남긴다 —
 // "원래 어느 블록 일이었나"를 UI가 보여줄 수 있어야 한다.
-const doneRow = (x) => ({ ...bucketRow(x), when: x.when, checkable: x.checkable === true });
+//
+// status는 "완료"로 정규화돼 오고, 완료가 아니었다면 무엇이었을지가
+// status_if_pending에 온다(D-019 §10). 둘 다 기록해야 정규화가 정보를
+// 지웠는지 아닌지가 계기판에 보인다.
+const doneRow = (x) => ({
+  ...bucketRow(x),
+  status_if_pending: x.status_if_pending ?? null,
+  when: x.when,
+  checkable: x.checkable === true,
+});
 
 function capture(state, now) {
   const r = evaluate(state, data, now);

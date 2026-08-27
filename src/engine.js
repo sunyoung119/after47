@@ -217,7 +217,7 @@ export function evaluate(state, data, now = Date.now()) {
     }
 
     // 선행의 제목을 함께 싣는다. UI가 "'OO'을(를) 먼저 하세요"를 조합할 수
-    // 있어야 actions.json을 다시 뒤지지 않는다(D-019). 막힘 문구를 콘텐츠로
+    // 있어야 actions.json을 다시 뒤지지 않는다(D-019 §5). 막힘 문구를 콘텐츠로
     // 새로 쓰지 않는 이유이기도 하다 — 제목이 이미 그 일을 한다.
     const blockedBy = (a.depends_on || [])
       .filter((id) => !done.has(id))
@@ -237,6 +237,14 @@ export function evaluate(state, data, now = Date.now()) {
       dept: a.ordinance_based ? district?.dept ?? null : null,
       amount_known: a.ordinance_based ? district?.amount_known ?? null : null,
       deadline_days: deadlineDays,
+      // 분야와 종류를 행에 싣는다. 섹션 행은 groups가 group을 주지만 버킷
+      // 행에는 아무것도 없어서, UI가 blocked·excluded를 그리려면 actions.json을
+      // 다시 열어야 했다. dept를 행에 실은 것과 같은 이유다(4/4-B).
+      group: a.domain_group,
+      category: a.category,
+      // "얼마나 기다리나". category가 `대기`인 항목의 eta다 — UI가
+      // "보름~두 달"을 그린다. 나머지는 null(2/4-C의 키 일관성 규칙).
+      wait_days: a.wait_days ?? null,
       // 3층 타임라인. 데이터의 when이 아니라 여기서 계산된 값이 화면 위치다(D-001)
       when: whenNow,
       // 금지는 완료 개념이 없다. "전원 넣지 않기 ✓"는 이상하다(D-018).
@@ -267,7 +275,15 @@ export function evaluate(state, data, now = Date.now()) {
     //
     // checkable을 함께 보는 것은 방어다. UI가 막겠지만 completed에
     // standing 항목 id가 들어와도 무시하고 그 블록에 남긴다.
-    if (done.has(r.action.id) && r.checkable) { out.done.push(r); continue; }
+    //
+    // status를 "완료"로 정규화한다(D-019 §10). 버킷 순서로만 지키던 것을
+    // 페이로드로도 지킨다 — UI가 버킷이 아니라 status를 읽으면 "완료"가
+    // "제외"로 보이고, D-018이 그쪽을 더 나쁘다고 명시했다. 원래 판정은
+    // status_if_pending에 남으므로 정보는 잃지 않는다.
+    if (done.has(r.action.id) && r.checkable) {
+      out.done.push({ ...r, status: "완료", status_if_pending: r.status });
+      continue;
+    }
     if (r.status !== "해당") { out.excluded.push(r); continue; }
     if (r.blockedBy.length) { out.blocked.push(r); continue; }
     if (r.action.category === "대기") { out.waiting.push(r); continue; }
