@@ -58,7 +58,8 @@ console.log("\n"+"=".repeat(62));
 console.log("수손 가해/피해 분기 검증");
 console.log("=".repeat(62));
 const V=flat(vic), C=flat(cau);
-const t=(n,ok)=>console.log(`  ${ok?"PASS":"FAIL"}  ${n}`);
+let failed = 0;
+const t=(n,ok)=>{ if(!ok) failed++; console.log(`  ${ok?"PASS":"FAIL"}  ${n}`); };
 t("피해자에게 '관리사무소에 알리세요'가 뜬다", V.includes("water-damage-victim-notify"));
 t("피해자에게 '책임 인정하지 마세요'는 안 뜬다", !V.includes("water-damage-causer-caution"));
 t("가해자에게 '책임 인정하지 마세요'가 뜬다", C.includes("water-damage-causer-caution"));
@@ -74,3 +75,8 @@ const noAdj=flat(evaluate(ref("mapo"), data));
 t("손해사정사 안 왔으면 '내 편 창구' 안 뜬다", !noAdj.includes("my-side-channels-overview"));
 t("손해사정사 오면 '내 편 창구'가 뜬다",
   flat(evaluate(ref("mapo",{adjuster_present:true}), data)).includes("my-side-channels-overview"));
+
+console.log(`\n${"=".repeat(62)}`);
+console.log(failed ? `실패 ${failed}건` : "전부 통과");
+console.log("=".repeat(62));
+process.exit(failed ? 1 : 0);
