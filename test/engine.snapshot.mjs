@@ -132,6 +132,14 @@ const PERSONAS = [
   //     completed에 없으므로 여전히 blocked여야 한다
   ["P18", "강남 — 조사서 수령 (after_report가 열린다)",
     { district: "gangnam", report_received: true }],
+
+  // P19는 completed가 비어 있지 않은 유일한 페르소나다.
+  // done 버킷과 waiting 버킷을 동시에 여는 자리 —
+  // investigation-report-wait는 category가 `대기`인데 선행 때문에
+  // 42조합 시절부터 내내 blocked로 먼저 걸러졌다. 선행을 체크해야
+  // 비로소 waiting에 도달한다.
+  ["P19", "강남 — 조사서 신청 완료 (done과 waiting이 함께 열린다)",
+    { district: "gangnam", completed: ["investigation-report"] }],
 ];
 
 // +1200d는 deadline 축의 양성 케이스를 만들기 위한 것이다.
@@ -336,10 +344,13 @@ function diffCase(before, after) {
 // 데이터가 늘면 자연히 변한다. 0이 되는 것만 막는다.
 function checkInvariants(snapshot) {
   const rows = [];
+  let waiting = 0;
   for (const pid of Object.keys(snapshot.cases || {})) {
     for (const [label] of CLOCKS) {
       const c = snapshot.cases[pid][label];
-      if (c) rows.push(...(c.excluded || []));
+      if (!c) continue;
+      rows.push(...(c.excluded || []));
+      waiting += (c.waiting || []).length;
     }
   }
   const fails = [];
@@ -348,6 +359,9 @@ function checkInvariants(snapshot) {
     if (!rows.some((x) => x.status === st))
       fails.push(`\`${st}\` 상태를 밟는 조합이 하나도 없다`);
   }
+  // waiting은 `대기` 액션이 선행을 통과해야만 도달한다. completed가 빈
+  // 페르소나만 있으면 영원히 0이고, 그 사각을 P19가 메웠다.
+  if (!waiting) fails.push("waiting 버킷이 어느 조합에도 없다");
   return fails;
 }
 
