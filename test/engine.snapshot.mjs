@@ -189,6 +189,9 @@ const bucketRow = (x) => ({
   category: x.category ?? null,
   // `대기` 항목의 eta. investigation-report-wait 하나만 값이 있다.
   wait_days: x.wait_days ?? null,
+  // blocked 버킷에서 이 값이 참인 행은 이제 없어야 한다(D-019 §5).
+  // 불변식이 그것을 본다 — 기록하지 않으면 스냅샷만으로는 못 센다.
+  irreversible: x.action.irreversible === true,
 });
 
 // `reason`은 excluded에만 담는다. sections·blocked 행은 전부 `해당` 상태라
@@ -228,7 +231,11 @@ function capture(state, now) {
           // 3/4 재배치가 이 값을 입력으로 쓰기로 돼 있어 기록해 둔다.
           deadline_days: x.deadline_days ?? null,
           irreversible: x.action.irreversible === true,
-          // 금지(standing)만 false다. UI가 계산 없이 읽는다(D-018).
+          // 선행이 안 끝나 잠긴 채로 제자리에 있는 행(D-019 §5).
+          // blocked 버킷에 남는 것은 `irreversible`이 아닌 것뿐이므로,
+          // 이 값이 켜진 행은 전부 여기 섹션에만 있다.
+          locked: x.locked === true,
+          // 금지(standing)와 잠김만 false다. UI가 계산 없이 읽는다(D-018).
           checkable: x.checkable === true,
           // D-003의 degrade는 `해당` 상태의 조례 행에서 그려진다.
           dept: x.dept ?? null,
@@ -380,12 +387,18 @@ function diffCase(before, after) {
 function checkInvariants(snapshot) {
   const rows = [];
   let waiting = 0;
+  let lockedIrr = 0;
+  const blockedIrr = [];
   for (const pid of Object.keys(snapshot.cases || {})) {
     for (const [label] of CLOCKS) {
       const c = snapshot.cases[pid][label];
       if (!c) continue;
       rows.push(...(c.excluded || []));
       waiting += (c.waiting || []).length;
+      for (const x of c.blocked || [])
+        if (x.irreversible) blockedIrr.push(`${pid}${label} ${x.id}`);
+      for (const sec of c.sections || [])
+        for (const it of sec.items) if (it.locked) lockedIrr++;
     }
   }
   const fails = [];
@@ -400,6 +413,13 @@ function checkInvariants(snapshot) {
   // waiting은 `대기` 액션이 선행을 통과해야만 도달한다. completed가 빈
   // 페르소나만 있으면 영원히 0이고, 그 사각을 P19가 메웠다.
   if (!waiting) fails.push("waiting 버킷이 어느 조합에도 없다");
+  // D-019 §5. blocked 버킷은 이제 "되돌릴 수 있는데 선행이 안 끝난 것"만
+  // 담는다. 불가역이 하나라도 거기 있으면 접힌 것이고, 접히면 시한이 지난
+  // 뒤에도 missed에 못 간다 — 그 상태가 100조합 220건이었다.
+  if (blockedIrr.length)
+    fails.push(`blocked 버킷에 irreversible이 ${blockedIrr.length}건 있다 — ${blockedIrr[0]} 외`);
+  // 반대쪽. 잠김이 0이 되면 §5가 조용히 원상복구된 것이다.
+  if (!lockedIrr) fails.push("잠김(locked) 행이 어느 조합에도 없다");
   return fails;
 }
 

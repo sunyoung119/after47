@@ -278,6 +278,10 @@ export function evaluate(state, data, now = Date.now()) {
       when: whenNow,
       // 금지는 완료 개념이 없다. "전원 넣지 않기 ✓"는 이상하다(D-018).
       checkable: whenNow !== "standing",
+      // 선행이 안 끝나 잠긴 채로 제자리에 있는 행(D-019 §5). 아래 분배에서
+      // 켜진다. 기본값을 여기 두는 것은 키 일관성 때문이다 — 섹션 행마다
+      // 있고 없고 하면 UI가 undefined를 만난다.
+      locked: false,
     });
   }
 
@@ -318,7 +322,26 @@ export function evaluate(state, data, now = Date.now()) {
     // 미판정이 정확히 그것이다. 버킷을 늘리면 UI가 자리를 하나 더 그려야
     // 하는데 그럴 값이 없다. 무엇인지는 status가 말한다.
     if (r.status !== "해당") { out.excluded.push(r); continue; }
-    if (r.blockedBy.length) { out.blocked.push(r); continue; }
+    // 선행이 안 끝난 것 — 되돌릴 수 있는 것만 blocked 버킷으로 접는다.
+    //
+    // `irreversible`은 placement가 가리키는 자리에 잠긴 채로 남는다(D-019 §5).
+    // 접어 두면 fact-layer §0이 최우선이라고 못박은 것이 첫 화면에서 사라지고,
+    // 더 나쁘게는 시한이 지난 뒤에도 `missed`에 못 간다 — powder-removal(24h)과
+    // dry-water(48h)가 +5d부터 그랬다. placement는 missed를 돌려주는데 이
+    // 분배가 먼저 걸러서 어느 블록에도 안 나타났다(100조합 220건 중 160건).
+    //
+    // D-008("행동할 수 있는 것만 담는다")과 긴장하지만 위반은 아니다.
+    // D-008이 빼는 것은 `기관자율`(피해자가 개입할 수 없는 것)이고 이것은
+    // 선행만 끝내면 할 수 있는 것이다. 선행 제목은 blocked_by에 실려 있다.
+    if (r.blockedBy.length) {
+      if (!r.action.irreversible) { out.blocked.push(r); continue; }
+      r.locked = true;
+      // 선행이 안 끝났는데 체크되면 done이 거짓이 된다. 위 done 판정은
+      // 이미 지나갔으므로 이 대입이 "체크한 것을 잠근다"로 새지 않는다.
+      r.checkable = false;
+      pool.push(r);
+      continue;
+    }
     if (r.action.category === "대기") { out.waiting.push(r); continue; }
     pool.push(r);
   }

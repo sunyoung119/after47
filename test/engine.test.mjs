@@ -88,9 +88,13 @@ console.log("=".repeat(62));
 // water_damage_role을 victim으로 두는 이유는 water-damage-document-now가
 // 그 조건에만 걸리기 때문이다. none이면 항목 자체가 없어 의존 검증이 안 된다.
 const base = ref("mapo", { water_damage_role: "victim" });
+// 잠긴 행은 blocked 버킷이 아니라 placement 위치의 섹션에 있다(D-019 §5).
+// 그냥 s.key로 적으면 "풀렸다"와 "제자리에 잠겨 있다"가 구별되지 않아
+// 왕복 검증이 통과하면서도 잠금이 안 걸리는 구현이 가능해진다.
 const where = (r) => {
   const m = new Map();
-  r.sections.forEach(s=>s.groups.forEach(g=>g.items.forEach(x=>m.set(x.action.id, s.key))));
+  r.sections.forEach(s=>s.groups.forEach(g=>g.items.forEach(
+    x=>m.set(x.action.id, x.locked ? `${s.key}:잠김` : s.key))));
   r.done.forEach(x=>m.set(x.action.id,"DONE"));
   r.blocked.forEach(x=>m.set(x.action.id,"BLOCKED"));
   r.waiting.forEach(x=>m.set(x.action.id,"WAITING"));
@@ -106,20 +110,45 @@ const w0 = where(r0), w1 = where(r1), w2 = where(r2);
 t("체크하면 done으로 간다", w1.get("photo-before-cleanup") === "DONE");
 t("체크 전에는 done이 비어 있다", r0.done.length === 0);
 t("체크하면 목록에서 빠진다", w0.get("photo-before-cleanup") === "today" && w1.get("photo-before-cleanup") !== "today");
-t("매달린 것이 풀린다 — water-damage-document-now",
-  w0.get("water-damage-document-now") === "BLOCKED" && w1.get("water-damage-document-now") === "today");
-t("매달린 것이 풀린다 — textile-caution",
+// 불가역은 접히지 않고 제자리에 잠긴 채로 있다가 풀린다(D-019 §5).
+// 되돌릴 수 있는 것(textile-caution)은 지금처럼 blocked 버킷에 접힌다.
+t("매달린 것이 풀린다 — water-damage-document-now (불가역 · 제자리 잠김)",
+  w0.get("water-damage-document-now") === "today:잠김" && w1.get("water-damage-document-now") === "today");
+t("매달린 것이 풀린다 — textile-caution (되돌릴 수 있음 · blocked 버킷)",
   w0.get("textile-caution") === "BLOCKED" && w1.get("textile-caution") === "this_week");
 t("해제하면 원래 블록으로 돌아온다", w2.get("photo-before-cleanup") === "today" && r2.done.length === 0);
 t("해제하면 매달린 것이 다시 잠긴다",
-  w2.get("water-damage-document-now") === "BLOCKED" && w2.get("textile-caution") === "BLOCKED");
+  w2.get("water-damage-document-now") === "today:잠김" && w2.get("textile-caution") === "BLOCKED");
 t("왕복하면 처음과 완전히 같다", JSON.stringify(r0) === JSON.stringify(r2));
 t("금지는 체크해도 done으로 안 간다 (standing 방어)",
   evaluate({...base, completed:["preserve-product"]}, data, NOW).done.length === 0);
 t("섹션 행이 checkable을 싣고 있다",
   r0.sections.every(s=>s.groups.every(g=>g.items.every(x=>typeof x.checkable === "boolean"))));
-t("standing 블록만 checkable이 false다",
-  r0.sections.every(s=>s.groups.every(g=>g.items.every(x=>x.checkable === (s.key !== "standing")))));
+t("standing과 잠김만 checkable이 false다",
+  r0.sections.every(s=>s.groups.every(g=>g.items.every(
+    x=>x.checkable === (s.key !== "standing" && !x.locked)))));
+
+// ── 잠김 노출 (D-019 §5) ───────────────────────────
+// blocked 버킷의 뜻이 좁아졌다 — "선행이 안 끝난 것" 전부가 아니라
+// "그중 되돌릴 수 있는 것"만이다. 되돌릴 수 없는 것은 placement가 가리키는
+// 자리에 잠긴 채로 남는다. 접어 두면 시한이 지난 뒤에도 missed에 못 간다.
+t("blocked 버킷에 irreversible이 없다",
+  r0.blocked.every(x=>x.action.irreversible !== true),
+  r0.blocked.filter(x=>x.action.irreversible).map(x=>x.action.id).join(", "));
+t("잠긴 행이 선행 정보를 그대로 싣는다",
+  w0.get("water-damage-document-now") === "today:잠김" &&
+  r0.sections.flatMap(s=>s.groups.flatMap(g=>g.items))
+    .find(x=>x.action.id==="water-damage-document-now")
+    ?.blockedBy?.[0]?.title === "치우기 전에 방마다 사진·영상을 남기세요");
+
+// 시한이 지난 불가역이 잠겨 있어도 missed로 간다 — 이것이 §5의 목적이다.
+// +5d에 powder-removal(24h)·dry-water(48h)는 placement가 missed를 돌려주는데
+// 전에는 blocked 필터가 먼저 걸러서 어느 블록에도 안 나타났다.
+const late = where(evaluate(base, data, Date.parse(base.fire_at) + 5*24*36e5));
+t("시한이 지난 불가역은 잠겨 있어도 missed에 나타난다 — powder-removal",
+  late.get("powder-removal") === "missed:잠김", late.get("powder-removal"));
+t("시한이 지난 불가역은 잠겨 있어도 missed에 나타난다 — dry-water",
+  late.get("dry-water") === "missed:잠김", late.get("dry-water"));
 
 console.log(`\n${"=".repeat(62)}`);
 console.log(failed ? `실패 ${failed}건` : "전부 통과");
