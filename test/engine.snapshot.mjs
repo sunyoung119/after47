@@ -104,6 +104,23 @@ const PERSONAS = [
   // unknown을 both처럼 배열로 펼치는 실수가 정확히 그렇게 나타난다.
   ["P14", "강남 — 수손 상황 미확인 (역할 중립 항목만 떠야 한다)",
     { district: "gangnam", water_damage_role: "unknown" }],
+
+  // P15~P17은 D-013이 만든 게이트의 반대편을 밟는다.
+  // 베이스가 product_suspected "unknown" / adjuster_present false /
+  // product_maker_contacted false라, 이 셋을 켜야만 나오는 Action 9개가
+  // 42조합 어디에도 없었다. 그 9개가 레퍼런스 케이스 §4의 화면 2·3이고,
+  // deadline_days를 가진 Action 둘 중 하나(product-claim-limitation)가
+  // 여기 있다 — irreversible + anytime + 기한 1095일이라
+  // "시한이 지난 irreversible만 missed로 내린다"는 3/4 규칙의 시험대다.
+  //
+  // 하나씩 떼어놓는다. 합치면 어느 조건이 그 항목을 켰는지 diff에서
+  // 안 갈린다. 자치구를 강남으로 두어 P2(강남 · 베이스)와 나란히 읽는다.
+  ["P15", "강남 — 제조물 결함 확정 (D-013 게이트 반대편, 제조물 5개)",
+    { district: "gangnam", product_suspected: true }],
+  ["P16", "강남 — 손해사정사 등장 (레퍼런스 케이스 화면 2, 3개)",
+    { district: "gangnam", adjuster_present: true }],
+  ["P17", "강남 — 제조사 접촉함 (1개)",
+    { district: "gangnam", product_maker_contacted: true }],
 ];
 
 const CLOCKS = [
