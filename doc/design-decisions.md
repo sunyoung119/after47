@@ -1058,8 +1058,275 @@ water-damage-causer-caution        {"water_damage_role": "causer"}      그대�
 
 ---
 
+## D-017. when 재배치 계약 (초안 — 승인 전)
+
+> **이 항목은 초안이다.** 3/4-A에서 규칙을 설계만 했고 구현하지 않았다.
+> 사용자 승인 후 3/4-B 구현 커밋에서 "(초안 — 승인 전)"을 뗀다.
+> 아래 **쟁점** 절이 승인 전에 결정돼야 하는 것들이다.
+
+**문제**
+
+D-001이 "순서는 데이터가 아니라 뷰다"라고 정했는데, 지금 엔진은 그 뷰를
+계산하지 않는다. `when`을 그대로 읽어 블록에 넣을 뿐이다. 68조합을 재어
+보면 `+3h`와 `+1200d`의 출력이 **한 글자도 다르지 않다**. 화재 3시간째에
+들어온 사람과 3년 뒤에 들어온 사람이 같은 화면을 본다.
+
+`elapsed_hours`는 `deriveState()`가 계산해 두는데 아무도 읽지 않는다
+(`applies_when`/`excluded_when`에서 이 키를 쓰는 Action이 0개).
+
+**확정된 원칙 셋** (재논쟁하지 않는다)
+
+1. **`when`은 데이터에 남는다.** 화재 직후 기준의 기본 배치다. 엔진이
+   경과 시간을 보고 재배치한다. 시간 필드(`timing_hours`/`deadline_days`)가
+   있으면 그 값으로, 없으면 `axis`·`category` 규칙으로.
+   *데이터를 전부 계산으로 바꾸는 안은 폐기됐다* — 46개에 시간 필드를
+   채울 근거가 없고, 없는 숫자를 채우면 `source_grade: "출처필요"`가
+   대량 발생한다.
+2. **`missed`로 내리는 기준은 `irreversible`이다.** 시한이 지난
+   `irreversible`만 `missed`로 가고 나머지는 제자리에 둔다. 근거는
+   `fact-layer-data.md` §0.
+3. **`after_report`는 시간으로 근사하지 않는다.** `report_received` 상태
+   키를 신설해 푼다.
+
+---
+
+### 1. `elapsed_bucket` — 파생 키
+
+`deriveState()`가 `elapsed_hours`에서 계산하는 이산값이다.
+
+| 값 | 구간 | 경계의 근거 |
+|---|---|---|
+| `immediate` | 0h ~ 4h | 아직 어떤 시한도 지나지 않은 구간 |
+| `first_hours` | 4h ~ 48h | `fridge-4h`(4h)가 첫 만료. 6·24시간이 뒤따른다 |
+| `first_week` | 48h ~ 7d | `dry-water`(48h)가 `timing_hours`의 최댓값. 사실 축의 창이 닫힌다 |
+| `first_month` | 7d ~ 30d | **임의다.** `this_week` 블록의 이름이 가리키는 기간일 뿐 데이터 근거가 없다 |
+| `months` | 30d ~ 1095d | 양천구 조례 신청 기한 30일 |
+| `years` | 1095d ~ | 제조물책임·보험 청구 시효 3년 |
+
+`4h` `48h` `30d` `1095d`는 데이터에 실재하는 값이다. **`7d`만 임의**이며,
+아래 규칙 R5의 사실 축 경계로만 쓰인다.
+
+**재배치 자체는 이 키를 쓰지 않는다.** 항목마다 자기 시간 필드와
+`elapsed_hours`를 직접 비교한다 — 그쪽이 정확하고, 구간으로 뭉개면
+같은 구간 안의 4시간과 24시간이 구별되지 않는다.
+
+`elapsed_bucket`이 필요한 곳은 둘이다.
+
+- **R5** — 시간 필드가 없는 항목을 움직일 때의 경계
+- **`ask_when`** — 데이터의 조건은 범위 비교를 못 한다(D-010). 시점별
+  설문 분할은 이 이산값을 배열 OR로 받아야 표현된다. D-014의 재검토
+  조건("엔진이 `elapsed_hours`를 실제로 쓰기 시작하면")이 여기서 발동한다.
+
+---
+
+### 2. 이동 규칙
+
+| # | 규칙 | 왜 |
+|---|---|---|
+| **R0** | `standing`은 움직이지 않는다 | 금지사항 전용 블록이다(CLAUDE.md 5). 금지는 시간이 지나도 유효하다 |
+| **R1** | `after_report`는 시간으로 안 움직인다 | 원칙 3. `report_received`로만 풀린다 |
+| **R2** | 시한 만료 판정 | `timing_hours > 0` 이고 `elapsed_hours > timing_hours`, 또는 `deadline_days`가 있고 `elapsed_days > deadline_days` |
+| **R3** | 만료 + `irreversible` → `missed` | 원칙 2 |
+| **R4** | 만료 + `irreversible` 아님 → 제자리 | 원칙 2 |
+| **R5** | 시간 필드 없음 + `this_week` → `anytime` | 사실 축은 7일, 제도 축은 30일 경과 시 |
+
+**R2의 `> 0` 조건이 이 규칙의 핵심이다.** `timing_hours: 0`인 항목이
+6개인데 하나도 "0시간 후 만료"라는 뜻이 아니다.
+
+| id | when | 실제 의미 |
+|---|---|---|
+| `photo-before-cleanup` | today | "치우기 **전에**" — 청소 개시가 기준이지 시각이 아니다 |
+| `scene-release` | today | "조사관에게 확인하세요" — 즉시성의 표시 |
+| `wet-appliance-power` | standing | 금지. 만료가 없다 |
+| `preserve-product` | standing | 금지 |
+| `product-handover-caution` | standing | 금지 |
+| `scene-preserved-hold` | standing | 금지 |
+
+`0`을 만료 시각으로 읽으면 **`+3h`에서 이 여섯이 전부 시한 초과**가 되고,
+그중 넷이 `irreversible`이라 R3이 `missed`로 내린다. "젖은 가전에 전원을
+넣지 마세요"가 화재 3시간째에 "혹시 아직 안 하셨다면"으로 내려간다.
+D-006이 뒤집히는 자리다.
+
+따라서 **`timing_hours: 0`은 "즉시"의 우선순위 표시이고 만료 시각이
+아니다.** R2가 `> 0`으로 거른다. (쟁점 ① 참조 — 데이터 쪽에서 `0`과
+`null`을 구분하는 편이 나을 수 있다.)
+
+**R5의 경계를 `axis`로 나눈 근거**는 D-001이다 — "사실 축은 4~72시간,
+제도 축은 며칠~30일로 시간 스케일이 다르다". 사실 축 항목에 `this_week`가
+7일 넘게 붙어 있으면 그 라벨이 거짓이 되는 시점이 제도 축보다 이르다.
+
+---
+
+### 3. 57개 전수 이동표
+
+`placement`는 페르소나와 무관하다 — Action 속성과 경과 시간만으로 정해진다.
+**조례 4개만 예외**다(기한이 자치구에서 온다. 양천 30일, 나머지 4개 구는
+기한 없음). 그래서 표에 변종을 나눠 적었다.
+
+**움직이는 것 — 19행**
+
+| id | 현 `when` | +3h | +5d | +90d | +1200d |
+|---|---|---|---|---|---|
+| `fridge-4h` ※ | missed | **today** | missed | missed | missed |
+| `powder-removal` | today | today | **missed** | missed | missed |
+| `dry-water` | today | today | **missed** | missed | missed |
+| `insurance-claim-limitation` | anytime | anytime | anytime | anytime | **missed** |
+| `product-claim-limitation` | anytime | anytime | anytime | anytime | **missed** |
+| `fire-cert` | this_week | this_week | this_week | **anytime** | anytime |
+| `investigation-report` | this_week | this_week | this_week | **anytime** | anytime |
+| `adjuster-position` | this_week | this_week | this_week | **anytime** | anytime |
+| `origin-unknown` | this_week | this_week | this_week | **anytime** | anytime |
+| `no-ordinance-fallback` | this_week | this_week | this_week | **anytime** | anytime |
+| `water-damage-appears-later` | this_week | this_week | this_week | **anytime** | anytime |
+| `fire-insurance-water-coverage` | this_week | this_week | this_week | **anytime** | anytime |
+| `building-group-fire-insurance` | this_week | this_week | this_week | **anytime** | anytime |
+| `no-personal-insurance-building-path` | this_week | this_week | this_week | **anytime** | anytime |
+| `recall-lookup` | this_week | this_week | this_week | **anytime** | anytime |
+| `my-side-channels-overview` | this_week | this_week | this_week | **anytime** | anytime |
+| `common-area-management-role` | this_week | this_week | this_week | **anytime** | anytime |
+| `support-psych` [기한 없는 구] | this_week | this_week | this_week | **anytime** | anytime |
+| `support-waste` [기한 없는 구] | this_week | this_week | this_week | **anytime** | anytime |
+
+※ `fridge-4h`는 데이터의 `when`을 `today`로 고친다는 전제다(쟁점 ②).
+
+**안 움직이는 것 — 41행**
+
+| 블록 | 개수 | 왜 |
+|---|---|---|
+| `standing` | 8 | R0 |
+| `after_report` | 10 | R1 |
+| `today` | 10 | 시간 필드가 없거나(5), 만료해도 `irreversible`이 아니거나(`ppe-powder`), 양천 조례 2건(R4 제자리) |
+| `anytime` | 10 | 시효 둘을 뺀 나머지. 창구·증상 관찰이라 만료가 없다 |
+| `this_week` | 3 | `textile-caution`(만료해도 non-irrev → R4), 양천 조례 2건 |
+
+**시각별 블록 크기** (조례는 "기한 없는 구" 기준)
+
+| 블록 | 현재 | +3h | +5d | +90d | +1200d |
+|---|---|---|---|---|---|
+| missed | 1 | **0** | 3 | 3 | **5** |
+| today | 10 | 11 | 8 | 8 | 8 |
+| standing | 8 | 8 | 8 | 8 | 8 |
+| this_week | 15 | 15 | 15 | **1** | 1 |
+| anytime | 12 | 12 | 12 | **26** | 24 |
+| after_report | 10 | 10 | 10 | 10 | 10 |
+
+`+3h`의 `missed`가 **0**이 되는 것이 이 설계의 목표다. 화재 3시간째에
+"혹시 아직 안 하셨다면"이 비어 있는 것이 옳다.
+
+---
+
+### 4. `report_received` — 설계 (구현은 3/4-B)
+
+```
+key       report_received
+type      single
+options   true  "받았습니다"
+          false "아직 못 받았습니다"
+default   false
+ask_when  {"elapsed_bucket": ["first_month", "months", "years"]}
+text      "화재현장조사서를 받으셨나요?"
+help      "조사서에 적힌 원인에 따라 달라지는 안내가 있습니다.
+           보통 보름에서 두 달쯤 걸립니다."
+```
+
+**`default: false`인 이유.** 조사 직후 진입(QR)이 기본 경로이고 그때는
+확실히 안 받은 상태다. 그리고 D-006으로 오답의 비용을 비교하면 —
+`after_report` 10개는 **`irreversible`이 하나도 없고** `category`가
+판단 8 / 신청 1 / 대기 1이다. 안 보여줘서 생기는 손해가 즉각적이지 않다.
+반대로 안 받은 사람에게 10개를 펼치면 정신없는 사람에게 노이즈다.
+
+**`ask_when`으로 초기에 숨기는 이유.** D-014의 규칙은 "`default`가 있으면
+생략해도 된다"이고 여기엔 있다. 화재 3시간째에 "조사서 받으셨나요"는
+조사관이 방금 다녀간 사람에게 무의미한 질문이다.
+
+경계를 `first_month`(7일)로 잡은 근거는 데이터에 있다 —
+`investigation-report-wait`의 `wait_days`가 `[15, 60]`이다. 7일 전에는
+받았을 가능성이 사실상 없다.
+
+**이것이 `elapsed_bucket`의 첫 실사용처다.** D-014가 미뤄둔 "시점별 설문
+분할"이 여기서 시작된다.
+
+---
+
+### 5. 쟁점 — 승인 전에 결정이 필요하다
+
+**① `timing_hours: 0`을 데이터에서 구분할 것인가**
+
+R2가 `> 0`으로 거르는 것은 코드에서 막는 방식이다. 데이터 쪽에서
+`0`(즉시)과 `null`(시한 없음)을 구분하는 편이 정직하다 — 지금은 같은
+필드에 "만료 시각"과 "우선순위 표시" 두 뜻이 섞여 있다. `urgency: "즉시"`
+같은 별도 필드로 빼면 `timing_hours`는 만료 시각만 뜻하게 된다.
+**데이터 6건 수정이라 이번 범위 밖이다.**
+
+**② `fridge-4h`의 `when`을 `today`로 고칠 것인가**
+
+`when: "missed"`가 데이터에 박혀 있는 유일한 항목이다. 원칙 1이
+"`when`은 화재 직후 기준의 기본 배치"라고 했는데, 화재 직후에 냉장고
+4시간은 **아직 안 지났다**. 지금 값은 그 원칙과 모순이고, 그래서 화재
+3시간째 화면에 "혹시 아직 안 하셨다면"이 떠 있다.
+
+`when: "today"` + `timing_hours: 4`로 두면 R2·R3이 4시간 뒤에 `missed`로
+내린다. 데이터가 "언제까지"만 말하고 배치는 엔진이 계산하는 형태가 되어
+원칙 1에 맞는다. **다른 길은 보이지 않는다.** `missed`를 데이터에
+남겨두면 재배치 전제에서 항상 모순이다.
+**데이터 1건 수정이라 이번 범위 밖이다.**
+
+**③ 기한이 지난 신청을 "오늘 하실 것"에 두는 것이 맞는가**
+
+원칙 2("`irreversible`만 `missed`")를 그대로 적용하면 양천구 조례
+`support-housing`은 `+90d`에서 신청 기한 30일이 지났는데도 **"오늘 하실
+것"에 남는다**. 신청할 수 없는 것을 오늘 하라고 말하는 셈이다.
+
+D-011("숨기지 않는다")은 지켜진다 — 사라지지 않으니까. 문제는 *라벨*이다.
+선택지는 셋이다.
+
+- *(가) 제자리 + UI가 "기한 경과"를 표시* — 원칙 2 그대로. 엔진은
+  `deadline_days`와 `elapsed`를 이미 보내므로 화면에서 붙일 수 있다.
+- *(나) `missed`로 보낸다* — "혹시 아직 안 하셨다면"이라는 라벨은 오히려
+  맞는다. 그러나 원칙 2를 고쳐야 한다.
+- *(다) 기한 만료 전용 블록을 만든다* — 블록이 7개가 된다.
+
+**초안은 (가)를 전제로 계산했다.** 원칙 2가 확정 사항이기 때문이지
+(가)가 최선이라고 판단해서가 아니다. 결정이 필요하다.
+
+**④ `+90d`의 `anytime` 26개**
+
+R5가 `this_week` 14개를 `anytime`으로 내리면 "계속 신경 쓰실 것"이
+26개가 된다. 재배치가 만드는 새 문제다. 첫 화면 개수 제한(1+4)을 다루는
+단계에서 함께 봐야 한다. R5를 빼면 이 문제는 없지만 `+90d`의 사람이
+"이번 주에 하실 것" 15개를 보게 된다.
+
+**⑤ R5의 사실 축 7일 경계가 현재 시계로 관측되지 않는다**
+
+`+5d`(5일)와 `+90d`(90일) 사이를 재는 시각이 없어서, 7일 경계와 30일
+경계의 차이가 나타나는 조합이 하나도 없다. 두 경계 중 하나를 잘못
+구현해도 계기판이 못 잡는다. `+14d` 같은 시각을 추가하거나, 경계를
+하나(30일)로 통일해야 한다.
+
+---
+
+**버린 것**
+
+`timing_hours`를 섹션 *안쪽* 정렬에만 쓰던 단순함. 지금은 `byTiming`
+하나로 정렬만 하는데, 앞으로는 배치와 정렬 두 곳에서 읽힌다.
+
+**재검토 조건**
+
+- 시간 필드를 가진 Action이 늘어나면 → R5의 적용 범위가 줄어든다.
+  46개 중 상당수가 시간 필드를 갖게 되면 R5를 폐기하고 R2~R4로 통일한다
+- `elapsed_bucket`을 `ask_when`에서 실제로 쓰기 시작하면 → D-014의
+  "시점별 설문 분할" 재검토가 발동한다
+
+---
+
 ## 갱신 로그
 
+- 2026-08-27 v10. **D-017(when 재배치 계약) 초안 추가 — 승인 전이다.**
+  규칙만 설계했고 코드·데이터는 한 줄도 안 고쳤다. 승인되면 3/4-B
+  구현 커밋에서 제목의 "(초안 — 승인 전)"을 뗀다. 쟁점 다섯이 열려 있다 —
+  `timing_hours: 0`의 뜻, `fridge-4h`의 `when`, 기한 지난 신청의 자리,
+  `+90d`의 anytime 26개, R5 사실 축 경계의 관측 불가.
+  스냅샷 시계에 +1200d 추가(17 × 4 = 68조합) — deadline 축의 양성 케이스.
 - 2026-08-27 v9. D-016(`water_damage_role`의 모름은 역할 중립만 켠다) 추가.
   `q-water-role`의 `none`을 `none`/`unknown`으로 쪼개고 7개 Action 중 4개를
   열었다. D-013의 "모르면 금지를 켠다"가 여기서는 성립하지 않는다 —
