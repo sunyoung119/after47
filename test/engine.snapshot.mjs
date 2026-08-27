@@ -122,6 +122,16 @@ const PERSONAS = [
     { district: "gangnam", adjuster_present: true }],
   ["P17", "강남 — 제조사 접촉함 (1개)",
     { district: "gangnam", product_maker_contacted: true }],
+
+  // P18은 원칙 3(after_report는 시간이 아니라 조사서 수령으로 푼다)을
+  // 지키는 자리다. 확인할 것이 셋이다.
+  //   · investigation-report와 -wait가 안 뜬다(받았는데 "신청하세요"는 틀렸다)
+  //   · after_report 섹션이 unlocked로 기록된다
+  //   · 그 신청에 매달려 있던 것들이 blocked에서 풀린다 — 다만 한 단계만.
+  //     tenant-contract-termination은 선행(tenant-burden-of-proof)이
+  //     completed에 없으므로 여전히 blocked여야 한다
+  ["P18", "강남 — 조사서 수령 (after_report가 열린다)",
+    { district: "gangnam", report_received: true }],
 ];
 
 // +1200d는 deadline 축의 양성 케이스를 만들기 위한 것이다.

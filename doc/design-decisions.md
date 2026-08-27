@@ -1265,7 +1265,7 @@ placement(action, elapsed_hours, deadline_days) → when
 
 ---
 
-### 5. `report_received` — 설계 (구현은 3/4-C)
+### 5. `report_received` — 구현됨 (3/4-C)
 
 ```
 key       report_received
@@ -1291,6 +1291,28 @@ help      "조사서에 적힌 원인에 따라 달라지는 안내가 있습니
 7일 전에는 받았을 가능성이 사실상 없다.
 
 **이것이 `elapsed_bucket`의 첫 실사용처다.**
+
+**구현에서 추가된 것 둘.**
+
+*(가) `after_report` 항목은 재배치하지 않는다.* 블록에 그대로 두고
+섹션에 `unlocked` 플래그를 실어 보낸다(`report_received === true`일 때만
+`true`). "나오면 할 수 있는 것"과 "이제 할 수 있는 것" 중 무엇으로 부를지는
+UI의 라벨 몫이다. 플래그는 모든 섹션에 넣었다 — 섹션 객체의 모양이 일정해야
+UI가 분기 없이 읽고, 나중에 다른 블록에 잠금 조건이 생겨도 구조가 안 바뀐다.
+
+*(나) 조사서를 받으면 `investigation-report` 의존을 충족으로 본다.*
+`investigation-report`("조사서를 신청하세요")와 `investigation-report-wait`는
+받은 사람에게 안 띄운다 — 틀린 안내이고 거짓이기 때문이다. 그런데 `blocked`
+판정은 `completed` 배열만 보므로, 화면에서 사라진 항목은 **체크할 수도 없고
+거기 매달린 넷이 영원히 blocked가 된다.** 조사서를 받은 사람이 정확히
+그것들을 봐야 하는 사람인데. 조사서가 손에 있다는 것이 그 신청의 목적
+달성이므로 충족으로 본다.
+
+**이 규칙은 `investigation-report` 한 항목에만 적용된다.** "applies 안 되는
+선행은 충족으로 본다"로 일반화하면 `scene-release`가 안 뜨는 사람의 청소
+금지가 풀린다. 그리고 **한 단계만 푼다** — `tenant-burden-of-proof`는
+풀리지만 그것을 선행으로 갖는 `tenant-contract-termination`은 여전히
+blocked다.
 
 ---
 
@@ -1324,6 +1346,10 @@ R5가 `this_week` 14개를 `anytime`으로 내리면 "계속 신경 쓰실 것"�
 
 ## 갱신 로그
 
+- 2026-08-27 v12. D-017 §5 구현(3/4-C). `elapsed_bucket` 파생 키,
+  `q-report` 질문(16번 자리, `ask_when`으로 7일 전 숨김), `after_report`
+  섹션의 `unlocked` 플래그, 조사서 수령 시 `investigation-report` 의존
+  충족(한 항목 한정·한 단계만). 스냅샷에 P18 추가(18 × 5 = 90조합).
 - 2026-08-27 v11. **D-017 확정** — 초안 표시를 뗐다. 승인된 결정 다섯을
   반영: 기한 도과는 제자리도 missed도 아니고 `excluded`(§3, 사유에 헤지),
   `timing_hours: 0`은 R2가 코드로 막고 재검토 조건 명시(실제로 보호하는
