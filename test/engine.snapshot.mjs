@@ -123,10 +123,15 @@ const PERSONAS = [
     { district: "gangnam", product_maker_contacted: true }],
 ];
 
+// +1200d는 deadline 축의 양성 케이스를 만들기 위한 것이다.
+// deadline_days를 가진 Action이 둘뿐인데 모두 1095일(3년)이라
+// +90d까지로는 "시한이 지난 irreversible"이 한 번도 생기지 않았다.
+// timing_hours 축은 +3h만으로도 양성 케이스가 나온다(timing 0인 항목들).
 const CLOCKS = [
   ["+3h", 3],
   ["+5d", 5 * 24],
   ["+90d", 90 * 24],
+  ["+1200d", 1200 * 24],
 ];
 const at = (hours) => new Date(Date.parse(FIRE_AT) + hours * 36e5).toISOString();
 
