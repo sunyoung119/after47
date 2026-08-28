@@ -101,7 +101,7 @@
     "blocks_reason": null,
     "knowledge_level": "전문",
     "source_grade": "해외공적",
-    "source_url": null,
+    "source_url": "https://www.redcross.org/get-help/how-to-prepare-for-emergencies/types-of-emergencies/fire/checking-home-after-fire.html",
     "checked_at": "2026-08-26",
     "when": "today",
     "summary": "치우기 전에 방마다 사진을 남겨야 손해를 입증할 수 있습니다.",
@@ -200,7 +200,7 @@
   {
     "id": "powder-removal",
     "title": "소화약제 분말은 되도록 빨리 제거하세요",
-    "body": "제1인산암모늄 분말은 공기 중 수분과 만나면 약산성이 되어 금속과 회로를 부식시킵니다. 특히 알루미늄과 기판에 취약하고, 시간이 지날수록 진행됩니다. 물이 닿으면 굳어서 제거가 어려워지므로 물걸레로 먼저 문지르지 마세요. 정밀 전자기기 내부는 전문 복원 영역입니다.",
+    "body": "제1인산암모늄 분말은 공기 중 수분과 만나면 약산성이 되어 금속과 회로를 부식시킵니다. 특히 알루미늄과 기판에 취약하고, 시간이 지날수록 진행됩니다. 정밀 전자기기 내부는 전문 복원 영역입니다.",
     "domain": 8,
     "category": "판단",
     "audience": "피해자",
