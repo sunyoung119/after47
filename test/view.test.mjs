@@ -574,7 +574,39 @@ t(
     .filter((f) => existsSync(join(D, f)))
     .every((f) => !/localStorage|sessionStorage|document\.cookie/.test(코드만(f)))
 );
-t("인트로 문구가 확정 문구다", introView({}).line === "불이 꺼진 뒤, 다시 일상으로 가는 길을 함께합니다");
+// 시안 확정 문구 넣 — 라벨·제목·부제·마이크로카피. 줄이면 안 된다.
+const iv = introView({});
+t("인트로 문구가 확정 문구다", iv.line === "불이 꺼진 뒤, 다시 일상으로 가는 길을 함께합니다.");
+t(
+  "마이크로카피가 확정 문구 그대로다 (줄이지 않는다)",
+  iv.micro === "불이 꺼졌듯, 이 시간도 지나갑니다. 다시 일어설 수 있습니다."
+);
+t("상단 라벨이 확정된 서비스명이다", iv.eyebrow === "화재피해 회복 내비게이션");
+t("CTA가 행동을 말한다", iv.cta === "내 상황 확인하기");
+// 제목은 글자로 쪼져 드러나지만 보조기술은 한 덩어리를 읽어야 한다.
+t("제목이 글자로 쪼개져 있다", Array.isArray(iv.letters) && iv.letters.length === 4);
+t("쪼개진 글자를 붙이면 제목이 된다", iv.letters.join("") === iv.lead);
+// 인트로가 canvas 픽셀을 읽지 않는다 — 못 읽는 환경이 있었다.
+t(
+  "인트로가 getImageData에 의존하지 않는다",
+  !/getImageData/.test(코드만("src/ui/screens.js"))
+);
+// 첫 탭이 저장을 기다리다 소진되면 첫 화면에 갇힌다.
+t(
+  "인트로 통과가 once로 한 번만 살아 있지 않다",
+  !/once:\s*true/.test(코드만("src/ui/screens.js"))
+);
+// 전환이 먼저다 — route/render 뒤에 persist가 온다.
+{
+  const src = 코드만("src/ui/app.js");
+  const body = src.slice(src.indexOf("async function passIntro"));
+  // passIntro 다음 선언까지만 자른다.
+  const 본문 = body.slice(0, body.indexOf("function", 30));
+  t(
+    "인트로 통과는 저장을 기다리지 않는다 (render 뒤에 persist)",
+    본문.indexOf("render()") < 본문.indexOf("persist()")
+  );
+}
 
 // 안내 — 속도도 결과도 약속하지 않는다
 const gv = guideView();

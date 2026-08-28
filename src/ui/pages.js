@@ -23,9 +23,12 @@ export const DECK = ["timeline", "check", "sources", "contacts"];
 export function introView(state = {}) {
   return {
     show: state.intro_seen !== true,
+    eyebrow: COPY.intro.eyebrow,
     lead: COPY.intro.lead,
+    letters: COPY.intro.letters,
     line: COPY.intro.line,
-    skip: COPY.intro.skip,
+    cta: COPY.intro.cta,
+    micro: COPY.intro.micro,
   };
 }
 

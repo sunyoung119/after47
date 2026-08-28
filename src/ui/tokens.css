@@ -62,6 +62,7 @@
   --c-glow-3: rgba(90, 77, 111, 0.2);
   --c-glow-soft: rgba(255, 218, 184, 0.12); /* 숨 쉬는 번짐 */
   --c-grain: rgba(255, 255, 255, 0.11); /* 미세 입자 */
+  --c-title-glow: rgba(255, 230, 210, 0.05); /* 제목의 숨기만 한 번짐 */
 
   /* ── 글꼴 ──────────────────────────────────────── */
   --font: "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans CJK KR", system-ui,
@@ -111,6 +112,15 @@
   --s5: 24px;
   --s6: 32px;
   --s7: 48px;
+
+  /* 인트로 전용 간격 — 시안의 리듬이 --s* 스케일 밖에 있다.
+     스케일로 둥글리면 한 화면 안에서 간격이 다 같아져 숫자가 무너진다. */
+  --s-intro-eyebrow: 34px;
+  --s-intro-sub: 48px;
+  --s-intro-sub-sm: 52px;
+  --s-intro-actions: 52px;
+  --s-intro-actions-sm: 72px;
+  --s-intro-micro: 21px;
 
   /* ── 형태 ──────────────────────────────────────── */
   /* 모서리는 3px 하나다. 이름 셋은 남겨 둔다 — 레이아웃 CSS가 모른다. */

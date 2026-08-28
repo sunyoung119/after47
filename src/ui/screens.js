@@ -16,96 +16,50 @@ const btn = (cls, label, fn) => {
   return b;
 };
 
-// ── ① 인트로 ───────────────────────────────────────
+// ── ① 인트로 ───────────────────────────────────
 //
-// 흩어진 점이 모여 글자가 된다. **사진은 쓰지 않는다** — 남의 집 화재
-// 사진은 지금 이 사람이 볼 것이 아니다. 화면 아무 데나 탭하면 통과한다.
+// 사용자가 확정한 시안이다. 구조·타이밍·문구를 그대로 옮겼다.
+// **사진은 쓰지 않는다** — 남의 집 화재 사진은 지금 이 사람이 볼 것이 아니다.
+//
+// 여기 있는 것은 문 하나다. [내 상황 확인하기]가 **진짜 버튼**이고
+// 화면 아무 데나 탭하는 것은 보조다. 키보드는 버튼이 그대로 받는다.
+//
+// ★ `{ once: true }`를 걸지 않는다. 첫 탭이 저장을 기다리다 소진되면
+//   사람이 첫 화면에 갇힌다 — 다시 눌 수 있어야 한다.
 export function renderIntro(host, iv, onPass) {
   clear(host);
   host.hidden = false;
-  const box = el("div", "intro__inner");
 
-  const canvas = el("canvas", "intro__canvas");
-  box.appendChild(canvas);
+  const content = el("section", "intro__content");
+  content.appendChild(el("p", "intro__eyebrow", iv.eyebrow));
 
-  box.appendChild(el("p", "intro__lead", iv.lead));
-  box.appendChild(el("p", "intro__line", iv.line));
-  box.appendChild(el("p", "intro__skip", iv.skip));
-  host.appendChild(box);
+  // 제목 — 글자가 하나씩 드러난다. 보조기술에는 한 덩어리로 읽힌다.
+  const title = el("h1", "intro__title");
+  title.setAttribute("aria-label", iv.lead);
+  const reveal = el("span", "intro__reveal");
+  reveal.setAttribute("aria-hidden", "true");
+  for (const ch of iv.letters) reveal.appendChild(el("span", null, ch));
+  title.appendChild(reveal);
+  content.appendChild(title);
 
-  host.addEventListener("click", onPass, { once: true });
-  // 키보드로도 넘어갈 수 있어야 한다.
-  host.tabIndex = 0;
-  host.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" || e.key === " ") onPass();
+  content.appendChild(el("p", "intro__sub", iv.line));
+
+  const actions = el("div", "intro__actions");
+  const cta = el("button", "intro__cta", iv.cta);
+  cta.type = "button";
+  cta.addEventListener("click", (e) => {
+    // 화면 탭 핸들러까지 올라가면 같은 전환이 두 번 돌아간다.
+    if (e && e.stopPropagation) e.stopPropagation();
+    onPass();
   });
+  actions.appendChild(cta);
+  content.appendChild(actions);
+  host.appendChild(content);
 
-  dots(canvas, iv.lead);
-}
+  // 확정 문구. 이 화면에서 유일하게 사람에게 건네는 말이다.
+  host.appendChild(el("p", "intro__micro", iv.micro));
 
-// 점이 모여 글자가 되는 1~3초. **움직임을 줄여 달라고 한 사람에게는
-// 애니메이션 없이 정적으로 보인다**(prefers-reduced-motion).
-function dots(canvas, text) {
-  const ctx = canvas.getContext && canvas.getContext("2d");
-  if (!ctx) return;
-  const reduce =
-    typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  const dpr = Math.min(globalThis.devicePixelRatio || 1, 2);
-  const w = canvas.clientWidth || 320;
-  const h = 120;
-  canvas.width = w * dpr;
-  canvas.height = h * dpr;
-  ctx.scale(dpr, dpr);
-
-  // 글자 모양을 픽셀로 읽어 목표 좌표를 만든다.
-  const ink = getComputedStyle(canvas).color;
-  ctx.font = `700 ${Math.min(w / 5, 56)}px ${getComputedStyle(document.body).fontFamily}`;
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillStyle = ink;
-  ctx.fillText(text, w / 2, h / 2);
-
-  let targets = [];
-  try {
-    const img = ctx.getImageData(0, 0, w * dpr, h * dpr).data;
-    const step = 4 * dpr;
-    for (let y = 0; y < h * dpr; y += step)
-      for (let x = 0; x < w * dpr; x += step)
-        if (img[(y * w * dpr + x) * 4 + 3] > 128) targets.push({ x: x / dpr, y: y / dpr });
-  } catch {
-    return; // 픽셀을 못 읽는 환경이면 위에 그린 글자가 그대로 남는다
-  }
-  if (!targets.length || reduce) return;
-
-  // 흩어진 자리에서 시작해 제자리로 모인다.
-  const P = targets.map((t) => ({
-    x: Math.random() * w,
-    y: Math.random() * h,
-    tx: t.x,
-    ty: t.y,
-  }));
-  const t0 = performance.now();
-  const DUR = 1400;
-  const tick = (now) => {
-    const k = Math.min(1, (now - t0) / DUR);
-    const e = 1 - Math.pow(1 - k, 3);
-    ctx.clearRect(0, 0, w, h);
-    ctx.fillStyle = ink;
-    for (const p of P) {
-      const x = p.x + (p.tx - p.x) * e;
-      const y = p.y + (p.ty - p.y) * e;
-      ctx.fillRect(x, y, 2, 2);
-    }
-    if (k < 1) requestAnimationFrame(tick);
-    else {
-      // 마지막엔 글자로 또렷하게 바꾼다 — 점 상태로 두면 읽기 어렵다.
-      ctx.clearRect(0, 0, w, h);
-      ctx.fillText(text, w / 2, h / 2);
-    }
-  };
-  ctx.clearRect(0, 0, w, h);
-  requestAnimationFrame(tick);
+  host.addEventListener("click", onPass);
 }
 
 // ── ② 안내 ─────────────────────────────────────────

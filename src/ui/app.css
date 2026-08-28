@@ -53,50 +53,270 @@ a {
   color: var(--c-ink);
 }
 
-/* ── ① 인트로 ──────────────────────────────────── */
+/* ── ① 인트로 ──────────────────────────────── */
+/* 사용자가 확정한 시안. 새벽 글로우(radial)는 **이 화면에만** 있다 —
+   덱 네 장은 차분한 단색이다. 매 화면이 일출이면 아무 화면도 일출이 아니다. */
 .intro {
   position: fixed;
   inset: 0;
+  z-index: 20;
+  min-height: 100dvh;
   display: grid;
   place-items: center;
-  /* 새벽 — 깊은 남색에서 여명으로. 사진은 쓰지 않는다. */
+  isolation: isolate;
+  overflow: hidden;
   background:
     radial-gradient(
-      120% 80% at 50% 100%,
-      color-mix(in srgb, var(--c-accent) 22%, transparent),
-      transparent 70%
+      95% 70% at 50% 112%,
+      var(--c-glow-0) 0%,
+      var(--c-glow-1) 23%,
+      var(--c-glow-2) 43%,
+      var(--c-glow-3) 67%,
+      transparent 79%
     ),
-    linear-gradient(180deg, var(--c-bg) 0%, var(--c-bg-soft) 100%);
-  cursor: pointer;
-  z-index: 20;
+    linear-gradient(
+      180deg,
+      var(--c-bg) 0%,
+      var(--c-bg-soft) 33%,
+      var(--c-surface) 64%,
+      var(--c-bg-deep) 100%
+    );
 }
-.intro__inner {
+/* 아래에서 천천히 숨 쉬는 번짐 */
+.intro::before {
+  content: "";
+  position: absolute;
+  left: -18vw;
+  right: -18vw;
+  bottom: -34vh;
+  height: 68vh;
+  border-radius: 50%;
+  background: var(--c-glow-soft);
+  filter: blur(82px);
+  animation: intro-breathe 8s ease-in-out infinite alternate;
+  z-index: -2;
+}
+/* 미세 입자 — 넓은 그라데이션에 생기는 띄를 깨다 */
+.intro::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.12;
+  background-image: radial-gradient(circle, var(--c-grain) 0 0.55px, transparent 0.7px);
+  background-size: 6px 6px;
+  mix-blend-mode: soft-light;
+}
+.intro__content {
+  width: min(92vw, 1040px);
+  padding: 8vh var(--s5) 10vh;
   text-align: center;
-  padding: var(--s5);
-  max-width: var(--page);
 }
-.intro__canvas {
-  display: block;
-  width: 100%;
-  height: 120px;
-  margin-bottom: var(--s4);
-}
-.intro__lead {
-  margin: 0;
-  font-size: var(--f-hero);
-  font-weight: var(--w-heavy);
-  letter-spacing: 0.02em;
-}
-.intro__line {
-  margin: var(--s3) 0 var(--s6);
-  color: var(--c-ink-soft);
-  font-size: var(--f-md);
-  line-height: var(--lh);
-}
-.intro__skip {
+.intro__eyebrow {
+  margin: 0 0 var(--s-intro-eyebrow);
+  font-size: var(--f-intro-eyebrow);
+  font-weight: var(--w-bold);
+  letter-spacing: var(--ls-eyebrow);
   color: var(--c-ink-faint);
-  font-size: var(--f-sm);
+  opacity: 0;
+  animation: intro-fade 0.55s var(--delay-eyebrow) ease forwards;
+}
+.intro__title {
   margin: 0;
+  font-size: var(--f-intro-title);
+  line-height: var(--lh-intro-title);
+  font-weight: var(--w-heavy);
+  letter-spacing: var(--ls-title);
+  color: var(--c-ink);
+  text-shadow: 0 0 14px var(--c-title-glow);
+}
+/* 글자 하나씩 왼쪽부터 드러난다. 보조기술은 aria-label로 한 덩어리를 읽는다. */
+.intro__reveal {
+  display: inline-flex;
+  gap: 0.01em;
+  white-space: nowrap;
+}
+.intro__reveal span {
+  display: inline-block;
+  opacity: 0;
+  filter: blur(7px);
+  transform: translateY(14px);
+  clip-path: inset(0 100% 0 0);
+  animation: intro-title-in var(--dur-title) var(--ease-intro) forwards;
+}
+.intro__reveal span:nth-child(1) {
+  animation-delay: var(--delay-title);
+}
+.intro__reveal span:nth-child(2) {
+  animation-delay: calc(var(--delay-title) + var(--delay-title-step));
+}
+.intro__reveal span:nth-child(3) {
+  animation-delay: calc(var(--delay-title) + var(--delay-title-step) * 2);
+}
+.intro__reveal span:nth-child(4) {
+  animation-delay: calc(var(--delay-title) + var(--delay-title-step) * 3);
+}
+.intro__sub {
+  width: min(92%, 760px);
+  margin: var(--s-intro-sub) auto 0;
+  font-size: var(--f-intro-sub);
+  line-height: var(--lh-intro-sub);
+  font-weight: 400;
+  letter-spacing: var(--ls);
+  color: var(--c-ink-soft);
+  opacity: 0;
+  filter: blur(4px);
+  transform: translateY(8px);
+  animation: intro-fade-clear var(--dur-sub) var(--delay-sub) ease forwards;
+  text-wrap: balance;
+}
+.intro__actions {
+  margin-top: var(--s-intro-actions);
+  opacity: 0;
+  transform: translateY(8px);
+  animation: intro-fade-up var(--dur-cta) var(--delay-cta) ease forwards;
+}
+/* 진짜 버튼이다. 키보드·보조기술이 그대로 받고, 터치 목표를 지킨다. */
+.intro__cta {
+  appearance: none;
+  min-height: var(--tap);
+  border: 1px solid var(--c-line);
+  background: var(--c-cta);
+  color: var(--c-ink);
+  padding: var(--s4) 18px 17px;
+  border-radius: var(--r1);
+  font: var(--w-bold) var(--f-intro-cta) / 1 var(--font);
+  letter-spacing: var(--ls);
+  box-shadow:
+    inset 0 1px 0 var(--c-glow-soft),
+    0 10px 28px var(--c-glow-3);
+  cursor: pointer;
+  transition:
+    background var(--dur) ease,
+    transform var(--dur) ease;
+}
+.intro__cta:hover {
+  background: var(--c-cta-hover);
+  transform: translateY(-1px);
+}
+/* 확정 마이크로카피. 화면 아래에 고정된다. */
+.intro__micro {
+  position: absolute;
+  left: 50%;
+  bottom: var(--s-intro-micro);
+  translate: -50% 0;
+  margin: 0;
+  font-size: var(--f-intro-micro);
+  line-height: var(--lh-tight);
+  white-space: nowrap;
+  color: var(--c-ink-micro);
+  opacity: 0;
+  animation: intro-fade var(--dur-fade) var(--delay-micro) ease forwards;
+}
+
+@keyframes intro-title-in {
+  0% {
+    opacity: 0;
+    filter: blur(7px);
+    transform: translateY(14px);
+    clip-path: inset(0 100% 0 0);
+  }
+  50% {
+    opacity: 0.75;
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes intro-fade-clear {
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+@keyframes intro-fade-up {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes intro-fade {
+  to {
+    opacity: 1;
+  }
+}
+@keyframes intro-breathe {
+  from {
+    transform: scale(0.96);
+    opacity: 0.74;
+  }
+  to {
+    transform: scale(1.04);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .intro__content {
+    width: min(90vw, 420px);
+    padding: 10vh var(--s5) 12vh;
+  }
+  .intro__eyebrow {
+    font-size: var(--f-intro-eyebrow-sm);
+    line-height: var(--lh-tight);
+  }
+  .intro__title {
+    font-size: var(--f-intro-title-sm);
+    line-height: var(--lh-intro-title-sm);
+    letter-spacing: var(--ls-title-sm);
+  }
+  .intro__sub {
+    width: 100%;
+    margin-top: var(--s-intro-sub-sm);
+    font-size: var(--f-intro-sub-sm);
+    line-height: var(--lh-intro-sub-sm);
+  }
+  .intro__actions {
+    margin-top: var(--s-intro-actions-sm);
+  }
+  .intro__cta {
+    font-size: var(--f-intro-cta-sm);
+    padding: var(--s3) var(--s4) 15px;
+  }
+  .intro__micro {
+    width: min(86vw, 320px);
+    white-space: normal;
+    text-wrap: balance;
+    line-height: var(--lh-intro-sub);
+  }
+}
+
+/* 움직임을 줄여 달라고 한 사람에게는 연출 없이 글자만 남는다. */
+@media (prefers-reduced-motion: reduce) {
+  .intro *,
+  .intro *::before,
+  .intro *::after,
+  .intro::before,
+  .intro::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .intro__eyebrow,
+  .intro__reveal span,
+  .intro__sub,
+  .intro__actions,
+  .intro__micro {
+    opacity: 1;
+    filter: none;
+    transform: none;
+    clip-path: none;
+  }
 }
 
 /* ── 셸 ────────────────────────────────────────── */

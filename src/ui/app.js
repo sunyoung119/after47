@@ -99,6 +99,15 @@ async function persist() {
   return r;
 }
 
+// 인트로가 떠 있는 동안만 body 스크롤을 잠근다. CSS는 tokens/app.css에 있고
+// 여기는 클래스 하나만 붙인다 — 색값도 치수도 JS에 쓰지 않는다.
+function setIntroLock(on) {
+  const b = document.body;
+  if (!b || !b.classList) return;
+  if (on) b.classList.add("is-intro");
+  else b.classList.remove("is-intro");
+}
+
 // ── 렌더 ───────────────────────────────────────────
 function render() {
   const intro = $("intro");
@@ -106,9 +115,12 @@ function render() {
 
   if (app.screen === "intro") {
     flow.hidden = true;
+    // 뒤 화면이 비치거나 스크롤되면 안 된다. 복원은 바로 아래에서 한다.
+    setIntroLock(true);
     renderIntro(intro, introView(app.state), passIntro);
     return;
   }
+  setIntroLock(false);
   intro.hidden = true;
   flow.hidden = false;
 
@@ -146,11 +158,19 @@ function go(screen) {
 }
 
 async function passIntro() {
+  // 버튼과 화면 탭이 같이 들어와도 한 번만 통과한다.
+  if (app.state.intro_seen === true) return;
   // 플래그는 **state 필드**다. 저장은 saveState 경유이고 storage는 무변이다.
   app.state = { ...app.state, intro_seen: true };
-  await persist();
+  // **전환이 먼저다.** 저장이 느리거나 막혀도 첫 화면에 갇히면 안 된다 —
+  // 인트로는 정보가 아니라 문이고, 문이 저장을 기다릴 이유가 없다.
   route();
   render();
+  try {
+    await persist();
+  } catch {
+    // 저장 실패는 다음 화면의 D-015 안내가 말한다. 전환을 되돌리지 않는다.
+  }
 }
 
 function renderBanners(entry) {
