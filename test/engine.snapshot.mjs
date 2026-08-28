@@ -392,14 +392,23 @@ function checkInvariants(snapshot) {
   let waiting = 0;
   let lockedIrr = 0;
   const blockedIrr = [];
+  // D-018의 짝(4/4-E). 금지가 blocked로 접히면 밴드에서 통째로 사라진다.
+  // 엔진이 분배에서 막지만, 여기가 보는 것은 **데이터가 다시 들어오는 것**이다.
+  // 스냅샷 행에 when이 없으므로 id로 actions를 되짚는다 — R0이 standing을
+  // 그대로 두므로 데이터의 when으로 판정할 수 있다.
+  const whenOf = new Map(data.actions.map((a) => [a.id, a.when]));
+  const blockedStanding = [];
   for (const pid of Object.keys(snapshot.cases || {})) {
     for (const [label] of CLOCKS) {
       const c = snapshot.cases[pid][label];
       if (!c) continue;
       rows.push(...(c.excluded || []));
       waiting += (c.waiting || []).length;
-      for (const x of c.blocked || [])
+      for (const x of c.blocked || []) {
         if (x.irreversible) blockedIrr.push(`${pid}${label} ${x.id}`);
+        if (whenOf.get(x.id) === "standing")
+          blockedStanding.push(`${pid}${label} ${x.id}`);
+      }
       for (const sec of c.sections || [])
         for (const it of sec.items) if (it.locked) lockedIrr++;
     }
@@ -421,6 +430,10 @@ function checkInvariants(snapshot) {
   // 뒤에도 missed에 못 간다 — 그 상태가 100조합 220건이었다.
   if (blockedIrr.length)
     fails.push(`blocked 버킷에 irreversible이 ${blockedIrr.length}건 있다 — ${blockedIrr[0]} 외`);
+  // D-018의 짝. standing은 선행을 기다리지 않는다 — blocked로 접히면
+  // 밴드에도 섹션에도 없어 금지가 화면에서 사라진다.
+  if (blockedStanding.length)
+    fails.push(`blocked 버킷에 standing이 ${blockedStanding.length}건 있다 — ${blockedStanding[0]} 외`);
   // 반대쪽. 잠김이 0이 되면 §5가 조용히 원상복구된 것이다.
   if (!lockedIrr) fails.push("잠김(locked) 행이 어느 조합에도 없다");
   return fails;

@@ -271,8 +271,9 @@ export function evaluate(state, data, now = Date.now()) {
       // 다시 열어야 했다. dept를 행에 실은 것과 같은 이유다(4/4-B).
       group: a.domain_group,
       category: a.category,
-      // "얼마나 기다리나". category가 `대기`인 항목의 eta다 — UI가
-      // "보름~두 달"을 그린다. 나머지는 null(2/4-C의 키 일관성 규칙).
+      // "얼마나 기다리나". UI가 "보름~두 달"을 그린다. 나머지는
+      // null(2/4-C의 키 일관성 규칙). **`대기` 전용이 아니다** — 현재 2건이고
+      // 그중 dispute-mediation은 `신청`이다. category로 유무를 추정하지 마라.
       wait_days: a.wait_days ?? null,
       // 3층 타임라인. 데이터의 when이 아니라 여기서 계산된 값이 화면 위치다(D-001)
       when: whenNow,
@@ -335,7 +336,14 @@ export function evaluate(state, data, now = Date.now()) {
     // D-008("행동할 수 있는 것만 담는다")과 긴장하지만 위반은 아니다.
     // D-008이 빼는 것은 `기관자율`(피해자가 개입할 수 없는 것)이고 이것은
     // 선행만 끝내면 할 수 있는 것이다. 선행 제목은 blocked_by에 실려 있다.
-    if (r.blockedBy.length) {
+    //
+    // **금지는 선행을 기다리지 않는다**(D-018의 짝). `standing`이 여기서
+    // 접히면 타임라인 밖 밴드에도 섹션에도 없어 화면에서 통째로 사라진다 —
+    // adjusters-may-all-be-opposing이 100조합 중 P16의 5조합에서 그랬다.
+    // 데이터에서 depends_on을 뺐지만(4/4-E①) 같은 유형이 다시 들어올 수
+    // 있으므로 분배에서도 막는다. blockedBy는 행에 그대로 둔다 —
+    // 자리를 바꾸는 것이지 정보를 지우는 것이 아니다.
+    if (r.blockedBy.length && r.when !== "standing") {
       if (!r.action.irreversible) { out.blocked.push(r); continue; }
       r.locked = true;
       // 선행이 안 끝났는데 체크되면 done이 거짓이 된다. 위 done 판정은
