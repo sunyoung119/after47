@@ -15,6 +15,7 @@ import { openSession, anchorSession } from "../src/session.js";
 import { evaluate } from "../src/engine.js";
 import { applyDefaults } from "../src/questions.js";
 import { entryView, surveyView, saveNoticeView, resultPlaceholderView } from "../src/ui/view.js";
+import { timelineView, locate, waitLabel } from "../src/ui/timeline.js";
 
 const D = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (f) => JSON.parse(readFileSync(join(D, f), "utf8"));
@@ -315,6 +316,140 @@ t(
   String(빈판정.undeterminedCount)
 );
 t("standing은 별도로 센다 (rank 경쟁 밖)", rv.standingCount > 0);
+
+// ── 5. 타임라인 ────────────────────────────────────
+section("5. 타임라인 — 자르고 접는 것은 UI다");
+
+const tl = (state, now = NOW) => timelineView({ result: 판정(state, now), state, data });
+
+const t1 = tl(전.state);
+t(
+  "가로 암시선은 양 끝점뿐이다 — 끝은 화살표, 라벨은 '회복으로'",
+  t1.header.start === "화재발생" && t1.header.end === "회복으로",
+  JSON.stringify(t1.header)
+);
+t("확정 문구가 그대로다", t1.header.line === "불이 꺼졌듯, 이 시간도 지나갑니다.");
+
+t("큰 카드는 rank 1이다", t1.cards.lead?.rank === 1, String(t1.cards.lead?.rank));
+t(
+  "그 아래 넉 줄은 rank 2~5다",
+  t1.cards.rest.length === 4 && t1.cards.rest.every((r, i) => r.rank === i + 2),
+  JSON.stringify(t1.cards.rest.map((r) => r.rank))
+);
+t("카드 영역이 예산(5)을 넘지 않는다", 1 + t1.cards.rest.length <= 5);
+t(
+  "큰 카드가 제목·요약·본문을 갖는다 (읽을 것은 하나)",
+  Boolean(t1.cards.lead.title && t1.cards.lead.summary && t1.cards.lead.body)
+);
+t(
+  "접힌 구간은 라벨과 개수를 갖는다 (지우는 것이 아니라 접는 것이다)",
+  t1.more.length > 0 && t1.more.every((m) => m.label && typeof m.count === "number")
+);
+t(
+  "접힌 구간에는 rank 6 이상만 있다",
+  t1.more.every((m) => m.items.every((r) => r.rank > 5)),
+  JSON.stringify(t1.more.flatMap((m) => m.items.map((r) => r.rank)).filter((r) => r <= 5))
+);
+
+// standing과 missed는 순위 경쟁 밖이다(D-019 §0 · UI-A② 개정)
+t(
+  "금지 밴드가 있고 rank가 전부 null이다",
+  t1.standing.count > 0 && t1.standing.items.every((r) => r.rank === null)
+);
+t("금지는 체크할 수 없다", t1.standing.items.every((r) => r.checkable === false));
+t(
+  "카드 영역에 standing이 섞이지 않는다",
+  ![t1.cards.lead, ...t1.cards.rest].some((r) => r.when === "standing")
+);
+
+const 늦게 = tl(전.state, Date.parse(FIRE) + 5 * 24 * 36e5);
+t("+5d에는 지나간 것이 생긴다", 늦게.missed.count > 0, String(늦게.missed.count));
+t("지나간 것은 rank가 null이다", 늦게.missed.items.every((r) => r.rank === null));
+t(
+  "지나간 것이 카드 예산을 먹지 않는다 (UI-A② 개정의 핵심)",
+  ![늦게.cards.lead, ...늦게.cards.rest].some((r) => r.when === "missed"),
+  JSON.stringify([늦게.cards.lead, ...늦게.cards.rest].map((r) => r.rank + ":" + r.when))
+);
+t(
+  "+5d에도 첫 카드는 같다",
+  늦게.cards.lead?.id === t1.cards.lead?.id,
+  t1.cards.lead?.id + " → " + 늦게.cards.lead?.id
+);
+
+// 잠김 — 여는 열쇠가 어디 있는지 뷰모델이 답한다
+const 잠긴 = [t1.cards.lead, ...t1.cards.rest, ...t1.more.flatMap((m) => m.items)].filter(
+  (r) => r.locked
+);
+t(
+  "잠긴 행은 선행 제목을 싣고 있다 (콘텐츠를 새로 쓰지 않는다)",
+  잠긴.every((r) => r.blockedBy.length > 0 && r.blockedBy[0].title)
+);
+// 선행이 이 사람 화면에 **아예 없을 수 있다.** applies_when에 안 맞아 그
+// Action이 안 뜨는데 depends_on은 그대로라 잠김만 남는다. 레퍼런스 케이스가
+// 그렇다 — scene_preserved:true라 scene-release가 안 뜬다(엔진·데이터 쪽
+// 문제. 보고했다). 화면은 갈 곳이 있을 때만 버튼을 그려야 한다.
+t("잠긴 행마다 leadTo / leadMissing 중 하나가 정해진다",
+  잠긴.every((r) => (r.leadTo === null) === (r.leadMissing === true)));
+const 갈수있는 = 잠긴.filter((r) => r.leadTo);
+const 못가는 = 잠긴.filter((r) => r.leadMissing);
+t("갈 곳이 있는 잠김은 locate로 찾힌다",
+  갈수있는.every((r) => locate(t1, r.leadTo.id) !== null),
+  JSON.stringify(갈수있는.map((r) => r.leadTo.id)));
+t("선행이 화면에 없으면 leadMissing이다 (버튼을 그리지 않는 근거)",
+  못가는.every((r) => locate(t1, r.blockedBy[0].id) === null),
+  JSON.stringify(못가는.map((r) => r.id + "←" + r.blockedBy[0].id)));
+console.log(`      실측 — 잠김 ${잠긴.length}건 중 갈 곳 있음 ${갈수있는.length} / 없음 ${못가는.length}`);
+t("화면에 없는 id는 null이다", locate(t1, "없는-액션") === null);
+
+// 대기 — 기간을 약속하지 않되 숫자는 준다
+t(
+  "대기 항목은 wait_days 하한으로 정렬된다",
+  t1.waiting.every((r, i, a) => i === 0 || (a[i - 1].waitDays?.[0] ?? 1e9) <= (r.waitDays?.[0] ?? 1e9))
+);
+t("범위를 숫자로 만든다", waitLabel([15, 60]) === "15~60일", String(waitLabel([15, 60])));
+t("값이 없으면 null이다 — 화면은 기간 없이 상태만 말한다", waitLabel(null) === null);
+
+// 완료 로그
+const 체크 = {
+  ...전.state,
+  completed: ["fire-cert"],
+  completed_at: { "fire-cert": "2026-03-02T12:00:00.000Z" },
+};
+const t2 = tl(체크);
+t("체크한 것이 완료 로그로 간다", t2.done.count === 1 && t2.done.items[0].id === "fire-cert");
+t("완료에 날짜가 붙는다", t2.done.items[0].doneOn === "2026년 3월 2일", t2.done.items[0].doneOn);
+t(
+  "날짜가 없어도 완료다 (completed_at이 null이라고 완료가 아닌 것은 아니다)",
+  tl({ ...전.state, completed: ["fire-cert"] }).done.items[0].doneOn === null
+);
+t(
+  "완료한 것은 카드에서 빠진다",
+  ![t2.cards.lead, ...t2.cards.rest].some((r) => r.id === "fire-cert")
+);
+
+// 해당 여부 — 자치구 미지정만 화면에서 고르게 유도한다
+const { district: _d2, ...구없이2 } = 전.state;
+const t3 = tl(구없이2);
+t(
+  "자치구 미지정 미판정은 [자치구 고르기]로 유도한다",
+  t3.excluded.filter((r) => r.needsDistrict).length === 4,
+  String(t3.excluded.filter((r) => r.needsDistrict).length)
+);
+t("자치구를 고른 뒤에는 그 유도가 없다", t1.excluded.every((r) => !r.needsDistrict));
+
+// after_report — unlocked로 라벨이 바뀐다
+const 전라벨 = tl({ ...전.state, report_received: false }).more.find((m) => m.key === "after_report");
+const 후라벨 = tl({ ...전.state, report_received: true }).more.find((m) => m.key === "after_report");
+t("after_report 구간이 양쪽에 다 있다", Boolean(전라벨 && 후라벨));
+if (전라벨 && 후라벨) {
+  t("조사서 전에는 '조사서가 나온 뒤에'", 전라벨.label === "조사서가 나온 뒤에", 전라벨.label);
+  t("조사서를 받으면 '이제 할 수 있는 것'", 후라벨.label === "이제 할 수 있는 것", 후라벨.label);
+}
+
+// anytime 비대 — 분야로 한 번 더 묶는다(D-019 §7)
+const any = t1.more.find((m) => m.key === "anytime");
+if (any) t("anytime은 분야 묶음을 갖는다", any.groups.length > 0 && Boolean(any.groups[0].group));
+
 
 // ── 결과 ───────────────────────────────────────────
 console.log(`\n${"=".repeat(62)}`);

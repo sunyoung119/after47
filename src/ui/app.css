@@ -122,7 +122,8 @@ body {
 .meta__hint {
   opacity: 0.85;
 }
-.row {
+/* 버튼 한 줄. 타임라인의 목록 행(.row)과 이름이 겹쳐 .actions로 둔다. */
+.actions {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -252,7 +253,7 @@ body {
   margin: 8px 0 0;
 }
 
-/* ── 결과 자리표시자 ────────────────────────────── */
+/* ── 결과 화면 머리 ─────────────────────────────── */
 .basis {
   display: flex;
   align-items: center;
@@ -269,58 +270,6 @@ body {
   flex-wrap: wrap;
   margin: 12px 0 0;
 }
-.block {
-  margin: 20px 0;
-}
-.counts {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 12px;
-}
-.counts__item {
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 4px 10px;
-  font-size: 0.9rem;
-}
-.top {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 8px;
-}
-.top__item {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  flex-wrap: wrap;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 10px 12px;
-}
-.top__rank {
-  font-weight: 700;
-  min-width: 1.2em;
-}
-.top__title {
-  flex: 1 1 12rem;
-}
-.top__tag {
-  font-size: 0.8rem;
-  color: var(--ink-soft);
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  padding: 1px 6px;
-}
-.top__tag--locked {
-  border-style: dashed;
-  font-weight: 600;
-}
-
 /* ── 발 ─────────────────────────────────────────── */
 .foot {
   margin-top: 32px;
@@ -334,4 +283,242 @@ body {
 }
 .foot__line:empty {
   display: none;
+}
+
+/* ── 타임라인 (UI-A②) ──────────────────────────── */
+
+/* 가로 암시선 — 양 끝점만. 중간 노드도 현재 위치 표시도 없다. */
+.arc {
+  padding: 16px 0 8px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 8px;
+}
+.arc__row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+.arc__line {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-align: center;
+  letter-spacing: -0.05em;
+}
+.arc__end--to {
+  font-weight: 600;
+  color: var(--ink);
+}
+.arc__line-copy {
+  margin: 10px 0 0;
+  text-align: center;
+  color: var(--ink-soft);
+}
+
+/* 카드 — 읽을 것은 하나, 있는 것은 다섯 */
+.cards {
+  margin: 16px 0;
+}
+.card {
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  padding: 16px;
+}
+.card__title {
+  margin: 0;
+  font-size: 1.2rem;
+  line-height: 1.45;
+}
+.card__summary {
+  margin: 8px 0 0;
+}
+.card__body {
+  margin: 8px 0 0;
+  color: var(--ink-soft);
+}
+.card__more {
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+.cardlist {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+.cardline {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.cardline__sum {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  cursor: pointer;
+  min-height: 32px;
+}
+.cardline__rank {
+  font-weight: 700;
+  color: var(--ink-soft);
+  min-width: 1.1em;
+}
+.cardline__title {
+  flex: 1;
+}
+
+/* 접힌 구간 — 라벨과 개수만 */
+.block {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin: 10px 0;
+}
+.block--sub {
+  margin: 8px 0 0;
+  background: var(--bg-soft);
+}
+.block--missed,
+.block--done {
+  background: var(--bg-soft);
+}
+.block__sum {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  cursor: pointer;
+  min-height: 32px;
+  align-items: center;
+}
+.block__label {
+  font-weight: 600;
+}
+.block__count {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+
+/* 금지 밴드 — 타임라인 밖. 항상 보인다. */
+.band {
+  border: 1px solid var(--ink);
+  border-left-width: 5px;
+  border-radius: 8px;
+  padding: 12px;
+  margin: 16px 0;
+}
+.band__title {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+
+.rows {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.row {
+  border-top: 1px solid var(--line);
+  padding-top: 8px;
+}
+.row:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+/* 흐림은 형태로도 구분한다 — 색만으로 상태를 말하지 않는다. */
+.row--dim .row__sum,
+.row--dim .row__summary {
+  color: var(--ink-soft);
+}
+.row--standing .row__sum {
+  font-weight: 600;
+}
+.row__sum {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 0;
+  cursor: pointer;
+  min-height: 32px;
+}
+.row__summary,
+.row__reason,
+.row__dept,
+.row__wait {
+  margin: 6px 0 0;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+}
+.row__wait {
+  color: var(--ink);
+}
+.row__date {
+  margin-left: auto;
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+}
+.row--done .row__sum {
+  color: var(--ink-soft);
+}
+/* 선행으로 이동했을 때 잠깐 강조 */
+.row--flash,
+.card--flash {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+/* 잠김 — 제자리 흐림 + 먼저 할 일 */
+.locked {
+  margin-top: 8px;
+  padding: 8px 10px;
+  border: 1px dashed var(--line);
+  border-radius: 6px;
+}
+.locked__text {
+  margin: 0;
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+/* 상태는 글자로 말한다 (WCAG 1.4.1) */
+.tags {
+  margin: 8px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.tag {
+  font-size: 0.78rem;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 1px 6px;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+.tag--locked {
+  border-style: dashed;
+  font-weight: 600;
+  color: var(--ink);
+}
+.tag--quiet {
+  border-color: transparent;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  min-height: 44px;
+  cursor: pointer;
+}
+.check__box {
+  width: 22px;
+  height: 22px;
 }

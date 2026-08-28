@@ -11,7 +11,9 @@ import { openSession, anchorSession, shareUrl, spellToken } from "../session.js"
 import { saveState } from "../storage.js";
 import { evaluate } from "../engine.js";
 import { applyDefaults } from "../questions.js";
-import { entryView, surveyView, saveNoticeView, resultPlaceholderView } from "./view.js";
+import { entryView, surveyView, saveNoticeView } from "./view.js";
+import { timelineView, locate } from "./timeline.js";
+import { renderTimeline, el, clear } from "./render.js";
 import { COPY } from "./copy.js";
 
 // ── 상태 ───────────────────────────────────────────
@@ -22,18 +24,10 @@ const app = {
   screen: "survey", // picker · survey · result
   savedOnce: false, // D-015 예외를 첫 답변 직후 한 번만 띄우기 위한 표시
   spelled: false,
+  tv: null, // 마지막으로 그린 타임라인 뷰모델. goTo가 이것에 묻는다
 };
 
 const $ = (id) => document.getElementById(id);
-const el = (tag, cls, text) => {
-  const n = document.createElement(tag);
-  if (cls) n.className = cls;
-  if (text != null) n.textContent = text;
-  return n;
-};
-const clear = (n) => {
-  while (n.firstChild) n.removeChild(n.firstChild);
-};
 
 // 화면에 띄우는 주소는 **여기서 만든다.** shareUrl의 기본 base가
 // https://after47.kr/ 인데 v1 배포처가 아니다. 없는 주소를 안내하는 것이
@@ -209,7 +203,7 @@ function renderSurvey(main) {
 
   main.appendChild(q.type === "date" ? dateField(q) : choiceField(q));
 
-  const row = el("div", "row");
+  const row = el("div", "actions");
   row.appendChild(backLink(sv));
   if (sv.canPeek) {
     const peek = el("button", "btn btn--quiet", COPY.survey.peek);
@@ -333,7 +327,7 @@ function showSaveNotice() {
   spell.hidden = true;
   box.appendChild(spell);
 
-  const row = el("div", "row");
+  const row = el("div", "actions");
   for (const a of sn.actions) {
     const btn = el("button", "btn", a.label);
     btn.type = "button";
@@ -368,28 +362,28 @@ function showSaveNotice() {
   box.appendChild(row);
 }
 
-// ── ② 결과 자리표시자 ──────────────────────────────
-// 꾸미지 않는다. 엔진 출력을 날것으로 보는 자리다.
-// 타임라인·갈림길 시각화·D-015 1층은 UI-A②의 일이다.
+// ── ② 타임라인 ─────────────────────────────────────
+// 자리표시자를 대체한다(UI-A②). 판단은 timeline.js가, 그리기는 render.js가
+// 한다. 여기서 하는 것은 둘을 잇고 사용자 행동을 state로 되돌리는 것뿐이다.
 function renderResult(main, entry) {
-  // 판정할 때만 기본값을 채운 **사본**을 만든다. app.state는 그대로 둔다.
+  // 판정할 때만 기본값을 채운 **사본**을 만든다. app.state는 그대로 둔다 —
+  // 기본값을 써 넣으면 "안 물어본 것"과 "기본값으로 답한 것"이 구분되지 않는다.
   const forEngine = applyDefaults(app.session.data.questions, app.state);
   const result = evaluate(forEngine, app.session.data);
   const district = entry.district
     ? app.session.data.districts.find((d) => d.id === entry.district.id)
     : null;
-  const rv = resultPlaceholderView(result, district);
+  const tv = timelineView({ result, state: app.state, data: app.session.data });
+  app.tv = tv; // onGoTo가 "지금 화면 어디에 있나"를 묻는다
 
-  // QR 오배포 방어 — "지금 어느 구 기준으로 보고 있는지"를 결과 위에 둔다.
-  // 주소는 노출하지 않는다(D-015 1층은 UI-A②).
+  // QR 오배포 방어 — "지금 어느 구 기준으로 보고 있는지"를 맨 위에 둔다.
   const basis = el("p", "basis");
-  basis.appendChild(el("strong", null, rv.basis));
-  const change = el("button", "btn btn--quiet", rv.hasDistrict ? COPY.picker.change : COPY.picker.choose);
+  basis.appendChild(
+    el("strong", null, district ? COPY.result.basis(district.name) : COPY.result.noDistrict)
+  );
+  const change = el("button", "btn btn--quiet", district ? COPY.picker.change : COPY.picker.choose);
   change.type = "button";
-  change.addEventListener("click", () => {
-    app.screen = "picker";
-    render();
-  });
+  change.addEventListener("click", goPicker);
   basis.appendChild(change);
   main.appendChild(basis);
 
@@ -413,46 +407,51 @@ function renderResult(main, entry) {
     main.appendChild(row);
   }
 
-  main.appendChild(el("p", "hint", COPY.result.placeholder));
-
-  main.appendChild(countBlock(COPY.result.buckets, rv.buckets.map((b) => `${b.label} ${b.count}`)));
-  main.appendChild(
-    countBlock(
-      COPY.result.sections,
-      rv.sections.map((s) => `${s.label} ${s.count}${s.unlocked === false ? " (잠김)" : ""}`)
-    )
-  );
-
-  const top = el("section", "block");
-  top.appendChild(el("h3", "h3", COPY.result.top));
-  const ol = el("ol", "top");
-  for (const it of rv.top) {
-    const li = el("li", "top__item");
-    li.appendChild(el("span", "top__rank", `${it.rank}`));
-    li.appendChild(el("span", "top__title", it.title));
-    // 상태는 색이 아니라 글자다(WCAG 1.4.1).
-    li.appendChild(el("span", "top__tag", it.when));
-    if (it.locked) li.appendChild(el("span", "top__tag top__tag--locked", COPY.result.locked));
-    ol.appendChild(li);
-  }
-  top.appendChild(ol);
-  main.appendChild(top);
-
-  main.appendChild(
-    countBlock("", [
-      `${COPY.result.standing} ${rv.standingCount}`,
-      `${COPY.result.undetermined} ${rv.undeterminedCount}`,
-    ])
-  );
+  renderTimeline(main, tv, {
+    onCheck: check,
+    onGoTo: goTo,
+    onPickDistrict: goPicker,
+  });
 }
 
-function countBlock(title, lines) {
-  const sec = el("section", "block");
-  if (title) sec.appendChild(el("h3", "h3", title));
-  const ul = el("ul", "counts");
-  for (const line of lines) ul.appendChild(el("li", "counts__item", line));
-  sec.appendChild(ul);
-  return sec;
+function goPicker() {
+  app.screen = "picker";
+  render();
+}
+
+// 체크 → completed + completed_at 기록 → saveState → 재평가.
+// **`completed_at`을 넣는 것은 UI 몫이다**(4/4-F②). 엔진은 실어 보내기만 한다.
+async function check(id, on) {
+  const set = new Set(app.state.completed || []);
+  const at = { ...(app.state.completed_at || {}) };
+  if (on) {
+    set.add(id);
+    at[id] = new Date().toISOString();
+  } else {
+    set.delete(id);
+    delete at[id];
+  }
+  app.state = { ...app.state, completed: [...set], completed_at: at };
+  await persist();
+  render();
+}
+
+// 잠긴 행에서 선행 카드로 보낸다. 접힌 구간 안이면 펼치고 스크롤·강조한다 —
+// 화면에 "지금 못 하는 것"이 있는데 여는 열쇠가 같은 화면에 없던 것이
+// D-019 §4의 관측이었다.
+function goTo(id) {
+  if (!app.tv || !locate(app.tv, id)) return;
+  const node = document.querySelector(`[data-row="${id}"]`);
+  if (!node) return;
+  // 조상 details를 전부 연다. 접혀 있으면 스크롤이 의미가 없다.
+  for (let p = node; p; p = p.parentElement) if (p.tagName === "DETAILS") p.open = true;
+  if (node.tagName === "DETAILS" || node.querySelector) {
+    const own = node.tagName === "DETAILS" ? node : node.querySelector("details");
+    if (own) own.open = true;
+  }
+  node.scrollIntoView({ behavior: "smooth", block: "center" });
+  node.classList.add("row--flash");
+  setTimeout(() => node.classList.remove("row--flash"), 1600);
 }
 
 // ── 시작 ───────────────────────────────────────────
