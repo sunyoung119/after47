@@ -235,7 +235,9 @@ t("새로 시작하기를 고르면 새 토큰이 나온다", s.token !== 토큰
 
 // 이상한 주소
 새백엔드();
-s = await openSession({ url: "https://after47.kr/?d=jongno&t=ab0k9m" });
+// bucheon은 서울 자치구가 아니다. 25개 전수를 채운 뒤로 "데이터에 없는 구"를
+// 서울 안에서 고를 수 없어졌다.
+s = await openSession({ url: "https://after47.kr/?d=bucheon&t=ab0k9m" });
 t("모르는 자치구는 힌트로 안 쓴다", s.state.district === undefined);
 t("자치구를 물어야 한다고 알려준다", s.notices.some((n) => n.type === "district_needed"));
 t("망가진 토큰은 버리고 새로 발급한다", isValidToken(s.token) && s.token !== "ab0k9m");

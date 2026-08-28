@@ -164,7 +164,9 @@ section("4. 자치구 유입 - QR 없이도 들어올 수 있는가");
 const urlCases = [
   ["https://after47.kr/?d=mapo", "mapo", false],
   ["?d=gangnam", "gangnam", false],
-  ["?d=jongno", null, true], // 아직 안 채운 구
+  // 25개 전수를 채운 뒤로 "아직 안 채운 구"가 없어졌다. 서울 자치구가
+  // 아닌 값으로 바꾼다 — 이웃 도시 QR이나 잘못 온 링크가 그 자리다.
+  ["?d=bucheon", null, true],
   ["?d=<script>", null, true],
   ["/", null, true],
   [null, null, true],
