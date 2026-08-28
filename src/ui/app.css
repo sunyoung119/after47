@@ -23,7 +23,7 @@ body {
   background-attachment: fixed;
   color: var(--c-ink);
   font: var(--f-body) / var(--lh) var(--font);
-  letter-spacing: var(--ls);
+  letter-spacing: var(--ls, -0.02em);
   word-break: keep-all; /* 화재 직후 사람이 읽는다 */
 }
 
@@ -53,9 +53,22 @@ a {
   color: var(--c-ink);
 }
 
-/* ── ① 인트로 ──────────────────────────────── */
+/* ── ① 인트로 ──────────────────────────────────── */
 /* 사용자가 확정한 시안. 새벽 글로우(radial)는 **이 화면에만** 있다 —
-   덱 네 장은 차분한 단색이다. 매 화면이 일출이면 아무 화면도 일출이 아니다. */
+   덱 네 장은 차분한 단색이다. 매 화면이 일출이면 아무 화면도 일출이 아니다.
+
+   ★★ 기본 상태는 **보이는 것**이다. 등장 연출은 keyframes의 `from`에만 있고
+      fill-mode는 `backwards`다(지연 동안만 숨긴다). 애니메이션이 어떤
+      이유로든 안 돌면 **정적으로 전부 보이는 화면**이 남는다.
+
+      실기기에서 그 사고가 났다. 새 마크업 + 캐시에 남은 옛 `tokens.css`
+      조합에서 `var(--delay-eyebrow)` 같은 인트로 토큰이 안 풀렸고,
+      CSS 규칙상 var()가 해석되지 않으면 **그 선언이 통째로 무효**가 된다
+      → `animation` 없음 → `opacity: 0`으로 시작하던 글자가 영원히
+      나타나지 않았다. 연출이 콘텐츠의 전제가 되면 안 된다.
+
+   ★★ 그래서 인트로가 쓰는 var()에는 전부 **리터럴 폴백**이 붙어 있다.
+      폴백 값은 시안 원본이다. 토큰이 하나도 없어도 선언은 살아남는다. */
 .intro {
   position: fixed;
   inset: 0;
@@ -68,21 +81,21 @@ a {
   background:
     radial-gradient(
       95% 70% at 50% 112%,
-      var(--c-glow-0) 0%,
-      var(--c-glow-1) 23%,
-      var(--c-glow-2) 43%,
-      var(--c-glow-3) 67%,
+      var(--c-glow-0, rgba(241, 201, 167, 0.84)) 0%,
+      var(--c-glow-1, rgba(217, 161, 127, 0.6)) 23%,
+      var(--c-glow-2, rgba(169, 119, 121, 0.4)) 43%,
+      var(--c-glow-3, rgba(90, 77, 111, 0.2)) 67%,
       transparent 79%
     ),
     linear-gradient(
       180deg,
-      var(--c-bg) 0%,
-      var(--c-bg-soft) 33%,
-      var(--c-surface) 64%,
-      var(--c-bg-deep) 100%
+      var(--c-bg, #0a0d1d) 0%,
+      var(--c-bg-soft, #11152b) 33%,
+      var(--c-surface, #20213d) 64%,
+      var(--c-bg-deep, #4b4059) 100%
     );
 }
-/* 아래에서 천천히 숨 쉬는 번짐 */
+/* 아래에서 천천히 숨 쉬는 번짐. 장식이라 안 돌아도 배경만 남는다. */
 .intro::before {
   content: "";
   position: absolute;
@@ -91,12 +104,12 @@ a {
   bottom: -34vh;
   height: 68vh;
   border-radius: 50%;
-  background: var(--c-glow-soft);
+  background: var(--c-glow-soft, rgba(255, 218, 184, 0.12));
   filter: blur(82px);
   animation: intro-breathe 8s ease-in-out infinite alternate;
   z-index: -2;
 }
-/* 미세 입자 — 넓은 그라데이션에 생기는 띄를 깨다 */
+/* 미세 입자 — 넓은 그라데이션에 생기는 띠를 깬다 */
 .intro::after {
   content: "";
   position: absolute;
@@ -104,34 +117,39 @@ a {
   z-index: -1;
   pointer-events: none;
   opacity: 0.12;
-  background-image: radial-gradient(circle, var(--c-grain) 0 0.55px, transparent 0.7px);
+  background-image: radial-gradient(
+    circle,
+    var(--c-grain, rgba(255, 255, 255, 0.11)) 0 0.55px,
+    transparent 0.7px
+  );
   background-size: 6px 6px;
   mix-blend-mode: soft-light;
 }
 .intro__content {
   width: min(92vw, 1040px);
-  padding: 8vh var(--s5) 10vh;
+  padding: 8vh var(--s5, 24px) 10vh;
   text-align: center;
 }
 .intro__eyebrow {
-  margin: 0 0 var(--s-intro-eyebrow);
-  font-size: var(--f-intro-eyebrow);
-  font-weight: var(--w-bold);
-  letter-spacing: var(--ls-eyebrow);
-  color: var(--c-ink-faint);
-  opacity: 0;
-  animation: intro-fade 0.55s var(--delay-eyebrow) ease forwards;
+  margin: 0 0 var(--s-intro-eyebrow, 34px);
+  font-size: var(--f-intro-eyebrow, 13px);
+  font-weight: var(--w-bold, 600);
+  letter-spacing: var(--ls-eyebrow, 0.08em);
+  color: var(--c-ink-faint, rgba(255, 248, 241, 0.48));
+  animation: intro-fade 0.55s var(--delay-eyebrow, 0.08s) ease backwards;
 }
 .intro__title {
   margin: 0;
-  font-size: var(--f-intro-title);
-  line-height: var(--lh-intro-title);
-  font-weight: var(--w-heavy);
-  letter-spacing: var(--ls-title);
-  color: var(--c-ink);
-  text-shadow: 0 0 14px var(--c-title-glow);
+  font-size: var(--f-intro-title, clamp(68px, 10.2vw, 148px));
+  line-height: var(--lh-intro-title, 0.98);
+  font-weight: var(--w-heavy, 700);
+  letter-spacing: var(--ls-title, -0.085em);
+  color: var(--c-ink, #fffaf5);
+  text-shadow: 0 0 14px var(--c-title-glow, rgba(255, 230, 210, 0.05));
 }
-/* 글자 하나씩 왼쪽부터 드러난다. 보조기술은 aria-label로 한 덩어리를 읽는다. */
+/* 글자 하나씩 왼쪽부터 드러난다. 보조기술은 h1의 aria-label을 읽는다.
+   **기본 상태에 opacity·blur·clip-path를 두지 않는다** — 연출이 없으면
+   그냥 제목이다. */
 .intro__reveal {
   display: inline-flex;
   gap: 0.01em;
@@ -139,84 +157,78 @@ a {
 }
 .intro__reveal span {
   display: inline-block;
-  opacity: 0;
-  filter: blur(7px);
-  transform: translateY(14px);
-  clip-path: inset(0 100% 0 0);
-  animation: intro-title-in var(--dur-title) var(--ease-intro) forwards;
+  animation: intro-title-in var(--dur-title, 0.88s)
+    var(--ease-intro, cubic-bezier(0.2, 0.8, 0.2, 1)) backwards;
 }
 .intro__reveal span:nth-child(1) {
-  animation-delay: var(--delay-title);
+  animation-delay: var(--delay-title, 0.22s);
 }
 .intro__reveal span:nth-child(2) {
-  animation-delay: calc(var(--delay-title) + var(--delay-title-step));
+  animation-delay: calc(var(--delay-title, 0.22s) + var(--delay-title-step, 0.08s));
 }
 .intro__reveal span:nth-child(3) {
-  animation-delay: calc(var(--delay-title) + var(--delay-title-step) * 2);
+  animation-delay: calc(var(--delay-title, 0.22s) + var(--delay-title-step, 0.08s) * 2);
 }
 .intro__reveal span:nth-child(4) {
-  animation-delay: calc(var(--delay-title) + var(--delay-title-step) * 3);
+  animation-delay: calc(var(--delay-title, 0.22s) + var(--delay-title-step, 0.08s) * 3);
 }
 .intro__sub {
   width: min(92%, 760px);
-  margin: var(--s-intro-sub) auto 0;
-  font-size: var(--f-intro-sub);
-  line-height: var(--lh-intro-sub);
+  margin: var(--s-intro-sub, 48px) auto 0;
+  font-size: var(--f-intro-sub, clamp(17px, 1.95vw, 23px));
+  line-height: var(--lh-intro-sub, 1.75);
   font-weight: 400;
-  letter-spacing: var(--ls);
-  color: var(--c-ink-soft);
-  opacity: 0;
-  filter: blur(4px);
-  transform: translateY(8px);
-  animation: intro-fade-clear var(--dur-sub) var(--delay-sub) ease forwards;
+  letter-spacing: var(--ls, -0.02em);
+  color: var(--c-ink-soft, rgba(255, 248, 241, 0.78));
+  animation: intro-fade-clear var(--dur-sub, 0.78s) var(--delay-sub, 1.02s) ease backwards;
   text-wrap: balance;
 }
 .intro__actions {
-  margin-top: var(--s-intro-actions);
-  opacity: 0;
-  transform: translateY(8px);
-  animation: intro-fade-up var(--dur-cta) var(--delay-cta) ease forwards;
+  margin-top: var(--s-intro-actions, 52px);
+  animation: intro-fade-up var(--dur-cta, 0.72s) var(--delay-cta, 1.44s) ease backwards;
 }
 /* 진짜 버튼이다. 키보드·보조기술이 그대로 받고, 터치 목표를 지킨다. */
 .intro__cta {
   appearance: none;
-  min-height: var(--tap);
-  border: 1px solid var(--c-line);
-  background: var(--c-cta);
-  color: var(--c-ink);
-  padding: var(--s4) 18px 17px;
-  border-radius: var(--r1);
-  font: var(--w-bold) var(--f-intro-cta) / 1 var(--font);
-  letter-spacing: var(--ls);
+  min-height: var(--tap, 44px);
+  border: 1px solid var(--c-line, rgba(255, 255, 255, 0.18));
+  background: var(--c-cta, rgba(125, 119, 139, 0.62));
+  color: var(--c-ink, #fffaf5);
+  padding: var(--s4, 16px) 18px 17px;
+  border-radius: var(--r1, 3px);
+  font: var(--w-bold, 600) var(--f-intro-cta, 15px) / 1
+    var(--font, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif);
+  letter-spacing: var(--ls, -0.02em);
   box-shadow:
-    inset 0 1px 0 var(--c-glow-soft),
-    0 10px 28px var(--c-glow-3);
+    inset 0 1px 0 var(--c-glow-soft, rgba(255, 218, 184, 0.12)),
+    0 10px 28px var(--c-glow-3, rgba(90, 77, 111, 0.2));
   cursor: pointer;
   transition:
-    background var(--dur) ease,
-    transform var(--dur) ease;
+    background var(--dur, 260ms) ease,
+    transform var(--dur, 260ms) ease;
 }
 .intro__cta:hover {
-  background: var(--c-cta-hover);
+  background: var(--c-cta-hover, rgba(140, 133, 153, 0.72));
   transform: translateY(-1px);
 }
 /* 확정 마이크로카피. 화면 아래에 고정된다. */
 .intro__micro {
   position: absolute;
   left: 50%;
-  bottom: var(--s-intro-micro);
+  bottom: var(--s-intro-micro, 21px);
   translate: -50% 0;
   margin: 0;
-  font-size: var(--f-intro-micro);
-  line-height: var(--lh-tight);
+  font-size: var(--f-intro-micro, 11px);
+  line-height: var(--lh-tight, 1.4);
   white-space: nowrap;
-  color: var(--c-ink-micro);
-  opacity: 0;
-  animation: intro-fade var(--dur-fade) var(--delay-micro) ease forwards;
+  color: var(--c-ink-micro, rgba(255, 248, 241, 0.34));
+  animation: intro-fade var(--dur-fade, 0.7s) var(--delay-micro, 1.92s) ease backwards;
 }
 
+/* keyframes는 **from에만 있다.** 끝 상태는 요소의 기본 스타일이고,
+   그래서 애니메이션이 사라져도 화면은 그 기본 스타일로 남는다. */
 @keyframes intro-title-in {
-  0% {
+  from {
     opacity: 0;
     filter: blur(7px);
     transform: translateY(14px);
@@ -226,29 +238,23 @@ a {
     opacity: 0.75;
     filter: blur(2px);
   }
-  100% {
-    opacity: 1;
-    filter: blur(0);
-    transform: translateY(0);
-    clip-path: inset(0 0 0 0);
-  }
 }
 @keyframes intro-fade-clear {
-  to {
-    opacity: 1;
-    filter: blur(0);
-    transform: translateY(0);
+  from {
+    opacity: 0;
+    filter: blur(4px);
+    transform: translateY(8px);
   }
 }
 @keyframes intro-fade-up {
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  from {
+    opacity: 0;
+    transform: translateY(8px);
   }
 }
 @keyframes intro-fade {
-  to {
-    opacity: 1;
+  from {
+    opacity: 0;
   }
 }
 @keyframes intro-breathe {
@@ -265,57 +271,46 @@ a {
 @media (max-width: 640px) {
   .intro__content {
     width: min(90vw, 420px);
-    padding: 10vh var(--s5) 12vh;
+    padding: 10vh var(--s5, 24px) 12vh;
   }
   .intro__eyebrow {
-    font-size: var(--f-intro-eyebrow-sm);
-    line-height: var(--lh-tight);
+    font-size: var(--f-intro-eyebrow-sm, 12px);
+    line-height: var(--lh-tight, 1.4);
   }
   .intro__title {
-    font-size: var(--f-intro-title-sm);
-    line-height: var(--lh-intro-title-sm);
-    letter-spacing: var(--ls-title-sm);
+    font-size: var(--f-intro-title-sm, clamp(64px, 18vw, 92px));
+    line-height: var(--lh-intro-title-sm, 1.02);
+    letter-spacing: var(--ls-title-sm, -0.08em);
   }
   .intro__sub {
     width: 100%;
-    margin-top: var(--s-intro-sub-sm);
-    font-size: var(--f-intro-sub-sm);
-    line-height: var(--lh-intro-sub-sm);
+    margin-top: var(--s-intro-sub-sm, 52px);
+    font-size: var(--f-intro-sub-sm, 19px);
+    line-height: var(--lh-intro-sub-sm, 1.85);
   }
   .intro__actions {
-    margin-top: var(--s-intro-actions-sm);
+    margin-top: var(--s-intro-actions-sm, 72px);
   }
   .intro__cta {
-    font-size: var(--f-intro-cta-sm);
-    padding: var(--s3) var(--s4) 15px;
+    font-size: var(--f-intro-cta-sm, 14px);
+    padding: var(--s3, 12px) var(--s4, 16px) 15px;
   }
   .intro__micro {
     width: min(86vw, 320px);
     white-space: normal;
     text-wrap: balance;
-    line-height: var(--lh-intro-sub);
+    line-height: var(--lh-intro-sub, 1.75);
   }
 }
 
-/* 움직임을 줄여 달라고 한 사람에게는 연출 없이 글자만 남는다. */
+/* 움직임을 줄여 달라고 한 사람에게는 연출만 걷어낸다.
+   **opacity를 되돌릴 필요가 없다** — 기본 상태가 이미 보이는 것이다. */
 @media (prefers-reduced-motion: reduce) {
   .intro *,
-  .intro *::before,
-  .intro *::after,
   .intro::before,
   .intro::after {
     animation: none !important;
     transition: none !important;
-  }
-  .intro__eyebrow,
-  .intro__reveal span,
-  .intro__sub,
-  .intro__actions,
-  .intro__micro {
-    opacity: 1;
-    filter: none;
-    transform: none;
-    clip-path: none;
   }
 }
 
@@ -340,7 +335,7 @@ a {
 .top__title {
   margin: 0;
   font-size: var(--f-lg);
-  letter-spacing: var(--ls-tight);
+  letter-spacing: var(--ls-tight, -0.03em);
 }
 .top__addr:empty {
   display: none;
@@ -390,7 +385,7 @@ a {
   font-size: var(--f-lg);
   margin: var(--s5) 0 var(--s3);
   line-height: var(--lh-tight);
-  letter-spacing: var(--ls-tight);
+  letter-spacing: var(--ls-tight, -0.03em);
 }
 .h3 {
   font-size: var(--f-md);
@@ -642,7 +637,8 @@ a {
 /* 첫 도달 시 다음 장이 살짝 삐져나왔다 들어가는 힌트 */
 @media (prefers-reduced-motion: no-preference) {
   .deck__rail--hint {
-    animation: peek 900ms var(--ease) 1;
+    /* 기본 상태가 보이는 것이라 안 돌아도 힌트만 없어진다. 폴백은 그래도 둔다. */
+    animation: peek 900ms var(--ease, cubic-bezier(0.22, 0.61, 0.36, 1)) 1;
   }
   @keyframes peek {
     30% {
@@ -714,7 +710,7 @@ a {
   margin: 0;
   font-size: var(--f-xl);
   line-height: var(--lh-tight);
-  letter-spacing: var(--ls-tight);
+  letter-spacing: var(--ls-tight, -0.03em);
 }
 .card__summary {
   margin: var(--s2) 0 0;

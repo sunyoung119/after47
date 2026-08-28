@@ -204,6 +204,14 @@ npm run serve                  정적 서버(http://localhost:5173)
 
 - `index.html`은 **리포 루트**다. `loadData`의 base가 `"data"`인 상대경로라
   절대경로로 바꾸면 GitHub Pages 프로젝트 페이지에서 깨진다
+- **화면 파일(css·js)을 고치면 `index.html`의 `?v=` 숫자를 올려라.** 빌드가
+  없어서 파일명에 해시가 안 붙는다 — 안 올리면 폰이 옛 CSS를 붙들고 새
+  마크업과 섞는다(실제로 인트로 글자가 통째로 안 보이는 사고가 났다).
+  규칙은 `index.html` 상단 주석에 있다
+- **연출을 콘텐츠의 전제로 만들지 마라.** 기본 상태는 **보이는 것**이고
+  등장 연출은 `@keyframes`의 `from`에만 둔다(fill-mode `backwards`).
+  `animation`에 쓰는 `var()`에는 리터럴 폴백을 붙인다 — var 하나가 안 풀리면
+  **선언 전체가 무효**가 되어 `opacity: 0`이 영구히 남는다. 위 사고의 뿌리다
 - **판단은 뷰모델, 그리기는 DOM 코드.** `view.js`(진입·설문·저장) ·
   `timeline.js`(타임라인) · `pages.js`(인트로·안내·요약·체크·근거·연락처·덱)가
   전부 DOM을 모르는 순수함수이고 `test/view.test.mjs`가 본다.

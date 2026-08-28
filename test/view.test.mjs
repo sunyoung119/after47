@@ -608,6 +608,46 @@ t(
   );
 }
 
+// ── 연출이 안 돌아도 화면은 남는가 (실기기 사고 재발 방지) ──────
+//
+// 실기기에서 인트로 글자가 통째로 안 보였다. 새 마크업 + 캐시에 남은 옛
+// tokens.css 조합에서 `var(--delay-*)`가 안 풀렸고, **var 하나가 해석되지
+// 않으면 그 선언 전체가 무효**라 animation이 사라졌다 — opacity:0으로
+// 시작하던 글자가 영원히 나타나지 않았다.
+//
+// 그래서 규칙 셋을 코드로 박는다. 눈으로 지킬 수 있는 종류가 아니다.
+{
+  const css = readFileSync(join(D, "src/ui/app.css"), "utf8");
+  // @keyframes를 걷어낸 나머지가 "요소의 기본 스타일"이다. 두 겹 중첩까지.
+  const 기본 = css.replace(/@keyframes[^{]*\{(?:[^{}]*\{[^{}]*\})*[^{}]*\}/g, "");
+  const 인트로 = 기본
+    .slice(기본.indexOf(".intro {"), 기본.indexOf("/* ── 셸"))
+    .replace(/\/\*[\s\S]*?\*\//g, "");
+
+  t("인트로 기본 상태에 opacity:0이 없다 (연출 없이도 보인다)", !/opacity:\s*0\s*;/.test(인트로));
+  t("숨겼다 되돌리는 forwards를 쓰지 않는다", !/forwards/.test(인트로));
+  // 폴백이 없으면 토큰 하나가 빠지는 순간 연출이 통째로 사라진다.
+  const anim = 인트로.match(/animation[^;]*;/g) || [];
+  t(
+    `animation의 var에 전부 리터럴 폴백이 있다 (${anim.length}개 선언)`,
+    anim.length >= 5 && anim.every((a) => !/var\(--[a-z0-9-]+\)/.test(a))
+  );
+  // 7단계에서 새로 생긴 토큰은 옛 tokens.css에 없다. 폴백이 유일한 방어다.
+  const 신설 = ["--c-glow-0", "--c-ink-micro", "--c-cta", "--c-bg-deep", "--ls", "--ls-tight"];
+  t(
+    "7단계 신설 토큰은 어디서도 폴백 없이 쓰이지 않는다",
+    신설.every((v) => !css.includes(`var(${v})`))
+  );
+}
+{
+  const html = readFileSync(join(D, "index.html"), "utf8");
+  const refs = html.match(/(?:href|src)="src\/ui\/[^"]+"/g) || [];
+  t(
+    `화면 파일 참조에 캐시 버전이 붙어 있다 (${refs.length}개)`,
+    refs.length >= 3 && refs.every((r) => r.includes("?v="))
+  );
+}
+
 // 안내 — 속도도 결과도 약속하지 않는다
 const gv = guideView();
 t("안내는 왜 묻는지만 말한다", gv.lines.length >= 2 && Boolean(gv.cta));
