@@ -119,6 +119,32 @@ v = entryView(s);
 t("만료 고지가 배너가 아니라 별도 자리에 있다", v.expires !== null && !bannerTypes(v).includes("expires_at"));
 t("만료 고지에 날짜가 한국어로 들어간다", /\d{4}년 \d{1,2}월 \d{1,2}일/.test(v.expires.text), v.expires.text);
 
+// notices는 진입 시점의 사실이고 화면은 지금 state를 본다. 어긋나면 화면이 맞다.
+const 고른뒤 = entryView({
+  ...(await (async () => {
+    새백엔드();
+    return openSession({ url: "https://after47.kr/" });
+  })()),
+  state: { district: "gangnam" },
+});
+t(
+  "자치구를 고른 뒤에는 district_needed 배너가 사라진다",
+  !bannerTypes(고른뒤).includes("district_needed"),
+  JSON.stringify(bannerTypes(고른뒤))
+);
+t("고른 구가 보인다", 고른뒤.district?.id === "gangnam" && !고른뒤.picker.needed);
+
+새백엔드();
+s = await openSession({ url: "https://after47.kr/?d=seongbuk" });
+await anchorSession(s);
+s = await openSession({ url: `https://after47.kr/?d=mapo&t=${s.token}` });
+t(
+  "충돌한 구로 바꾸고 나면 그 배너도 사라진다",
+  !bannerTypes(entryView({ ...s, state: { ...s.state, district: "mapo" } })).includes(
+    "district_conflict"
+  )
+);
+
 // 망가진 토큰
 새백엔드();
 v = entryView(await openSession({ url: "https://after47.kr/?d=mapo&t=ab0k9m" }));
@@ -219,6 +245,12 @@ t(
 const 되열기 = surveyView({ questions, state: 전.state, data, now: NOW, cursor: "q-tenure" });
 t("커서로 답한 질문을 다시 연다", 되열기.current?.id === "q-tenure");
 t("다시 열어도 이전 답이 실려 있다", 되열기.current?.answer === "renter");
+// 뒤로가기는 커서 기준 앞 질문이다. answered의 마지막으로 보내면 맴돈다.
+t("뒤로가기가 커서 기준 앞 질문을 가리킨다", 되열기.prev?.id === "q-housing-type", 되열기.prev?.id);
+const 한번더 = surveyView({ questions, state: 전.state, data, now: NOW, cursor: 되열기.prev.id });
+t("한 번 더 뒤로 가면 또 앞으로 간다 (같은 자리를 맴돌지 않는다)", 한번더.prev?.id === "q-residence");
+t("첫 질문에서는 뒤로갈 곳이 없다", surveyView({ questions, state: {}, data, now: NOW }).prev === null);
+
 // 목록에서 사라진 질문을 가리키는 커서는 무시하고 첫 미답변으로 떨어진다
 const 죽은커서 = surveyView({ questions, state: { district: "mapo" }, data, now: NOW, cursor: "q-report" });
 t("보이지 않는 질문을 가리키는 커서는 무시된다", 죽은커서.current?.id === "q-fire-date");

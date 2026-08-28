@@ -113,12 +113,9 @@ async function onBannerAction(a) {
   if (a.id === "switch_district") {
     app.state = { ...app.state, district: a.value };
     await persist();
-    // 충돌 알림은 이번 세션의 notice라 다시 뜨지 않게 지운다.
-    app.session = {
-      ...app.session,
-      state: app.state,
-      notices: app.session.notices.filter((n) => n.type !== "district_conflict"),
-    };
+    // 알림을 손으로 지우지 않는다. 배너를 남길지 말지는 뷰모델이
+    // 지금 state를 보고 정한다 — 규칙이 두 곳에 있으면 어긋난다.
+    app.session = { ...app.session, state: app.state };
     syncAddressBar();
     render();
   } else if (a.id === "restart") {
@@ -227,7 +224,7 @@ function renderSurvey(main) {
 }
 
 function backLink(sv) {
-  const prev = sv.answered[sv.answered.length - 1];
+  const prev = sv.prev;
   const btn = el("button", "btn btn--quiet", COPY.survey.back);
   btn.type = "button";
   btn.disabled = !prev;

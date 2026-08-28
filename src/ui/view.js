@@ -26,8 +26,13 @@ export function entryView(session) {
   const selected = session?.state?.district || null;
   const banners = [];
 
+  // notices는 **진입 시점의 사실**이고 화면은 **지금 state**를 본다. 둘이
+  // 어긋나면 화면 쪽이 맞다 — 자치구를 고른 뒤에도 "어느 구인지 알려주세요"가
+  // 남아 있으면 사용자는 자기가 고른 것이 안 먹혔다고 읽는다.
   for (const n of notices) {
     if (n.type === "district_conflict") {
+      // 그 구로 바꾸고 나면 충돌은 지난 일이다.
+      if (n.fromUrl === selected) continue;
       banners.push({
         type: "district_conflict",
         text: COPY.banner.district_conflict(nameOf(n.fromUrl), nameOf(n.saved)),
@@ -41,6 +46,7 @@ export function entryView(session) {
         ],
       });
     } else if (n.type === "district_needed") {
+      if (selected) continue; // 이미 골랐다
       banners.push({
         type: "district_needed",
         text:
@@ -130,6 +136,11 @@ export function surveyView({ questions, state, data, now = Date.now(), cursor = 
   const firstUnanswered = visible.find((q) => state[q.key] === undefined) || null;
   const q = atCursor || firstUnanswered;
 
+  // 뒤로가기는 **커서 기준 앞 질문**이다. answered의 마지막으로 보내면
+  // 한 번 뒤로 간 뒤부터 같은 자리를 맴돈다.
+  const here = q ? visible.findIndex((v) => v.id === q.id) : visible.length;
+  const prevQ = here > 0 ? visible[here - 1] : null;
+
   return {
     current: q
       ? {
@@ -143,6 +154,7 @@ export function surveyView({ questions, state, data, now = Date.now(), cursor = 
         }
       : null,
     answered,
+    prev: prevQ ? { id: prevQ.id, key: prevQ.key, text: prevQ.text } : null,
     remaining,
     done: remaining === 0,
     // D-003 — 설문을 끝내지 않아도 화면이 나온다. 언제든 넘어갈 수 있다.
