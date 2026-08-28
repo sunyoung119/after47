@@ -29,6 +29,13 @@ function toRow(x) {
     group: a.domain_group ?? x.group ?? null,
     category: x.category ?? a.category ?? null,
     irreversible: a.irreversible === true,
+    // 출처 한 줄을 그리기 위한 재료. 없는 항목이 21건이라 null이 정상이다.
+    sourceUrl: a.source_url ?? null,
+    sourceGrade: a.source_grade ?? null,
+    // 조례 항목에만 붙는 문의 줄의 조건. 엔진이 `dept`·`amount_known`을
+    // 조례 항목에만 채우지만, 자치구 미지정이면 그것도 null이 되므로
+    // Action 쪽 플래그를 그대로 본다.
+    ordinanceBased: a.ordinance_based === true,
     when: x.when ?? null,
     rank: x.rank ?? null,
     locked: x.locked === true,
@@ -126,10 +133,13 @@ export function timelineView({ result, state = {}, data = {}, budget = CARD_BUDG
   const all = [...rows, ...waiting, ...blocked, ...excluded, ...done];
   const present = new Set(all.map((r) => r.id));
   for (const r of all) {
-    const first = r.blockedBy[0] ?? null;
-    r.leadTo = first && present.has(first.id) ? first : null;
-    // 선행이 화면에 없다 — 사용자는 이 행을 스스로 풀 수 없다.
-    r.leadMissing = Boolean(first) && !r.leadTo;
+    // **화면에 있는 첫 선행**을 고른다. `blockedBy[0]`만 보면 그것 하나가
+    // 안 뜨는 사람에게 "갈 곳 없음"이 되는데, 나머지 선행은 멀쩡히 화면에
+    // 있을 수 있다 — `powder-removal`이 그렇다(scene-release는 안 뜨지만
+    // photo-before-cleanup은 큰 카드다).
+    r.leadTo = r.blockedBy.find((b) => present.has(b.id)) ?? null;
+    // 선행이 **하나도** 화면에 없을 때만 스스로 풀 수 없다.
+    r.leadMissing = r.blockedBy.length > 0 && !r.leadTo;
   }
 
   return {

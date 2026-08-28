@@ -701,3 +701,12 @@ body {
   font-size: 0.88rem;
   white-space: nowrap;
 }
+
+/* 출처 한 줄 — 본문 맨 아래 */
+.src {
+  margin: 8px 0 0;
+  font-size: 0.82rem;
+}
+.src__link {
+  color: var(--ink-soft);
+}

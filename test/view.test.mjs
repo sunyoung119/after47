@@ -323,17 +323,20 @@ t(
 );
 
 // 고지문 — D-006의 "말하지 않는 것"이 사용자 언어로 들어 있는가
-const 고지 = COPY.notice.doesNot.join(" ");
-for (const [무엇, 낱말] of [
-  ["법적 책임", /책임이 누구에게/],
-  ["보험금 액수", /보험금 액수/],
-  ["의료 진단", /진단하지 않습니다/],
-  ["시공 방법·자재", /약품·자재/],
-  ["업체 보증", /추천하거나 보증하지 않습니다/],
-  ["수급 자격 확정", /확정해 드리지 않습니다/],
-])
-  t(`고지문이 '${무엇}'을 말하지 않는다고 밝힌다`, 낱말.test(고지));
+// 고지문은 **하는 것 두 줄 + 저장·출처**로 줄였다(마무리 수정).
+// 면책 목록은 읽는 사람을 방어적으로 만들 뿐 행동을 돕지 않는다 —
+// 경계는 안내 본문 안에서 지킨다(조례 카드의 "구청이 확정합니다").
+t("고지문에 면책 목록이 없다", COPY.notice.doesNot === undefined);
+t("하는 것 두 줄은 남는다", COPY.notice.does.length === 2);
+t(
+  "'그대로 읽어'를 뺐다",
+  COPY.notice.does[1] === "자치구 지원은 조례 원문을 정리한 것입니다.",
+  COPY.notice.does[1]
+);
 t("고지문이 보관 기간을 고지한다 (D-002)", /90일/.test(COPY.notice.storage));
+t("고지문이 해외 출처 인용을 밝힌다", /해외 기준/.test(COPY.notice.sources));
+
+
 
 // 절대 쓰면 안 되는 문구 — v1에서 거짓이다(D-015)
 const 문구 = readFileSync(join(D, "src/ui/copy.js"), "utf8").replace(/\/\/.*$/gm, "");
@@ -509,6 +512,57 @@ if (전라벨 && 후라벨) {
 // anytime 비대 — 분야로 한 번 더 묶는다(D-019 §7)
 const any = t1.more.find((m) => m.key === "anytime");
 if (any) t("anytime은 분야 묶음을 갖는다", any.groups.length > 0 && Boolean(any.groups[0].group));
+
+// ★ 고지문이 "본문에 출처를 밝혀 두었습니다"라고 말하므로 **행이 출처를
+//   실어 나르지 않으면 그 문장이 거짓이 된다.**
+const 출처있는 = [...t1.more.flatMap((m) => m.items), t1.cards.lead, ...t1.cards.rest].filter(
+  (r) => r.sourceUrl
+);
+t("출처가 있는 행은 sourceUrl을 싣는다", 출처있는.length > 0, String(출처있는.length));
+t(
+  "출처가 없는 항목은 null이다 (빈 '출처:'를 그리지 않기 위해)",
+  [t1.cards.lead, ...t1.cards.rest].every((r) => r.sourceUrl === null || typeof r.sourceUrl === "string")
+);
+
+// 조례 항목에만 "구청이 확정합니다" 줄이 붙는다 — 면책이 아니라 정보다.
+const 조례행 = [...t1.excluded, ...t1.more.flatMap((m) => m.items)].filter((r) => r.ordinanceBased);
+t(
+  "조례 항목만 ordinanceBased다",
+  조례행.every((r) => r.id.startsWith("support-")),
+  JSON.stringify(조례행.map((r) => r.id))
+);
+// 조례 4건은 섹션·blocked·excluded 어디에든 흩어질 수 있다. 전부 합쳐 센다.
+const 강남 = tl({ ...전.state, district: "gangnam" });
+const 강남조례 = [
+  강남.cards.lead,
+  ...강남.cards.rest,
+  ...강남.more.flatMap((m) => m.items),
+  ...강남.missed.items,
+  ...강남.blocked,
+  ...강남.excluded,
+  ...강남.waiting,
+  ...강남.done.items,
+].filter((r) => r && r.ordinanceBased);
+t(
+  "조례가 있는 구에서는 그 행이 4건이다",
+  강남조례.length === 4,
+  JSON.stringify(강남조례.map((r) => r.id))
+);
+t(
+  "조례가 없는 구에서는 0건이다 (support_items가 비어 skip된다)",
+  [
+    t1.cards.lead,
+    ...t1.cards.rest,
+    ...t1.more.flatMap((m) => m.items),
+    ...t1.blocked,
+    ...t1.excluded,
+  ].filter((r) => r && r.ordinanceBased).length === 0
+);
+t("문의 문장이 확정 주체를 밝힌다", /구청이 확정합니다/.test(COPY.timeline.ordinanceNote("가")));
+t(
+  "부서를 모르면 '구청 재난안전과'로 degrade한다 (dept가 null인 구가 9개)",
+  /구청 재난안전과/.test(COPY.timeline.ordinanceNote(null))
+);
 
 
 // ── 6. 갈림길과 자치구 비교 ────────────────────────

@@ -53,6 +53,38 @@ export function renderTimeline(main, tv, handlers = {}) {
   if (tv.done.count) main.appendChild(doneBlock(tv.done, handlers));
 }
 
+// 출처 한 줄. **고지문의 "본문에 출처를 밝혀 두었습니다"를 참으로 만드는
+// 자리다** — 안 그리면 그 문장이 거짓이 된다. `source_url`이 없는 항목이
+// 21건이라 그때는 줄 자체를 만들지 않는다(빈 "출처:"가 더 나쁘다).
+function sourceLine(r) {
+  if (!r.sourceUrl) return null;
+  let host;
+  try {
+    host = new URL(r.sourceUrl).hostname.replace(/^www\./, "");
+  } catch {
+    return null;
+  }
+  const p = el("p", "src");
+  const a = el("a", "src__link", COPY.timeline.source(host));
+  a.href = r.sourceUrl;
+  a.target = "_blank";
+  a.rel = "noopener noreferrer";
+  p.appendChild(a);
+  return p;
+}
+
+// 조례 항목에 붙는 줄. **면책 문구가 아니라 정보다** — 확정하는 곳이
+// 구청이라는 사실을 미리 알면 헛걸음과 실망이 줄고, 무엇을 물으러 가는지도
+// 분명해진다. 금액은 25개 구 전부 미상이라 이 줄이 D-003의 degrade다.
+function ordinanceLine(r) {
+  if (!r.ordinanceBased) return null;
+  return el("p", "row__dept", COPY.timeline.ordinanceNote(r.dept));
+}
+
+const append = (node, child) => {
+  if (child) node.appendChild(child);
+};
+
 // ── 갈림길 노드 ────────────────────────────────────
 // 아직 답하지 않은 질문이 타임라인 위의 노드로 놓인다. 답이 갈리면 화면이
 // 어떻게 달라지는지를 **유령 미리보기**로 먼저 보여준다 — 추측이 아니라
@@ -130,8 +162,9 @@ export function compareBlock(cv, handlers = {}, { picking = false } = {}) {
     const li = el("li", "compare__row");
     li.appendChild(el("p", "compare__title", r.title));
     const pair = el("div", "compare__pair");
-    pair.appendChild(side(cv.mine.name, r.mine));
-    pair.appendChild(side(cv.other.name, r.other));
+    const opt = { fallbackRow: r.id === "no-ordinance-fallback" };
+    pair.appendChild(side(cv.mine.name, r.mine, opt));
+    pair.appendChild(side(cv.other.name, r.other, opt));
     li.appendChild(pair);
     table.appendChild(li);
   }
@@ -140,9 +173,18 @@ export function compareBlock(cv, handlers = {}, { picking = false } = {}) {
   return sec;
 }
 
-function side(name, cell) {
+function side(name, cell, { fallbackRow = false } = {}) {
   const box = el("div", "compare__side");
   box.appendChild(el("p", "compare__name", name));
+  // 조례 미보유 안내 행은 "없습니다 · 해당"으로 읽혀 어색했다. 그 행에
+  // 한해 두 구를 **같은 축**으로 말한다 — 이 행이 있다는 것 자체가
+  // "전용 조례가 없다"는 뜻이고, 없다는 것은 "있다"는 뜻이다.
+  if (fallbackRow) {
+    box.appendChild(
+      el("p", "compare__status", cell ? COPY.compare.noOrdinance : COPY.compare.hasOrdinance)
+    );
+    return box;
+  }
   if (!cell) {
     box.appendChild(el("p", "compare__status", COPY.compare.absent));
     return box;
@@ -193,10 +235,12 @@ function leadCard(r, handlers) {
   card.appendChild(el("h2", "card__title", r.title));
   if (r.summary) card.appendChild(el("p", "card__summary", r.summary));
   card.appendChild(tags(r));
+  append(card, ordinanceLine(r));
   if (r.body) {
     const det = el("details", "card__more");
     det.appendChild(el("summary", null, COPY.timeline.detail));
     det.appendChild(el("p", "card__body", r.body));
+    append(det, sourceLine(r));
     card.appendChild(det);
   }
   if (r.locked) card.appendChild(lockedNote(r, handlers));
@@ -217,7 +261,9 @@ function lineCard(r, handlers) {
   det.appendChild(sum);
   if (r.summary) det.appendChild(el("p", "card__summary", r.summary));
   det.appendChild(tags(r));
+  append(det, ordinanceLine(r));
   if (r.body) det.appendChild(el("p", "card__body", r.body));
+  append(det, sourceLine(r));
   if (r.locked) det.appendChild(lockedNote(r, handlers));
   else if (r.checkable) det.appendChild(checkbox(r, handlers));
   li.appendChild(det);
@@ -268,6 +314,7 @@ function standingBand(b) {
     det.appendChild(el("summary", "row__sum", r.title));
     if (r.summary) det.appendChild(el("p", "row__summary", r.summary));
     if (r.body) det.appendChild(el("p", "card__body", r.body));
+    append(det, sourceLine(r));
     li.appendChild(det);
     ul.appendChild(li);
   }
@@ -289,6 +336,7 @@ function waitingBlock(rows) {
     li.dataset.row = r.id;
     li.appendChild(el("p", "row__sum", r.title));
     if (r.summary) li.appendChild(el("p", "row__summary", r.summary));
+    append(li, sourceLine(r));
     const w = waitLabel(r.waitDays);
     if (w) {
       li.appendChild(el("p", "row__wait", `${COPY.timeline.waitTitle} ${w}`));
@@ -333,10 +381,10 @@ function excludedBlock(rows, handlers) {
     li.appendChild(head);
     if (r.reason) li.appendChild(el("p", "row__reason", r.reason));
     // 금액을 몰라도 창구는 말한다(D-003). dept가 null인 구가 9개다.
-    if (r.dept !== null || r.amountKnown !== null)
-      li.appendChild(
-        el("p", "row__dept", r.dept ? COPY.timeline.deptKnown(r.dept) : COPY.timeline.deptUnknown)
-      );
+    // 조례 항목은 카드와 같은 문장을 쓴다 — 같은 사실을 두 가지로 말하지 않는다.
+    if (r.ordinanceBased) append(li, ordinanceLine(r));
+    else if (r.dept !== null)
+      li.appendChild(el("p", "row__dept", COPY.timeline.deptKnown(r.dept)));
     if (r.needsDistrict && handlers.onPickDistrict)
       li.appendChild(btn("btn btn--quiet", COPY.timeline.pickDistrict, handlers.onPickDistrict));
     ul.appendChild(li);
@@ -379,7 +427,9 @@ function rowItem(r, handlers, { dim = false } = {}) {
   if (r.locked) sum.appendChild(el("span", "tag tag--locked", "잠김"));
   det.appendChild(sum);
   if (r.summary) det.appendChild(el("p", "row__summary", r.summary));
+  append(det, ordinanceLine(r));
   if (r.body) det.appendChild(el("p", "card__body", r.body));
+  append(det, sourceLine(r));
   if (r.locked) det.appendChild(lockedNote(r, handlers));
   else if (r.checkable && handlers.onCheck) det.appendChild(checkbox(r, handlers));
   li.appendChild(det);

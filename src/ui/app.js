@@ -445,9 +445,7 @@ function renderNotice() {
   const yes = el("ul", "notice__list");
   for (const line of COPY.notice.does) yes.appendChild(el("li", null, line));
   det.appendChild(yes);
-  const no = el("ul", "notice__list notice__list--no");
-  for (const line of COPY.notice.doesNot) no.appendChild(el("li", null, line));
-  det.appendChild(no);
+  // "하지 않는 것" 목록은 뺐다(마무리 수정). 경계는 안내 본문 안에서 지킨다.
   det.appendChild(el("p", "hint", COPY.notice.storage));
   det.appendChild(el("p", "hint", COPY.notice.sources));
   box.appendChild(det);
