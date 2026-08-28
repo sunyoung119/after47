@@ -17,6 +17,7 @@ import { applyDefaults } from "../src/questions.js";
 import { entryView, surveyView, saveNoticeView, resultPlaceholderView } from "../src/ui/view.js";
 import { timelineView, locate, waitLabel } from "../src/ui/timeline.js";
 import { forkView, compareView } from "../src/ui/whatif.js";
+import { COPY, BUCKET_LABEL, STATUS_LABEL } from "../src/ui/copy.js";
 
 const D = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (f) => JSON.parse(readFileSync(join(D, f), "utf8"));
@@ -273,8 +274,66 @@ t(
   "⑨ 주소 복사와 한 글자씩 보기가 있다",
   blocked.actions.some((a) => a.id === "copy") && blocked.actions.some((a) => a.id === "spell")
 );
-// 1층(결과 화면에서 한 번)은 UI-A②다. 지금 켜면 그 단계의 설계를 먼저 굳힌다.
-t("저장이 되는 경우의 1층은 아직 닫혀 있다", saveNoticeView({ persisted: true }).show === false);
+t(
+  "⑨ '주소를 남겼습니다'가 아니라 gated [계속하기]다 (앱은 남겼는지 모른다)",
+  blocked.actions.some((a) => a.id === "go" && a.gated === true) &&
+    !blocked.actions.some((a) => /남겼/.test(a.label)),
+  JSON.stringify(blocked.actions)
+);
+
+// 1층 — 결과 화면에 처음 닿았을 때 한 번(D-015)
+const 일층 = saveNoticeView({
+  persisted: true,
+  stage: "result_first",
+  url: "u",
+  token: "ab3k9m",
+  canShare: true,
+});
+t("1층은 결과 첫 도달에서 열린다", 일층.show === true && 일층.variant === "saved");
+t(
+  "1층에는 '나중에'가 있다 (없으면 사람은 X를 찾고, 안 보이면 화면을 닫는다)",
+  일층.actions.some((a) => a.id === "later")
+);
+t(
+  "카톡 보내기는 공유를 지원할 때만 나온다",
+  일층.actions.some((a) => a.id === "share") &&
+    !saveNoticeView({ persisted: true, stage: "result_first", canShare: false }).actions.some(
+      (a) => a.id === "share"
+    )
+);
+t("2층은 이 박스를 쓰지 않는다", saveNoticeView({ persisted: true }).show === false);
+
+// 문구 정정 4건 (승인됨)
+t("헤더 제목이 '화재피해 회복 내비게이터'다", COPY.app.title === "화재피해 회복 내비게이터");
+t(
+  "token_invalid에서 사용자 탓 어조를 뺐다",
+  COPY.banner.token_invalid === "이 주소로는 저장된 기록을 찾지 못해 새로 시작합니다.",
+  COPY.banner.token_invalid
+);
+t(
+  "미판정 계열 명칭이 '아직 확인 못 함' 하나다",
+  BUCKET_LABEL.excluded === "아직 확인 못 함" && STATUS_LABEL.미판정 === "아직 확인 못 함",
+  `${BUCKET_LABEL.excluded} / ${STATUS_LABEL.미판정}`
+);
+t(
+  "화면 어디에도 '미판정'·'해당 여부 확인 필요'가 남아 있지 않다",
+  !/미판정|해당 여부 확인 필요/.test(
+    JSON.stringify(COPY) + JSON.stringify(BUCKET_LABEL) + JSON.stringify(Object.values(STATUS_LABEL))
+  )
+);
+
+// 고지문 — D-006의 "말하지 않는 것"이 사용자 언어로 들어 있는가
+const 고지 = COPY.notice.doesNot.join(" ");
+for (const [무엇, 낱말] of [
+  ["법적 책임", /책임이 누구에게/],
+  ["보험금 액수", /보험금 액수/],
+  ["의료 진단", /진단하지 않습니다/],
+  ["시공 방법·자재", /약품·자재/],
+  ["업체 보증", /추천하거나 보증하지 않습니다/],
+  ["수급 자격 확정", /확정해 드리지 않습니다/],
+])
+  t(`고지문이 '${무엇}'을 말하지 않는다고 밝힌다`, 낱말.test(고지));
+t("고지문이 보관 기간을 고지한다 (D-002)", /90일/.test(COPY.notice.storage));
 
 // 절대 쓰면 안 되는 문구 — v1에서 거짓이다(D-015)
 const 문구 = readFileSync(join(D, "src/ui/copy.js"), "utf8").replace(/\/\/.*$/gm, "");

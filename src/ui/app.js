@@ -29,6 +29,10 @@ const app = {
   // 비교 보기 — **저장 state의 district는 바뀌지 않는다.** 보기 전환일 뿐이다.
   compare: null,
   comparePicking: false,
+  // D-015 1·2층. saveShown은 "결과에 한 번 닿았다", addrTouched는
+  // "주소를 복사하거나 한 글자씩 봤다"는 표시다 — **남겼는지는 모른다.**
+  saveShown: false,
+  addrTouched: false,
 };
 
 const $ = (id) => document.getElementById(id);
@@ -74,6 +78,8 @@ function render() {
   const entry = entryView({ ...app.session, state: app.state });
   renderBanners(entry);
   renderExpires(entry);
+  renderAddrSlot();
+  renderNotice();
 
   const main = $("main");
   clear(main);
@@ -185,7 +191,7 @@ function renderSurvey(main) {
       render();
     });
     main.appendChild(go);
-    main.appendChild(backLink(sv));
+    main.appendChild(answeredList(sv));
     return;
   }
 
@@ -219,6 +225,30 @@ function renderSurvey(main) {
     row.appendChild(peek);
   }
   main.appendChild(row);
+}
+
+// 답한 것을 다시 열 수 있어야 한다. 상황이 바뀌면 답도 바뀐다 —
+// 손해사정사가 오고, 조사서가 나오고, 제품 결함이 확인된다.
+function answeredList(sv) {
+  const box = el("section", "answered");
+  box.appendChild(el("h3", "h3", COPY.survey.editTitle));
+  box.appendChild(el("p", "hint", COPY.survey.editHint));
+  const ul = el("ul", "answered__list");
+  for (const a of sv.answered) {
+    const li = el("li", "answered__item");
+    const b = el("button", "answered__btn");
+    b.type = "button";
+    b.appendChild(el("span", "answered__q", a.text));
+    b.appendChild(el("span", "answered__a", a.answerLabel));
+    b.addEventListener("click", () => {
+      app.cursor = a.id;
+      render();
+    });
+    li.appendChild(b);
+    ul.appendChild(li);
+  }
+  box.appendChild(ul);
+  return box;
 }
 
 function backLink(sv) {
@@ -299,18 +329,21 @@ async function answer(key, value) {
   // 결과 화면까지 기다리지 않고 첫 답변 직후 즉시 띄운다.
   if (!app.savedOnce) {
     app.savedOnce = true;
-    if (r.persisted === false) showSaveNotice();
+    if (r.persisted === false) showSaveNotice("survey_first_answer");
   }
   render();
 }
 
-// ── D-015 예외 화면 ────────────────────────────────
-function showSaveNotice() {
+// ── D-015 저장 안내 ───────────────────────────────
+// 예외(저장이 막힌 브라우저)와 1층(결과 첫 도달)이 같은 박스를 쓴다.
+// 무엇을 보여줄지는 뷰모델이 정한다.
+function showSaveNotice(stage) {
   const sn = saveNoticeView({
     persisted: app.session.persisted,
-    stage: "survey_first_answer",
+    stage,
     url: myUrl(),
     token: app.session.token,
+    canShare: typeof navigator !== "undefined" && typeof navigator.share === "function",
   });
   const box = $("save-notice");
   clear(box);
@@ -331,39 +364,93 @@ function showSaveNotice() {
   spell.hidden = true;
   box.appendChild(spell);
 
+  const gatedBtns = [];
+  const touch = () => {
+    app.addrTouched = true;
+    for (const b of gatedBtns) b.disabled = false;
+    renderAddrSlot();
+  };
+
   const row = el("div", "actions");
   for (const a of sn.actions) {
-    const btn = el("button", "btn", a.label);
-    btn.type = "button";
-    if (a.id === "copy") {
-      btn.addEventListener("click", async () => {
+    const b = el("button", a.id === "go" ? "btn btn--primary" : "btn", a.label);
+    b.type = "button";
+    if (a.gated) {
+      // ★ 사실이 아닌 것을 주장하지 않는다. 주소를 만져 본 뒤에만 열린다.
+      b.disabled = !app.addrTouched;
+      gatedBtns.push(b);
+    }
+    if (a.id === "share") {
+      b.addEventListener("click", async () => {
         try {
-          await navigator.clipboard.writeText(sn.url);
-          btn.textContent = COPY.save.copied;
+          await navigator.share({ title: COPY.app.title, url: sn.url });
+          touch();
         } catch {
-          // 복사가 막히면 선택 상태로 만들어 준다. 손으로 적을 수도 있다.
-          const r = document.createRange();
-          r.selectNodeContents(addr);
-          const s = getSelection();
-          s.removeAllRanges();
-          s.addRange(r);
+          await copyAddr(addr, sn.url, b);
         }
       });
+    } else if (a.id === "copy") {
+      b.addEventListener("click", () => copyAddr(addr, sn.url, b).then(touch));
     } else if (a.id === "spell") {
-      btn.addEventListener("click", () => {
+      b.addEventListener("click", () => {
         app.spelled = !app.spelled;
         spell.hidden = !app.spelled;
-        btn.textContent = app.spelled ? COPY.save.spellOff : COPY.save.spell;
+        b.textContent = app.spelled ? COPY.save.spellOff : COPY.save.spell;
+        touch();
       });
-    } else if (a.id === "ack") {
-      // "나중에"가 아니다. 저장을 마쳤다는 사용자의 표시다(D-015 예외 규정).
-      btn.addEventListener("click", () => {
+    } else if (a.id === "later" || a.id === "go") {
+      b.addEventListener("click", () => {
         box.hidden = true;
       });
     }
-    row.appendChild(btn);
+    row.appendChild(b);
   }
   box.appendChild(row);
+  if (sn.actions.some((a) => a.gated)) box.appendChild(el("p", "hint", COPY.save.goHint));
+}
+
+async function copyAddr(addr, url, b) {
+  try {
+    await navigator.clipboard.writeText(url);
+    b.textContent = COPY.save.copied;
+  } catch {
+    // 복사가 막히면 선택 상태로 만들어 준다. 손으로 적을 수도 있다.
+    const r = document.createRange();
+    r.selectNodeContents(addr);
+    const s = getSelection();
+    s.removeAllRanges();
+    s.addRange(r);
+  }
+}
+
+// D-015 2층 — 결과에 닿은 뒤로는 헤더에 작게 상시.
+// **저장 행동을 한 번이라도 하면 표시가 바뀐다.**
+function renderAddrSlot() {
+  const slot = $("addr-slot");
+  clear(slot);
+  if (!app.saveShown) return;
+  const b = el("button", "btn btn--quiet", app.addrTouched ? COPY.save.headerDone : COPY.save.header);
+  b.type = "button";
+  b.addEventListener("click", () => showSaveNotice("result_first"));
+  slot.appendChild(b);
+}
+
+// 고지문 — 하단 한 줄 + 펼침 상세(D-006의 "말하지 않는 것").
+function renderNotice() {
+  const box = $("notice");
+  clear(box);
+  const det = el("details", "notice");
+  det.appendChild(el("summary", "notice__line", COPY.notice.line));
+  det.appendChild(el("h3", "h3", COPY.notice.title));
+  const yes = el("ul", "notice__list");
+  for (const line of COPY.notice.does) yes.appendChild(el("li", null, line));
+  det.appendChild(yes);
+  const no = el("ul", "notice__list notice__list--no");
+  for (const line of COPY.notice.doesNot) no.appendChild(el("li", null, line));
+  det.appendChild(no);
+  det.appendChild(el("p", "hint", COPY.notice.storage));
+  det.appendChild(el("p", "hint", COPY.notice.sources));
+  box.appendChild(det);
 }
 
 // ── ② 타임라인 ─────────────────────────────────────
@@ -389,6 +476,14 @@ function renderResult(main, entry) {
   change.type = "button";
   change.addEventListener("click", goPicker);
   basis.appendChild(change);
+  const edit = el("button", "btn btn--quiet", COPY.survey.edit);
+  edit.type = "button";
+  edit.addEventListener("click", () => {
+    app.screen = "survey";
+    app.cursor = null;
+    render();
+  });
+  basis.appendChild(edit);
   main.appendChild(basis);
 
   renderTimeline(main, tv, {
@@ -396,6 +491,15 @@ function renderResult(main, entry) {
     onGoTo: goTo,
     onPickDistrict: goPicker,
   });
+
+  // D-015 1층 — 결과 화면에 **처음 닿았을 때 한 번.** 이때 비로소 잃을 것이
+  // 생겼고 사용자도 이 화면이 무엇인지 안다. 저장이 막힌 브라우저는 이미
+  // 설문 첫 답변 때 봤으므로 여기서 또 띄우지 않는다.
+  if (!app.saveShown && app.session.persisted !== false) {
+    app.saveShown = true;
+    showSaveNotice("result_first");
+    renderAddrSlot();
+  }
 
   // 갈림길 — 아직 답하지 않은 질문이 타임라인 위의 노드로 놓인다.
   // 답하면 저장하고 재평가한다. **미리보기의 가정 답은 저장하지 않는다.**

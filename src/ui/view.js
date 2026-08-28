@@ -167,9 +167,15 @@ export function surveyView({ questions, state, data, now = Date.now(), cursor = 
 // 이번 단계가 실제로 쓰는 것은 **예외 경로 하나**다(저장이 막힌 브라우저).
 // 1층(결과 화면에서 한 번)과 2층(그 뒤로 작게 상시)은 UI-A②의 일이라
 // 여기서는 show:false로 닫아 둔다 — 분기 자리만 만들어 둔다.
-export function saveNoticeView({ persisted, stage = null, url = null, token = null } = {}) {
-  // 저장이 막힌 브라우저에서는 0층이 아예 없다. 결과 화면까지 기다리지 않고
-  // 설문 첫 답변 직후 즉시 띄우고, **"나중에"를 뺀다.**
+export function saveNoticeView({
+  persisted,
+  stage = null,
+  url = null,
+  token = null,
+  canShare = false,
+} = {}) {
+  // 예외 — 저장이 막힌 브라우저에서는 0층이 아예 없다. 결과 화면까지
+  // 기다리지 않고 설문 첫 답변 직후 즉시 띄우고, **"나중에"를 뺀다.**
   if (persisted === false) {
     return {
       show: true,
@@ -180,13 +186,36 @@ export function saveNoticeView({ persisted, stage = null, url = null, token = nu
       actions: [
         { id: "copy", label: COPY.save.copy },
         { id: "spell", label: COPY.save.spell },
-        { id: "ack", label: COPY.save.ack },
+        // ★ "주소를 남겼습니다"가 아니다. **앱은 사용자가 남겼는지 모른다.**
+        //   복사나 한 글자씩 보기를 쓴 뒤에만 열린다(gated).
+        { id: "go", label: COPY.save.go, gated: true },
       ],
     };
   }
-  // 저장이 되는 경우의 1층은 UI-A②다. 여기서 미리 띄우면 그 단계의 설계를
-  // 먼저 굳혀 버린다.
-  return { show: false, variant: "saved", lines: [], url, token, actions: [] };
+
+  // 1층 — 결과 화면에 처음 닿았을 때 한 번. 이때 비로소 잃을 것이 생겼고,
+  // 사용자도 이 화면이 무엇인지 안다(D-015).
+  if (stage === "result_first") {
+    return {
+      show: true,
+      variant: "saved",
+      lines: [COPY.save.saveTitle, COPY.save.saveLine],
+      url,
+      token,
+      actions: [
+        // OS 공유 시트. 미지원이면 화면이 복사로 폴백한다.
+        ...(canShare ? [{ id: "share", label: COPY.save.share }] : []),
+        { id: "copy", label: COPY.save.copy },
+        { id: "spell", label: COPY.save.spell },
+        // "나중에"를 둔다. 없으면 사람은 X를 찾고, 그래도 안 보이면 화면을
+        // 닫는다. 대신 2층으로 내려간다(D-015).
+        { id: "later", label: COPY.save.later },
+      ],
+    };
+  }
+
+  // 2층은 헤더의 작은 한 줄이라 이 박스를 쓰지 않는다.
+  return { show: false, variant: "quiet", lines: [], url, token, actions: [] };
 }
 
 // ── 결과 자리표시자 ────────────────────────────────

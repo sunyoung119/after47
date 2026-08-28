@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <!-- 모바일 세로가 본체다. 확대를 막지 않는다(접근성). -->
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>화재 피해 회복 안내</title>
+    <title>화재피해 회복 내비게이터</title>
     <meta name="color-scheme" content="light dark" />
     <link rel="stylesheet" href="src/ui/app.css" />
   </head>
@@ -19,7 +19,11 @@
     <a class="skip" href="#main">본문으로 건너뛰기</a>
 
     <header class="top">
-      <h1 class="top__title">화재 피해 회복 안내</h1>
+      <div class="top__bar">
+        <h1 class="top__title">화재피해 회복 내비게이터</h1>
+        <!-- D-015 2층 — 결과에 닿은 뒤 작게 상시. app.js가 채운다. -->
+        <div id="addr-slot" class="top__addr"></div>
+      </div>
       <p class="top__lead">지금 무엇을 먼저 해야 하는지, 무엇을 하면 안 되는지 알려드립니다.</p>
     </header>
 
@@ -35,6 +39,8 @@
 
     <footer class="foot">
       <p id="expires" class="foot__line"></p>
+      <!-- 고지문 — 하단 한 줄 + 펼침 상세. app.js가 채운다. -->
+      <div id="notice"></div>
     </footer>
 
     <script type="module" src="src/ui/app.js"></script>

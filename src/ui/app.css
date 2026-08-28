@@ -632,3 +632,72 @@ body {
   font-size: 0.85rem;
   color: var(--ink-soft);
 }
+
+/* ── D-015 2층 · 고지문 ─────────────────────────── */
+.top__bar {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+.top__addr:empty {
+  display: none;
+}
+.notice {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+.notice__line {
+  cursor: pointer;
+  min-height: 32px;
+}
+.notice__list {
+  margin: 6px 0 0;
+  padding-left: 1.1em;
+}
+.notice__list--no {
+  margin-top: 10px;
+}
+.notice__list--no li::marker {
+  content: "× ";
+}
+
+/* ── 답한 내용 (되돌아가기) ─────────────────────── */
+.answered {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+.answered__list {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+.answered__btn {
+  width: 100%;
+  min-height: 44px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  text-align: left;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 12px;
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+}
+.answered__q {
+  flex: 1;
+  font-size: 0.92rem;
+}
+.answered__a {
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+  white-space: nowrap;
+}

@@ -5,7 +5,7 @@
 //
 // ★ 저장소를 직접 만지지 않는다(D-002). 누수 탐지가 src/ 아래를 재귀로 훑는다.
 
-import { COPY } from "./copy.js";
+import { COPY, STATUS_LABEL } from "./copy.js";
 import { waitLabel } from "./timeline.js";
 
 export const el = (tag, cls, text) => {
@@ -147,7 +147,7 @@ function side(name, cell) {
     box.appendChild(el("p", "compare__status", COPY.compare.absent));
     return box;
   }
-  box.appendChild(el("p", "compare__status", cell.status));
+  box.appendChild(el("p", "compare__status", STATUS_LABEL[cell.status] ?? cell.status));
   if (cell.reason) box.appendChild(el("p", "compare__reason", cell.reason));
   if (cell.dept !== null || cell.status) {
     const d = cell.dept ? COPY.timeline.deptKnown(cell.dept) : null;
@@ -327,8 +327,9 @@ function excludedBlock(rows, handlers) {
     li.dataset.row = r.id;
     const head = el("p", "row__sum");
     head.appendChild(el("span", null, r.title));
-    // 상태는 색이 아니라 글자다(WCAG 1.4.1).
-    head.appendChild(el("span", "tag", r.status));
+    // 상태는 색이 아니라 글자다(WCAG 1.4.1). **엔진 문자열을 그대로 쓰지
+    // 않는다** — "미판정"은 내부 용어이고 화면에서는 "아직 확인 못 함"이다.
+    head.appendChild(el("span", "tag", STATUS_LABEL[r.status] ?? r.status));
     li.appendChild(head);
     if (r.reason) li.appendChild(el("p", "row__reason", r.reason));
     // 금액을 몰라도 창구는 말한다(D-003). dept가 null인 구가 9개다.

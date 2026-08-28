@@ -136,13 +136,16 @@ Action에 순서 번호나 전역 정렬 배열을 만들지 마라. 순서는 `
 ## 검증
 
 ```
-npm test                       다섯 다 실행
+npm test                       여섯 다 실행
 
 node test/engine.test.mjs      판정 결과 출력 + 수손 가해/피해 분기
 node test/engine.snapshot.mjs  계기판 — 100조합이 기준선과 같은가
 node test/questions.test.mjs   설문만으로 레퍼런스 케이스에 도달하는가
 node test/districts.test.mjs   25개 구가 변종별로 제대로 판정되는가
+node test/view.test.mjs        화면이 무엇을 그릴지 브라우저 없이 검사한다
 node test/storage.test.mjs     백엔드를 갈아끼워도 같은 계약을 지키는가
+
+npm run serve                  정적 서버(http://localhost:5173)
 ```
 
 레퍼런스 케이스(오피스텔 임차인 / 현관등 발화 / 제조물 의심)가 끝까지
@@ -160,6 +163,14 @@ node test/storage.test.mjs     백엔드를 갈아끼워도 같은 계약을 지
 `skip`된 항목은 어느 버킷에도 행이 없으므로, 이 등식 하나가 매핑 오류를
 대부분 잡는다. `meal`에 대응 Action이 0건인 것은 **의도**이고 그 사실이
 테스트로 박혀 있다(D-020).
+
+`view.test.mjs`는 **화면의 판단을 브라우저 밖에서** 본다. `src/ui/`의
+뷰모델은 전부 DOM을 모르는 순수함수이고(`entryView`·`surveyView`·
+`saveNoticeView`·`timelineView`·`forkView`·`compareView`), DOM 코드는 그것을
+받아 그리기만 한다. **판단이 브라우저 안에 숨으면 계기판이 못 본다** —
+엔진에서 했던 것과 같은 이유다. 특히 지키는 것 둘 — 설문 뷰모델은 **분모를
+반환하지 않고**(질문 수가 답에 따라 변해 "3/17"이 거짓이 된다), 가정 판정
+(`whatif.js`)은 **state 사본으로만 돌아 저장으로 새지 않는다.**
 
 `storage.test.mjs`는 D-002가 지켜지는지를 두 방향에서 본다 — 계약 테스트가
 `storage.js`의 동작을 보고, 누수 탐지가 다른 파일이 몰래 저장소를 만지는지를
