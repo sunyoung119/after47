@@ -1,35 +1,71 @@
-/* 시각 토큰 — 색·글꼴·간격은 **전부 여기에만** 있다.
+/* 시각 토큰 — 색·글꼴·간격·크기는 **전부 여기에만** 있다.
  *
  * 마크업과 JS에 색값을 쓰지 마라. 시안이 확정되면 이 파일만 갈아끼운다.
  *
- * 새벽 팔레트 — 깊은 남색 바탕에서 여명 쪽으로. 불이 꺼진 뒤의 시간이고,
+ * 새벽 팔레트 v2 — 사용자가 확정한 인트로 시안에서 뽑았다.
+ * 깊은 남색(#0a0d1d)에서 여명(#f1c9a7)으로. 불이 꺼진 뒤의 시간이고,
  * 사진을 쓰지 않는 것과 같은 이유로 자극을 낮춘다.
+ *
+ * **새벽 글로우(radial)는 인트로 전용이다.** 덱 네 장은 차분한 단색으로
+ * 간다 — 매 화면이 일출이면 아무 화면도 일출이 아니다.
  *
  * 지키는 것
  *   · 상태는 색이 아니라 글자로 말한다 (WCAG 1.4.1)
  *   · 순수 빨강·초록을 쓰지 않는다 (색각 이상 + 경보 톤 회피)
- *   · 본문 대비 WCAG AA 이상
+ *   · 여명(--c-accent)은 **행동 가능한 것**에만 — 버튼·링크·현재 장 표시
+ *   · 본문 대비 WCAG AA 이상 (실측은 아래 표)
  *   · 터치 목표 44px
+ *
+ * 대비 실측 (WCAG 2.x · --c-bg #0a0d1d 기준)
+ *   --c-ink        18.60 : 1   AA
+ *   --c-ink   / 표면        15.04 : 1   AA
+ *   --c-ink-soft   11.20 : 1   AA
+ *   --c-ink-faint   4.79 : 1   AA
+ *   --c-accent     12.55 : 1   AA
+ *   --c-cta 위 --c-ink       8.34 : 1   AA
+ *   --c-ink-micro   1.55 : 1   **미달** — 인트로 하단 전용이고
+ *     그 자리는 여명 글로우로 밝아져 흰 글자가 불투명해도 3.11이 한계다.
+ *     시안 확정값을 그대로 뒀다. 되돌리려면 이 한 줄이다.
  */
 
 :root {
-  /* ── 색 — 기본은 새벽(어두운 쪽) ───────────────── */
-  --c-bg: #0f1622; /* 깊은 남색 */
-  --c-bg-soft: #17202e;
-  --c-surface: #1b2534;
-  --c-line: #2c3849;
-  --c-line-strong: #46566d;
-  --c-ink: #e9edf4; /* 본문 — bg 대비 15:1 */
-  --c-ink-soft: #a9b6c8; /* 보조 — bg 대비 8:1 */
-  --c-ink-faint: #7c8a9e; /* 흐림 — 상태를 색으로만 말하지 않으므로 보조용 */
+  /* ── 색 ────────────────────────────────────────── */
+  /* 바탕 — 인트로 그라데이션의 네 정거장. 덱은 앞 셋만 쓴다. */
+  --c-bg: #0a0d1d; /* 깊은 남색 */
+  --c-bg-soft: #11152b;
+  --c-surface: #20213d;
+  --c-bg-deep: #4b4059; /* 인트로 그라데이션 끝. 덱에 쓰지 마라 */
+
+  /* 경계는 반투명이다 — 바탕이 무엇이든 같은 세기로 얹힌다. */
+  --c-line: rgba(255, 255, 255, 0.18);
+  --c-line-strong: rgba(255, 255, 255, 0.32);
+
+  --c-ink: #fffaf5; /* 본문 — bg 대비 18.6:1 */
+  --c-ink-soft: rgba(255, 248, 241, 0.78); /* 보조 — 11.2:1 */
+  --c-ink-faint: rgba(255, 248, 241, 0.48); /* 흐림 — 4.79:1 */
+  --c-ink-micro: rgba(255, 248, 241, 0.34); /* 인트로 마이크로카피 전용 */
 
   /* 여명. 강조는 이 하나뿐이고 경보로 읽히지 않는 온기다. */
-  --c-accent: #e8a765;
-  --c-accent-ink: #1a1208;
-  --c-focus: #9ec5fe;
+  --c-accent: #f1c9a7;
+  --c-accent-ink: #0a0d1d; /* 여명 바탕 위 글자 — 12.55:1 */
+  /* 포커스 링은 여명과 달라야 한다. 같은 색이면 '지금 여기'가 안 보인다. */
+  --c-focus: #fffaf5;
+
+  /* 인트로 CTA — 여명이 아니라 안개 낀 회보라. 시안 확정값. */
+  --c-cta: rgba(125, 119, 139, 0.62);
+  --c-cta-hover: rgba(140, 133, 153, 0.72);
+
+  /* 새벽 글로우 — **인트로에서만 쓴다.** */
+  --c-glow-0: rgba(241, 201, 167, 0.84);
+  --c-glow-1: rgba(217, 161, 127, 0.6);
+  --c-glow-2: rgba(169, 119, 121, 0.4);
+  --c-glow-3: rgba(90, 77, 111, 0.2);
+  --c-glow-soft: rgba(255, 218, 184, 0.12); /* 숨 쉬는 번짐 */
+  --c-grain: rgba(255, 255, 255, 0.11); /* 미세 입자 */
 
   /* ── 글꼴 ──────────────────────────────────────── */
-  --font: system-ui, -apple-system, "Segoe UI", "Malgun Gothic", sans-serif;
+  --font: "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans CJK KR", system-ui,
+    -apple-system, sans-serif;
   --f-body: 16px;
   --f-xs: 0.78rem;
   --f-sm: 0.88rem;
@@ -37,8 +73,32 @@
   --f-lg: 1.12rem;
   --f-xl: 1.3rem;
   --f-hero: 1.6rem;
-  --lh: 1.6;
+
+  /* 인트로 전용 크기 — 시안 그대로. 뒤는 좁은 화면용. */
+  --f-intro-eyebrow: 13px;
+  --f-intro-eyebrow-sm: 12px;
+  --f-intro-title: clamp(68px, 10.2vw, 148px);
+  --f-intro-title-sm: clamp(64px, 18vw, 92px);
+  --f-intro-sub: clamp(17px, 1.95vw, 23px);
+  --f-intro-sub-sm: 19px;
+  --f-intro-cta: 15px;
+  --f-intro-cta-sm: 14px;
+  --f-intro-micro: 11px;
+
+  --lh: 1.7; /* 본문 — 정신없는 사람이 읽는다 */
   --lh-tight: 1.4;
+  --lh-intro-title: 0.98;
+  --lh-intro-title-sm: 1.02;
+  --lh-intro-sub: 1.75;
+  --lh-intro-sub-sm: 1.85;
+
+  /* 자간 — 제목은 타이트하게, 본문은 살짝. */
+  --ls: -0.02em;
+  --ls-tight: -0.03em;
+  --ls-title: -0.085em; /* 인트로 대제목 */
+  --ls-title-sm: -0.08em;
+  --ls-eyebrow: 0.08em; /* 라벨만 벌린다 */
+
   --w-bold: 600;
   --w-heavy: 700;
 
@@ -53,32 +113,33 @@
   --s7: 48px;
 
   /* ── 형태 ──────────────────────────────────────── */
-  --r1: 6px;
-  --r2: 10px;
-  --r3: 14px;
+  /* 모서리는 3px 하나다. 이름 셋은 남겨 둔다 — 레이아웃 CSS가 모른다. */
+  --r1: 3px;
+  --r2: 3px;
+  --r3: 3px;
   --tap: 44px; /* 터치 목표 최소 */
   --page: 34rem; /* 본문 최대 폭 */
   --dur: 260ms;
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  /* 인트로 연출 — 시안의 타이밍 그대로. */
+  --ease-intro: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dur-title: 0.88s;
+  --dur-sub: 0.78s;
+  --dur-cta: 0.72s;
+  --dur-fade: 0.7s;
+  --delay-eyebrow: 0.08s;
+  --delay-title: 0.22s;
+  --delay-title-step: 0.08s;
+  --delay-sub: 1.02s;
+  --delay-cta: 1.44s;
+  --delay-micro: 1.92s;
 }
 
-/* 밝은 화면을 쓰는 사람에게는 같은 팔레트의 여명 쪽을 준다.
-   토큰 이름은 그대로이므로 레이아웃 CSS는 아무것도 모른다. */
-@media (prefers-color-scheme: light) {
-  :root {
-    --c-bg: #faf6f1;
-    --c-bg-soft: #f2ece4;
-    --c-surface: #ffffff;
-    --c-line: #ddd3c7;
-    --c-line-strong: #a89684;
-    --c-ink: #1a2230; /* bg 대비 14:1 */
-    --c-ink-soft: #4c5a6d; /* bg 대비 7.5:1 */
-    --c-ink-faint: #6b7889;
-    --c-accent: #a35a12;
-    --c-accent-ink: #ffffff;
-    --c-focus: #0b57d0;
-  }
-}
+/* 라이트 모드는 이번 시안에서 대응하지 않는다 — 확정된 것은 새벽 하나다.
+   토큰 이름과 구조는 그대로 두므로, 여명 쪽 팔레트가 정해지면 이 블록만
+   채우면 된다. 지금 옛 값을 남겨 두면 낮에 들어온 사람만 다른 앱을 본다.
+   index.html의 color-scheme도 dark 하나로 맞춰 두었다. */
 
 /* 움직임을 줄여 달라고 한 사람에게는 전환을 없앤다. */
 @media (prefers-reduced-motion: reduce) {

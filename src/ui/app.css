@@ -17,10 +17,19 @@ body {
 
 body {
   margin: 0;
+  /* 덱은 차분한 단색에 가깝다 — 새벽 글로우는 인트로에만 있다. */
   background: var(--c-bg);
+  background-image: linear-gradient(180deg, var(--c-bg) 0%, var(--c-bg-soft) 100%);
+  background-attachment: fixed;
   color: var(--c-ink);
   font: var(--f-body) / var(--lh) var(--font);
+  letter-spacing: var(--ls);
   word-break: keep-all; /* 화재 직후 사람이 읽는다 */
+}
+
+/* 인트로가 떠 있는 동안 뒤 화면이 비치거나 스크롤되면 안 된다. */
+body.is-intro {
+  overflow: hidden;
 }
 
 .skip {
@@ -111,6 +120,7 @@ a {
 .top__title {
   margin: 0;
   font-size: var(--f-lg);
+  letter-spacing: var(--ls-tight);
 }
 .top__addr:empty {
   display: none;
@@ -160,6 +170,7 @@ a {
   font-size: var(--f-lg);
   margin: var(--s5) 0 var(--s3);
   line-height: var(--lh-tight);
+  letter-spacing: var(--ls-tight);
 }
 .h3 {
   font-size: var(--f-md);
@@ -483,6 +494,7 @@ a {
   margin: 0;
   font-size: var(--f-xl);
   line-height: var(--lh-tight);
+  letter-spacing: var(--ls-tight);
 }
 .card__summary {
   margin: var(--s2) 0 0;
