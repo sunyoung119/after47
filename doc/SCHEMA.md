@@ -30,16 +30,36 @@ Action의 필드로 넣는다 — 조건은 Action에 붙는 속성이지 독립
 
 ---
 
-## 3상태 판정 (D-011)
+## 판정 상태 — 넷 (D-011 · D-019 §6)
 
 Action은 사라지거나 나타나는 게 아니라 **상태를 갖는다.**
 
-| 상태 | 조건 | 화면 |
+| 상태 | 뜻 | 화면 |
 |---|---|---|
 | (없음) | `applies_when` 불일치 | 결과에 포함 안 됨 |
-| `해당` | `applies_when` 일치 + `excluded_when` 불일치 | 할 일 / 진행 중 |
-| `조건부` | `excluded_when` 일치 + `exception_available: true` | "원칙적으로 제외지만 예외 조항 있음 — 문의" |
-| `제외` | `excluded_when` 일치 + `exception_available: false` | 흐리게, 제외 사유 표시 |
+| `해당` | 아래 어느 제외에도 안 걸렸다 | 할 일 / 진행 중 |
+| `조건부` | 제외에 걸렸으나 예외 조항이 있다 | "원칙적으로 제외지만 예외 조항 있음 — 문의" |
+| `제외` | 제외에 걸렸고 예외 조항이 없다 | 흐리게, 제외 사유 표시 |
+| `미판정` | 판정에 필요한 답이 아직 없다 | 무엇을 답하면 확정되는지 표시 |
+
+**제외로 가는 경로는 셋이고 전부 `제외`/`조건부`를 만든다.**
+
+| 경로 | 어디서 | 예외 조항을 무엇으로 보나 |
+|---|---|---|
+| Action 자체 | `excluded_when` 일치 | `action.exception_available` |
+| 자치구 조례 | `districtExclusion()` — 주택 한정 · 거주 요건 · 보험 4변종 | `district.emergency_exception` |
+| 신청 기한 도과 | `deadlineExclusion()` — `irreversible`은 제외(R3이 `missed`로 가져간다) | `district.emergency_exception` |
+
+**`미판정`으로 가는 경로는 둘이다.** 둘 다 `districtExclusion()` 안에 있다.
+
+- 자치구 미지정 — 조례 판정 자체가 불가능하다
+- 보험 `unknown` — 단, **그 구의 `insurance_exclusion`이 실제로 보는 키가
+  `unknown`일 때만**이다. 보험을 안 보는 구(`none`, 예: 성북)에서는
+  모르는 채로도 `해당`이 확정이다
+
+`미판정`은 판정 결과가 아니라 **판정 이전**이다. 그래서 `emergency_exception`을
+보지 않는다 — 구청장 예외는 제외된 사람에게 열리는 문인데, 여기는 아직
+제외인지 아닌지를 모른다. 확정 제외가 미판정보다 먼저다.
 
 `제외`도 숨기지 않는다. "이런 지원이 있지만 당신은 이 사유로 해당되지 않는다"는
 것 자체가 정보다. 다른 데서 듣고 혼란스러워하는 것보다 낫다.
@@ -71,8 +91,15 @@ Action은 사라지거나 나타나는 게 아니라 **상태를 갖는다.**
 | `amount_source` | enum | `attachment`\|`rule`\|`mayor`\|`none` |
 | `amount_known` | bool | 실제 금액 확인 여부 (현재 대부분 false) |
 | `fallback` | string\|null | 미보유 구의 대체 근거 |
+| `support_items` | [string] | 이 구가 지원하는 항목. Action의 `support_item`과 맞춘다. 여기 없으면 그 Action은 결과에서 아예 빠진다 |
+| `exclusion_exempt_items` | [string] | 보험 제외를 **적용하지 않는** 항목 (양천: psych · housing) |
 | `source_url` | string | 원문 주소 |
 | `checked_at` | date | 마지막 확인일 |
+
+`support_items`·`exclusion_exempt_items`·`housing_only`·`residency`·
+`insurance_exclusion`이 `districtExclusion()`이 직접 읽는 판정 핵심 필드다.
+판정 순서는 **support_items → housing_only → residency →
+exclusion_exempt_items → insurance**이고, 먼저 걸리는 것이 뒤를 가린다.
 
 `insurance_exclusion` 값이 넷인 것은 실제로 4변종이기 때문이다(§2-3).
 `enrolled_self`(본인 가입)와 `enrolled_dwelling`(주택 가입)의 구분이 중요하다 —
@@ -92,8 +119,11 @@ Action은 사라지거나 나타나는 게 아니라 **상태를 갖는다.**
 |---|---|---|
 | `id` | string | 슬러그 |
 | `title` | string | 한 줄 |
+| `summary` | string | 한 문장. `body`는 펼쳐야 나온다 |
 | `body` | string | 안내 본문 |
 | `domain` | int | 서비스 분야 1~10 |
+| `domain_group` | enum | 화면용 묶음 7종 (§domain_group). 분야 번호는 관리용이고 이것이 화면에 나간다 |
+| `when` | enum | 배치 위치의 **기본값**. 실제 화면 위치는 `placement()`가 계산한다 (§when) |
 | `category` | enum | `신청`\|`판단`\|`대기`\|`기관자율` (D-008) |
 | `audience` | enum | `피해자`\|`조사관` |
 | `axis` | enum | `사실`\|`제도` |
@@ -105,6 +135,8 @@ Action은 사라지거나 나타나는 게 아니라 **상태를 갖는다.**
 | `excluded_when` | object\|null | 제외 조건 |
 | `exception_available` | bool | 제외여도 예외 조항 존재 |
 | `exclusion_reason` | string\|null | 제외 시 표시할 사유 |
+| `ordinance_based` | bool | **선택 필드(4건에만 있다).** 자치구 조례 지원 항목 |
+| `support_item` | string | **선택 필드(4건에만 있다).** psych · waste · housing · supplies. districts의 `support_items`와 맞춘다 |
 | `depends_on` | [string] | 선행 action id (쌍 관계) |
 | `blocks_reason` | string\|null | 선행 미완료 시 표시할 이유 |
 | `knowledge_level` | `상식`\|`전문` | |
@@ -114,6 +146,13 @@ Action은 사라지거나 나타나는 게 아니라 **상태를 갖는다.**
 
 `depends_on`이 쌍 관계다. 전역 순서 배열이 아니다 — 조건이 바뀌어도
 재계산되어야 하기 때문(D-001).
+
+`ordinance_based`와 `support_item`만 **없는 Action에는 키 자체가 없다.**
+나머지는 전 항목에 키가 있고 값이 `null`이다.
+
+**선행은 완료 가능한 행동이어야 한다**(D-018). `standing`(금지)을
+`depends_on`에 넣지 마라 — 금지는 체크할 수 없어서(`checkable: false`)
+그 뒤의 항목이 영원히 풀리지 않는다.
 
 ---
 
@@ -171,10 +210,15 @@ scene_preserved       true | false | "unknown"   현장보존 조치 중
 wet_appliances        bool  물에 젖은 가전 있음
 powder_present        bool  소화약제 분말 잔존
 other_units_affected  true | false | "unknown"   타 세대 피해
-water_damage_role     victim | causer | both | none   소화수 피해 가해·피해 구분
+water_damage_role     victim | causer | both | none | "unknown"   소화수 피해
+report_received       bool  화재현장조사서를 받았는가 (after_report를 여는 키)
 adjuster_present      bool  손해사정사 등장 여부
 product_maker_contacted bool  제조사 접촉 여부
 ```
+
+`report_received`는 **7일이 지나야 묻는다** — `q-report`의 `ask_when`이
+`elapsed_bucket`을 본다. 그 전에는 `default: false`로 채워진다. 조사서가
+나오기 전에 "받으셨나요"를 묻는 것은 답할 수 없는 질문이다.
 
 `water_damage_role`이 특히 중요하다. 물 피해를 **받은 쪽과 준 쪽은 지시가
 정반대**다("관리사무소에 알리세요" vs "책임을 인정하지 마세요"). 이것을
@@ -187,11 +231,23 @@ questions가 묻지 않고 `deriveState()`가 만든다. `applies_when`과 `ask_
 똑같이 읽는다.
 
 ```
-elapsed_hours                  fire_at에서 계산
+elapsed_hours                  fire_at에서 계산 (시간 단위 정수)
+elapsed_bucket                 immediate | first_hours | first_week | first_month | months | years
 district_has_ordinance         자치구 조례 보유 여부
 district_residency             none | address | address_and_actual
 district_insurance_exclusion   none | enrolled_self | enrolled_dwelling | compensated
 ```
+
+`deriveState()`는 `water_damage_role: "both"`도 여기서 `["victim","causer"]`
+배열로 펼친다. `"unknown"`은 펼치지 않는다 — 모르는 사람에게 양쪽 지시를
+함께 주면 반대 지시가 섞인다(D-016).
+
+**`elapsed_bucket`의 소비자는 `ask_when` 하나다.** 재배치(`placement()`)는
+이 키를 쓰지 않고 항목마다 자기 시간 필드와 `elapsed_hours`를 직접 비교한다 —
+구간으로 뭉개면 같은 구간 안의 4시간과 24시간이 구별되지 않는다. 데이터의
+조건은 범위 비교를 못 하므로(D-010) 시점별 설문 분할은 이산값을 배열 OR로
+받아야 하고, 그래서 이 키가 있다. 경계 4h·48h·30d·1095d는 데이터에 실재하는
+값이고 7d만 임의다(D-017 §1).
 
 자치구 파생 키는 **조례 내용에 따라 질문을 켜고 끄기 위한 것**이다.
 `ask_when: {"district_insurance_exclusion": "compensated"}` 는 보험금 수령을
@@ -200,12 +256,16 @@ district_insurance_exclusion   none | enrolled_self | enrolled_dwelling | compen
 
 ### "모름"은 언제나 `"unknown"` 문자열이다
 
-3상태 키가 여섯이다.
-
 ```
 scene_preserved  insurance_self  insurance_dwelling
 other_units_affected  origin_area  product_suspected
 ```
+
+**`true | false | "unknown"` 3상태 키는 위 여섯이고, "모름"을 값으로 갖는
+키는 일곱이다.** 일곱째가 `water_damage_role`인데 3상태가 아니다 —
+`victim | causer | both | none | "unknown"` 다섯 값이고, 여기서 `none`(물
+피해가 없다)과 `"unknown"`(젖었는지 모른다)은 다른 뜻이다. 둘을 합치면
+"모르겠다"가 "피해 없음"이 되어 수손 안내가 통째로 사라진다(D-016).
 
 **`null`을 "모름"으로 쓰지 마라.** 한때 보험 세 키가 `null`이었는데
 `matches()`에서 `null`은 `true` 조건에도 `false` 조건에도 안 걸려서,
@@ -231,19 +291,106 @@ other_units_affected  origin_area  product_suspected
 
 ## 엔진 계약
 
+**정본은 `src/engine.js`다.** 아래는 100조합(`test/engine.snapshot.mjs`)을
+돌려 실측한 현재 반환이다.
+
 ```
-evaluate(state, data) → {
-  now:      [{action, status, reason}]   지금 해야 할 것
-  waiting:  [{action, eta}]              기다리는 것
-  blocked:  [{action, blocked_by}]       선행 미완료
-  later:    [{action}]                   나중
-  excluded: [{action, reason}]           제외·조건부
+evaluate(state, data, now = Date.now()) → {
+  sections: [{key, label, count, unlocked, groups}]   화면에 펴는 것
+  done:     [행]   사용자가 체크한 것
+  waiting:  [행]   category가 "대기"인 것
+  blocked:  [행]   선행이 안 끝났고 되돌릴 수 있는 것
+  excluded: [행]   해당이 아닌 것 — 제외 · 조건부 · 미판정
 }
 ```
 
-완료 상태(`done`)는 재방문 시 사용자가 체크한 것으로, state와 별도로
-`completed: [action_id]` 배열로 관리한다(D-002 저장 계층).
+`now`는 안쪽 `deriveState()`까지 흘러간다. 세 번째 인자를 주면 시각이
+고정되고, 안 주면 실행할 때마다 다른 결과가 나온다.
 
+### 행 — 모든 버킷과 섹션이 같은 모양이다
+
+15개 키가 **전부 있다.** 값이 없으면 `null`이지 키가 빠지지는 않는다
+(키 일관성 규칙 — UI가 `undefined`를 만나지 않는다).
+
+| 키 | 타입 | 내용 |
+|---|---|---|
+| `action` | object | actions.json 원본 객체 통째 |
+| `status` | enum | 해당 · 조건부 · 제외 · 미판정 · **완료**(done 버킷만) |
+| `reason` | string\|null | 제외·조건부·미판정의 사유 |
+| `blockedBy` | [{id, title}] | 아직 안 끝난 선행. **제목이 함께 온다** — UI가 "'OO'을(를) 먼저 하세요"를 조합한다 |
+| `blocks_reason` | string\|null | 왜 이 순서인지의 특수 설명. 데이터에 5건뿐이고 나머지는 `null` |
+| `dept` | string\|null | 조례 항목의 소관 부서. 조례 항목이 아니면 `null` |
+| `amount_known` | bool\|null | 조례 항목의 금액 확인 여부. D-003의 degrade를 districts.json 없이 그리기 위한 것 |
+| `deadline_days` | int\|null | 행 수준 기한. Action 값이 없으면 조례 항목에 한해 자치구 값이 온다 |
+| `group` | enum | `domain_group`. 섹션은 `groups`로도 주지만 버킷 행에는 이것뿐이다 |
+| `category` | enum | 신청 · 판단 · 대기 (`기관자율`은 audience 필터에서 빠진다) |
+| `wait_days` | [int,int]\|null | `대기` 항목의 eta |
+| `when` | enum | **계산된** 화면 위치. `action.when`이 아니라 `placement()`의 결과다 |
+| `checkable` | bool | 체크 가능 여부. `standing`과 `locked`가 `false` |
+| `locked` | bool | 선행이 안 끝났는데 제자리에 남은 행 (D-019 §5) |
+| `rank` | int\|null | 화면을 가로지르는 순위. **엔진은 자르지 않는다** |
+
+`done` 버킷의 행만 16번째 키 `status_if_pending`을 갖는다. 완료가 아니었다면
+무엇이었는지다(실측 값: `해당`·`제외`). 다른 버킷에는 이 키가 없다.
+
+`reason`은 `excluded` 행에만 있는 것이 아니다. **`done` 행에도 남는다** —
+완료로 이겼지만 원래 판정이 제외였던 경우다. `status`가 `"완료"`인 행의
+`reason`을 그대로 그리면 "완료"인데 "기한이 지났을 수 있습니다"가 붙는다.
+UI는 `status`를 먼저 보고 문구를 정해야 한다.
+
+### rank — 어디에 값이 있고 어디가 null인가
+
+| | rank |
+|---|---|
+| `sections` 중 `standing` **밖** | 1부터의 정수 |
+| `sections` 중 `standing` | `null` — 타임라인 밖 별도 밴드라 순위 경쟁에 없다 (D-019 §0) |
+| `done` · `waiting` · `blocked` · `excluded` | `null` — 접히는 자리라 순위가 없다 |
+
+`locked`도 섹션 행에서만 켜진다.
+
+**자르는 것은 UI다.** `rank <= 5`를 펴면 D-019 §1의 "1+4"가 된다.
+나머지는 라벨과 개수로 접는다 — Action은 사라지지 않는다(D-011).
+
+### 섹션
+
+```
+{ key, label, count, unlocked, groups: [{group, items: [행]}] }
+```
+
+- `key`/`label` — §when의 6종. **빈 섹션은 보내지 않는다**
+- `count` — 그 섹션의 행 수(그룹 합)
+- `unlocked` — 모든 섹션에 있다. `after_report`만 `report_received === true`일
+  때 참이고 나머지는 항상 참. 섹션 객체의 모양이 일정해야 UI가 분기 없이 읽는다
+- `groups` — `domain_group`으로 묶은 것. 섹션 안쪽 정렬은 `timing_hours`이고
+  `rank`와 별개다. 순위는 화면을 가로지르는 값이고 이것은 블록 안의 값이다
+
+### 버킷에 들어가는 순서 — 먼저 걸리는 것이 뒤를 가린다
+
+1. **`done`** — 체크했고 `checkable`이면. **어떤 판정보다도 먼저다**(D-018).
+   30일 안에 신청을 마친 사람이 90일 뒤에 열었을 때 "기한이 지났습니다"가
+   아니라 "완료"를 봐야 한다. `status`는 `"완료"`로 정규화되고 원래 판정은
+   `status_if_pending`에 남는다
+2. **`excluded`** — `status`가 `해당`이 아닌 것 전부(제외 · 조건부 · 미판정)
+3. **`blocked`** — 선행이 안 끝났고 **`irreversible`이 아닌 것.**
+   불가역이면 `placement()`가 가리키는 섹션에 `locked: true`로 남는다
+4. **`waiting`** — `category`가 `대기`
+5. **섹션** — 나머지
+
+버킷 이름이 내용보다 넓은 자리가 하나 있다. **`blocked`는 "선행이 안 끝난 것"
+전부가 아니라 "그중 되돌릴 수 있는 것"이다**(D-019 §5).
+
+`when`이 `standing`인 행도 선행이 있으면 `blocked`로 간다. 그러면 금지 밴드에
+안 나타난다 — 현재 데이터에 1건 있다(§when 참조).
+
+### 계기판이 기록하는 것은 이 중 일부다
+
+`test/engine.snapshot.mjs`의 `bucketRow()`는 `action` 객체 통째가 아니라
+`id`만 남기고, `rank`·`locked`·`when`·`checkable` 대신 `irreversible`을
+기록하는 식으로 요약한다. **스냅샷에 없는 필드가 계약에 없는 것은 아니다.**
+전체 계약은 위 표이고 정본은 코드다.
+
+완료 상태는 재방문 시 사용자가 체크한 것으로, state와 별도로
+`completed: [action_id]` 배열로 관리한다(D-002 저장 계층).
 
 ---
 
@@ -257,6 +404,24 @@ evaluate(state, data) → {
 | `this_week` | 이번 주에 하실 것 | |
 | `anytime` | 계속 신경 쓸 것 | 언제든 쓸 수 있는 창구, 시효, 관찰해야 할 증상 |
 | `after_report` | 조사서가 나온 뒤에 | 화재현장조사서·감정 결과가 있어야 판단 가능 |
+
+**데이터의 `when`은 기본값이지 화면 위치가 아니다.** 실제 위치는
+`placement(action, elapsed_hours, deadline_days)`가 계산한다(D-017). 순수
+함수이고 규칙은 여섯이다 — `standing`과 `after_report`는 안 움직이고(R0·R1),
+시한이 지나면 `irreversible`만 `missed`로 내려가며(R2·R3·R4), 시간 필드가
+없는 `this_week`만 기간이 지나면 `anytime`으로 간다(R5, 사실 축 7일 / 제도
+축 30일). 신청 기한이 지난 것은 `missed`가 아니라 `excluded`다 —
+`missed`는 `irreversible` 전용이다(D-017 §3).
+
+`after_report`는 시간이 아니라 `report_received`로 열린다. 재배치하지 않고
+섹션의 `unlocked` 플래그로 표시한다.
+
+**`standing`인데 `standing` 블록에 없는 행이 생길 수 있다.** 선행이 있으면
+`blocked` 버킷이 먼저 가져가기 때문이고, 현재 데이터에 1건 있다
+(`adjusters-may-all-be-opposing` — 선행이 `adjuster-position`). 금지가
+타임라인 밖 별도 밴드라는 D-019 §0의 전제에서 보면 그 한 건은 밴드에
+나타나지 않는다. **`depends_on`을 추가할 때 그 항목이 `standing`인지
+확인하라.**
 
 `standing`과 `anytime`의 경계가 흐려지기 쉽다. **`standing`은 "하지 마세요"만**
 담는다. "무료로 신청할 수 있습니다"는 `anytime`이다.
