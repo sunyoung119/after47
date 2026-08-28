@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!-- 모바일 세로가 본체다. 확대를 막지 않는다(접근성). -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>화재 피해 회복 안내</title>
+    <meta name="color-scheme" content="light dark" />
+    <link rel="stylesheet" href="src/ui/app.css" />
+  </head>
+  <body>
+    <!--
+      뼈대만 둔다. 내용은 src/ui/app.js가 채운다.
+
+      경로가 전부 상대경로인 것은 의도다 — loadData의 base가 "data"이고,
+      GitHub Pages 프로젝트 페이지는 /저장소이름/ 아래에 놓인다.
+      절대경로로 바꾸면 그곳에서 전부 깨진다.
+    -->
+    <a class="skip" href="#main">본문으로 건너뛰기</a>
+
+    <header class="top">
+      <h1 class="top__title">화재 피해 회복 안내</h1>
+      <p class="top__lead">지금 무엇을 먼저 해야 하는지, 무엇을 하면 안 되는지 알려드립니다.</p>
+    </header>
+
+    <!-- 진입 알림 — 자치구 충돌·이어보기·주소 문제 등 -->
+    <div id="banners" class="banners" role="status" aria-live="polite"></div>
+
+    <main id="main" class="main">
+      <p class="loading">불러오는 중입니다…</p>
+    </main>
+
+    <!-- D-015 예외 — 저장이 막힌 브라우저에서만 열린다 -->
+    <div id="save-notice" class="savebox" hidden></div>
+
+    <footer class="foot">
+      <p id="expires" class="foot__line"></p>
+    </footer>
+
+    <script type="module" src="src/ui/app.js"></script>
+  </body>
+</html>

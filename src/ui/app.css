@@ -1,0 +1,337 @@
+/* 화면 스타일 — 모바일 세로가 본체다.
+ *
+ * 규칙 셋 (doc/ui-research.md ③ · WCAG 1.4.1)
+ *   · 상태를 색으로만 구분하지 않는다. 글자가 먼저고 색은 보조다
+ *   · 진행률 바·게임화 장식 없음
+ *   · 확대를 막지 않는다. 터치 목표는 44px 이상
+ */
+
+:root {
+  --ink: #1b1b1b;
+  --ink-soft: #4a4a4a;
+  --line: #d6d6d6;
+  --bg: #ffffff;
+  --bg-soft: #f4f4f4;
+  --focus: #0b57d0;
+  --pad: 16px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #ececec;
+    --ink-soft: #b4b4b4;
+    --line: #3a3a3a;
+    --bg: #16181a;
+    --bg-soft: #202325;
+    --focus: #a8c7fa;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0 var(--pad) 48px;
+  max-width: 34rem;
+  margin-inline: auto;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.6 system-ui, -apple-system, "Segoe UI", "Malgun Gothic", sans-serif;
+  /* 화재 직후 사람이 읽는다. 본문을 작게 만들지 않는다. */
+  word-break: keep-all;
+}
+
+.skip {
+  position: absolute;
+  left: -9999px;
+}
+.skip:focus {
+  left: var(--pad);
+  top: var(--pad);
+  background: var(--bg);
+  padding: 8px;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* ── 머리 ───────────────────────────────────────── */
+.top {
+  padding: 24px 0 8px;
+}
+.top__title {
+  margin: 0;
+  font-size: 1.25rem;
+}
+.top__lead {
+  margin: 6px 0 0;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+/* ── 배너 ───────────────────────────────────────── */
+.banners:empty {
+  display: none;
+}
+.banner {
+  border: 1px solid var(--line);
+  border-left-width: 4px; /* 색이 아니라 형태로 구분한다 */
+  background: var(--bg-soft);
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 6px;
+}
+.banner__text {
+  margin: 0;
+}
+.banner__sub {
+  margin: 4px 0 0;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+.banner__actions {
+  margin-top: 8px;
+}
+
+/* ── 공통 ───────────────────────────────────────── */
+.h2 {
+  font-size: 1.15rem;
+  margin: 20px 0 12px;
+  line-height: 1.45;
+}
+.h3 {
+  font-size: 0.95rem;
+  margin: 0 0 6px;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+.hint {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  margin: 6px 0;
+}
+.meta {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  margin: 8px 0 0;
+}
+.meta__hint {
+  opacity: 0.85;
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+.loading,
+.error {
+  color: var(--ink-soft);
+}
+
+.btn {
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+}
+.btn--primary {
+  border-color: var(--ink);
+  font-weight: 600;
+}
+.btn--quiet {
+  background: transparent;
+  color: var(--ink-soft);
+  text-decoration: underline;
+  border-color: transparent;
+  padding-inline: 4px;
+}
+.btn[disabled] {
+  opacity: 0.45;
+  cursor: default;
+  text-decoration: none;
+}
+
+/* ── 자치구 선택 ────────────────────────────────── */
+.picker {
+  list-style: none;
+  margin: 12px 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+  gap: 8px;
+}
+.picker__item {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+}
+
+/* ── 설문 ───────────────────────────────────────── */
+.choices {
+  display: grid;
+  gap: 8px;
+  margin: 8px 0;
+}
+.choice {
+  min-height: 52px;
+  padding: 12px 14px;
+  text-align: left;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+}
+/* 고른 것은 굵기와 글자로 표시한다. 색만으로 구분하지 않는다. */
+.choice--on {
+  border-color: var(--ink);
+  font-weight: 600;
+}
+.choice__mark {
+  color: var(--ink-soft);
+  font-weight: 400;
+  font-size: 0.85rem;
+}
+.why {
+  margin: 4px 0 12px;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+.why__body {
+  margin: 6px 0 0;
+}
+.pick {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+.pick__input {
+  margin-top: 10px;
+  min-height: 44px;
+  font: inherit;
+  width: 100%;
+}
+
+/* ── D-015 예외 ─────────────────────────────────── */
+.savebox {
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+  background: var(--bg-soft);
+}
+.savebox__line {
+  margin: 0 0 12px;
+}
+/* 종이에 적을 수 있어야 하고 전화로 불러줄 수 있어야 한다. */
+.savebox__url {
+  font-size: 1.15rem;
+  font-weight: 600;
+  word-break: break-all;
+  margin: 0;
+  line-height: 1.5;
+}
+.savebox__spell {
+  font-size: 1.25rem;
+  letter-spacing: 0.15em;
+  margin: 8px 0 0;
+}
+
+/* ── 결과 자리표시자 ────────────────────────────── */
+.basis {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  margin: 0;
+}
+.todo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 12px 0 0;
+}
+.block {
+  margin: 20px 0;
+}
+.counts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+}
+.counts__item {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.9rem;
+}
+.top {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.top__item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.top__rank {
+  font-weight: 700;
+  min-width: 1.2em;
+}
+.top__title {
+  flex: 1 1 12rem;
+}
+.top__tag {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 1px 6px;
+}
+.top__tag--locked {
+  border-style: dashed;
+  font-weight: 600;
+}
+
+/* ── 발 ─────────────────────────────────────────── */
+.foot {
+  margin-top: 32px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+.foot__line {
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+  margin: 0;
+}
+.foot__line:empty {
+  display: none;
+}
