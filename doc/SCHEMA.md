@@ -129,7 +129,7 @@ exclusion_exempt_items → insurance**이고, 먼저 걸리는 것이 뒤를 가
 | `axis` | enum | `사실`\|`제도` |
 | `timing_hours` | int\|null | 사실 축 — 화재 후 N시간 내 |
 | `deadline_days` | int\|null | 제도 축 — 신청 기한 |
-| `wait_days` | [int,int]\|null | `대기` 항목의 예상 소요 범위 |
+| `wait_days` | [int,int]\|null | 예상 소요 범위. **`대기` 전용이 아니다** — 현재 2건이고 그중 하나는 `신청`이다 |
 | `irreversible` | bool | 놓치면 회복 불가 (§0) |
 | `applies_when` | object | 관련성 조건 |
 | `excluded_when` | object\|null | 제외 조건 |
@@ -324,7 +324,7 @@ evaluate(state, data, now = Date.now()) → {
 | `deadline_days` | int\|null | 행 수준 기한. Action 값이 없으면 조례 항목에 한해 자치구 값이 온다 |
 | `group` | enum | `domain_group`. 섹션은 `groups`로도 주지만 버킷 행에는 이것뿐이다 |
 | `category` | enum | 신청 · 판단 · 대기 (`기관자율`은 audience 필터에서 빠진다) |
-| `wait_days` | [int,int]\|null | `대기` 항목의 eta |
+| `wait_days` | [int,int]\|null | "얼마나 기다리나". 현재 2건 — `investigation-report-wait` `[15,60]`(`대기`) · `dispute-mediation` `[0,40]`(`신청`). **`category`로 이 값의 유무를 추정하지 마라** |
 | `when` | enum | **계산된** 화면 위치. `action.when`이 아니라 `placement()`의 결과다 |
 | `checkable` | bool | 체크 가능 여부. `standing`과 `locked`가 `false` |
 | `locked` | bool | 선행이 안 끝났는데 제자리에 남은 행 (D-019 §5) |
