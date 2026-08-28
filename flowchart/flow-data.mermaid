@@ -1,57 +1,79 @@
 %%{init: {"theme":"base","themeVariables":{"background":"#ffffff","primaryColor":"#f7f7f7","primaryTextColor":"#1a1a1a","primaryBorderColor":"#8a8a8a","lineColor":"#555555","secondaryColor":"#efefef","tertiaryColor":"#ffffff","edgeLabelBackground":"#ffffff","clusterBkg":"#fafafa","clusterBorder":"#bbbbbb","titleColor":"#1a1a1a","nodeTextColor":"#1a1a1a"}}}%%
 flowchart TD
     subgraph 입력
-      Q["questions.json 17문항<br/>ask_when으로 14~17개만 묻는다<br/>생략돼도 default로 값은 남는다 — D-014"] --> ST["state<br/>답 17키 + district + completed"]
-      URLD["?d= 자치구<br/>(저장값이 있으면 저장값이 이김)"] --> ST
-      COMP["completed 배열<br/>저장 계층에서"] --> ST
+      Q["questions.json 18문항<br/>ask_when으로 14~17개만 묻는다 — D-014<br/>7일 전 14~16 · 7일 후 15~17<br/>생략돼도 default로 값은 남는다"] --> ST["state<br/>답 18키 + district + completed"]
+      URLD["?d= 자치구<br/>저장값이 있으면 저장값이 이김 — D-015"] --> ST
+      COMP["completed 배열<br/>저장 계층에서 — D-002"] --> ST
     end
 
-    ST --> DERIVE["deriveState(state, data, now)<br/>· elapsed_hours = now − fire_at (1/4에서 now 주입)<br/>· both → victim·causer 양쪽으로 펼침<br/>· unknown은 안 펼친다 — D-016<br/>· 자치구 파생 3키"]
+    ST --> DERIVE["deriveState(state, data, now)<br/>· elapsed_hours = now − fire_at<br/>· elapsed_bucket 6구간 — 소비자는 ask_when 하나<br/>· both → victim·causer 양쪽으로 펼침<br/>· unknown은 안 펼친다 — D-016<br/>· 자치구 파생 3키"]
     DJ["districts.json 5개 구"] --> DERIVE
 
     AJ["actions.json 57개"] --> AUD
     DERIVE --> AUD{"audience가<br/>피해자인가"}
     AUD -->|조사관 1개| HIDE["화면에서 뺌 — D-008"]
-    AUD -->|피해자 56개| MATCH["applies_when 매칭 — D-010<br/>다른 키 AND · 같은 키 배열 OR<br/>'unknown'은 조건에 명시된 Action만 켠다<br/>(D-013 키별 표 · D-016 water는 역할 중립만)"]
+    AUD -->|피해자 56개| MATCH["applies_when 매칭 — D-010<br/>다른 키 AND · 같은 키 배열 OR<br/>'unknown'은 조건에 명시된 Action만 켠다<br/>D-013 키별 표 · D-016 water는 역할 중립만"]
 
     MATCH -->|안 맞음| GONE["결과에 없음"]
     MATCH -->|맞음| ORD{"조례 지원 항목인가<br/>ordinance_based 4개<br/>psych·waste·housing·supplies"}
 
-    ORD -->|예| DX["districtExclusion() — 순서대로<br/>1 자치구 미지정이면 뺌 (1/4 C)<br/>2 구가 지원 안 하는 항목이면 뺌<br/>3 housing_only  4 residency<br/>5 예외 항목이면 통과 (양천 psych·housing)<br/>6 보험 제외 4변종"]
+    ORD -->|예| DX["districtExclusion() — 순서대로<br/>1 자치구 미지정이면 미판정 — D-019 §6<br/>2 구가 지원 안 하는 항목이면 뺌<br/>3 housing_only  4 residency<br/>5 예외 항목이면 통과 — 양천 psych·housing<br/>6 보험 제외 4변종<br/>그 구가 실제로 보는 키가 unknown이면 미판정"]
     ORD -->|아니오| EXCA
 
+    DX -->|판정 불가| UND["미판정 — 네 번째 상태<br/>판정 결과가 아니라 판정 이전이다<br/>emergency_exception을 보지 않는다"]
     DX -->|걸림 + 구에 긴급예외<br/>현재 성북만| COND["조건부 — D-011<br/>'원칙 제외지만 문의'"]
-    DX -->|걸림 + 예외 없음| OUT["제외 + 사유 + 기한"]
+    DX -->|걸림 + 예외 없음| OUT["제외 + 사유"]
     DX -->|안 걸림| EXCA{"Action 자체의<br/>excluded_when"}
 
-    EXCA -->|현재 쓰는 Action 0개<br/>죽은 분기| OK["해당"]
+    EXCA -->|현재 쓰는 Action 0개<br/>죽은 분기| DLX{"신청 기한이<br/>지났는가"}
+    DLX -->|"예 + irreversible 아님"| OUT2["제외 — deadlineExclusion()<br/>제자리도 missed도 아니다 — D-017 §3<br/>기산점 불확실 → 사유에 헤지<br/>구에 긴급예외 있으면 조건부"]
+    DLX -->|아니오| OK["해당"]
 
-    OK --> DEP{"depends_on 선행이<br/>completed에 다 있나"}
-    DEP -->|아니오| BLOCK["아직 못 함(접힘)<br/>blocks_reason은 17개 중 5개뿐<br/>※ irreversible도 여기 갇힌다<br/>water-damage-document-now 등 → 4/4 결정"]
-    DEP -->|예| CAT{"category"}
+    OK --> ROW["행 페이로드 15키 — 모든 버킷이 같은 모양<br/>action · status · reason · blockedBy{id,title}<br/>blocks_reason · dept · amount_known · deadline_days<br/>group · category · wait_days · when · checkable<br/>locked · rank"]
+    UND & COND & OUT & OUT2 --> ROW
 
-    CAT -->|대기| WAIT["기다리는 중<br/>※ 유일한 대기 항목이 선행에 막혀<br/>지금은 항상 blocked로 먼저 걸러짐"]
-    CAT -->|신청·판단| WHEN["when 필드 그대로 배치 — 정적<br/>※ elapsed_hours를 아무도 안 읽는다(측정 확인)<br/>화재 3시간째나 90일째나 화면이 같다<br/>→ 3/4에서 재배치: 시간 있으면 시간,<br/>없으면 axis·category / missed는 irreversible 기준"]
+    ROW --> BUCKET{"버킷 분배<br/>먼저 걸리는 것이<br/>뒤를 가린다"}
 
-    WHEN --> S1["혹시 아직 안 하셨다면 missed"]
-    WHEN --> S2["오늘 하실 것 today"]
-    WHEN --> S3["당분간 하지 마실 것 standing<br/>금지 전용"]
-    WHEN --> S4["이번 주에 this_week"]
-    WHEN --> S5["계속 신경 쓸 것 anytime"]
-    WHEN --> S6["조사서 나온 뒤에 after_report<br/>※ 조사서 수령을 아는 키가 아직 없다<br/>→ 3/4에서 report_received 신설"]
+    BUCKET -->|"1 completed에 있고 checkable"| DONE["완료 — D-018<br/>status를 '완료'로 정규화<br/>원래 판정은 status_if_pending<br/>※ excluded보다 먼저다<br/>※ reason이 남아 있을 수 있다"]
+    BUCKET -->|2 status가 해당이 아님| EXC["제외·조건부·미판정(접힘)<br/>사라지지 않는다 — D-011"]
+    BUCKET -->|"3 선행 미완료 + 가역"| BLOCK["아직 못 함(접힘)<br/>blocks_reason은 14개 중 5개뿐<br/>※ standing도 선행이 있으면 여기로 온다<br/>현재 1건 — 금지 밴드에 안 나타난다"]
+    BUCKET -->|"3' 선행 미완료 + irreversible"| LOCK["잠김 — D-019 §5<br/>placement 위치에 locked:true로 남는다<br/>checkable:false<br/>접으면 시한이 지나도 missed에 못 간다"]
+    BUCKET -->|4 category가 대기| WAIT["기다리는 중<br/>wait_days로 eta를 그린다"]
+    BUCKET -->|5 나머지| POOL["pool"]
 
-    S1 & S2 & S3 & S4 & S5 & S6 --> GROUP["섹션 안: timing_hours로 정렬 후<br/>분야 domain_group 로 묶기<br/>몸 · 지낼 곳 · 집 정리 · 서류<br/>보험과 돈 · 집주인과 계약 · 책임과 분쟁"]
+    LOCK --> POOL
+    POOL --> PLACE["placement(action, elapsed_hours, deadline_days)<br/>순수 함수 · 데이터의 when은 기본값일 뿐 — D-017<br/>R0 standing 안 움직임 · R1 after_report 안 움직임<br/>R2 시한 만료 → R3 irreversible이면 missed<br/>R4 아니면 제자리 · R5 this_week는 기간 지나면 anytime"]
 
-    GROUP --> RET["반환 sections · waiting · blocked · excluded<br/>행마다 deadline_days, excluded엔 reason<br/>※ SCHEMA.md의 옛 계약 now/later 와 다름 — 문서가 낡음"]
+    PLACE --> RANK["rank — D-019 §2<br/>standing 제외하고 화면을 가로질러 매긴다<br/>tier 1 missed → 2 irreversible → 3 시한 남음 → 4 나머지<br/>동순위: 잠김 여부 → 급한 순 → 블록 순 → 데이터 순<br/>엔진은 자르지 않는다. UI가 rank ≤ 5만 편다"]
 
-    RET -.-> DASH["계기판 test/engine.snapshot.mjs<br/>14 페르소나 × 3시각 = 42조합 고정<br/>+ 조건부·제외 바닥 불변식<br/>2/4-D에서 17 × 3 = 51조합 예정"]
+    RANK --> S1["혹시 아직 안 하셨다면 missed"]
+    RANK --> S2["오늘 하실 것 today"]
+    RANK --> S3["당분간 하지 마실 것 standing<br/>금지 전용 · rank는 null<br/>타임라인 밖 별도 밴드 — D-019 §0"]
+    RANK --> S4["이번 주에 this_week"]
+    RANK --> S5["계속 신경 쓸 것 anytime"]
+    RANK --> S6["조사서 나온 뒤에 after_report<br/>report_received로 unlocked — D-017 §5<br/>재배치가 아니라 플래그다"]
+
+    S1 & S2 & S3 & S4 & S5 & S6 --> GROUP["섹션 안: timing_hours로 정렬 후<br/>분야 domain_group 로 묶기<br/>몸 · 지낼 곳 · 집 정리 · 서류<br/>보험과 돈 · 집주인과 계약 · 책임과 분쟁<br/>빈 섹션은 안 보낸다"]
+
+    GROUP --> RET["반환 sections · done · waiting · blocked · excluded<br/>섹션은 key · label · count · unlocked · groups<br/>정본은 src/engine.js — SCHEMA.md 엔진 계약 절"]
+    DONE & EXC & BLOCK & WAIT --> RET
+
+    RET -.-> DASH["계기판 test/engine.snapshot.mjs<br/>20 페르소나 × 5시각 = 100조합 고정<br/>+ 불변식 일곱 — --update로도 안 넘어간다<br/>excluded 비지 않음 · 조건부·제외·미판정 각 1건 이상<br/>waiting 1건 이상 · blocked에 불가역 0건 · 잠김 1건 이상"]
 
     style GONE fill:#eee,stroke:#8a8a8a,color:#1a1a1a
     style HIDE fill:#eee,stroke:#8a8a8a,color:#1a1a1a
     style COND fill:#fff4e5,stroke:#8a8a8a,color:#1a1a1a
+    style UND fill:#e8f0fe,stroke:#8a8a8a,color:#1a1a1a
     style OUT fill:#fce8e6,stroke:#8a8a8a,color:#1a1a1a
+    style OUT2 fill:#fce8e6,stroke:#8a8a8a,color:#1a1a1a
+    style DONE fill:#e6f4ea,stroke:#8a8a8a,color:#1a1a1a
+    style EXC fill:#efefef,stroke:#8a8a8a,color:#1a1a1a
     style GROUP fill:#e6f4ea,stroke:#8a8a8a,color:#1a1a1a
-    style WHEN fill:#fdf2d0,stroke:#8a8a8a,color:#1a1a1a
+    style PLACE fill:#fdf2d0,stroke:#8a8a8a,color:#1a1a1a
+    style RANK fill:#fdf2d0,stroke:#8a8a8a,color:#1a1a1a
+    style ROW fill:#fafafa,stroke:#8a8a8a,color:#1a1a1a
     style WAIT fill:#fdf2d0,stroke:#8a8a8a,color:#1a1a1a
     style BLOCK fill:#fdf2d0,stroke:#8a8a8a,color:#1a1a1a
+    style LOCK fill:#fce8e6,stroke:#8a8a8a,color:#1a1a1a
+    style S3 fill:#fce8e6,stroke:#8a8a8a,color:#1a1a1a
     style DASH fill:#e8f0fe,stroke:#8a8a8a,color:#1a1a1a
