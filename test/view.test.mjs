@@ -304,7 +304,7 @@ t(
 t("2층은 이 박스를 쓰지 않는다", saveNoticeView({ persisted: true }).show === false);
 
 // 문구 정정 4건 (승인됨)
-t("헤더 제목이 '화재피해 회복 내비게이터'다", COPY.app.title === "화재피해 회복 내비게이터");
+t("헤더 제목이 '화재피해 회복 내비게이션'다", COPY.app.title === "화재피해 회복 내비게이션");
 t(
   "token_invalid에서 사용자 탓 어조를 뺐다",
   COPY.banner.token_invalid === "이 주소로는 저장된 기록을 찾지 못해 새로 시작합니다.",
