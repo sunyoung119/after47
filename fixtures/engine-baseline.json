@@ -49077,6 +49077,7 @@
             "category": "신청",
             "wait_days": null,
             "irreversible": false,
+            "reason": null,
             "status_if_pending": "해당",
             "when": "this_week",
             "checkable": true
@@ -49589,6 +49590,7 @@
             "category": "신청",
             "wait_days": null,
             "irreversible": false,
+            "reason": null,
             "status_if_pending": "해당",
             "when": "this_week",
             "checkable": true
@@ -50101,6 +50103,7 @@
             "category": "신청",
             "wait_days": null,
             "irreversible": false,
+            "reason": null,
             "status_if_pending": "해당",
             "when": "this_week",
             "checkable": true
@@ -50606,6 +50609,7 @@
             "category": "신청",
             "wait_days": null,
             "irreversible": false,
+            "reason": null,
             "status_if_pending": "해당",
             "when": "anytime",
             "checkable": true
@@ -51111,6 +51115,7 @@
             "category": "신청",
             "wait_days": null,
             "irreversible": false,
+            "reason": null,
             "status_if_pending": "해당",
             "when": "anytime",
             "checkable": true
@@ -51604,6 +51609,7 @@
             "category": "신청",
             "wait_days": null,
             "irreversible": false,
+            "reason": null,
             "status_if_pending": "해당",
             "when": "this_week",
             "checkable": true
@@ -52117,6 +52123,7 @@
             "category": "신청",
             "wait_days": null,
             "irreversible": false,
+            "reason": null,
             "status_if_pending": "해당",
             "when": "this_week",
             "checkable": true
@@ -52630,6 +52637,7 @@
             "category": "신청",
             "wait_days": null,
             "irreversible": false,
+            "reason": null,
             "status_if_pending": "해당",
             "when": "this_week",
             "checkable": true
@@ -53123,6 +53131,7 @@
             "category": "신청",
             "wait_days": null,
             "irreversible": false,
+            "reason": null,
             "status_if_pending": "제외",
             "when": "this_week",
             "checkable": true
@@ -53632,6 +53641,7 @@
             "category": "신청",
             "wait_days": null,
             "irreversible": false,
+            "reason": null,
             "status_if_pending": "제외",
             "when": "this_week",
             "checkable": true

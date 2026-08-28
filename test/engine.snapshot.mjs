@@ -205,8 +205,12 @@ const excludedRow = (x) => ({ ...bucketRow(x), reason: x.reason ?? null });
 // status는 "완료"로 정규화돼 오고, 완료가 아니었다면 무엇이었을지가
 // status_if_pending에 온다(D-019 §10). 둘 다 기록해야 정규화가 정보를
 // 지웠는지 아닌지가 계기판에 보인다.
+// reason도 기록한다. 4/4-E 이전에는 안 했고, 그래서 계기판이
+// "status는 완료인데 reason에 기한 도과 사유가 남아 있다"를 못 봤다 —
+// 100조합을 손으로 재고 나서야 드러났다. 정규화가 풀리면 여기서 잡힌다.
 const doneRow = (x) => ({
   ...bucketRow(x),
+  reason: x.reason ?? null,
   status_if_pending: x.status_if_pending ?? null,
   when: x.when,
   checkable: x.checkable === true,

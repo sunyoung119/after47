@@ -316,8 +316,13 @@ export function evaluate(state, data, now = Date.now()) {
     // 페이로드로도 지킨다 — UI가 버킷이 아니라 status를 읽으면 "완료"가
     // "제외"로 보이고, D-018이 그쪽을 더 나쁘다고 명시했다. 원래 판정은
     // status_if_pending에 남으므로 정보는 잃지 않는다.
+    //
+    // **reason도 함께 정규화한다**(4/4-E). status만 고치고 사유를 남기면
+    // "완료"인데 "신청 기한(30일)이 지났을 수 있습니다"가 붙는다 —
+    // P20 양천이 +90d부터 그랬다. 완료한 사람에게 그것은 틀린 말이고,
+    // "완료가 아니었다면 무엇이었을지"는 status_if_pending이 이미 담는다.
     if (done.has(r.action.id) && r.checkable) {
-      out.done.push({ ...r, status: "완료", status_if_pending: r.status });
+      out.done.push({ ...r, status: "완료", reason: null, status_if_pending: r.status });
       continue;
     }
     // `미판정`도 여기로 온다. 새 버킷을 만들지 않는다(D-019 §6) —
