@@ -13,7 +13,8 @@ import { evaluate } from "../engine.js";
 import { applyDefaults } from "../questions.js";
 import { entryView, surveyView, saveNoticeView } from "./view.js";
 import { timelineView, locate } from "./timeline.js";
-import { renderTimeline, el, clear } from "./render.js";
+import { forkView, compareView } from "./whatif.js";
+import { renderTimeline, forkNode, compareBlock, el, clear } from "./render.js";
 import { COPY } from "./copy.js";
 
 // ── 상태 ───────────────────────────────────────────
@@ -25,6 +26,9 @@ const app = {
   savedOnce: false, // D-015 예외를 첫 답변 직후 한 번만 띄우기 위한 표시
   spelled: false,
   tv: null, // 마지막으로 그린 타임라인 뷰모델. goTo가 이것에 묻는다
+  // 비교 보기 — **저장 state의 district는 바뀌지 않는다.** 보기 전환일 뿐이다.
+  compare: null,
+  comparePicking: false,
 };
 
 const $ = (id) => document.getElementById(id);
@@ -387,15 +391,23 @@ function renderResult(main, entry) {
   basis.appendChild(change);
   main.appendChild(basis);
 
-  // 재방문에서 답하지 않은 질문이 생겼을 때 — 한 줄로만.
-  const sv = surveyView({
+  renderTimeline(main, tv, {
+    onCheck: check,
+    onGoTo: goTo,
+    onPickDistrict: goPicker,
+  });
+
+  // 갈림길 — 아직 답하지 않은 질문이 타임라인 위의 노드로 놓인다.
+  // 답하면 저장하고 재평가한다. **미리보기의 가정 답은 저장하지 않는다.**
+  const fv = forkView({
     questions: app.session.data.questions,
     state: app.state,
     data: app.session.data,
   });
-  if (sv.remaining > 0) {
+  if (fv.question) {
+    main.appendChild(forkNode(fv, { onAnswer: answer }));
     const row = el("p", "todo");
-    row.appendChild(el("span", null, COPY.survey.unanswered(sv.remaining)));
+    row.appendChild(el("span", null, COPY.survey.unanswered(fv.remaining)));
     const go = el("button", "btn btn--quiet", COPY.survey.unansweredAction);
     go.type = "button";
     go.addEventListener("click", () => {
@@ -407,11 +419,36 @@ function renderResult(main, entry) {
     main.appendChild(row);
   }
 
-  renderTimeline(main, tv, {
-    onCheck: check,
-    onGoTo: goTo,
-    onPickDistrict: goPicker,
+  // 자치구 비교 — 같은 답으로 다른 구 판정을 나란히.
+  const cv = compareView({
+    questions: app.session.data.questions,
+    state: app.state,
+    data: app.session.data,
+    otherId: app.compare,
   });
+  main.appendChild(
+    compareBlock(
+      cv,
+      {
+        onCompareOpen: () => {
+          app.comparePicking = true;
+          render();
+        },
+        onComparePick: (id) => {
+          // ★ app.state는 건드리지 않는다. 보기만 바뀐다.
+          app.compare = id;
+          app.comparePicking = false;
+          render();
+        },
+        onCompareClose: () => {
+          app.compare = null;
+          app.comparePicking = false;
+          render();
+        },
+      },
+      { picking: app.comparePicking }
+    )
+  );
 }
 
 function goPicker() {

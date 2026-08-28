@@ -16,6 +16,7 @@ import { evaluate } from "../src/engine.js";
 import { applyDefaults } from "../src/questions.js";
 import { entryView, surveyView, saveNoticeView, resultPlaceholderView } from "../src/ui/view.js";
 import { timelineView, locate, waitLabel } from "../src/ui/timeline.js";
+import { forkView, compareView } from "../src/ui/whatif.js";
 
 const D = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (f) => JSON.parse(readFileSync(join(D, f), "utf8"));
@@ -449,6 +450,69 @@ if (전라벨 && 후라벨) {
 // anytime 비대 — 분야로 한 번 더 묶는다(D-019 §7)
 const any = t1.more.find((m) => m.key === "anytime");
 if (any) t("anytime은 분야 묶음을 갖는다", any.groups.length > 0 && Boolean(any.groups[0].group));
+
+
+// ── 6. 갈림길과 자치구 비교 ────────────────────────
+section("6. 가정 판정 — 저장하지 않는다");
+
+// 아직 안 답한 상태에서 갈림길이 선다
+const 반쯤 = { district: "mapo", completed: [], fire_at: FIRE, residence_possible: false };
+const 원본 = JSON.parse(JSON.stringify(반쯤));
+const fv = forkView({ questions, state: 반쯤, data, now: NOW });
+t("답할 것이 남으면 갈림길 노드가 선다", fv.question !== null, JSON.stringify(fv.remaining));
+t("갈림길은 첫 미답 질문이다", fv.question.key === "housing_type", fv.question?.key);
+t("선택지마다 미리보기가 붙는다", fv.question.options.every((o) => Array.isArray(o.preview)));
+t(
+  "미리보기는 2~3개까지만이다 (답하기 전에 화면이 늘지 않게)",
+  fv.question.options.every((o) => o.preview.length <= 3 && o.moved.length <= 3)
+);
+
+// ★ 이 파일의 핵심 검사 — 가정 답이 state로 새면 그 뒤 판정이 전부 거짓이 된다
+t(
+  "가정 답이 원본 state를 건드리지 않는다",
+  JSON.stringify(반쯤) === JSON.stringify(원본),
+  JSON.stringify(반쯤)
+);
+
+t("다 답하면 갈림길이 없다", forkView({ questions, state: 전.state, data, now: NOW }).question === null);
+
+// 자치구 비교 — 보기 전환일 뿐이다
+const 내상태 = { ...전.state };
+const 사본 = JSON.parse(JSON.stringify(내상태));
+const cv0 = compareView({ questions, state: 내상태, data, now: NOW });
+t("비교 대상을 안 고르면 비활성이다", cv0.active === false && cv0.rows.length === 0);
+t("내 구를 뺀 24개를 고를 수 있다", cv0.options.length === 24, String(cv0.options.length));
+t("내 구는 목록에 없다", !cv0.options.some((o) => o.id === "mapo"));
+
+const cv = compareView({ questions, state: 내상태, data, now: NOW, otherId: "gangnam" });
+t("비교를 켜면 두 구가 잡힌다", cv.active && cv.mine.id === "mapo" && cv.other.id === "gangnam");
+t(
+  "★ 비교해도 저장 state의 district는 그대로다",
+  JSON.stringify(내상태) === JSON.stringify(사본) && 내상태.district === "mapo"
+);
+t("다른 것만 행으로 나온다", cv.rows.length > 0 && cv.rows.length < 20, String(cv.rows.length));
+t(
+  "같은 것은 개수로만 말한다",
+  typeof cv.sameCount === "number" && cv.sameCount > cv.rows.length,
+  `다름 ${cv.rows.length} / 같음 ${cv.sameCount}`
+);
+t(
+  "차이는 조례 항목에서 난다",
+  cv.rows.every((r) => r.id.startsWith("support-") || r.id === "no-ordinance-fallback"),
+  JSON.stringify(cv.rows.map((r) => r.id))
+);
+console.log("      실측 — 마포 ↔ 강남:");
+for (const r of cv.rows)
+  console.log(
+    `        ${r.title.slice(0, 26).padEnd(28)}마포 ${(r.mine?.status ?? "없음").padEnd(5)} 강남 ${r.other?.status ?? "없음"}`
+  );
+
+// 자치구를 안 고른 사람은 비교 자체가 성립하지 않는다
+const { district: _d3, ...구없이3 } = 전.state;
+t(
+  "내 구를 안 골랐으면 비교를 못 한다",
+  compareView({ questions, state: 구없이3, data, now: NOW, otherId: "gangnam" }).mine === null
+);
 
 
 // ── 결과 ───────────────────────────────────────────

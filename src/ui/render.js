@@ -53,6 +53,109 @@ export function renderTimeline(main, tv, handlers = {}) {
   if (tv.done.count) main.appendChild(doneBlock(tv.done, handlers));
 }
 
+// ── 갈림길 노드 ────────────────────────────────────
+// 아직 답하지 않은 질문이 타임라인 위의 노드로 놓인다. 답이 갈리면 화면이
+// 어떻게 달라지는지를 **유령 미리보기**로 먼저 보여준다 — 추측이 아니라
+// 그 답으로 실제 판정을 돌려 뽑은 제목이다.
+export function forkNode(fv, handlers = {}) {
+  const sec = el("section", "fork");
+  sec.appendChild(el("p", "fork__kicker", COPY.fork.title));
+  sec.appendChild(el("h3", "fork__q", fv.question.text));
+  if (fv.question.help) sec.appendChild(el("p", "hint", fv.question.help));
+
+  const list = el("ul", "fork__opts");
+  for (const o of fv.question.options) {
+    const li = el("li", "fork__opt");
+    li.appendChild(
+      btn("choice", o.label, () => handlers.onAnswer && handlers.onAnswer(fv.question.key, o.value))
+    );
+    // 아직 고르지 않은 가지는 흐리게. 2~3개까지만 — 전부 보여주면 답하기
+    // 전에 화면이 는다.
+    const ghost = el("div", "ghost");
+    if (o.preview.length) {
+      ghost.appendChild(el("p", "ghost__label", COPY.fork.preview));
+      const ul = el("ul", "ghost__list");
+      for (const g of o.preview) ul.appendChild(el("li", "ghost__item", g.title));
+      ghost.appendChild(ul);
+    } else if (o.moved.length) {
+      ghost.appendChild(el("p", "ghost__label", COPY.fork.moved));
+      const ul = el("ul", "ghost__list");
+      for (const g of o.moved) ul.appendChild(el("li", "ghost__item", g.title));
+      ghost.appendChild(ul);
+    } else {
+      ghost.appendChild(el("p", "ghost__label", COPY.fork.noChange));
+    }
+    li.appendChild(ghost);
+    list.appendChild(li);
+  }
+  sec.appendChild(list);
+  sec.appendChild(el("p", "hint", COPY.fork.hint));
+  return sec;
+}
+
+// ── 자치구 비교 ────────────────────────────────────
+// **보기 전환일 뿐이다.** 저장된 자치구는 바뀌지 않는다.
+export function compareBlock(cv, handlers = {}, { picking = false } = {}) {
+  const sec = el("section", "compare");
+  if (!cv.active) {
+    if (!cv.mine) {
+      sec.appendChild(el("p", "hint", COPY.compare.needMine));
+      return sec;
+    }
+    if (!picking) {
+      sec.appendChild(btn("btn", COPY.compare.open, () => handlers.onCompareOpen && handlers.onCompareOpen()));
+      return sec;
+    }
+    sec.appendChild(el("h3", "h3", COPY.compare.pick));
+    const list = el("ul", "picker");
+    for (const o of cv.options) {
+      const li = el("li");
+      li.appendChild(btn("picker__item", o.name, () => handlers.onComparePick && handlers.onComparePick(o.id)));
+      list.appendChild(li);
+    }
+    sec.appendChild(list);
+    sec.appendChild(btn("btn btn--quiet", COPY.compare.back, () => handlers.onCompareClose && handlers.onCompareClose()));
+    return sec;
+  }
+
+  // 비교 중이라는 것이 화면에 계속 보여야 한다.
+  const head = el("p", "compare__head");
+  head.appendChild(el("strong", null, COPY.compare.active(cv.mine.name, cv.other.name)));
+  head.appendChild(btn("btn btn--quiet", COPY.compare.back, () => handlers.onCompareClose && handlers.onCompareClose()));
+  sec.appendChild(head);
+  sec.appendChild(el("p", "hint", COPY.compare.note));
+
+  const table = el("ul", "compare__rows");
+  for (const r of cv.rows) {
+    const li = el("li", "compare__row");
+    li.appendChild(el("p", "compare__title", r.title));
+    const pair = el("div", "compare__pair");
+    pair.appendChild(side(cv.mine.name, r.mine));
+    pair.appendChild(side(cv.other.name, r.other));
+    li.appendChild(pair);
+    table.appendChild(li);
+  }
+  sec.appendChild(table);
+  sec.appendChild(el("p", "hint", COPY.compare.same(cv.sameCount)));
+  return sec;
+}
+
+function side(name, cell) {
+  const box = el("div", "compare__side");
+  box.appendChild(el("p", "compare__name", name));
+  if (!cell) {
+    box.appendChild(el("p", "compare__status", COPY.compare.absent));
+    return box;
+  }
+  box.appendChild(el("p", "compare__status", cell.status));
+  if (cell.reason) box.appendChild(el("p", "compare__reason", cell.reason));
+  if (cell.dept !== null || cell.status) {
+    const d = cell.dept ? COPY.timeline.deptKnown(cell.dept) : null;
+    if (d) box.appendChild(el("p", "compare__dept", d));
+  }
+  return box;
+}
+
 // ── 가로 암시선 ────────────────────────────────────
 // 양 끝점만. **중간 노드도 현재 위치 표시도 없다** — 점을 찍는 순간
 // "아직 이만큼 남았다"가 되고, 정신없는 사람에게 그것은 압박이다.

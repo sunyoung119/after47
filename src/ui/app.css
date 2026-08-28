@@ -522,3 +522,113 @@ body {
   width: 22px;
   height: 22px;
 }
+
+/* ── 갈림길 ─────────────────────────────────────── */
+.fork {
+  border: 1px solid var(--ink);
+  border-radius: 10px;
+  padding: 14px;
+  margin: 20px 0;
+}
+.fork__kicker {
+  margin: 0;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+}
+.fork__q {
+  margin: 4px 0 10px;
+  font-size: 1.05rem;
+  line-height: 1.45;
+}
+.fork__opts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.fork__opt {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
+}
+.fork__opt .choice {
+  width: 100%;
+}
+/* 아직 고르지 않은 가지 — 흐림. 색만이 아니라 크기·들여쓰기로도 구분한다. */
+.ghost {
+  margin-top: 8px;
+  padding-left: 10px;
+  border-left: 2px dashed var(--line);
+}
+.ghost__label {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+.ghost__list {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+}
+.ghost__item {
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+  opacity: 0.85;
+}
+
+/* ── 자치구 비교 ────────────────────────────────── */
+.compare {
+  margin: 24px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+.compare__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 0 0 4px;
+}
+.compare__rows {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+.compare__row {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.compare__title {
+  margin: 0 0 8px;
+  font-weight: 600;
+}
+.compare__pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.compare__side {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 8px;
+}
+.compare__name {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+.compare__status {
+  margin: 2px 0 0;
+  font-weight: 600;
+}
+.compare__reason,
+.compare__dept {
+  margin: 4px 0 0;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
