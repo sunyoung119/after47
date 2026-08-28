@@ -697,6 +697,34 @@
     "domain_group": "지낼 곳"
   },
   {
+    "id": "emergency-welfare",
+    "title": "지낼 곳이 곤란하면 긴급복지지원을 신청할 수 있습니다",
+    "summary": "화재로 살던 곳에서 지내기 어려워진 경우가 법에 적혀 있습니다. 문의는 129.",
+    "body": "긴급복지지원법은 「화재로 인하여 거주하는 주택 또는 건물에서 생활하기 곤란하게 된 경우」를 위기상황으로 정하고 있습니다(제2조 제9호). 생계·주거 등을 한시적으로 돕는 국가 제도이고, 창구는 구청 복지 부서와 보건복지상담센터 129(24시간)입니다.\n\n다만 소득·재산 기준 심사가 있어 신청한다고 모두 받는 것은 아닙니다. 기준은 해마다 바뀌므로 129나 구청에서 지금 기준을 확인하세요.",
+    "domain": 2,
+    "domain_group": "지낼 곳",
+    "category": "신청",
+    "audience": "피해자",
+    "axis": "제도",
+    "when": "anytime",
+    "timing_hours": null,
+    "deadline_days": null,
+    "wait_days": null,
+    "irreversible": false,
+    "applies_when": {
+      "residence_possible": false
+    },
+    "excluded_when": null,
+    "exception_available": false,
+    "exclusion_reason": null,
+    "depends_on": [],
+    "blocks_reason": null,
+    "knowledge_level": "상식",
+    "source_grade": "공적",
+    "source_url": "https://www.law.go.kr/법령/긴급복지지원법/제2조",
+    "checked_at": "2026-08-28"
+  },
+  {
     "id": "no-ordinance-fallback",
     "title": "이 자치구에는 화재피해주민 전용 지원 조례가 없습니다",
     "body": "대신 사회재난 구호 조례나 긴급복지지원 경로가 있으나, 자동으로 적용되지 않고 별도 심의나 소득 심사가 필요합니다. 구청 재난안전 담당 부서와 동주민센터에 직접 문의하세요. 서울시 차원의 심리상담과 분쟁조정은 자치구와 무관하게 이용할 수 있습니다.",
