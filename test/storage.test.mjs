@@ -128,14 +128,28 @@ const 금지 = [
   [/\bdocument\.cookie\b/, "document.cookie"],
   [/(^|[^.\w])fetch\s*\(/m, "fetch("],
 ];
-for (const f of readdirSync(join(D, "src")).filter((f) => f.endsWith(".js"))) {
-  const src = readFileSync(join(D, "src", f), "utf8");
+// **재귀로 훑는다.** 한 겹만 읽으면 `src/ui/` 같은 하위 폴더가 통째로
+// 사각이 된다 — UI가 거기 생겼고, 화면 코드야말로 localStorage를 직접
+// 부르고 싶어지는 자리다.
+function jsFiles(dir, prefix = "src") {
+  const out = [];
+  for (const e of readdirSync(join(D, dir), { withFileTypes: true })) {
+    const rel = `${prefix}/${e.name}`;
+    if (e.isDirectory()) out.push(...jsFiles(join(dir, e.name), rel));
+    else if (e.name.endsWith(".js")) out.push(rel);
+  }
+  return out.sort();
+}
+const 검사대상 = jsFiles("src");
+t(`src/ 아래 .js를 재귀로 전부 본다 (${검사대상.length}개)`, 검사대상.length > 0);
+for (const rel of 검사대상) {
+  const src = readFileSync(join(D, rel), "utf8");
   // 주석은 뺀다. 설명에 단어가 나오는 것까지 막을 필요는 없다.
   const code = src.replace(/\/\/.*$/gm, "").replace(/\/\*[\s\S]*?\*\//g, "");
   for (const [re, 이름] of 금지) {
     const hit = re.test(code);
-    const 허용 = f === "storage.js";
-    t(`src/${f} 안의 ${이름}`, 허용 ? true : !hit, `${f}가 ${이름}를 직접 부른다`);
+    const 허용 = rel === "src/storage.js";
+    t(`${rel} 안의 ${이름}`, 허용 ? true : !hit, `${rel}이 ${이름}를 직접 부른다`);
   }
 }
 // storage.js 안에서도 localStorage를 만지는 곳은 webBackend 하나여야 한다.
