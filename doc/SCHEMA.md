@@ -191,11 +191,13 @@ exclusion_exempt_items → insurance**이고, 먼저 걸리는 것이 뒤를 가
 
 questions가 채우고 규칙엔진이 읽는 값들.
 
-`district`는 URL 파라미터 `?d=` 에서, `completed`는 저장 계층에서 온다.
-나머지는 전부 questions가 채운다.
+`district`는 URL 파라미터 `?d=` 에서, `completed`와 `completed_at`은 저장
+계층에서 온다. 나머지는 전부 questions가 채운다.
 
 ```
 district              자치구 id                     ← URL ?d=
+completed             [action_id]                   ← 저장 계층
+completed_at          { action_id: ISO시각 }        ← 저장 계층
 fire_at               화재 발생 일시 → elapsed_hours 계산
 tenure                owner | renter
 housing_type          house | apartment | officetel | other
@@ -330,8 +332,18 @@ evaluate(state, data, now = Date.now()) → {
 | `locked` | bool | 선행이 안 끝났는데 제자리에 남은 행 (D-019 §5) |
 | `rank` | int\|null | 화면을 가로지르는 순위. **엔진은 자르지 않는다** |
 
-`done` 버킷의 행만 16번째 키 `status_if_pending`을 갖는다. 완료가 아니었다면
-무엇이었는지다(실측 값: `해당`·`제외`). 다른 버킷에는 이 키가 없다.
+`done` 버킷의 행만 두 키를 더 갖는다(17키). 다른 버킷에는 없다.
+
+| 키 | 타입 | 내용 |
+|---|---|---|
+| `status_if_pending` | enum | 완료가 아니었다면 무엇이었는지 (실측 값: `해당`·`제외`) |
+| `completed_at` | string|null | 체크한 시각(ISO). 기록이 없으면 `null` |
+
+**`completed_at`이 `null`이라고 완료가 아닌 것은 아니다.** 완료 여부의
+진실은 `completed` 배열이고 이 키는 "언제"만 담는다. 이 키가 없던 사용자,
+그리고 `report_received`로 충족된 `investigation-report`가 `null`로 온다 —
+마이그레이션은 하지 않는다(D-002: 저장 계층은 state를 통째로 저장하므로
+새 키가 그대로 실린다).
 
 **`reason`이 값을 갖는 것은 `excluded` 행뿐이다**(제외 · 조건부 · 미판정).
 `done` 행의 `reason`은 `status`와 함께 `null`로 정규화된다 — 완료로

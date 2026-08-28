@@ -149,8 +149,13 @@ const PERSONAS = [
   //
   // housing은 체크하지 않았으므로 +90d부터 excluded로 간다.
   // 같은 구의 두 항목이 체크 하나로 갈리는 것까지가 관측 대상이다.
+  // completed_at은 P20에만 둔다. BASE에 넣으면 P19까지 값을 갖게 되어
+  // "기록이 없는 완료"(엔진이 null을 실어 보내는 경로)가 사라진다.
+  // 화재 +1일에 체크한 것으로 둔다 — 양천 기한 30일 안이라 +90d에서
+  // "기한이 지나도 done이 이긴다"는 이 페르소나의 목적과 어긋나지 않는다.
   ["P20", "양천 — 심리지원 신청 완료 (기한이 지나도 done이 이긴다)",
-    { district: "yangcheon", completed: ["support-psych"] }],
+    { district: "yangcheon", completed: ["support-psych"],
+      completed_at: { "support-psych": "2026-03-02T12:00:00.000Z" } }],
 ];
 
 // +1200d는 deadline 축의 양성 케이스를 만들기 위한 것이다.
@@ -212,6 +217,9 @@ const doneRow = (x) => ({
   ...bucketRow(x),
   reason: x.reason ?? null,
   status_if_pending: x.status_if_pending ?? null,
+  // 언제 체크했나(4/4-F). P20에만 값이 있다 — BASE에 넣으면 완료가 있는
+  // 모든 조합이 같은 시각을 갖게 되어 "없을 때 null"이 관측되지 않는다.
+  completed_at: x.completed_at ?? null,
   when: x.when,
   checkable: x.checkable === true,
 });

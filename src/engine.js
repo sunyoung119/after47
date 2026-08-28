@@ -196,6 +196,12 @@ export function evaluate(state, data, now = Date.now()) {
 
   const s = deriveState(state, data, now);
   const done = new Set(state.completed || []);
+  // 완료 시각. `{ action_id: ISO시각 }` 맵이고 체크할 때 UI가 기록한다.
+  // 저장 계층은 state를 통째로 저장하므로 새 키가 그대로 실린다 —
+  // **마이그레이션이 없다.** 이 키가 없던 사용자는 빈 맵이 되고 행의
+  // completed_at은 null이다. 완료 여부의 진실은 계속 completed 배열이고
+  // 이것은 "언제"만 담는다 — 여기가 비어도 완료는 완료다.
+  const completedAt = state.completed_at || {};
 
   // 조사서를 받았으면 "조사서를 신청하세요"는 화면에서 사라진다(결정 2).
   // 그런데 blocked 판정은 completed 배열만 보므로, 사라진 항목은 체크할
@@ -322,7 +328,14 @@ export function evaluate(state, data, now = Date.now()) {
     // P20 양천이 +90d부터 그랬다. 완료한 사람에게 그것은 틀린 말이고,
     // "완료가 아니었다면 무엇이었을지"는 status_if_pending이 이미 담는다.
     if (done.has(r.action.id) && r.checkable) {
-      out.done.push({ ...r, status: "완료", reason: null, status_if_pending: r.status });
+      out.done.push({
+        ...r,
+        status: "완료",
+        reason: null,
+        status_if_pending: r.status,
+        // 없으면 null. 기록이 없다고 완료가 아닌 것은 아니다(위 주석).
+        completed_at: completedAt[r.action.id] ?? null,
+      });
       continue;
     }
     // `미판정`도 여기로 온다. 새 버킷을 만들지 않는다(D-019 §6) —

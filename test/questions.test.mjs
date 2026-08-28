@@ -29,7 +29,11 @@ const DERIVED = [
   "elapsed_hours",
   "elapsed_bucket",
 ];
-const NOT_ASKED = { district: "URL 파라미터 ?d=", completed: "저장 계층" };
+const NOT_ASKED = {
+  district: "URL 파라미터 ?d=",
+  completed: "저장 계층",
+  completed_at: "저장 계층",
+};
 
 // ── 1. 구조 ────────────────────────────────────────
 section("1. questions.json 구조");
@@ -142,6 +146,8 @@ for (const a of data.actions) {
 const engineSrc = readFileSync(join(D, "src/engine.js"), "utf8");
 for (const m of engineSrc.matchAll(/\bstate\.([a-z_]+)/g)) used.add(m[1]);
 
+// 질문이 아니라 저장 계층이 채우는 키. 설문을 끝내도 비어 있는 것이 정상이다.
+const STORAGE_KEYS = Object.keys(NOT_ASKED).filter((k) => k !== "district");
 const asked = new Set(questions.map((q) => q.key));
 for (const k of [...used].sort()) {
   if (DERIVED.includes(k)) continue;
@@ -295,7 +301,7 @@ for (const [label, answers, expect] of SCENES) {
   // (b) 엔진이 읽는 키 중 undefined가 남지 않았는가
   const s = deriveState(state, data);
   const holes = [...used].filter(
-    (k) => !DERIVED.includes(k) && k !== "completed" && s[k] === undefined
+    (k) => !DERIVED.includes(k) && !STORAGE_KEYS.includes(k) && s[k] === undefined
   );
   t("엔진이 읽는 키에 빈 값이 없다", holes.length === 0, `비어 있음: ${holes.join(", ")}`);
 

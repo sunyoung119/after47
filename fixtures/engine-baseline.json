@@ -49079,6 +49079,7 @@
             "irreversible": false,
             "reason": null,
             "status_if_pending": "해당",
+            "completed_at": null,
             "when": "this_week",
             "checkable": true
           }
@@ -49592,6 +49593,7 @@
             "irreversible": false,
             "reason": null,
             "status_if_pending": "해당",
+            "completed_at": null,
             "when": "this_week",
             "checkable": true
           }
@@ -50105,6 +50107,7 @@
             "irreversible": false,
             "reason": null,
             "status_if_pending": "해당",
+            "completed_at": null,
             "when": "this_week",
             "checkable": true
           }
@@ -50611,6 +50614,7 @@
             "irreversible": false,
             "reason": null,
             "status_if_pending": "해당",
+            "completed_at": null,
             "when": "anytime",
             "checkable": true
           }
@@ -51117,6 +51121,7 @@
             "irreversible": false,
             "reason": null,
             "status_if_pending": "해당",
+            "completed_at": null,
             "when": "anytime",
             "checkable": true
           }
@@ -51228,6 +51233,9 @@
         "completed": [
           "support-psych"
         ],
+        "completed_at": {
+          "support-psych": "2026-03-02T12:00:00.000Z"
+        },
         "district": "yangcheon",
         "fire_at": "2026-03-01T12:00:00.000Z",
         "housing_type": "officetel",
@@ -51611,6 +51619,7 @@
             "irreversible": false,
             "reason": null,
             "status_if_pending": "해당",
+            "completed_at": "2026-03-02T12:00:00.000Z",
             "when": "this_week",
             "checkable": true
           }
@@ -52125,6 +52134,7 @@
             "irreversible": false,
             "reason": null,
             "status_if_pending": "해당",
+            "completed_at": "2026-03-02T12:00:00.000Z",
             "when": "this_week",
             "checkable": true
           }
@@ -52639,6 +52649,7 @@
             "irreversible": false,
             "reason": null,
             "status_if_pending": "해당",
+            "completed_at": "2026-03-02T12:00:00.000Z",
             "when": "this_week",
             "checkable": true
           }
@@ -53133,6 +53144,7 @@
             "irreversible": false,
             "reason": null,
             "status_if_pending": "제외",
+            "completed_at": "2026-03-02T12:00:00.000Z",
             "when": "this_week",
             "checkable": true
           }
@@ -53643,6 +53655,7 @@
             "irreversible": false,
             "reason": null,
             "status_if_pending": "제외",
+            "completed_at": "2026-03-02T12:00:00.000Z",
             "when": "this_week",
             "checkable": true
           }
