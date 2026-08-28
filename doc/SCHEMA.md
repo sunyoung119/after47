@@ -89,12 +89,13 @@ Action은 사라지거나 나타나는 게 아니라 **상태를 갖는다.**
 | `housing_only` | bool | 주택 한정 여부 |
 | `emergency_exception` | bool | 긴급 예외 조항 유무 |
 | `amount_source` | enum | `attachment`\|`rule`\|`mayor`\|`none` |
-| `amount_known` | bool | 실제 금액 확인 여부 (현재 대부분 false) |
+| `amount_known` | bool | 실제 금액 확인 여부 (**25개 구 전부 false**) |
 | `fallback` | string\|null | 미보유 구의 대체 근거 |
-| `support_items` | [string] | 이 구가 지원하는 항목. Action의 `support_item`과 맞춘다. 여기 없으면 그 Action은 결과에서 아예 빠진다 |
+| `support_items` | [string] | 이 구가 지원하는 항목. `psych`·`waste`·`housing`·`supplies`·`meal`. Action의 `support_item`과 맞춘다. 여기 없으면 그 Action은 결과에서 아예 빠진다 |
 | `exclusion_exempt_items` | [string] | 보험 제외를 **적용하지 않는** 항목 (양천: psych · housing) |
 | `source_url` | string | 원문 주소 |
 | `checked_at` | date | 마지막 확인일 |
+| `exclusion_note` | string\|null | **판정에 쓰지 않는 기록용.** 원문이 enum에 정확히 안 맞을 때 그 사실을 남긴다. 현재 관악 1건 |
 
 `support_items`·`exclusion_exempt_items`·`housing_only`·`residency`·
 `insurance_exclusion`이 `districtExclusion()`이 직접 읽는 판정 핵심 필드다.
@@ -105,9 +106,23 @@ exclusion_exempt_items → insurance**이고, 먼저 걸리는 것이 뒤를 가
 `enrolled_self`(본인 가입)와 `enrolled_dwelling`(주택 가입)의 구분이 중요하다 —
 임차인 본인은 보험이 없어도 건물에 보험이 있으면 제외되는 구가 있다.
 
-**미결정**: 지원 항목(심리·폐기물 등)을 districts에 나열할지 actions에
-구 목록을 둘지. 현재는 **actions 쪽에 `applies_when.district`로** 두고
-데이터를 채워보며 판단한다.
+**문서의 4변종과 이 enum 4값은 같은 분류가 아니다.** `problem-definition`
+§2-3의 네 줄은 조문의 *효과*로 묶은 것이고, enum은 **엔진이 볼 state 키**로
+가른 것이다. "가입만 해도 제외" 한 줄이 enum에서는 원문 문언의 주체에 따라
+`enrolled_self`(본인)와 `enrolled_dwelling`(주택)으로 갈리고, 양천의 "예외"는
+enum 값이 아니라 `exclusion_exempt_items`라는 별도 필드다. **문서의 네 줄과
+enum의 네 값을 1:1로 맞추지 마라.**
+
+**enum에 정확히 안 맞는 원문은 `exclusion_note`에 남긴다.** 관악이 그렇다 —
+「피해주택에 대한 화재보험이 가입되어 보험금을 지급받는 경우」로 주택 기준
+가입과 보험금 수령이 AND로 묶여 있어 넷 중 어디에도 없다. `compensated`로
+근사했고 근사라는 사실을 그 필드에 적었다. **엔진은 `exclusion_note`를 읽지
+않는다** — 판정 규칙이 두 곳으로 흩어지면 계기판이 못 본다.
+
+**지원 항목은 districts 쪽에 둔다**(`support_items`). 한때 actions에
+`applies_when.district`로 구 목록을 두는 안과 저울질했으나, 자치구가 늘 때마다
+Action을 고쳐야 해서 폐기했다 — 25개 전수를 채우는 동안 `actions.json`은
+한 줄도 안 바뀌었다.
 
 ---
 
@@ -136,7 +151,7 @@ exclusion_exempt_items → insurance**이고, 먼저 걸리는 것이 뒤를 가
 | `exception_available` | bool | 제외여도 예외 조항 존재 |
 | `exclusion_reason` | string\|null | 제외 시 표시할 사유 |
 | `ordinance_based` | bool | **선택 필드(4건에만 있다).** 자치구 조례 지원 항목 |
-| `support_item` | string | **선택 필드(4건에만 있다).** psych · waste · housing · supplies. districts의 `support_items`와 맞춘다 |
+| `support_item` | string | **선택 필드(4건에만 있다).** psych · waste · housing · supplies. districts의 `support_items`와 맞춘다 — 다만 `meal`은 **의도적으로 없다**(아래) |
 | `depends_on` | [string] | 선행 action id (쌍 관계) |
 | `blocks_reason` | string\|null | 선행 미완료 시 표시할 이유 |
 | `knowledge_level` | `상식`\|`전문` | |
@@ -149,6 +164,18 @@ exclusion_exempt_items → insurance**이고, 먼저 걸리는 것이 뒤를 가
 
 `ordinance_based`와 `support_item`만 **없는 Action에는 키 자체가 없다.**
 나머지는 전 항목에 키가 있고 값이 `null`이다.
+
+**`meal`에 대응하는 Action은 없고, 그것이 결정이다.** districts의
+`support_items` 어휘는 다섯인데 Action의 `support_item`은 넷뿐이다. 긴급급식
+조항은 7개 구(광진·구로·금천·성북·송파·영등포·중구)에 있지만 전부 "구청장이
+예산의 범위에서 지원할 수 있다"는 재량 규정이고, 금액·기간·신청서식이 없으며
+하위 규칙은 25개 구 전수조사에서 0건이다. 대피소 급식 체계에 얹힌 항목이라
+개별 주택화재에서 집행되는 그림이 없다 — **실행되는지 확인 안 된 제도는
+안내하지 않는다**(D-020 초안).
+
+`support_items`의 `meal`은 **지우지 마라.** 그것은 조례가 무엇을 지원한다고
+써놨는지의 기록이고, 지우면 데이터가 조례를 틀리게 기술한다. 결손이 아니라
+결정이라는 것을 `test/districts.test.mjs`가 이름과 주석으로 박아 둔다.
 
 **선행은 완료 가능한 행동이어야 한다**(D-018). `standing`(금지)을
 `depends_on`에 넣지 마라 — 금지는 체크할 수 없어서(`checkable: false`)
