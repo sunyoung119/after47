@@ -40869,7 +40869,7 @@
           },
           {
             "key": "standing",
-            "count": 4,
+            "count": 5,
             "unlocked": true,
             "items": [
               {
@@ -40905,6 +40905,19 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "adjusters-may-all-be-opposing",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
                 "rank": null,
                 "locked": false,
                 "checkable": false,
@@ -41183,24 +41196,6 @@
           },
           {
             "id": "independent-adjuster-right",
-            "blocked_by": [
-              {
-                "id": "adjuster-position",
-                "title": "지금 나온 손해사정사가 누구를 대리하는지 확인하세요"
-              }
-            ],
-            "blocks_reason": null,
-            "status": "해당",
-            "deadline_days": null,
-            "dept": null,
-            "amount_known": null,
-            "group": "보험과 돈",
-            "category": "판단",
-            "wait_days": null,
-            "irreversible": false
-          },
-          {
-            "id": "adjusters-may-all-be-opposing",
             "blocked_by": [
               {
                 "id": "adjuster-position",
@@ -41445,7 +41440,7 @@
           },
           {
             "key": "standing",
-            "count": 4,
+            "count": 5,
             "unlocked": true,
             "items": [
               {
@@ -41481,6 +41476,19 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "adjusters-may-all-be-opposing",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
                 "rank": null,
                 "locked": false,
                 "checkable": false,
@@ -41759,24 +41767,6 @@
           },
           {
             "id": "independent-adjuster-right",
-            "blocked_by": [
-              {
-                "id": "adjuster-position",
-                "title": "지금 나온 손해사정사가 누구를 대리하는지 확인하세요"
-              }
-            ],
-            "blocks_reason": null,
-            "status": "해당",
-            "deadline_days": null,
-            "dept": null,
-            "amount_known": null,
-            "group": "보험과 돈",
-            "category": "판단",
-            "wait_days": null,
-            "irreversible": false
-          },
-          {
-            "id": "adjusters-may-all-be-opposing",
             "blocked_by": [
               {
                 "id": "adjuster-position",
@@ -42021,7 +42011,7 @@
           },
           {
             "key": "standing",
-            "count": 4,
+            "count": 5,
             "unlocked": true,
             "items": [
               {
@@ -42057,6 +42047,19 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "adjusters-may-all-be-opposing",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
                 "rank": null,
                 "locked": false,
                 "checkable": false,
@@ -42352,24 +42355,6 @@
             "irreversible": false
           },
           {
-            "id": "adjusters-may-all-be-opposing",
-            "blocked_by": [
-              {
-                "id": "adjuster-position",
-                "title": "지금 나온 손해사정사가 누구를 대리하는지 확인하세요"
-              }
-            ],
-            "blocks_reason": null,
-            "status": "해당",
-            "deadline_days": null,
-            "dept": null,
-            "amount_known": null,
-            "group": "보험과 돈",
-            "category": "판단",
-            "wait_days": null,
-            "irreversible": false
-          },
-          {
             "id": "tenant-burden-of-proof",
             "blocked_by": [
               {
@@ -42597,7 +42582,7 @@
           },
           {
             "key": "standing",
-            "count": 4,
+            "count": 5,
             "unlocked": true,
             "items": [
               {
@@ -42633,6 +42618,19 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "adjusters-may-all-be-opposing",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
                 "rank": null,
                 "locked": false,
                 "checkable": false,
@@ -42904,24 +42902,6 @@
           },
           {
             "id": "independent-adjuster-right",
-            "blocked_by": [
-              {
-                "id": "adjuster-position",
-                "title": "지금 나온 손해사정사가 누구를 대리하는지 확인하세요"
-              }
-            ],
-            "blocks_reason": null,
-            "status": "해당",
-            "deadline_days": null,
-            "dept": null,
-            "amount_known": null,
-            "group": "보험과 돈",
-            "category": "판단",
-            "wait_days": null,
-            "irreversible": false
-          },
-          {
-            "id": "adjusters-may-all-be-opposing",
             "blocked_by": [
               {
                 "id": "adjuster-position",
@@ -43166,7 +43146,7 @@
           },
           {
             "key": "standing",
-            "count": 4,
+            "count": 5,
             "unlocked": true,
             "items": [
               {
@@ -43202,6 +43182,19 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "adjusters-may-all-be-opposing",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
                 "rank": null,
                 "locked": false,
                 "checkable": false,
@@ -43473,24 +43466,6 @@
           },
           {
             "id": "independent-adjuster-right",
-            "blocked_by": [
-              {
-                "id": "adjuster-position",
-                "title": "지금 나온 손해사정사가 누구를 대리하는지 확인하세요"
-              }
-            ],
-            "blocks_reason": null,
-            "status": "해당",
-            "deadline_days": null,
-            "dept": null,
-            "amount_known": null,
-            "group": "보험과 돈",
-            "category": "판단",
-            "wait_days": null,
-            "irreversible": false
-          },
-          {
-            "id": "adjusters-may-all-be-opposing",
             "blocked_by": [
               {
                 "id": "adjuster-position",

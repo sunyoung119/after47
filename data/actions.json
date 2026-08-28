@@ -1045,9 +1045,7 @@
     "excluded_when": null,
     "exception_available": false,
     "exclusion_reason": null,
-    "depends_on": [
-      "adjuster-position"
-    ],
+    "depends_on": [],
     "blocks_reason": null,
     "knowledge_level": "상식",
     "source_grade": "공적",
