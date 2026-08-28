@@ -14,9 +14,16 @@ import { formatDate } from "./view.js";
 // 사용자 관찰이 아니므로 재검토 조건에 올라 있다.
 export const CARD_BUDGET = 5;
 
-// 접힌 구간에서 위에서 아래로 읽히는 순서. missed·standing은 여기 없다 —
-// 둘 다 타임라인 밖 별도 자리다.
-const SECTION_ORDER = ["today", "this_week", "anytime", "after_report"];
+// 타임라인 페이지의 접힌 구간 순서.
+//
+// **`anytime`이 여기 없다**(6단계). 시점 무관한 것들은 체크 페이지로 갔다 —
+// 타임라인은 "지금 어디쯤"을 말하는 곳인데 `anytime`은 시점이 없어서
+// 그 축에 놓이지 않는다. `missed`·`standing`도 각자 별도 자리다.
+//
+// **카드 영역(rank ≤ 5)은 전 구간 대상 그대로다.** anytime 행이 상위 5에
+// 들면 카드로 뜬다(3년 시효가 그렇다) — 그러면 그 항목은 카드와 체크
+// 페이지에 함께 보이는데, **의도된 중복이고 체크 상태는 공유된다.**
+const SECTION_ORDER = ["today", "this_week", "after_report"];
 
 // 엔진 행 → 화면 행. 값이 없으면 null이지 키가 빠지지 않는다(엔진 계약과 같은 톤).
 function toRow(x) {
@@ -97,6 +104,9 @@ export function timelineView({ result, state = {}, data = {}, budget = CARD_BUDG
   // ── 타임라인 밖 ─────────────────────────────────
   const missedRows = bySection("missed");
   const standingRows = bySection("standing");
+  // 체크 페이지가 쓴다. **rank로 자르지 않는다** — 카드에 오른 항목도
+  // 여기 그대로 있다(의도된 중복).
+  const anytimeRows = bySection("anytime");
 
   // ── 버킷 ────────────────────────────────────────
   // 기다리는 중 — 정렬은 `wait_days` 하한이다. 버킷 행에는 rank가 없다.
@@ -166,6 +176,13 @@ export function timelineView({ result, state = {}, data = {}, budget = CARD_BUDG
       count: standingRows.length,
       items: standingRows,
     },
+    // 시점이 없는 것들. 타임라인의 접힌 구간에는 없고 체크 페이지가 쓴다.
+    anytime: {
+      label: SECTION_LABEL.anytime,
+      count: anytimeRows.length,
+      items: anytimeRows,
+      groups: groupByDomain(anytimeRows),
+    },
     waiting,
     blocked,
     excluded,
@@ -191,6 +208,7 @@ export function locate(view, id) {
   if (view.cards.lead?.id === id) return { where: "cards", section: null };
   if (view.cards.rest.some((r) => r.id === id)) return { where: "cards", section: null };
   for (const m of view.more) if (m.items.some((r) => r.id === id)) return { where: "more", section: m.key };
+  if (view.anytime.items.some((r) => r.id === id)) return { where: "anytime", section: "anytime" };
   if (view.missed.items.some((r) => r.id === id)) return { where: "missed", section: "missed" };
   if (view.standing.items.some((r) => r.id === id)) return { where: "standing", section: "standing" };
   for (const [k, list] of [["waiting", view.waiting], ["blocked", view.blocked], ["excluded", view.excluded]])

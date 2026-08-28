@@ -8,7 +8,7 @@
 // 저장소를 직접 만지지 않는다. 세션은 인자로 받는다(D-002).
 
 import { visibleQuestions, unansweredKeys } from "../questions.js";
-import { COPY, BUCKET_LABEL, SECTION_LABEL } from "./copy.js";
+import { COPY } from "./copy.js";
 
 // ── 진입 ───────────────────────────────────────────
 //
@@ -216,52 +216,6 @@ export function saveNoticeView({
 
   // 2층은 헤더의 작은 한 줄이라 이 박스를 쓰지 않는다.
   return { show: false, variant: "quiet", lines: [], url, token, actions: [] };
-}
-
-// ── 결과 자리표시자 ────────────────────────────────
-//
-// 꾸미지 않는다. 엔진 출력을 날것으로 보는 자리다. 타임라인·갈림길
-// 시각화는 UI-A②의 일이고, 여기서 미리 그리면 그 단계가 아니게 된다.
-//
-// **자르는 것은 UI다**(D-019 §2) — 엔진은 rank만 주고 자르지 않는다.
-// 여기서 rank <= 5를 뽑는다. rank를 다시 계산하지는 않는다.
-export function resultPlaceholderView(result, district = null) {
-  const rows = [];
-  for (const s of result.sections || []) {
-    for (const g of s.groups || []) for (const it of g.items || []) rows.push({ ...it, section: s.key });
-  }
-
-  const top = rows
-    .filter((r) => typeof r.rank === "number" && r.rank <= 5)
-    .sort((a, b) => a.rank - b.rank)
-    .map((r) => ({
-      id: r.action.id,
-      title: r.action.title,
-      rank: r.rank,
-      when: r.when,
-      locked: r.locked === true,
-    }));
-
-  const standingCount = (result.sections || []).find((s) => s.key === "standing")?.count ?? 0;
-
-  return {
-    basis: district ? COPY.result.basis(district.name) : COPY.result.noDistrict,
-    hasDistrict: Boolean(district),
-    buckets: ["done", "waiting", "blocked", "excluded"].map((k) => ({
-      key: k,
-      label: BUCKET_LABEL[k],
-      count: (result[k] || []).length,
-    })),
-    sections: (result.sections || []).map((s) => ({
-      key: s.key,
-      label: SECTION_LABEL[s.key] || s.label || s.key,
-      count: s.count,
-      unlocked: s.unlocked,
-    })),
-    top,
-    standingCount,
-    undeterminedCount: (result.excluded || []).filter((x) => x.status === "미판정").length,
-  };
 }
 
 // ── 부수 ───────────────────────────────────────────

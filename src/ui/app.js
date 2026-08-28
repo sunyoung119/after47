@@ -13,8 +13,7 @@ import { evaluate } from "../engine.js";
 import { applyDefaults } from "../questions.js";
 import { entryView, surveyView, saveNoticeView } from "./view.js";
 import { timelineView, locate } from "./timeline.js";
-import { forkView, compareView } from "./whatif.js";
-import { renderTimeline, forkNode, compareBlock, el, clear } from "./render.js";
+import { renderTimeline, el, clear } from "./render.js";
 import { COPY } from "./copy.js";
 
 // ── 상태 ───────────────────────────────────────────
@@ -27,8 +26,6 @@ const app = {
   spelled: false,
   tv: null, // 마지막으로 그린 타임라인 뷰모델. goTo가 이것에 묻는다
   // 비교 보기 — **저장 state의 district는 바뀌지 않는다.** 보기 전환일 뿐이다.
-  compare: null,
-  comparePicking: false,
   // D-015 1·2층. saveShown은 "결과에 한 번 닿았다", addrTouched는
   // "주소를 복사하거나 한 글자씩 봤다"는 표시다 — **남겼는지는 모른다.**
   saveShown: false,
@@ -499,58 +496,6 @@ function renderResult(main, entry) {
     renderAddrSlot();
   }
 
-  // 갈림길 — 아직 답하지 않은 질문이 타임라인 위의 노드로 놓인다.
-  // 답하면 저장하고 재평가한다. **미리보기의 가정 답은 저장하지 않는다.**
-  const fv = forkView({
-    questions: app.session.data.questions,
-    state: app.state,
-    data: app.session.data,
-  });
-  if (fv.question) {
-    main.appendChild(forkNode(fv, { onAnswer: answer }));
-    const row = el("p", "todo");
-    row.appendChild(el("span", null, COPY.survey.unanswered(fv.remaining)));
-    const go = el("button", "btn btn--quiet", COPY.survey.unansweredAction);
-    go.type = "button";
-    go.addEventListener("click", () => {
-      app.screen = "survey";
-      app.cursor = null;
-      render();
-    });
-    row.appendChild(go);
-    main.appendChild(row);
-  }
-
-  // 자치구 비교 — 같은 답으로 다른 구 판정을 나란히.
-  const cv = compareView({
-    questions: app.session.data.questions,
-    state: app.state,
-    data: app.session.data,
-    otherId: app.compare,
-  });
-  main.appendChild(
-    compareBlock(
-      cv,
-      {
-        onCompareOpen: () => {
-          app.comparePicking = true;
-          render();
-        },
-        onComparePick: (id) => {
-          // ★ app.state는 건드리지 않는다. 보기만 바뀐다.
-          app.compare = id;
-          app.comparePicking = false;
-          render();
-        },
-        onCompareClose: () => {
-          app.compare = null;
-          app.comparePicking = false;
-          render();
-        },
-      },
-      { picking: app.comparePicking }
-    )
-  );
 }
 
 function goPicker() {

@@ -7,16 +7,16 @@
 // 한다. 세션은 storage.test.mjs가 쓰는 **메모리 백엔드 주입 패턴을 그대로**
 // 가져온다 — 브라우저 없이 openSession을 돌리는 방법이 이미 거기 있다.
 
-import { readFileSync } from "fs";
+import { readFileSync, existsSync } from "fs";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 import { configureStorage, memoryBackend, saveState } from "../src/storage.js";
 import { openSession, anchorSession } from "../src/session.js";
 import { evaluate } from "../src/engine.js";
 import { applyDefaults } from "../src/questions.js";
-import { entryView, surveyView, saveNoticeView, resultPlaceholderView } from "../src/ui/view.js";
+import { entryView, surveyView, saveNoticeView } from "../src/ui/view.js";
 import { timelineView, locate, waitLabel } from "../src/ui/timeline.js";
-import { forkView, compareView } from "../src/ui/whatif.js";
+import { introView, guideView, summaryView, checkView, sourcesView, contactsView, deckView, DECK } from "../src/ui/pages.js";
 import { COPY, BUCKET_LABEL, STATUS_LABEL } from "../src/ui/copy.js";
 
 const D = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -345,44 +345,10 @@ t(
   !/다른 기기에서도/.test(문구)
 );
 
-// ── 4. 결과 자리표시자 ─────────────────────────────
-section("4. 결과 자리표시자 — 자르는 것은 UI다");
-
-const 판정 = (state, now = NOW) => evaluate(applyDefaults(questions, state, now), data, now);
-const rv = resultPlaceholderView(판정(전.state), data.districts.find((d) => d.id === "mapo"));
-t("자치구 이름이 상단에 실린다", rv.basis === "마포구 기준" && rv.hasDistrict);
-t("버킷 넷의 개수를 준다", rv.buckets.length === 4 && rv.buckets.every((b) => typeof b.count === "number"));
-t("버킷 라벨이 색이 아니라 글자다", rv.buckets.every((b) => typeof b.label === "string" && b.label.length > 0));
-t("섹션 개수를 준다", rv.sections.length > 0 && rv.sections.every((x) => typeof x.count === "number"));
-t("rank 5 이하만 편다 (자르는 것은 UI다)", rv.top.length <= 5 && rv.top.every((x) => x.rank <= 5));
-t("펴는 다섯이 rank 순이다", rv.top.every((x, i, a) => i === 0 || a[i - 1].rank <= x.rank));
-t("제목·when·locked를 함께 싣는다", rv.top.every((x) => x.title && x.when && "locked" in x));
-
-// 설문은 다 했는데 자치구만 안 고른 경우 — D-019 §6이 겨냥한 자리다.
-const { district: _버림, ...구없이 } = 전.state;
-const 미선택 = resultPlaceholderView(판정(구없이), null);
-t("자치구 미선택이면 그렇게 말한다", 미선택.basis === "자치구 미선택" && !미선택.hasDistrict);
-t(
-  "자치구 미선택이면 조례 4건이 전부 미판정이다 (D-019 §6)",
-  미선택.undeterminedCount === 4,
-  String(미선택.undeterminedCount)
-);
-
-// D-003 — 아무것도 답하지 않아도 화면이 나온다. 이때 조례 행이 3건인 것은
-// support-housing의 applies_when이 residence_possible을 보기 때문이고,
-// 아직 그 질문에 답하지 않았으므로 애초에 대상이 아니다. 결손이 아니다.
-const 빈판정 = resultPlaceholderView(판정({ completed: [] }), null);
-t("아무것도 답하지 않아도 화면이 나온다 (D-003)", 빈판정.sections.length > 0);
-t(
-  "이때 미판정은 3건이다 — 거주 가능 여부를 아직 안 물어서다",
-  빈판정.undeterminedCount === 3,
-  String(빈판정.undeterminedCount)
-);
-t("standing은 별도로 센다 (rank 경쟁 밖)", rv.standingCount > 0);
-
 // ── 5. 타임라인 ────────────────────────────────────
 section("5. 타임라인 — 자르고 접는 것은 UI다");
 
+const 판정 = (state, now = NOW) => evaluate(applyDefaults(questions, state, now), data, now);
 const tl = (state, now = NOW) => timelineView({ result: 판정(state, now), state, data });
 
 const t1 = tl(전.state);
@@ -509,9 +475,33 @@ if (전라벨 && 후라벨) {
   t("조사서를 받으면 '이제 할 수 있는 것'", 후라벨.label === "이제 할 수 있는 것", 후라벨.label);
 }
 
-// anytime 비대 — 분야로 한 번 더 묶는다(D-019 §7)
-const any = t1.more.find((m) => m.key === "anytime");
-if (any) t("anytime은 분야 묶음을 갖는다", any.groups.length > 0 && Boolean(any.groups[0].group));
+// ★ 6단계 — anytime은 타임라인의 접힌 구간에서 빠지고 체크 페이지로 갔다.
+// 타임라인은 "지금 어디쯤"을 말하는 곳인데 anytime은 시점이 없다.
+t(
+  "타임라인 접힘 구간에 anytime이 없다",
+  !t1.more.some((m) => m.key === "anytime"),
+  JSON.stringify(t1.more.map((m) => m.key))
+);
+t("접힘 구간은 today · this_week · after_report뿐이다",
+  t1.more.every((m) => ["today", "this_week", "after_report"].includes(m.key)));
+t("anytime은 별도로 실려 나온다 (체크 페이지가 쓴다)",
+  t1.anytime.count > 0 && t1.anytime.groups.length > 0);
+// 카드 영역은 **전 구간 대상 그대로**다 — anytime 행이 상위 5에 들면 카드로
+// 뜬다(3년 시효가 그렇다). 그러면 체크 페이지와 중복되는데 의도된 것이다.
+const 카드anytime = [t1.cards.lead, ...t1.cards.rest].filter((r) => r.when === "anytime");
+const 어딘가카드 = [t1, tl({ ...전.state, product_suspected: true })].some((v) =>
+  [v.cards.lead, ...v.cards.rest].some((r) => r.when === "anytime")
+);
+t(
+  "카드 영역은 anytime도 대상이다 (rank ≤ 5면 카드로 뜬다)",
+  어딘가카드,
+  "어느 조합에서도 anytime이 상위 5에 못 들면 산식이나 데이터가 바뀐 것이다"
+);
+if (카드anytime.length)
+  t(
+    "카드에 뜬 anytime은 체크 페이지에도 있다 (의도된 중복 · 체크 상태 공유)",
+    카드anytime.every((r) => t1.anytime.items.some((x) => x.id === r.id))
+  );
 
 // ★ 고지문이 "본문에 출처를 밝혀 두었습니다"라고 말하므로 **행이 출처를
 //   실어 나르지 않으면 그 문장이 거짓이 된다.**
@@ -565,67 +555,108 @@ t(
 );
 
 
-// ── 6. 갈림길과 자치구 비교 ────────────────────────
-section("6. 가정 판정 — 저장하지 않는다");
+// ── 6. 페이지 (6단계 — 가로 덱) ────────────────────
+section("6. 페이지 — 가로 덱의 네 장");
 
-// 아직 안 답한 상태에서 갈림길이 선다
-const 반쯤 = { district: "mapo", completed: [], fire_at: FIRE, residence_possible: false };
-const 원본 = JSON.parse(JSON.stringify(반쯤));
-const fv = forkView({ questions, state: 반쯤, data, now: NOW });
-t("답할 것이 남으면 갈림길 노드가 선다", fv.question !== null, JSON.stringify(fv.remaining));
-t("갈림길은 첫 미답 질문이다", fv.question.key === "housing_type", fv.question?.key);
-t("선택지마다 미리보기가 붙는다", fv.question.options.every((o) => Array.isArray(o.preview)));
+// 인트로 — 첫 방문만. **플래그는 state에 있고 storage 경유로 저장된다.**
+t("처음이면 인트로가 뜬다", introView({}).show === true);
+t("본 적 있으면 안 뜬다", introView({ intro_seen: true }).show === false);
+// 누수 탐지와 같은 방식으로 본다 — 주석에 낱말이 나오는 것까지 막을 필요는 없다.
+const 코드만 = (f) =>
+  readFileSync(join(D, f), "utf8").replace(/\/\/.*$/gm, "").replace(/\/\*[\s\S]*?\*\//g, "");
 t(
-  "미리보기는 2~3개까지만이다 (답하기 전에 화면이 늘지 않게)",
-  fv.question.options.every((o) => o.preview.length <= 3 && o.moved.length <= 3)
-);
-
-// ★ 이 파일의 핵심 검사 — 가정 답이 state로 새면 그 뒤 판정이 전부 거짓이 된다
-t(
-  "가정 답이 원본 state를 건드리지 않는다",
-  JSON.stringify(반쯤) === JSON.stringify(원본),
-  JSON.stringify(반쯤)
-);
-
-t("다 답하면 갈림길이 없다", forkView({ questions, state: 전.state, data, now: NOW }).question === null);
-
-// 자치구 비교 — 보기 전환일 뿐이다
-const 내상태 = { ...전.state };
-const 사본 = JSON.parse(JSON.stringify(내상태));
-const cv0 = compareView({ questions, state: 내상태, data, now: NOW });
-t("비교 대상을 안 고르면 비활성이다", cv0.active === false && cv0.rows.length === 0);
-t("내 구를 뺀 24개를 고를 수 있다", cv0.options.length === 24, String(cv0.options.length));
-t("내 구는 목록에 없다", !cv0.options.some((o) => o.id === "mapo"));
-
-const cv = compareView({ questions, state: 내상태, data, now: NOW, otherId: "gangnam" });
-t("비교를 켜면 두 구가 잡힌다", cv.active && cv.mine.id === "mapo" && cv.other.id === "gangnam");
-t(
-  "★ 비교해도 저장 state의 district는 그대로다",
-  JSON.stringify(내상태) === JSON.stringify(사본) && 내상태.district === "mapo"
-);
-t("다른 것만 행으로 나온다", cv.rows.length > 0 && cv.rows.length < 20, String(cv.rows.length));
-t(
-  "같은 것은 개수로만 말한다",
-  typeof cv.sameCount === "number" && cv.sameCount > cv.rows.length,
-  `다름 ${cv.rows.length} / 같음 ${cv.sameCount}`
+  "인트로 플래그는 state 필드다 (저장은 storage 경유)",
+  !/localStorage|sessionStorage/.test(코드만("src/ui/pages.js"))
 );
 t(
-  "차이는 조례 항목에서 난다",
-  cv.rows.every((r) => r.id.startsWith("support-") || r.id === "no-ordinance-fallback"),
-  JSON.stringify(cv.rows.map((r) => r.id))
+  "화면 코드가 저장소를 직접 만지지 않는다",
+  ["src/ui/app.js", "src/ui/render.js", "src/ui/screens.js"]
+    .filter((f) => existsSync(join(D, f)))
+    .every((f) => !/localStorage|sessionStorage|document\.cookie/.test(코드만(f)))
 );
-console.log("      실측 — 마포 ↔ 강남:");
-for (const r of cv.rows)
-  console.log(
-    `        ${r.title.slice(0, 26).padEnd(28)}마포 ${(r.mine?.status ?? "없음").padEnd(5)} 강남 ${r.other?.status ?? "없음"}`
-  );
+t("인트로 문구가 확정 문구다", introView({}).line === "불이 꺼진 뒤, 다시 일상으로 가는 길을 함께합니다");
 
-// 자치구를 안 고른 사람은 비교 자체가 성립하지 않는다
-const { district: _d3, ...구없이3 } = 전.state;
+// 안내 — 속도도 결과도 약속하지 않는다
+const gv = guideView();
+t("안내는 왜 묻는지만 말한다", gv.lines.length >= 2 && Boolean(gv.cta));
 t(
-  "내 구를 안 골랐으면 비교를 못 한다",
-  compareView({ questions, state: 구없이3, data, now: NOW, otherId: "gangnam" }).mine === null
+  "속도를 약속하는 말이 없다",
+  !/빠르|금방|즉시|신속|바로 해결/.test(gv.lines.join(" ") + gv.title),
+  gv.lines.join(" ")
 );
+
+// 요약 — 답한 것이 질문·답 쌍으로, 각 줄이 그 질문으로 돌아가는 문
+const sm = summaryView({ questions, state: 전.state, data, now: NOW });
+t("요약이 답한 것을 전부 싣는다", sm.rows.length > 0 && sm.complete === true);
+t(
+  "각 줄이 질문·답 쌍이고 돌아갈 id를 갖는다",
+  sm.rows.every((r) => r.id && r.key && r.question && r.answer)
+);
+t(
+  "답을 라벨로 보여준다 (raw 값이 아니다)",
+  sm.rows.find((r) => r.key === "tenure")?.answer !== "renter",
+  JSON.stringify(sm.rows.find((r) => r.key === "tenure"))
+);
+const sm2 = summaryView({ questions, state: { district: "mapo" }, data, now: NOW });
+t("아직 안 답했으면 빈 목록이고 complete가 아니다", sm2.rows.length === 0 && !sm2.complete);
+
+// 체크 페이지 — 성격이 정반대인 둘을 탭으로 가른다
+const cv = checkView(t1);
+t("탭이 둘이다", cv.tabs.length === 2);
+t(
+  "기본 탭이 '해두면 좋은 일'이다 (첫인상이 금지 목록이면 안 된다)",
+  cv.tabs[0].key === "todo" && cv.tabs[0].label === "해두면 좋은 일"
+);
+t("해두면 좋은 일 = anytime", cv.todo.items.length === t1.anytime.count);
+t(
+  "★ standing 전부가 체크 페이지에 있다",
+  cv.avoid.items.length === t1.standing.count && cv.avoid.items.length > 0,
+  `${cv.avoid.items.length} / ${t1.standing.count}`
+);
+t("금지는 체크할 수 없다", cv.avoid.items.every((r) => r.checkable === false));
+t("완료 로그가 이 페이지에 있다", cv.done && typeof cv.done.count === "number");
+
+// 근거 페이지 — 엔진 행에서 그대로 뽑는다(재판정 금지)
+const sv2 = sourcesView(t1);
+t("출처가 있는 것만 모은다", sv2.groups.every((g) => g.items.every((x) => x.url && x.host)));
+t("분야로 묶는다", sv2.groups.length > 0 && sv2.groups.every((g) => g.group));
+t("같은 항목이 두 번 안 나온다", (() => {
+  const ids = sv2.groups.flatMap((g) => g.items.map((x) => x.id));
+  return new Set(ids).size === ids.length;
+})());
+t("해당 없는 것도 사유와 함께 남는다 (D-011)", Array.isArray(sv2.excluded));
+// 설문 결과에 따라 달라진다
+const sv3 = sourcesView(tl({ ...전.state, product_suspected: true }));
+t(
+  "답이 바뀌면 근거 목록도 바뀐다",
+  sv3.count !== sv2.count,
+  `${sv2.count} → ${sv3.count}`
+);
+
+// 연락처 — v1은 구별 번호 없이. 없는 것을 "준비 중"으로 쓰지 않는다.
+const cont = contactsView(t1, { state: 전.state, data });
+t("전역 번호 둘이 있다", cont.global.length === 2 && cont.global.every((c) => c.tel));
+t("129와 120이다", cont.global.map((c) => c.tel).join(",") === "129,120");
+const contG = contactsView(tl({ ...전.state, district: "gangnam" }), {
+  state: { ...전.state, district: "gangnam" },
+  data,
+});
+t("조례가 있는 구는 담당 부서를 안내한다", contG.district?.dept === "안전교통국 재난안전과");
+t("구별 번호 자리는 비어 있다 (다음 패스)", contG.district?.tel === null);
+t("조례가 없는 구에는 구청 줄이 없다", contactsView(t1, { state: 전.state, data }).district === null);
+t(
+  "화면에 나온 안내의 창구만 뜬다 (설문 맞춤)",
+  cont.orgs.every((o) => typeof o.tel === "string")
+);
+
+// 덱 — 네 장, 라벨 탭으로도 이동
+const dv = deckView("timeline");
+t("덱이 네 장이다", dv.pages.length === 4 && DECK.length === 4);
+t("순서가 타임라인·체크·근거·연락처다",
+  dv.pages.map((p) => p.label).join(",") === "타임라인,체크,근거,연락처");
+t("첫 장에서는 이전이 없다", dv.prev === null && dv.next === "check");
+t("마지막 장에서는 다음이 없다", deckView("contacts").next === null);
+t("현재 장이 표시된다", dv.pages[0].current === true && dv.pages[1].current === false);
 
 
 // ── 결과 ───────────────────────────────────────────
