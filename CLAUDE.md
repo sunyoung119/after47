@@ -18,6 +18,7 @@ QR을 주는 시점이 기본 진입점이다. **정신이 없고, 길게 읽을
 | `doc/SCHEMA.md` | 데이터 구조 정의 |
 | `doc/fact-layer-data.md` | 콘텐츠 원본과 출처 |
 | `doc/reference-case.md` | 실제 사례. **스키마 검증 기준** |
+| `doc/ui-research.md` | UI 패턴·재난 UX 리서치. **참고자료 — 확정 아님** |
 
 **설계를 바꾸려면 먼저 `design-decisions.md`에서 해당 결정을 찾아라.**
 결정을 뒤집을 때는 그 문서에 폐기 이력과 이유를 남긴다.
