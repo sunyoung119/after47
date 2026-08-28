@@ -42,21 +42,21 @@ export function renderTimeline(main, tv, handlers = {}) {
   main.appendChild(cards);
 
   // 접힌 구간 — 라벨과 개수만. 지우는 것이 아니라 접는 것이다(D-011).
+  // **anytime은 여기 없다**(6단계) — 시점이 없는 것들은 체크 페이지로 갔다.
   for (const m of tv.more) main.appendChild(moreBlock(m, handlers));
-
-  // 타임라인 밖 별도 밴드. 항상 보인다.
-  if (tv.standing.count) main.appendChild(standingBand(tv.standing));
 
   if (tv.waiting.length) main.appendChild(waitingBlock(tv.waiting));
   if (tv.blocked.length) main.appendChild(bucketBlock("blocked", tv.blocked, handlers));
   if (tv.excluded.length) main.appendChild(excludedBlock(tv.excluded, handlers));
-  if (tv.done.count) main.appendChild(doneBlock(tv.done, handlers));
+
+  // `standing`(하지 마실 것)과 완료 로그도 체크 페이지가 그린다.
+  // 타임라인은 **시점이 있는 것**만 담는다.
 }
 
 // 출처 한 줄. **고지문의 "본문에 출처를 밝혀 두었습니다"를 참으로 만드는
 // 자리다** — 안 그리면 그 문장이 거짓이 된다. `source_url`이 없는 항목이
 // 21건이라 그때는 줄 자체를 만들지 않는다(빈 "출처:"가 더 나쁘다).
-function sourceLine(r) {
+export function sourceLine(r) {
   if (!r.sourceUrl) return null;
   let host;
   try {
@@ -188,28 +188,6 @@ function moreBlock(m, handlers) {
   return det;
 }
 
-// ── 금지 밴드 ──────────────────────────────────────
-// 타임라인 밖이다. 시점에 꽂으면 "언제 하는 일"로 읽힌다. 체크가 없다.
-function standingBand(b) {
-  const sec = el("section", "band");
-  sec.appendChild(el("h3", "band__title", b.label));
-  const ul = el("ul", "rows");
-  for (const r of b.items) {
-    const li = el("li", "row row--standing");
-    li.dataset.row = r.id;
-    const det = el("details");
-    det.appendChild(el("summary", "row__sum", r.title));
-    if (r.summary) det.appendChild(el("p", "row__summary", r.summary));
-    if (r.body) det.appendChild(el("p", "card__body", r.body));
-    append(det, sourceLine(r));
-    li.appendChild(det);
-    ul.appendChild(li);
-  }
-  sec.appendChild(ul);
-  sec.appendChild(el("p", "hint", COPY.timeline.standingNote));
-  return sec;
-}
-
 // ── 버킷 ───────────────────────────────────────────
 function waitingBlock(rows) {
   const det = el("details", "block");
@@ -280,32 +258,8 @@ function excludedBlock(rows, handlers) {
   return det;
 }
 
-// 완료 로그 — 아래에 쌓인다. 숫자만이고 배지·축하는 없다.
-function doneBlock(d, handlers) {
-  const det = el("details", "block block--done");
-  const sum = el("summary", "block__sum");
-  sum.appendChild(el("span", "block__label", COPY.timeline.doneTitle));
-  sum.appendChild(el("span", "block__count", COPY.timeline.doneCount(d.count)));
-  det.appendChild(sum);
-  const ul = el("ul", "rows");
-  for (const r of d.items) {
-    const li = el("li", "row row--done");
-    li.dataset.row = r.id;
-    const head = el("p", "row__sum");
-    head.appendChild(el("span", null, r.title));
-    // completed_at이 null이라고 완료가 아닌 것은 아니다(4/4-F②).
-    head.appendChild(el("span", "row__date", r.doneOn || COPY.timeline.doneNoDate));
-    li.appendChild(head);
-    if (r.checkable && handlers.onCheck)
-      li.appendChild(btn("btn btn--quiet", COPY.timeline.uncheck, () => handlers.onCheck(r.id, false)));
-    ul.appendChild(li);
-  }
-  det.appendChild(ul);
-  return det;
-}
-
 // ── 행 ─────────────────────────────────────────────
-function rowItem(r, handlers, { dim = false } = {}) {
+export function rowItem(r, handlers, { dim = false } = {}) {
   const li = el("li", `row${dim ? " row--dim" : ""}`);
   li.dataset.row = r.id;
   const det = el("details");
