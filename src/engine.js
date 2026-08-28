@@ -380,7 +380,14 @@ export function evaluate(state, data, now = Date.now()) {
   // 순위도 순서이므로 D-001이 이미 답을 갖고 있다 — 계산은 엔진의 일이다.
   // UI가 이것을 다시 계산하면 규칙이 두 곳에 흩어지고 계기판이 못 본다.
   //
-  // standing은 타임라인 밖 별도 밴드라 순위 경쟁에 없다(D-019 §0). rank는 null.
+  // **순위 경쟁에서 빠지는 것이 둘이다** — `standing`과 `missed`.
+  //
+  // `standing`은 타임라인 밖 별도 밴드라 처음부터 빠져 있었다(D-019 §0).
+  // `missed`가 여기 합류한 것은 UI-A②의 개정이다. 지나간 것이 카드 예산을
+  // 먹으면 **+5d부터 상위 3이 전부 `missed`가 되어**(개정 전 96/120 조합)
+  // 지금 할 수 있는 일이 4위부터 시작한다. 화면에서 지우는 것이 아니라
+  // 카드 영역 위 별도 블록으로 뺀 것이다 — Action은 사라지지 않는다(D-011).
+  // 둘 다 rank는 null이고, 자르는 것도 접는 것도 UI의 일이다.
   const BLOCK_ORDER = SECTIONS.map(([k]) => k);
   const dataIndex = new Map(actions.map((a, i) => [a.id, i]));
   // Infinity - Infinity가 NaN이라 뺄셈으로 비교하지 않는다. NaN이 falsy라
@@ -394,22 +401,25 @@ export function evaluate(state, data, now = Date.now()) {
     r.action.timing_hours ??
     (r.deadline_days != null ? r.deadline_days * 24 : null) ??
     Infinity;
+  // tier는 **시간 창을 본다**(UI-A② 개정). 개정 전에는 `irreversible`만 보고
+  // 시간 창을 안 봐서, 3년짜리 시효(product-claim-limitation)가 24시간짜리
+  // 청소와 같은 tier에 앉았다. `missed`가 빠진 자리를 이것이 메운다.
   const tier = (r) => {
-    if (r.when === "missed") return 1;              // 되돌릴 수 없고 시한이 지났다
-    if (r.action.irreversible) return 2;            // 되돌릴 수 없는데 아직 할 수 있다
+    if (r.action.irreversible) return 1;            // 되돌릴 수 없다
     const hasClock = r.action.timing_hours != null || r.deadline_days != null;
-    if (!hasClock) return 4;
-    const e = expiry(r.action, s.elapsed_hours, r.deadline_days);
-    return e.timing || e.deadline ? 4 : 3;          // 시한이 있고 아직 안 지났다
+    return hasClock ? 2 : 3;                        // 시간 창이 있다 / 없다
   };
   pool
-    .filter((r) => r.when !== "standing")
+    .filter((r) => r.when !== "standing" && r.when !== "missed")
     .sort(
       (a, b) =>
         cmp(tier(a), tier(b)) ||
-        // 지금 할 수 있는 것이 앞이다
-        cmp(a.locked === true ? 1 : 0, b.locked === true ? 1 : 0) ||
+        // **급한 것이 잠긴 것보다 먼저다**(UI-A② 개정). 순서가 반대였을 때
+        // 24시간짜리 잠김이 3년 시효 뒤로 밀렸다 — 레퍼런스 케이스가 그
+        // 조합에 있었다. 잠겨 있어도 "곧 못 하게 된다"는 사실은 그대로다.
         cmp(urgency(a), urgency(b)) ||
+        // 같은 급함이면 지금 할 수 있는 것이 앞이다
+        cmp(a.locked === true ? 1 : 0, b.locked === true ? 1 : 0) ||
         cmp(BLOCK_ORDER.indexOf(a.when), BLOCK_ORDER.indexOf(b.when)) ||
         // 최종 tie-break. 이 줄이 있어야 같은 입력이 항상 같은 순위를 낸다
         cmp(dataIndex.get(a.action.id), dataIndex.get(b.action.id))
