@@ -153,6 +153,25 @@ t(
 v = entryView(await openSession({ url: "https://after47.kr/?d=mapo&t=ab0k9m" }));
 t("망가진 토큰이면 token_invalid 배너가 뜬다", bannerTypes(v).includes("token_invalid"));
 
+// ⑦ 주거 형태가 "그 외"(상가·고시원·공장)일 때만 책임 경계를 말한다 (D-006).
+// 공통 행동은 그 사람에게도 유효하지만 상가 특유의 절차는 데이터에 없다 —
+// **말하지 않으면 "내 경우도 전부 다뤄진다"가 된다.** 반대로 안 고른 사람에게
+// 뜨면 아무 뜻도 없는 경고가 되므로 엄격 비교여야 한다.
+새백엔드();
+const 경계세션 = await openSession({ url: "https://after47.kr/?d=mapo" });
+const scopeBanners = (st) =>
+  entryView({ ...경계세션, state: { ...경계세션.state, ...st } }).banners.filter(
+    (b) => b.type === "scope"
+  );
+const 그외 = scopeBanners({ housing_type: "other" });
+t(
+  "⑦ '그 외'를 고르면 경계 배너가 하나 뜨고 문구가 확정 문구 그대로다",
+  그외.length === 1 && 그외[0].text === COPY.banner.scope_other,
+  `개수=${그외.length} / 문구일치=${그외[0]?.text === COPY.banner.scope_other}`
+);
+t("⑦ 아파트에는 안 뜬다", scopeBanners({ housing_type: "apartment" }).length === 0);
+t("⑦ 아직 안 답한 사람에게는 안 뜬다", scopeBanners({}).length === 0);
+
 // ── 2. 설문 ────────────────────────────────────────
 section("2. 설문 — 커서와 남은 수");
 

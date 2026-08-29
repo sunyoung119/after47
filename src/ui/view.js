@@ -86,6 +86,23 @@ export function entryView(session) {
     });
   }
 
+  // 일곱째 — 진입 공지가 아니라 **책임 경계**다(D-006). 주거 형태가
+  // "그 외"(상가·고시원·공장)인 사람에게만 이 안내가 어디까지 검증됐는지
+  // 말한다. 공통 행동 대부분은 그 사람에게도 유효하지만 상가 특유의 절차는
+  // 데이터에 없고, **말하지 않으면 "내 경우도 전부 다뤄진다"가 된다.**
+  //
+  // 엄격 비교다. 아직 안 답한 사람(undefined)에게 뜨면 그 사람에게는
+  // 아무 뜻도 없는 경고가 된다.
+  // 배열 **끝**인 것도 의도다 — 자치구 충돌 같은 진입 공지가 먼저다.
+  if (session?.state?.housing_type === "other") {
+    banners.push({
+      type: "scope",
+      text: COPY.banner.scope_other,
+      sub: null,
+      actions: [],
+    });
+  }
+
   const needed = !selected;
   const expiresNotice = notices.find((n) => n.type === "expires_at");
 
