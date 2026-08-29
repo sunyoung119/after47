@@ -10,6 +10,16 @@
   box-sizing: border-box;
 }
 
+/* hidden 속성 복원 — 작성자 display(.intro grid, .flow/.deck flex)가
+   브라우저 기본 [hidden]{display:none}을 이겨 화면 전환(el.hidden)이
+   무효가 되는 것을 막는다. 실제로 났다: 인트로 통과 후에도 오버레이가
+   남았고, 재방문에서는 빈 인트로의 배경만 보였다.
+   새 !important는 이 규칙 하나만 — hidden의 의미론을 어떤 display
+   선언보다 위에 둔다. (기존 reduced-motion의 !important 2건은 별개다) */
+[hidden] {
+  display: none !important;
+}
+
 html,
 body {
   height: 100%;

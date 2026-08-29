@@ -658,12 +658,32 @@ t(
     신설.every((v) => !css.includes(`var(${v})`))
   );
 }
+// ── hidden이 살아 있는가 ────────────────────────────
+//
+// 화면 전환은 전부 `el.hidden = true/false`다. 그런데 hidden은 브라우저
+// 기본 `[hidden]{display:none}`에 기대는데, **작성자의 display 선언이
+// 그것을 이긴다** — `.intro{grid}`·`.flow{flex}`·`.deck{flex}`가 있으니
+// 세 요소에서 hidden이 통째로 죽어 있었다. 실기기에서 났다: 인트로를
+// 통과해도 오버레이(fixed·inset:0·z-index:20)가 남아 설문을 덮었고,
+// 재방문에서는 빈 인트로의 배경 그라데이션만 보였다.
+// 눈으로 지킬 수 있는 종류가 아니라서 규칙의 존재를 검사로 박는다.
+{
+  const css = readFileSync(join(D, "src/ui/app.css"), "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+  t(
+    "[hidden]을 어떤 display보다 위에 두는 규칙이 있다",
+    /\[hidden\]\s*\{[^}]*display:\s*none\s*!important/.test(css)
+  );
+}
 {
   const html = readFileSync(join(D, "index.html"), "utf8");
   const refs = html.match(/(?:href|src)="src\/ui\/[^"]+"/g) || [];
+  // ★ 값까지 본다. 존재만 보면 "올리는 것을 잊은 배포"를 못 잡는다 —
+  //   화면 파일을 고치면서 v를 올리면 **이 줄의 숫자도 함께 올린다.**
+  const V = "?v=4";
   t(
-    `화면 파일 참조에 캐시 버전이 붙어 있다 (${refs.length}개)`,
-    refs.length >= 3 && refs.every((r) => r.includes("?v="))
+    `화면 파일 참조가 전부 ${V}다 (${refs.length}개)`,
+    refs.length >= 3 && refs.every((r) => r.includes(V)),
+    refs.join(" ")
   );
 }
 
