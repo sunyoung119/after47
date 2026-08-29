@@ -266,6 +266,36 @@
     "domain_group": "집 정리"
   },
   {
+    "id": "soot-corrosion-progress",
+    "title": "그을음은 놔둘수록 금속과 표면을 계속 부식시킵니다",
+    "body": "그을음은 산성이라 제거 전까지 계속 부식시킵니다. 금속 표면은 24~48시간이 지나면 영구적인 부식 자국이 남을 수 있고, 벽지·가구 같은 표면에는 착색이 진행됩니다. 치우기 전 사진을 남긴 뒤, 닦아낼 수 있는 표면부터 빨리 제거를 시작하세요. 정밀 기기와 넓은 면적은 전문 복원 영역입니다.",
+    "domain": 8,
+    "category": "판단",
+    "audience": "피해자",
+    "axis": "사실",
+    "timing_hours": 48,
+    "deadline_days": null,
+    "wait_days": null,
+    "irreversible": true,
+    "guidance_type": "action",
+    "applies_when": {},
+    "excluded_when": null,
+    "exception_available": false,
+    "exclusion_reason": null,
+    "depends_on": [
+      "scene-release",
+      "photo-before-cleanup"
+    ],
+    "blocks_reason": "현장보존 해제와 증거 촬영이 먼저입니다",
+    "knowledge_level": "전문",
+    "source_grade": "학술",
+    "source_url": null,
+    "checked_at": "2026-08-26",
+    "when": "today",
+    "summary": "그을음은 놔둘수록 부식·착색이 진행됩니다. 닦을 수 있는 표면부터 빨리 제거하세요.",
+    "domain_group": "집 정리"
+  },
+  {
     "id": "textile-caution",
     "title": "그을음이 밴 옷은 일반 세탁 전에 확인이 필요합니다",
     "body": "그을음은 섬유에 정전기적으로 달라붙어 물과 세제에 저항합니다. 가정용 세탁기로 돌리면 오염이 퍼져서 살릴 수 있던 옷까지 망칠 수 있습니다. 옮기기 전에 먼저 촬영해 두고, 전문 세탁 가능 여부를 확인한 뒤 결정하세요.",

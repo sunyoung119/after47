@@ -508,9 +508,12 @@ t("anytime은 별도로 실려 나온다 (체크 페이지가 쓴다)",
 // 카드 영역은 **전 구간 대상 그대로**다 — anytime 행이 상위 5에 들면 카드로
 // 뜬다(3년 시효가 그렇다). 그러면 체크 페이지와 중복되는데 의도된 것이다.
 const 카드anytime = [t1.cards.lead, ...t1.cards.rest].filter((r) => r.when === "anytime");
-const 어딘가카드 = [t1, tl({ ...전.state, product_suspected: true })].some((v) =>
-  [v.cards.lead, ...v.cards.rest].some((r) => r.when === "anytime")
-);
+// 관측 창을 여러 시각으로 넓힌다 — 한 시각의 순위 재배열이 계약 위반으로 오인되지 않게.
+const 어딘가카드 = [
+  t1,
+  tl({ ...전.state, product_suspected: true }),
+  tl(전.state, Date.parse(FIRE) + 90 * 24 * 36e5),
+].some((v) => [v.cards.lead, ...v.cards.rest].some((r) => r.when === "anytime"));
 t(
   "카드 영역은 anytime도 대상이다 (rank ≤ 5면 카드로 뜬다)",
   어딘가카드,
