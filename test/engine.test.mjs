@@ -150,6 +150,54 @@ t("시한이 지난 불가역은 잠겨 있어도 missed에 나타난다 — pow
 t("시한이 지난 불가역은 잠겨 있어도 missed에 나타난다 — dry-water",
   late.get("dry-water") === "missed:잠김", late.get("dry-water"));
 
+// ── guidance_type — 안내의 종류를 데이터가 말한다 ────
+//
+// 결과 화면의 상위 IA(우선 확인 / 지금 실행 / 알아둘 것)가 읽을 축이다.
+// **아직 어떤 런타임 코드도 이 필드를 읽지 않는다** — 다음 단계에서 UI가
+// `row.action.guidance_type`으로 읽는다(엔진 행의 action이 원본 Action
+// 객체 전체라 엔진은 손댈 것이 없다).
+//
+// ★ 누락은 FAIL이다. **"없으면 action으로 친다"는 기본값을 어디에도
+//   만들지 마라** — 조용한 기본값은 분류를 빼먹은 것과 일부러 실행으로
+//   둔 것을 구분할 수 없게 만든다.
+const GT = ["action", "do_not", "awareness"];
+const DO_NOT = [
+  "wet-appliance-power",
+  "preserve-product",
+  "product-handover-caution",
+  "scene-preserved-hold",
+  "water-damage-causer-caution",
+  "tenant-dont-do",
+];
+const AWARENESS = ["adjusters-may-all-be-opposing", "product-maker-position-may-change"];
+const 없는것 = data.actions.filter((a) => !("guidance_type" in a)).map((a) => a.id);
+t(`${data.actions.length}개 Action 전부가 guidance_type을 갖는다`, 없는것.length === 0, 없는것.join(", "));
+const 밖의값 = data.actions.filter((a) => !GT.includes(a.guidance_type));
+t(
+  "값이 action / do_not / awareness 셋 중 하나다 (넷째를 만들지 않는다)",
+  밖의값.length === 0,
+  밖의값.map((a) => `${a.id}=${a.guidance_type}`).join(", ")
+);
+const 뽑기 = (v) => data.actions.filter((a) => a.guidance_type === v).map((a) => a.id).sort();
+t(
+  `do_not이 정확히 ${DO_NOT.length}건이다`,
+  뽑기("do_not").join(",") === [...DO_NOT].sort().join(","),
+  뽑기("do_not").join(", ")
+);
+t(
+  `awareness가 정확히 ${AWARENESS.length}건이다`,
+  뽑기("awareness").join(",") === [...AWARENESS].sort().join(","),
+  뽑기("awareness").join(", ")
+);
+// ★ 축 분리의 회귀 가드. irreversible로 do_not을 추론하면 이 한 건이 샌다 —
+//   "현장 보존 상태를 유지하세요"는 되돌릴 수 있지만 금지다.
+const 보존 = data.actions.find((a) => a.id === "scene-preserved-hold");
+t(
+  "scene-preserved-hold는 irreversible=false인데 do_not이다 (irreversible과 독립된 축)",
+  보존?.irreversible === false && 보존?.guidance_type === "do_not",
+  `irreversible=${보존?.irreversible} guidance_type=${보존?.guidance_type}`
+);
+
 console.log(`\n${"=".repeat(62)}`);
 console.log(failed ? `실패 ${failed}건` : "전부 통과");
 console.log("=".repeat(62));

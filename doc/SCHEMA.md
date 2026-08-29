@@ -146,6 +146,7 @@ Action을 고쳐야 해서 폐기했다 — 25개 전수를 채우는 동안 `ac
 | `deadline_days` | int\|null | 제도 축 — 신청 기한 |
 | `wait_days` | [int,int]\|null | 예상 소요 범위. **`대기` 전용이 아니다** — 현재 2건이고 그중 하나는 `신청`이다 |
 | `irreversible` | bool | 놓치면 회복 불가 (§0) |
+| `guidance_type` | enum | `action`(실행 요구) \| `do_not`(금지) \| `awareness`(실행 요구 없는 판단정보). **`when`·`irreversible`·`rank`와 독립된 축이다** — 예: `scene-preserved-hold`는 `irreversible=false`지만 `do_not`이다. 현재 do_not 6 · awareness 2 · action 50이고 **전 58건이 값을 갖는다**(누락 시 기본값으로 때우지 않는다 — `engine.test.mjs`가 막는다) |
 | `applies_when` | object | 관련성 조건 |
 | `excluded_when` | object\|null | 제외 조건 |
 | `exception_available` | bool | 제외여도 예외 조항 존재 |

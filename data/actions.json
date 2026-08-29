@@ -14,6 +14,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {},
     "excluded_when": null,
     "exception_available": false,
@@ -40,6 +41,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {
       "powder_present": true
     },
@@ -65,6 +67,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": true,
+    "guidance_type": "do_not",
     "applies_when": {
       "wet_appliances": true
     },
@@ -93,6 +96,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": true,
+    "guidance_type": "action",
     "applies_when": {},
     "excluded_when": null,
     "exception_available": false,
@@ -119,6 +123,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": true,
+    "guidance_type": "do_not",
     "applies_when": {
       "product_suspected": [
         true,
@@ -150,6 +155,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": true,
+    "guidance_type": "do_not",
     "applies_when": {
       "product_suspected": [
         true,
@@ -181,6 +187,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {
       "powder_present": true
     },
@@ -209,6 +216,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": true,
+    "guidance_type": "action",
     "applies_when": {
       "powder_present": true
     },
@@ -240,6 +248,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": true,
+    "guidance_type": "action",
     "applies_when": {},
     "excluded_when": null,
     "exception_available": false,
@@ -268,6 +277,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {},
     "excluded_when": null,
     "exception_available": false,
@@ -296,6 +306,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": true,
+    "guidance_type": "action",
     "applies_when": {},
     "excluded_when": null,
     "exception_available": false,
@@ -322,6 +333,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "do_not",
     "applies_when": {
       "scene_preserved": [
         true,
@@ -353,6 +365,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {
       "scene_preserved": [
         false,
@@ -384,6 +397,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {},
     "excluded_when": null,
     "exception_available": false,
@@ -410,6 +424,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {
       "report_received": false
     },
@@ -441,6 +456,7 @@
       60
     ],
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {
       "report_received": false
     },
@@ -471,6 +487,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {
       "insurance_dwelling": [
         true,
@@ -502,6 +519,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {
       "tenure": "renter",
       "origin_area": "unknown"
@@ -531,6 +549,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {
       "tenure": "renter",
       "origin_area": "common"
@@ -563,6 +582,7 @@
       40
     ],
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {
       "product_suspected": true
     },
@@ -591,6 +611,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "ordinance_based": true,
     "support_item": "psych",
     "applies_when": {},
@@ -619,6 +640,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "ordinance_based": true,
     "support_item": "waste",
     "applies_when": {},
@@ -650,6 +672,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "ordinance_based": true,
     "support_item": "housing",
     "applies_when": {
@@ -680,6 +703,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "ordinance_based": true,
     "support_item": "supplies",
     "applies_when": {},
@@ -711,6 +735,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {
       "residence_possible": false
     },
@@ -736,6 +761,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {
       "district_has_ordinance": false
     },
@@ -764,6 +790,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {},
     "excluded_when": null,
     "exception_available": false,
@@ -793,6 +820,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {
       "water_damage_role": [
         "victim",
@@ -825,6 +853,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": true,
+    "guidance_type": "action",
     "applies_when": {
       "water_damage_role": [
         "victim",
@@ -859,6 +888,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {
       "water_damage_role": "victim"
     },
@@ -887,6 +917,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {
       "water_damage_role": [
         "victim",
@@ -921,6 +952,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {
       "water_damage_role": "victim"
     },
@@ -949,6 +981,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {
       "water_damage_role": [
         "victim",
@@ -981,6 +1014,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": true,
+    "guidance_type": "do_not",
     "applies_when": {
       "water_damage_role": "causer"
     },
@@ -1009,6 +1043,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {
       "insurance_self": true
     },
@@ -1037,6 +1072,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {
       "adjuster_present": true
     },
@@ -1067,6 +1103,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "awareness",
     "applies_when": {
       "adjuster_present": true
     },
@@ -1095,6 +1132,7 @@
     "deadline_days": 1095,
     "wait_days": null,
     "irreversible": true,
+    "guidance_type": "action",
     "applies_when": {
       "insurance_self": [
         true,
@@ -1126,6 +1164,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {
       "insurance_self": true
     },
@@ -1154,6 +1193,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {
       "housing_type": [
         "apartment",
@@ -1185,6 +1225,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {
       "insurance_self": [
         false,
@@ -1216,6 +1257,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {
       "tenure": "renter"
     },
@@ -1244,6 +1286,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {
       "tenure": "renter"
     },
@@ -1274,6 +1317,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {
       "tenure": "renter"
     },
@@ -1302,6 +1346,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {
       "tenure": "renter",
       "residence_possible": false
@@ -1333,6 +1378,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": true,
+    "guidance_type": "do_not",
     "applies_when": {
       "tenure": "renter"
     },
@@ -1361,6 +1407,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {
       "product_suspected": true
     },
@@ -1389,6 +1436,7 @@
     "deadline_days": 1095,
     "wait_days": null,
     "irreversible": true,
+    "guidance_type": "action",
     "applies_when": {
       "product_suspected": true
     },
@@ -1417,6 +1465,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {
       "product_suspected": true
     },
@@ -1445,6 +1494,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "awareness",
     "applies_when": {
       "product_maker_contacted": true
     },
@@ -1473,6 +1523,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {
       "product_suspected": true
     },
@@ -1501,6 +1552,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {},
     "excluded_when": null,
     "exception_available": false,
@@ -1527,6 +1579,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {},
     "excluded_when": null,
     "exception_available": false,
@@ -1553,6 +1606,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {},
     "excluded_when": null,
     "exception_available": false,
@@ -1581,6 +1635,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {
       "adjuster_present": true
     },
@@ -1611,6 +1666,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {
       "other_units_affected": [
         true,
@@ -1642,6 +1698,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {
       "origin_area": "common",
       "housing_type": [
@@ -1676,6 +1733,7 @@
     "deadline_days": null,
     "wait_days": null,
     "irreversible": false,
+    "guidance_type": "action",
     "applies_when": {
       "housing_type": [
         "apartment",
