@@ -1,0 +1,74 @@
+[
+  {
+    "group": "긴급",
+    "org": "소방청 119",
+    "tel": "119",
+    "url": "https://www.nfa.go.kr/nfa/",
+    "note": "화재·구조·구급 신고",
+    "checked_at": "2026-08-30",
+    "verified_at_url": "https://www.nfa.go.kr/nfa/"
+  },
+  {
+    "group": "긴급",
+    "org": "경찰청 112",
+    "tel": "112",
+    "url": "https://112.go.kr/",
+    "note": "범죄·사건 신고",
+    "checked_at": "2026-08-30",
+    "verified_at_url": "https://112.go.kr/"
+  },
+  {
+    "group": "복지·긴급지원",
+    "org": "보건복지상담센터",
+    "tel": "129",
+    "url": "https://www.129.go.kr/counsel/counsel01.do",
+    "note": "긴급복지지원 상담은 24시간",
+    "checked_at": "2026-08-30",
+    "verified_at_url": "https://www.129.go.kr/counsel/counsel01.do"
+  },
+  {
+    "group": "복지·긴급지원",
+    "org": "다산콜재단(서울시 120)",
+    "tel": "120",
+    "url": "https://www.120dasan.or.kr/",
+    "note": "서울시 민원·행정 상담, 365일 24시간",
+    "checked_at": "2026-08-30",
+    "verified_at_url": "https://www.120dasan.or.kr/"
+  },
+  {
+    "group": "법률·분쟁",
+    "org": "대한법률구조공단",
+    "tel": "132",
+    "url": "https://www.klac.or.kr/legalstruct/telephoneConsultation.do",
+    "note": "전화상담 평일 09:00~11:50 · 13:00~17:50",
+    "checked_at": "2026-08-30",
+    "verified_at_url": "https://www.klac.or.kr/legalstruct/telephoneConsultation.do"
+  },
+  {
+    "group": "법률·분쟁",
+    "org": "1372 소비자상담센터",
+    "tel": "1372",
+    "url": "https://www.ccn.go.kr/index.ccn",
+    "note": "전화상담 평일 09:00~18:00 · 통화료 발신자 부담",
+    "checked_at": "2026-08-30",
+    "verified_at_url": "https://www.ccn.go.kr/index.ccn"
+  },
+  {
+    "group": "법률·분쟁",
+    "org": "금융감독원 금융민원센터",
+    "tel": "1332",
+    "url": "https://www.fss.or.kr/fss/main/contents.do?menuNo=201179",
+    "note": "분쟁조정 민원은 30일 이내 처리",
+    "checked_at": "2026-08-30",
+    "verified_at_url": "https://www.fss.or.kr/fss/main/contents.do?menuNo=201179"
+  },
+  {
+    "group": "심리",
+    "org": "재난심리회복지원센터",
+    "tel": "1670-9512",
+    "url": "https://safekorea.go.kr/safekorea-kor/dspo/dpsy/prsy/psychologicalRecoverySupportYard.do?menuSn=80",
+    "note": "재난 경험 후 심리 상담, 전국 공통",
+    "checked_at": "2026-08-30",
+    "verified_at_url": "https://safekorea.go.kr/safekorea-kor/dspo/dpsy/prsy/psychologicalRecoverySupportYard.do?menuSn=80"
+  }
+]

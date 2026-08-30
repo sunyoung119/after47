@@ -112,9 +112,20 @@
     "knowledge_level": "전문",
     "source_grade": "해외공적",
     "source_url": "https://www.redcross.org/get-help/how-to-prepare-for-emergencies/types-of-emergencies/fire/checking-home-after-fire.html",
-    "sources": [],
+    "sources": [
+      {
+        "type": "public_guidance",
+        "title": "Checking Your Home After A Fire",
+        "article": null,
+        "publisher": "American Red Cross",
+        "year": null,
+        "url": "https://www.redcross.org/get-help/how-to-prepare-for-emergencies/types-of-emergencies/fire/checking-home-after-fire.html",
+        "doi": null,
+        "checked_at": "2026-08-30"
+      }
+    ],
     "contacts": [],
-    "checked_at": "2026-08-26",
+    "checked_at": "2026-08-30",
     "when": "today",
     "summary": "치우기 전에 방마다 사진을 남겨야 손해를 입증할 수 있습니다.",
     "domain_group": "보험과 돈"
@@ -211,9 +222,20 @@
     "knowledge_level": "전문",
     "source_grade": "해외공적",
     "source_url": "https://www.epa.gov/wildfires/protect-yourself-ash",
-    "sources": [],
+    "sources": [
+      {
+        "type": "public_guidance",
+        "title": "Protect Yourself from Ash",
+        "article": null,
+        "publisher": "US EPA",
+        "year": null,
+        "url": "https://www.epa.gov/wildfires/protect-yourself-ash",
+        "doi": null,
+        "checked_at": "2026-08-30"
+      }
+    ],
     "contacts": [],
-    "checked_at": "2026-08-26",
+    "checked_at": "2026-08-30",
     "when": "today",
     "summary": "분말 청소 전에 마스크(최소 N95)를 준비하세요.",
     "domain_group": "몸"
@@ -276,9 +298,20 @@
     "knowledge_level": "전문",
     "source_grade": "해외공적",
     "source_url": "https://www.epa.gov/mold/brief-guide-mold-moisture-and-your-home",
-    "sources": [],
+    "sources": [
+      {
+        "type": "public_guidance",
+        "title": "A Brief Guide to Mold, Moisture and Your Home",
+        "article": null,
+        "publisher": "US EPA",
+        "year": null,
+        "url": "https://www.epa.gov/mold/brief-guide-mold-moisture-and-your-home",
+        "doi": null,
+        "checked_at": "2026-08-30"
+      }
+    ],
     "contacts": [],
-    "checked_at": "2026-08-26",
+    "checked_at": "2026-08-30",
     "when": "today",
     "summary": "젖은 곳은 48시간 안에 말려야 곰팡이가 생기지 않습니다.",
     "domain_group": "집 정리"
@@ -465,7 +498,18 @@
     "knowledge_level": "상식",
     "source_grade": "공적",
     "source_url": "https://www.law.go.kr/%EB%B2%95%EB%A0%B9/%EC%86%8C%EB%B0%A9%EC%9D%98%ED%99%94%EC%9E%AC%EC%A1%B0%EC%82%AC%EC%97%90%EA%B4%80%ED%95%9C%EB%B2%95%EB%A5%A0",
-    "sources": [],
+    "sources": [
+      {
+        "type": "law",
+        "title": "소방의 화재조사에 관한 법률",
+        "article": "제16조",
+        "publisher": "국가법령정보센터",
+        "year": null,
+        "url": "https://www.law.go.kr/%EB%B2%95%EB%A0%B9/%EC%86%8C%EB%B0%A9%EC%9D%98%ED%99%94%EC%9E%AC%EC%A1%B0%EC%82%AC%EC%97%90%EA%B4%80%ED%95%9C%EB%B2%95%EB%A5%A0",
+        "doi": null,
+        "checked_at": "2026-08-30"
+      }
+    ],
     "contacts": [
       {
         "org": "정부24",
@@ -476,7 +520,7 @@
         "verified_at_url": "https://www.gov.kr/mw/AA020InfoCappView.do?HighCtgCD=&CappBizCD=16600000055"
       }
     ],
-    "checked_at": "2026-08-26",
+    "checked_at": "2026-08-30",
     "when": "this_week",
     "summary": "각종 신청의 공통 증빙입니다. 조사가 끝나기를 기다리지 않아도 됩니다.",
     "domain_group": "서류"
@@ -541,9 +585,20 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://www.law.go.kr/%EB%B2%95%EB%A0%B9/%EC%86%8C%EB%B0%A9%EC%9D%98%ED%99%94%EC%9E%AC%EC%A1%B0%EC%82%AC%EC%97%90%EA%B4%80%ED%95%9C%EB%B2%95%EB%A5%A0",
-    "sources": [],
+    "sources": [
+      {
+        "type": "law",
+        "title": "소방의 화재조사에 관한 법률",
+        "article": null,
+        "publisher": "국가법령정보센터",
+        "year": null,
+        "url": "https://www.law.go.kr/%EB%B2%95%EB%A0%B9/%EC%86%8C%EB%B0%A9%EC%9D%98%ED%99%94%EC%9E%AC%EC%A1%B0%EC%82%AC%EC%97%90%EA%B4%80%ED%95%9C%EB%B2%95%EB%A5%A0",
+        "doi": null,
+        "checked_at": "2026-08-30"
+      }
+    ],
     "contacts": [],
-    "checked_at": "2026-08-26",
+    "checked_at": "2026-08-30",
     "when": "after_report",
     "summary": "기다리는 것은 서류 처리가 아니라 조사입니다. 그동안 보험 처리 방향이 정해지지 않습니다.",
     "domain_group": "서류"
@@ -836,7 +891,18 @@
     "knowledge_level": "상식",
     "source_grade": "공적",
     "source_url": "https://www.law.go.kr/법령/긴급복지지원법/제2조",
-    "sources": [],
+    "sources": [
+      {
+        "type": "law",
+        "title": "긴급복지지원법",
+        "article": null,
+        "publisher": "국가법령정보센터",
+        "year": null,
+        "url": "https://www.law.go.kr/법령/긴급복지지원법/제2조",
+        "doi": null,
+        "checked_at": "2026-08-30"
+      }
+    ],
     "contacts": [
       {
         "org": "보건복지상담센터",
@@ -847,7 +913,7 @@
         "verified_at_url": "https://www.129.go.kr/counsel/counsel01.do"
       }
     ],
-    "checked_at": "2026-08-28"
+    "checked_at": "2026-08-30"
   },
   {
     "id": "no-ordinance-fallback",
@@ -939,9 +1005,20 @@
     "knowledge_level": "전문",
     "source_grade": "해외공적",
     "source_url": "https://www.epa.gov/mold/brief-guide-mold-moisture-and-your-home",
-    "sources": [],
+    "sources": [
+      {
+        "type": "public_guidance",
+        "title": "A Brief Guide to Mold, Moisture and Your Home",
+        "article": null,
+        "publisher": "US EPA",
+        "year": null,
+        "url": "https://www.epa.gov/mold/brief-guide-mold-moisture-and-your-home",
+        "doi": null,
+        "checked_at": "2026-08-30"
+      }
+    ],
     "contacts": [],
-    "checked_at": "2026-08-26"
+    "checked_at": "2026-08-30"
   },
   {
     "id": "water-damage-document-now",
@@ -975,9 +1052,20 @@
     "knowledge_level": "상식",
     "source_grade": "해외공적",
     "source_url": "https://www.epa.gov/mold/brief-guide-mold-moisture-and-your-home",
-    "sources": [],
+    "sources": [
+      {
+        "type": "public_guidance",
+        "title": "A Brief Guide to Mold, Moisture and Your Home",
+        "article": null,
+        "publisher": "US EPA",
+        "year": null,
+        "url": "https://www.epa.gov/mold/brief-guide-mold-moisture-and-your-home",
+        "doi": null,
+        "checked_at": "2026-08-30"
+      }
+    ],
     "contacts": [],
-    "checked_at": "2026-08-26"
+    "checked_at": "2026-08-30"
   },
   {
     "id": "water-damage-victim-notify",
@@ -1006,9 +1094,20 @@
     "knowledge_level": "상식",
     "source_grade": "공적",
     "source_url": "https://law.go.kr/LSW//lsSideInfoP.do?lsiSeq=276941&joNo=0063&joBrNo=00&docCls=jo&urlMode=lsScJoRltInfoR",
-    "sources": [],
+    "sources": [
+      {
+        "type": "law",
+        "title": "공동주택관리법",
+        "article": null,
+        "publisher": "국가법령정보센터",
+        "year": null,
+        "url": "https://law.go.kr/LSW//lsSideInfoP.do?lsiSeq=276941&joNo=0063&joBrNo=00&docCls=jo&urlMode=lsScJoRltInfoR",
+        "doi": null,
+        "checked_at": "2026-08-30"
+      }
+    ],
     "contacts": [],
-    "checked_at": "2026-08-26"
+    "checked_at": "2026-08-30"
   },
   {
     "id": "water-damage-liability-structure",
@@ -1042,9 +1141,20 @@
     "knowledge_level": "전문",
     "source_grade": "학술",
     "source_url": "https://casenote.kr/%EB%8C%80%EB%B2%95%EC%9B%90/2010%EB%8B%A471318",
-    "sources": [],
+    "sources": [
+      {
+        "type": "case",
+        "title": "대법원 2010다71318",
+        "article": null,
+        "publisher": "CaseNote",
+        "year": 2013,
+        "url": "https://casenote.kr/%EB%8C%80%EB%B2%95%EC%9B%90/2010%EB%8B%A471318",
+        "doi": null,
+        "checked_at": "2026-08-30"
+      }
+    ],
     "contacts": [],
-    "checked_at": "2026-08-26"
+    "checked_at": "2026-08-30"
   },
   {
     "id": "fire-loss-compensation-not-applicable",
@@ -1131,9 +1241,20 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://casenote.kr/%EB%B2%95%EB%A0%B9/%EC%8B%A4%ED%99%94%EC%B1%85%EC%9E%84%EC%97%90_%EA%B4%80%ED%95%9C_%EB%B2%95%EB%A5%A0/%EC%A0%9C3%EC%A1%B0",
-    "sources": [],
+    "sources": [
+      {
+        "type": "law",
+        "title": "실화책임에 관한 법률",
+        "article": "제3조",
+        "publisher": "국가법령정보센터",
+        "year": null,
+        "url": "https://www.law.go.kr/법령/실화책임에관한법률/제3조",
+        "doi": null,
+        "checked_at": "2026-08-30"
+      }
+    ],
     "contacts": [],
-    "checked_at": "2026-08-26"
+    "checked_at": "2026-08-30"
   },
   {
     "id": "water-damage-causer-caution",
@@ -1165,9 +1286,20 @@
     "knowledge_level": "상식",
     "source_grade": "공적",
     "source_url": "https://casenote.kr/%EB%B2%95%EB%A0%B9/%EC%8B%A4%ED%99%94%EC%B1%85%EC%9E%84%EC%97%90_%EA%B4%80%ED%95%9C_%EB%B2%95%EB%A5%A0/%EC%A0%9C3%EC%A1%B0",
-    "sources": [],
+    "sources": [
+      {
+        "type": "law",
+        "title": "실화책임에 관한 법률",
+        "article": "제3조",
+        "publisher": "국가법령정보센터",
+        "year": null,
+        "url": "https://www.law.go.kr/법령/실화책임에관한법률/제3조",
+        "doi": null,
+        "checked_at": "2026-08-30"
+      }
+    ],
     "contacts": [],
-    "checked_at": "2026-08-26"
+    "checked_at": "2026-08-30"
   },
   {
     "id": "fire-insurance-water-coverage",
@@ -1196,9 +1328,20 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?csmSeq=526&ccfNo=4&cciNo=3&cnpClsNo=2",
-    "sources": [],
+    "sources": [
+      {
+        "type": "law",
+        "title": "상법",
+        "article": "제684조",
+        "publisher": "국가법령정보센터",
+        "year": null,
+        "url": "https://www.law.go.kr/법령/상법/제684조",
+        "doi": null,
+        "checked_at": "2026-08-30"
+      }
+    ],
     "contacts": [],
-    "checked_at": "2026-08-26"
+    "checked_at": "2026-08-30"
   },
   {
     "id": "independent-adjuster-right",
@@ -1229,9 +1372,20 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://www.law.go.kr/LSW//lsSideInfoP.do?lsiSeq=265389&joNo=0185&joBrNo=00&docCls=jo&urlMode=lsScJoRltInfoR",
-    "sources": [],
+    "sources": [
+      {
+        "type": "law",
+        "title": "보험업법",
+        "article": "제185조",
+        "publisher": "국가법령정보센터",
+        "year": null,
+        "url": "https://www.law.go.kr/LSW//lsSideInfoP.do?lsiSeq=265389&joNo=0185&joBrNo=00&docCls=jo&urlMode=lsScJoRltInfoR",
+        "doi": null,
+        "checked_at": "2026-08-30"
+      }
+    ],
     "contacts": [],
-    "checked_at": "2026-08-26"
+    "checked_at": "2026-08-30"
   },
   {
     "id": "adjusters-may-all-be-opposing",
@@ -1260,9 +1414,20 @@
     "knowledge_level": "상식",
     "source_grade": "공적",
     "source_url": "https://www.law.go.kr/LSW//lsSideInfoP.do?lsiSeq=265389&joNo=0185&joBrNo=00&docCls=jo&urlMode=lsScJoRltInfoR",
-    "sources": [],
+    "sources": [
+      {
+        "type": "law",
+        "title": "보험업법",
+        "article": "제185조",
+        "publisher": "국가법령정보센터",
+        "year": null,
+        "url": "https://www.law.go.kr/LSW//lsSideInfoP.do?lsiSeq=265389&joNo=0185&joBrNo=00&docCls=jo&urlMode=lsScJoRltInfoR",
+        "doi": null,
+        "checked_at": "2026-08-30"
+      }
+    ],
     "contacts": [],
-    "checked_at": "2026-08-26"
+    "checked_at": "2026-08-30"
   },
   {
     "id": "insurance-claim-limitation",
@@ -1294,9 +1459,20 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://www.law.go.kr/LSW/lsLawLinkInfo.do?lsJoLnkSeq=900329244&chrClsCd=010202",
-    "sources": [],
+    "sources": [
+      {
+        "type": "law",
+        "title": "상법",
+        "article": "제662조",
+        "publisher": "국가법령정보센터",
+        "year": null,
+        "url": "https://www.law.go.kr/LSW/lsLawLinkInfo.do?lsJoLnkSeq=900329244&chrClsCd=010202",
+        "doi": null,
+        "checked_at": "2026-08-30"
+      }
+    ],
     "contacts": [],
-    "checked_at": "2026-08-26"
+    "checked_at": "2026-08-30"
   },
   {
     "id": "financial-dispute-mediation",
@@ -1325,7 +1501,18 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=1771&ccfNo=4&cciNo=1&cnpClsNo=1",
-    "sources": [],
+    "sources": [
+      {
+        "type": "public_guidance",
+        "title": "금융분쟁조정위원회의 분쟁조정",
+        "article": null,
+        "publisher": "찾기쉬운 생활법령정보",
+        "year": null,
+        "url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=1771&ccfNo=4&cciNo=1&cnpClsNo=1",
+        "doi": null,
+        "checked_at": "2026-08-30"
+      }
+    ],
     "contacts": [
       {
         "org": "금융감독원 금융민원센터",
@@ -1336,7 +1523,7 @@
         "verified_at_url": "https://www.fss.or.kr/fss/main/contents.do?menuNo=201179"
       }
     ],
-    "checked_at": "2026-08-26"
+    "checked_at": "2026-08-30"
   },
   {
     "id": "building-group-fire-insurance",
@@ -1368,9 +1555,20 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://www.law.go.kr/lsInfoP.do?lsiSeq=193470",
-    "sources": [],
+    "sources": [
+      {
+        "type": "law",
+        "title": "화재로 인한 재해보상과 보험가입에 관한 법률",
+        "article": null,
+        "publisher": "국가법령정보센터",
+        "year": null,
+        "url": "https://www.law.go.kr/lsInfoP.do?lsiSeq=193470",
+        "doi": null,
+        "checked_at": "2026-08-30"
+      }
+    ],
     "contacts": [],
-    "checked_at": "2026-08-26"
+    "checked_at": "2026-08-30"
   },
   {
     "id": "no-personal-insurance-building-path",
@@ -1402,9 +1600,20 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://www.law.go.kr/LSW//lsSideInfoP.do?lsiSeq=265389&joNo=0185&joBrNo=00&docCls=jo&urlMode=lsScJoRltInfoR",
-    "sources": [],
+    "sources": [
+      {
+        "type": "law",
+        "title": "보험업법",
+        "article": "제185조",
+        "publisher": "국가법령정보센터",
+        "year": null,
+        "url": "https://www.law.go.kr/LSW//lsSideInfoP.do?lsiSeq=265389&joNo=0185&joBrNo=00&docCls=jo&urlMode=lsScJoRltInfoR",
+        "doi": null,
+        "checked_at": "2026-08-30"
+      }
+    ],
     "contacts": [],
-    "checked_at": "2026-08-26"
+    "checked_at": "2026-08-30"
   },
   {
     "id": "tenant-restoration-scope",
@@ -1433,9 +1642,20 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://casenote.kr/%EB%B2%95%EB%A0%B9/%EB%AF%BC%EB%B2%95/%EC%A0%9C615%EC%A1%B0",
-    "sources": [],
+    "sources": [
+      {
+        "type": "law",
+        "title": "민법",
+        "article": "제615조",
+        "publisher": "국가법령정보센터",
+        "year": null,
+        "url": "https://www.law.go.kr/법령/민법/제615조",
+        "doi": null,
+        "checked_at": "2026-08-30"
+      }
+    ],
     "contacts": [],
-    "checked_at": "2026-08-26"
+    "checked_at": "2026-08-30"
   },
   {
     "id": "tenant-burden-of-proof",
@@ -1466,9 +1686,20 @@
     "knowledge_level": "전문",
     "source_grade": "학술",
     "source_url": "https://kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002549501",
-    "sources": [],
+    "sources": [
+      {
+        "type": "academic",
+        "title": "임차건물 화재발생시 임대차계약상 의무의 종류에 따른 손해배상의 범위와 증명책임",
+        "article": null,
+        "publisher": "서울대학교 법학연구소",
+        "year": 2019,
+        "url": "https://kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002549501",
+        "doi": "10.22850/slj.2019.60.4.235",
+        "checked_at": "2026-08-30"
+      }
+    ],
     "contacts": [],
-    "checked_at": "2026-08-26"
+    "checked_at": "2026-08-30"
   },
   {
     "id": "tenant-notify-landlord",
@@ -1497,9 +1728,20 @@
     "knowledge_level": "상식",
     "source_grade": "공적",
     "source_url": "https://www.law.go.kr/%EB%B2%95%EB%A0%B9/%EB%AF%BC%EB%B2%95",
-    "sources": [],
+    "sources": [
+      {
+        "type": "law",
+        "title": "민법",
+        "article": "제634조",
+        "publisher": "국가법령정보센터",
+        "year": null,
+        "url": "https://www.law.go.kr/%EB%B2%95%EB%A0%B9/%EB%AF%BC%EB%B2%95",
+        "doi": null,
+        "checked_at": "2026-08-30"
+      }
+    ],
     "contacts": [],
-    "checked_at": "2026-08-26"
+    "checked_at": "2026-08-30"
   },
   {
     "id": "tenant-contract-termination",
@@ -1531,9 +1773,20 @@
     "knowledge_level": "전문",
     "source_grade": "학술",
     "source_url": "https://kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002549501",
-    "sources": [],
+    "sources": [
+      {
+        "type": "academic",
+        "title": "임차건물 화재발생시 임대차계약상 의무의 종류에 따른 손해배상의 범위와 증명책임",
+        "article": null,
+        "publisher": "서울대학교 법학연구소",
+        "year": 2019,
+        "url": "https://kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002549501",
+        "doi": "10.22850/slj.2019.60.4.235",
+        "checked_at": "2026-08-30"
+      }
+    ],
     "contacts": [],
-    "checked_at": "2026-08-26"
+    "checked_at": "2026-08-30"
   },
   {
     "id": "tenant-dont-do",
@@ -1562,9 +1815,20 @@
     "knowledge_level": "상식",
     "source_grade": "공적",
     "source_url": "https://casenote.kr/%EB%B2%95%EB%A0%B9/%EB%AF%BC%EB%B2%95/%EC%A0%9C615%EC%A1%B0",
-    "sources": [],
+    "sources": [
+      {
+        "type": "law",
+        "title": "민법",
+        "article": "제615조",
+        "publisher": "국가법령정보센터",
+        "year": null,
+        "url": "https://www.law.go.kr/법령/민법/제615조",
+        "doi": null,
+        "checked_at": "2026-08-30"
+      }
+    ],
     "contacts": [],
-    "checked_at": "2026-08-26"
+    "checked_at": "2026-08-30"
   },
   {
     "id": "product-defect-presumption",
@@ -1593,9 +1857,20 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://www.law.go.kr/%EB%B2%95%EB%A0%B9/%EC%A0%9C%EC%A1%B0%EB%AC%BC%EC%B1%85%EC%9E%84%EB%B2%95",
-    "sources": [],
+    "sources": [
+      {
+        "type": "law",
+        "title": "제조물 책임법",
+        "article": "제3조의2",
+        "publisher": "국가법령정보센터",
+        "year": null,
+        "url": "https://www.law.go.kr/%EB%B2%95%EB%A0%B9/%EC%A0%9C%EC%A1%B0%EB%AC%BC%EC%B1%85%EC%9E%84%EB%B2%95",
+        "doi": null,
+        "checked_at": "2026-08-30"
+      }
+    ],
     "contacts": [],
-    "checked_at": "2026-08-26"
+    "checked_at": "2026-08-30"
   },
   {
     "id": "product-claim-limitation",
@@ -1624,9 +1899,20 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://casenote.kr/%EB%B2%95%EB%A0%B9/%EC%A0%9C%EC%A1%B0%EB%AC%BC_%EC%B1%85%EC%9E%84%EB%B2%95/%EC%A0%9C7%EC%A1%B0",
-    "sources": [],
+    "sources": [
+      {
+        "type": "law",
+        "title": "제조물 책임법",
+        "article": "제7조",
+        "publisher": "국가법령정보센터",
+        "year": null,
+        "url": "https://www.law.go.kr/법령/제조물책임법/제7조",
+        "doi": null,
+        "checked_at": "2026-08-30"
+      }
+    ],
     "contacts": [],
-    "checked_at": "2026-08-26"
+    "checked_at": "2026-08-30"
   },
   {
     "id": "consumer-dispute-mediation",
@@ -1655,7 +1941,18 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?csmSeq=669&ccfNo=4&cciNo=1&cnpClsNo=3",
-    "sources": [],
+    "sources": [
+      {
+        "type": "public_guidance",
+        "title": "한국소비자원 이용하기",
+        "article": null,
+        "publisher": "찾기쉬운 생활법령정보",
+        "year": null,
+        "url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?csmSeq=669&ccfNo=4&cciNo=1&cnpClsNo=3",
+        "doi": null,
+        "checked_at": "2026-08-30"
+      }
+    ],
     "contacts": [
       {
         "org": "1372 소비자상담센터",
@@ -1666,7 +1963,7 @@
         "verified_at_url": "https://www.ccn.go.kr/index.ccn"
       }
     ],
-    "checked_at": "2026-08-26"
+    "checked_at": "2026-08-30"
   },
   {
     "id": "product-maker-position-may-change",
@@ -1727,7 +2024,16 @@
     "source_grade": "공적",
     "source_url": "https://www.consumer.go.kr/user/ftc/consumer/recallInfo/60/selectRecallInfoInternalList.do",
     "sources": [],
-    "contacts": [],
+    "contacts": [
+      {
+        "org": "소비자24",
+        "tel": null,
+        "url": "https://www.consumer.go.kr/",
+        "note": "상품·안전정보의 국내리콜에서 조회",
+        "checked_at": "2026-08-30",
+        "verified_at_url": "https://www.consumer.go.kr/"
+      }
+    ],
     "checked_at": "2026-08-26"
   },
   {
@@ -1755,7 +2061,18 @@
     "knowledge_level": "상식",
     "source_grade": "공적",
     "source_url": "http://www.moj.go.kr/cvs/2728/subview.do",
-    "sources": [],
+    "sources": [
+      {
+        "type": "public_guidance",
+        "title": "법률구조 대상자 안내",
+        "article": null,
+        "publisher": "대한법률구조공단",
+        "year": null,
+        "url": "https://www.klac.or.kr/legalstruct/legalRescueGuide.do",
+        "doi": null,
+        "checked_at": "2026-08-30"
+      }
+    ],
     "contacts": [
       {
         "org": "대한법률구조공단",
@@ -1766,7 +2083,7 @@
         "verified_at_url": "https://www.klac.or.kr/legalstruct/telephoneConsultation.do"
       }
     ],
-    "checked_at": "2026-08-26"
+    "checked_at": "2026-08-30"
   },
   {
     "id": "small-claims",
@@ -1793,9 +2110,20 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://www.easylaw.go.kr/CSP/CnpClsMain.laf?csmSeq=239&ccfNo=1&cciNo=1&cnpClsNo=1",
-    "sources": [],
+    "sources": [
+      {
+        "type": "public_guidance",
+        "title": "소액사건재판의 개념",
+        "article": null,
+        "publisher": "찾기쉬운 생활법령정보",
+        "year": null,
+        "url": "https://www.easylaw.go.kr/CSP/CnpClsMain.laf?csmSeq=239&ccfNo=1&cciNo=1&cnpClsNo=1",
+        "doi": null,
+        "checked_at": "2026-08-30"
+      }
+    ],
     "contacts": [],
-    "checked_at": "2026-08-26"
+    "checked_at": "2026-08-30"
   },
   {
     "id": "evidence-court-referral",
@@ -1824,9 +2152,20 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=568&ccfNo=5&cciNo=3&cnpClsNo=3",
-    "sources": [],
+    "sources": [
+      {
+        "type": "public_guidance",
+        "title": "증거의 신청 및 조사",
+        "article": null,
+        "publisher": "찾기쉬운 생활법령정보",
+        "year": null,
+        "url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=568&ccfNo=5&cciNo=3&cnpClsNo=3",
+        "doi": null,
+        "checked_at": "2026-08-30"
+      }
+    ],
     "contacts": [],
-    "checked_at": "2026-08-26"
+    "checked_at": "2026-08-30"
   },
   {
     "id": "my-side-channels-overview",
@@ -1857,9 +2196,20 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=1771&ccfNo=4&cciNo=1&cnpClsNo=1",
-    "sources": [],
+    "sources": [
+      {
+        "type": "public_guidance",
+        "title": "금융분쟁조정위원회의 분쟁조정",
+        "article": null,
+        "publisher": "찾기쉬운 생활법령정보",
+        "year": null,
+        "url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=1771&ccfNo=4&cciNo=1&cnpClsNo=1",
+        "doi": null,
+        "checked_at": "2026-08-30"
+      }
+    ],
     "contacts": [],
-    "checked_at": "2026-08-26"
+    "checked_at": "2026-08-30"
   },
   {
     "id": "smoke-soot-spread-liability",
@@ -1891,9 +2241,20 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://casenote.kr/%EB%B2%95%EB%A0%B9/%EC%8B%A4%ED%99%94%EC%B1%85%EC%9E%84%EC%97%90_%EA%B4%80%ED%95%9C_%EB%B2%95%EB%A5%A0/%EC%A0%9C2%EC%A1%B0",
-    "sources": [],
+    "sources": [
+      {
+        "type": "law",
+        "title": "실화책임에 관한 법률",
+        "article": "제2조",
+        "publisher": "국가법령정보센터",
+        "year": null,
+        "url": "https://www.law.go.kr/법령/실화책임에관한법률/제2조",
+        "doi": null,
+        "checked_at": "2026-08-30"
+      }
+    ],
     "contacts": [],
-    "checked_at": "2026-08-26"
+    "checked_at": "2026-08-30"
   },
   {
     "id": "common-area-management-role",
@@ -1928,9 +2289,20 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://law.go.kr/LSW//lsSideInfoP.do?lsiSeq=276941&joNo=0063&joBrNo=00&docCls=jo&urlMode=lsScJoRltInfoR",
-    "sources": [],
+    "sources": [
+      {
+        "type": "law",
+        "title": "공동주택관리법",
+        "article": null,
+        "publisher": "국가법령정보센터",
+        "year": null,
+        "url": "https://law.go.kr/LSW//lsSideInfoP.do?lsiSeq=276941&joNo=0063&joBrNo=00&docCls=jo&urlMode=lsScJoRltInfoR",
+        "doi": null,
+        "checked_at": "2026-08-30"
+      }
+    ],
     "contacts": [],
-    "checked_at": "2026-08-26"
+    "checked_at": "2026-08-30"
   },
   {
     "id": "housing-mgmt-dispute-committee",
@@ -1962,8 +2334,28 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://www.easylaw.go.kr/CSP/CnpClsMain.laf?csmSeq=1409&ccfNo=2&cciNo=1&cnpClsNo=1",
-    "sources": [],
-    "contacts": [],
-    "checked_at": "2026-08-26"
+    "sources": [
+      {
+        "type": "public_guidance",
+        "title": "공동주택관리 분쟁 조정",
+        "article": null,
+        "publisher": "찾기쉬운 생활법령정보",
+        "year": null,
+        "url": "https://www.easylaw.go.kr/CSP/CnpClsMain.laf?csmSeq=1409&ccfNo=2&cciNo=1&cnpClsNo=1",
+        "doi": null,
+        "checked_at": "2026-08-30"
+      }
+    ],
+    "contacts": [
+      {
+        "org": "중앙 공동주택관리 분쟁조정위원회",
+        "tel": null,
+        "url": "https://namc.molit.go.kr/",
+        "note": "신청수수료 건당 1만원",
+        "checked_at": "2026-08-30",
+        "verified_at_url": "https://namc.molit.go.kr/"
+      }
+    ],
+    "checked_at": "2026-08-30"
   }
 ]

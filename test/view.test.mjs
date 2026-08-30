@@ -421,9 +421,12 @@ const 결과 = (state, now = NOW) =>
 {
   const 양천 = 바탕({ ...전.state, district: "yangcheon" });
   t("모든 행이 sources 배열을 실어 나른다", 양천.all.every((r) => Array.isArray(r.sources)));
-  // 레퍼런스 케이스는 물 피해가 없어 채워진 항목이 이 화면에 안 뜬다.
-  // "전부 비어 있다"가 아니라 "여기에는 없다"가 사실이다 — 채워진 쪽은 아래에서 본다.
-  t("이 사람의 화면에는 아직 채워진 출처가 없다", 양천.all.every((r) => r.sources.length === 0));
+  // 콘텐츠 패스가 원문을 열어 확인한 만큼 채웠다(35/59). 나머지는 legacy
+  // URL만 있거나 URL조차 없는 것들이고, **채우지 못한 것을 지어내지 않는다.**
+  const 채운행 = 양천.all.filter((r) => r.sources.length);
+  t("채워진 출처가 화면에 있다", 채운행.length > 0, String(채운행.length));
+  t("채워진 항목은 문서명을 갖는다", 채운행.every((r) => typeof r.sources[0].title === "string"));
+  t("아직 빈 것도 있다 (지어내지 않는다)", 양천.all.some((r) => !r.sources.length));
   const 조례행 = 양천.all.filter((r) => r.ordinanceBased);
   t("조례 행이 있다 (양천)", 조례행.length > 0, String(조례행.length));
   t(

@@ -516,7 +516,9 @@ t(
   actions.filter((a) => !Array.isArray(a.contacts)).map((a) => a.id).join(", ")
 );
 const 연락처있음 = actions.filter((a) => a.contacts.length);
-t("1군 5건만 채워져 있다", 연락처있음.length === 5, 연락처있음.map((a) => a.id).join(", "));
+// 1군 5건(국가 창구) + 콘텐츠 패스에서 확인한 2건(소비자24 · 중앙 공동주택관리
+// 분쟁조정위원회). 뒤 둘은 **사이트 제목까지만 확인돼 tel이 없다.**
+t("확인된 7건만 채워져 있다", 연락처있음.length === 7, 연락처있음.map((a) => a.id).join(", "));
 t(
   "나머지는 빈 배열이다 (키가 빠지지 않는다)",
   actions.filter((a) => !a.contacts.length).length === actions.length - 연락처있음.length
@@ -546,6 +548,46 @@ t(
   actions.filter((a) => a.ordinance_based).every((a) => a.contacts.length === 0),
   actions.filter((a) => a.ordinance_based && a.contacts.length).map((a) => a.id).join(", ")
 );
+
+section("7. 전역 연락처 목록 — directory.json");
+
+// 연락처 페이지가 읽을 목록이다. **구청 번호는 넣지 않는다**(보류 유지) —
+// 25개 구의 부서 직통을 확인할 경로가 아직 없다.
+//
+// 여기 있는 값은 전부 **공식 페이지에서 직접 확인한 것**이다. 확인 못 한
+// 번호(112 · 120 · 1670-9512)는 이 파일에 없다 — **없는 편이 틀린 것보다 낫다.**
+const directory = read("data/directory.json");
+const GROUPS = ["긴급", "복지·긴급지원", "법률·분쟁", "심리"];
+
+t("배열이고 비어 있지 않다", Array.isArray(directory) && directory.length > 0, String(directory.length));
+for (const c of directory) {
+  t(
+    `${c.org ?? "(이름 없음)"} 항목이 계약을 지킨다`,
+    GROUPS.includes(c.group) &&
+      typeof c.org === "string" && c.org.length > 0 &&
+      /^\d{4}-\d{2}-\d{2}$/.test(c.checked_at || "") &&
+      /^https:\/\//.test(c.verified_at_url || ""),
+    JSON.stringify(c)
+  );
+  // 걸 곳도 갈 곳도 없는 연락처는 연락처가 아니다.
+  t(`${c.org} 전화나 주소 중 하나는 있다`, Boolean(c.tel || c.url));
+  // `tel:` 링크에 그대로 들어간다.
+  t(`${c.org} 번호가 숫자와 하이픈뿐이다`, c.tel === null || /^[\d-]+$/.test(c.tel), String(c.tel));
+  t(`${c.org} 주소가 https다`, c.url === null || /^https:\/\//.test(c.url), String(c.url));
+}
+t(
+  "그룹이 어휘 안에 있다",
+  directory.every((c) => GROUPS.includes(c.group)),
+  [...new Set(directory.map((c) => c.group))].join(", ")
+);
+// 같은 번호를 두 번 싣지 않는다 — 목록에서 같은 창구가 두 줄이면 어느
+// 쪽으로 걸어야 하는지를 사용자가 다시 판단해야 한다.
+{
+  const tels = directory.map((c) => c.tel).filter(Boolean);
+  t("번호가 중복되지 않는다", tels.length === new Set(tels).size, tels.join(", "));
+}
+// 구청 번호는 보류다(D-003 · 연락처 아키텍처).
+t("구청 번호가 들어 있지 않다", !directory.some((c) => /구청|주민센터/.test(c.org)));
 
 // ── 결과 ───────────────────────────────────────────
 console.log(`\n${"=".repeat(62)}`);
