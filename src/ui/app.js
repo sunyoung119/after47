@@ -18,7 +18,7 @@
 import { openSession, anchorSession, shareUrl, spellToken } from "../session.js";
 import { saveState } from "../storage.js";
 import { evaluate } from "../engine.js";
-import { applyDefaults, pruneStale } from "../questions.js";
+import { applyDefaults, pruneStale, visibleQuestions } from "../questions.js";
 import { entryView, surveyView, saveNoticeView } from "./view.js";
 import {
   landingView,
@@ -28,6 +28,7 @@ import {
   transitionView,
   revisitView,
   SELECT_FEEDBACK_MS,
+  BASIC_KEYS,
 } from "./entry.js";
 import {
   resultBase,
@@ -80,6 +81,9 @@ const app = {
   actionId: null, // Action 상세가 보고 있는 행
   from: null, // 이 상세를 어디서 열었나(결과 화면의 뒤를 여기서 안다)
   restoring: false, // 기기 뒤로가기로 복원하는 중이다
+  // 재설문 단계 — false | "basic" | "survey". **세션 내비게이션 상태이고
+  // 저장하지 않는다.** 도중에 이탈하면 다음 진입은 평소처럼 브릿지부터다.
+  again: false,
   returnTo: null, // 답을 고치러 갔다가 돌아올 자리
   base: null, // 마지막 결과 바탕. 상세가 이것에 묻는다
   savedShown: false, // D-015 1층을 이번 방문에서 이미 띄웠다
@@ -106,6 +110,22 @@ const survey = (cursor = app.cursor) =>
 // 전제를 쓴다**(확정 핸드오프 §5).
 const ready = () => app.state.fire_at !== undefined && Boolean(app.state.district);
 
+// 재설문이 걷는 질문 — 지금 보이는 것 전부다(답이 있든 없든).
+// 기본 확인이 가진 화재 발생일은 뺀다. 평소 설문은 "첫 미답변"으로 걷지만
+// 재설문은 **다 답한 사람이 처음부터 다시 걷는 것**이라 목록이 필요하다.
+const askable = () =>
+  visibleQuestions(app.session.data.questions, app.state, app.session.data).filter(
+    (q) => !BASIC_KEYS.includes(q.key)
+  );
+const firstQuestionId = () => askable()[0]?.id ?? null;
+// 그 답 다음에 오는 질문. **매번 다시 계산한다** — 앞 답을 바꾸면
+// pruneStale이 뒤를 지워서 목록 자체가 달라진다.
+function nextAfterKey(key) {
+  const list = askable();
+  const i = list.findIndex((q) => q.key === key);
+  return i >= 0 ? list[i + 1] ?? null : null;
+}
+
 // ── 진입 ───────────────────────────────────────────
 async function boot() {
   const opened = await openSession();
@@ -128,9 +148,10 @@ function route() {
   if (landingView(app.state).show) return void (app.screen = "landing");
   if (app.returning && !app.gate && revisitView({ state: app.state, saved: true }).show)
     return void (app.screen = "revisit");
-  if (!ready()) return void (app.screen = "basic");
+  // 재설문도 기본 확인부터 다시 걷는다 — 날짜와 지역도 확인 대상이다.
+  if (!ready() || app.again === "basic") return void (app.screen = "basic");
   if (scopeNoticeView(app.state).show) return void (app.screen = "scope");
-  if (survey(null).current) return void (app.screen = "survey");
+  if (app.again === "survey" || survey(null).current) return void (app.screen = "survey");
   app.screen = "home";
 }
 
@@ -166,10 +187,11 @@ const sameSpot = (a, b) =>
   Boolean(a && b) && SPOT_KEYS.every((k) => (a[k] ?? null) === (b[k] ?? null));
 
 // 지금 자리를 히스토리에 남긴다. `leaving`은 방금 떠난 화면이다.
-function mark(leaving, replace = false) {
+function mark(leaving, mode) {
   try {
     // **복원 중에는 절대 쌓지 않는다** — 뒤로가기가 앞으로 가는 것처럼 보인다.
-    const over = replace || app.restoring || CONSUMED.has(leaving);
+    const over =
+      mode === "replace" || app.restoring || (mode !== "push" && CONSUMED.has(leaving));
     history[over ? "replaceState" : "pushState"](spot(), "", location.href);
   } catch {
     /* 파일에서 열었거나 히스토리를 막은 브라우저. 화면은 그대로 돈다 */
@@ -178,7 +200,7 @@ function mark(leaving, replace = false) {
 
 // 화면을 옮긴다. **모든 전환이 이 문을 지난다** — 여기를 지나지 않으면
 // 히스토리에 자리가 안 남아 기기 뒤로가기가 앱을 나가버린다.
-function go(next) {
+function go(next, mode) {
   const leaving = app.screen;
   const before = spot();
   app.screen = next.screen;
@@ -186,12 +208,12 @@ function go(next) {
   app.topic = next.topic ?? null;
   app.actionId = next.actionId ?? null;
   app.from = next.from ?? null;
-  if (!sameSpot(before, spot())) mark(leaving);
+  if (!sameSpot(before, spot())) mark(leaving, mode);
   render();
 }
 
 // route()가 정한 자리로 옮긴다. 앞의 답을 지우고 다시 계산하는 전환들이 쓴다.
-function routeGo(replace = false) {
+function routeGo(mode) {
   const leaving = app.screen;
   app.cursor = null;
   app.topic = null;
@@ -201,8 +223,9 @@ function routeGo(replace = false) {
   // 설문으로 갈 때는 **어느 질문인지까지** 자리에 적는다. 커서가 비면
   // 기기 뒤로가기로 돌아왔을 때 "첫 미답변"으로 계산돼 앞 질문이 아니라
   // 지금 질문이 다시 나온다.
-  if (app.screen === "survey") app.cursor = survey(null).current?.id ?? null;
-  mark(leaving, replace);
+  if (app.screen === "survey")
+    app.cursor = survey(null).current?.id ?? (app.again ? firstQuestionId() : null);
+  mark(leaving, mode);
   render();
 }
 
@@ -233,13 +256,15 @@ function restore(s) {
   app.restoring = true;
   try {
     const at = nearest(s);
+    // 브릿지로 되돌아왔다면 재설문을 시작하려던 것을 접는다.
+    if (at.screen === "revisit") app.again = false;
     app.screen = at.screen;
     app.cursor = at.cursor ?? null;
     app.topic = at.topic ?? null;
     app.actionId = at.actionId ?? null;
     app.from = at.from ?? null;
     render(); // 못 그리는 자리는 render 안에서도 가장 가까운 화면으로 넘어간다
-    if (!sameSpot(spot(), s)) mark(s.screen, true); // 정정한다
+    if (!sameSpot(spot(), s)) mark(s.screen, "replace"); // 정정한다
   } finally {
     app.restoring = false;
   }
@@ -332,12 +357,36 @@ function renderHeader() {
   $("brand").textContent = COPY.brand;
   const slot = $("top-right");
   clear(slot);
-  const back = backTarget();
-  if (!back) return;
-  const b = el("button", "top__back", COPY.master.back);
+  const right = topRight();
+  if (!right) return;
+  const b = el("button", "top__back", right.label);
   b.type = "button";
-  b.addEventListener("click", back);
+  b.addEventListener("click", right.on);
   slot.appendChild(b);
+}
+
+// 머리 오른쪽에 무엇을 두는가.
+//
+// **재방문 브릿지의 갈 곳이 CTA 하나뿐이었다.** 질문 화면의 [이전]과 같은
+// 자리·톤으로 답을 다시 걷는 문을 둔다(사용자 결정). 확정 화면 22에는
+// 없던 요소지만 백로그의 "결과 진입 이후 전역 답 수정 진입점"이 이것이다.
+function topRight() {
+  if (app.screen === "revisit") return { label: COPY.revisit.again, on: startAgain };
+  const back = backTarget();
+  return back ? { label: COPY.master.back, on: back } : null;
+}
+
+// 다시 설문하기 — **답을 지우지 않는다.** state·completed·completed_at이
+// 전부 그대로이고, 파괴적 초기화는 세션 계층의 [새로 시작하기]가 맡는다.
+//
+// 랜딩(브랜드 문)부터 다시 그린다. `intro_seen`과 무관하다 — 화면은 플래그가
+// 아니라 app.screen을 보고 그리고, 통과도 화면으로 멱등을 잡는다.
+// 히스토리에는 **쌓는다** — 브릿지는 소비되는 화면이지만 여기서만은 되돌아올
+// 자리다(기기 뒤로가기 = 브릿지 복귀).
+function startAgain() {
+  app.again = "basic";
+  app.gate = true; // 브릿지는 이번 방문에서 이미 봤다
+  go({ screen: "landing" }, "push");
 }
 
 // [이전]이 무엇을 하는지. 없으면 null이고 버튼도 안 그린다 —
@@ -405,10 +454,11 @@ async function onBannerAction(a) {
     app.session = await anchorSession(opened);
     app.state = { completed: [] };
     app.gate = false;
+    app.again = false;
     app.returnTo = null;
     app.addrTouched = false;
     syncAddressBar();
-    routeGo(true);
+    routeGo("replace");
   }
 }
 
@@ -474,6 +524,14 @@ async function confirmBasic(inputValue) {
     await persist();
     app.session = { ...app.session, state: app.state };
   }
+  // 재설문은 **답이 다 있어도 첫 질문부터** 걷는다. route()는 "첫 미답변"을
+  // 찾으므로 여기서 커서를 직접 놓아야 설문을 건너뛰지 않는다.
+  if (app.again === "basic") {
+    app.again = "survey";
+    const first = firstQuestionId();
+    if (first) return go({ screen: "survey", cursor: first });
+    app.again = false;
+  }
   routeGo();
 }
 
@@ -509,6 +567,16 @@ async function answer(key, value) {
   // 이 화면이 대체한다).
   if (scopeNoticeView(app.state).show) return go({ screen: "scope" });
 
+  // 재설문은 다 답한 상태로 걷는다. "첫 미답변"으로는 한 발도 못 나가므로
+  // **지금 보이는 질문 목록에서 그 다음**을 찾는다. 앞 답을 바꿔 뒤가
+  // 사라졌으면(pruneStale) 목록이 이미 줄어 있어 자연히 건너뛴다.
+  if (app.again === "survey") {
+    const next = nextAfterKey(key);
+    if (next) return go({ screen: "survey", cursor: next.id });
+    app.again = false;
+    return go({ screen: "transition" });
+  }
+
   // 답을 고치러 왔던 사람은 남은 질문이 없으면 보던 자리로 돌아간다.
   // **history.back()으로 흉내 내지 않는다** — 답이 바뀐 뒤라 히스토리와
   // 화면이 갈린다. 코드가 화면을 바꾸는 것이므로 자리를 새로 쌓는다.
@@ -531,6 +599,14 @@ function renderScope(main) {
       // 같은 벽을 만난다.
       app.state = { ...app.state, scope_ack: true };
       await persist();
+      // 이 화면은 건물 종류 답 바로 뒤에만 선다. 재설문 중이면 그 다음
+      // 질문으로 이어야 한다 — route()는 다 답한 사람을 HOME으로 보낸다.
+      if (app.again === "survey") {
+        const next = nextAfterKey("housing_type");
+        if (next) return go({ screen: "survey", cursor: next.id });
+        app.again = false;
+        return go({ screen: "transition" });
+      }
       routeGo();
     },
     onBack: async () => {
@@ -586,7 +662,7 @@ function renderResult(main) {
     // 자리를 새로 쌓지 않는다 — 뒤로가기가 같은 화면을 두 번 지나면 안 된다.
     if (uv) return renderUndetermined(main, uv, { onAnswer: goAnswer });
     app.screen = "action";
-    mark("undetermined", true); // 자리를 새로 쌓지 않고 그 칸을 정정한다
+    mark("undetermined", "replace"); // 자리를 새로 쌓지 않고 그 칸을 정정한다
   }
   const ad = actionDetailView(base, app.actionId);
   if (!ad) return go({ screen: "home" });

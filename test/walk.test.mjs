@@ -15,6 +15,7 @@
 //   ③ 아직 확인 못 함 → 해당 질문 직행 → 답 변경 → 원래 자리 복귀
 //   ④ 건물 종류 '그 외' → 안내 범위 화면의 두 갈래
 //   ⑤ 기기 뒤로가기 — 히스토리가 앱의 화면 순서와 같은가
+//   ⑥ 다시 설문하기 — 브릿지에서 답을 다시 걷고, 지우지 않는가
 
 import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
@@ -71,6 +72,18 @@ async function 한문항(override = {}) {
   pick.click();
   await tick(STEP);
   return true;
+}
+
+// 지나간 질문을 기록하며 끝까지 걷는다.
+async function 설문기록(override = {}) {
+  const 본것 = [];
+  for (let i = 0; i < 30; i++) {
+    const q = 질문중();
+    if (!q) return 본것;
+    본것.push(q.own);
+    await 한문항(override);
+  }
+  throw new Error("설문이 끝나지 않는다");
 }
 
 async function 설문끝까지(override = {}) {
@@ -451,6 +464,146 @@ t("① 전환을 지나면 HOME이다", has(main(), "지금 필요한 안내를 
     `${깊이} → ${dom.depth()}`);
   t("HOME에서 기기 뒤로가기는 앱을 나간다 (트랩 없음)", dom.back().left === true);
 }
+
+// ── ⑥ 다시 설문하기 ────────────────────────────────
+section("⑥ 다시 설문하기 — 브릿지에서 답을 다시 걷는다");
+
+// 재방문 브릿지의 갈 곳이 CTA 하나뿐이었다. 우상단에 답을 다시 걷는 문을
+// 둔다(사용자 결정). **지우는 것이 아니다** — 답·완료 체크가 전부 남는다.
+configureStorage({ ...memoryBackend(), readJson }); // 새 사람
+await 열기();
+button($("intro"), "회복 시작하기").click();
+await tick(30);
+{
+  const sel = all(main(), (n) => n.tagName === "SELECT")[0];
+  sel.change("gangnam");
+  await tick(20);
+  button(main(), "다음").click();
+  await tick(20);
+}
+const 첫질문 = 질문중().own;
+await 설문끝까지();
+button(main(), "내 회복 경로 보기").click();
+await tick(30);
+
+// 완료 체크를 하나 남긴다 — 재설문이 이것을 건드리면 안 된다.
+const 먼저볼 = () => Number((카드("먼저 볼 내용").textContent.match(/(\d+)개/) || [])[1]);
+const 처음먼저볼 = 먼저볼();
+카드("체크리스트").click();
+await tick(10);
+all(main(), (n) => hasClass(n, "card__box") && !hasClass(n, "card__box--off"))[0].click();
+await tick(40);
+t("완료 체크를 하나 남겼다", has(main(), "완료한 것"));
+$("top-right").children[0].click();
+await tick(10);
+
+// ① 브릿지 → 다시 설문하기 → 랜딩 → 기본 확인 → 첫 질문
+await 열기(); // 재진입 = 재방문
+t("① 재방문 브릿지다", has(main(), "화재 발생 후"));
+t("① 브릿지 우상단에 [다시 설문하기]가 있다",
+  $("top-right").children[0]?.textContent === "다시 설문하기",
+  $("top-right").children[0]?.textContent);
+
+$("top-right").children[0].click();
+await tick(20);
+t("① 탭하면 랜딩이다 (브랜드 문부터)",
+  $("intro").hidden === false && has($("intro"), "불이 꺼진 뒤, 다시 일상으로 가는 길을 함께 합니다"),
+  texts($("intro")).join(" | "));
+
+// 기기 뒤로가기 = 브릿지 복귀 (브릿지는 소비되는 화면이지만 여기서만 쌓는다)
+{
+  const r = dom.back();
+  await tick(20);
+  t("① 기기 뒤로 = 브릿지 복귀", !r.left && has(main(), "화재 발생 후"),
+    texts(main()).slice(0, 4).join(" | "));
+  $("top-right").children[0].click();
+  await tick(20);
+}
+
+button($("intro"), "회복 시작하기").click();
+await tick(30);
+t("① 랜딩 CTA는 기본 확인으로 간다", has(main(), "화재가 있었던 날짜와 지역을 알려주세요"));
+{
+  const date = all(main(), (n) => n.type === "date")[0];
+  const sel = all(main(), (n) => n.tagName === "SELECT")[0];
+  t("① 기본 확인의 날짜가 유지된다", /^\d{4}-\d{2}-\d{2}$/.test(date.value), date.value);
+  t("① 기본 확인의 지역이 유지된다", sel.value === "gangnam", sel.value);
+  button(main(), "다음").click();
+  await tick(20);
+}
+t("① 다 답했어도 설문 첫 질문부터 걷는다", 질문중()?.own === 첫질문, `${첫질문} / ${질문중()?.own}`);
+t("① 기존 답이 선택된 채로 뜬다",
+  all(main(), (n) => hasClass(n, "q__choice--on")).length === 1,
+  texts(main()).join(" | "));
+
+// 답 하나만 바꾼다 — 젖은 가전 있어요 → 없어요
+const 재설문질문 = await 설문기록({ "물에 젖은 가전제품이나 전자기기가 있나요?": "없어요" });
+t("① 재설문 끝은 기존 전환 화면이다", has(main(), "확인했습니다"));
+t("① 재설문은 보이는 질문을 전부 걷는다",
+  재설문질문.length >= 15 && 재설문질문[0] === 첫질문, `${재설문질문.length}문항`);
+// ②의 대조군 — 발화 위치를 그대로 두면 제품 질문을 지나간다.
+t("① 발화 위치를 그대로 두면 제품 질문을 지나간다",
+  재설문질문.includes("불이 사용하던 제품에서 시작됐다고 들으셨나요?"),
+  재설문질문.join(" → "));
+button(main(), "내 회복 경로 보기").click();
+await tick(30);
+t("① 전환을 지나면 HOME이다", has(main(), "지금 필요한 안내를 정리했습니다."));
+t("① 바꾼 답이 결과에 반영된다 (금지 하나가 빠진다)",
+  먼저볼() === 처음먼저볼 - 1, `${처음먼저볼} → ${먼저볼()}`);
+{
+  카드("체크리스트").click();
+  await tick(10);
+  t("① 완료 체크는 그대로다 (답을 지우지 않는다)", has(main(), "완료한 것"),
+    texts(main()).slice(-6).join(" | "));
+  $("top-right").children[0].click();
+  await tick(10);
+}
+t("① HOME에는 [다시 설문하기]가 없다 (브릿지 자리다)", $("top-right").children.length === 0);
+
+// ② 재설문 중 upstream 답 변경 → pruneStale이 뒤 질문을 지운다
+await 열기();
+$("top-right").children[0].click();
+await tick(20);
+button($("intro"), "회복 시작하기").click();
+await tick(30);
+button(main(), "다음").click();
+await tick(20);
+{
+  // 발화 위치를 '모른다'로 바꾸면 제품 질문이 사라진다(ask_when).
+  const 본것 = [];
+  for (let i = 0; i < 30; i++) {
+    const q = 질문중();
+    if (!q) break;
+    본것.push(q.own);
+    const 바꾼다 = q.own === "불이 어디에서 시작됐는지 들으셨나요?";
+    await 한문항(바꾼다 ? { [q.own]: "아직 모르거나 듣지 못했어요" } : {});
+    if (바꾼다)
+      t("② upstream을 바꾸면 바로 다음이 제품 질문이 아니다 (pruneStale)",
+        질문중()?.own !== "불이 사용하던 제품에서 시작됐다고 들으셨나요?",
+        질문중()?.own);
+  }
+  t("② 이번 재설문에는 제품 질문이 아예 없다",
+    !본것.includes("불이 사용하던 제품에서 시작됐다고 들으셨나요?"),
+    본것.join(" → "));
+}
+t("② 재설문이 끝까지 돈다", has(main(), "확인했습니다"));
+
+// ③ 재설문 도중 이탈 → 다음 진입은 평소처럼 브릿지부터
+await 열기();
+$("top-right").children[0].click();
+await tick(20);
+button($("intro"), "회복 시작하기").click();
+await tick(30);
+button(main(), "다음").click();
+await tick(20);
+await 한문항();
+t("③ 재설문 도중이다", 질문중() !== null, texts(main()).slice(0, 3).join(" | "));
+await 열기(); // 이탈 후 재진입
+t("③ 재진입은 평소처럼 브릿지다", has(main(), "화재 발생 후"), texts(main()).slice(0, 4).join(" | "));
+button(main(), "지금 안내 보기").click();
+await tick(30);
+t("③ 브릿지 CTA는 그대로 HOME이다 (재설문 플래그가 안 남는다)",
+  has(main(), "지금 필요한 안내를 정리했습니다."), texts(main()).slice(0, 4).join(" | "));
 
 // ── 결과 ───────────────────────────────────────────
 console.log(`\n${"=".repeat(62)}`);
