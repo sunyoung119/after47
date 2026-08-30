@@ -141,20 +141,27 @@
   --c-axis: #d9cec7; /* 타임라인 세로축 */
   --c-check-line: #bfc3c3; /* 체크박스 테두리(미체크) */
 
-  /* ── 인트로 전용 (랜딩 교체 때 함께 걷어낸다) ──── */
+  /* ── 랜딩 전용 ─────────────────────────────────── */
   /*
-   * 랜딩은 다음 커밋에서 확정 사진 배경으로 통째 교체된다. 그때까지
-   * 이 값들이 없으면 랜딩이 깨지므로 남겨 둔다 — **새 화면에 쓰지 마라.**
+   * **이 화면만 어둡다.** 확정 사진 위에 흰 글자가 얹히기 때문이고,
+   * 나머지 화면은 전부 밝은 바탕에 짙은 글자다. 여기 있는 값을 다른
+   * 화면에 쓰지 마라 — 팔레트가 두 벌로 갈라진다.
+   *
+   * 새벽 글로우(--c-glow-*)와 글자 리빌은 이 커밋에서 폐기됐다. 사진이
+   * 그 자리를 대신한다.
    */
-  --c-bg-deep: #4b4059;
-  --c-ink-micro: rgba(255, 248, 241, 0.34);
-  --c-glow-0: rgba(241, 201, 167, 0.84);
-  --c-glow-1: rgba(217, 161, 127, 0.6);
-  --c-glow-2: rgba(169, 119, 121, 0.4);
-  --c-glow-3: rgba(90, 77, 111, 0.2);
-  --c-glow-soft: rgba(255, 218, 184, 0.12);
-  --c-grain: rgba(255, 255, 255, 0.11);
-  --c-title-glow: rgba(255, 230, 210, 0.05);
+  --c-landing-bg: #2261ac; /* 사진이 뜨기 전·못 뜰 때의 바탕 */
+  --c-landing-ink: #ffffff;
+  --c-landing-ink-soft: rgba(255, 255, 255, 0.96);
+  --c-landing-ink-dim: rgba(255, 255, 255, 0.92);
+  --c-landing-ink-faint: rgba(255, 255, 255, 0.82);
+  /* 위아래 그라데이션 — 글자가 얹히는 자리만 눌러 준다. */
+  --c-veil-top-0: rgba(5, 33, 66, 0.17);
+  --c-veil-top-1: rgba(5, 33, 66, 0.04);
+  --c-veil-bottom-1: rgba(7, 18, 29, 0.2);
+  --c-veil-bottom-2: rgba(7, 18, 29, 0.67);
+  /* 하늘의 밝은 부분에서도 흰 글자가 뜨게 하는 아주 옅은 그림자. */
+  --c-landing-shadow: rgba(0, 23, 48, 0.16);
 
   /* ── 글꼴 ──────────────────────────────────────── */
   /* 폴백은 확정 지시 그대로다. NanumSquare가 늦거나 실패해도 한글이
@@ -168,29 +175,29 @@
   --f-xl: 1.3rem;
   --f-hero: 1.6rem;
 
-  /* 인트로 전용 크기 — 위와 같이 랜딩 교체 때 걷어낸다. */
-  --f-intro-eyebrow: 13px;
-  --f-intro-eyebrow-sm: 12px;
-  --f-intro-title: clamp(68px, 10.2vw, 148px);
-  --f-intro-title-sm: clamp(64px, 18vw, 92px);
-  --f-intro-sub: clamp(17px, 1.95vw, 23px);
-  --f-intro-sub-sm: 19px;
-  --f-intro-cta: 15px;
-  --f-intro-cta-sm: 14px;
-  --f-intro-micro: 11px;
+  /* 재방문 게이트 — 날짜와 경과가 **같은 크기로** 서고 라벨·suffix만 작다.
+     패킷 D-033이 지정한 수치다(22 / 13). 둘 중 하나만 키우면 "무엇이
+     기준인가"가 흔들린다. */
+  --f-gate-value: 22px;
+  --f-gate-label: 13px;
+  --f-gate-message: 24px;
+
+  /* 랜딩 전용 크기 — 시안 그대로다. 다른 화면의 스케일과 다르다. */
+  --f-landing-eyebrow: 13px;
+  --f-landing-title: 50px;
+  --f-landing-sub: 18px;
+  --f-landing-cta: 17px;
+  --f-landing-footer: 12px;
 
   --lh: 1.7; /* 본문 — 정신없는 사람이 읽는다 */
   --lh-tight: 1.4;
-  --lh-intro-title: 0.98;
-  --lh-intro-title-sm: 1.02;
-  --lh-intro-sub: 1.75;
-  --lh-intro-sub-sm: 1.85;
+  --lh-landing-title: 1.06;
+  --lh-landing-sub: 1.62;
 
   /* 자간 — 확정 시안은 한글 제목을 바짝 조인다. */
   --ls: -0.02em;
   --ls-tight: -0.03em;
-  --ls-title: -0.085em;
-  --ls-title-sm: -0.08em;
+  --ls-landing-title: -2px;
   --ls-eyebrow: 0.08em;
 
   --w-bold: 700;
@@ -206,13 +213,13 @@
   --s6: 32px;
   --s7: 48px;
 
-  /* 인트로 전용 간격 — 랜딩 교체 때 걷어낸다. */
-  --s-intro-eyebrow: 34px;
-  --s-intro-sub: 48px;
-  --s-intro-sub-sm: 52px;
-  --s-intro-actions: 52px;
-  --s-intro-actions-sm: 72px;
-  --s-intro-micro: 21px;
+  /* 랜딩 전용 간격 — 사진 위 글자 배치는 시안의 좌표를 따른다. */
+  --s-landing-edge: 24px; /* 좌우 여백 */
+  --s-landing-eyebrow: 18px; /* 위에서 descriptor까지 */
+  --s-landing-title: 82px; /* 위에서 대제목까지 */
+  --s-landing-sub: 22px; /* 대제목과 설명 사이 */
+  --s-landing-actions: 30px; /* 아래에서 CTA까지 */
+  --s-landing-footer: 17px; /* CTA와 마이크로카피 사이 */
 
   /* ── 형태 ──────────────────────────────────────── */
   /* 확정 시안의 모서리는 8px 하나다. 카드에 **그림자를 넣지 마라.** */
@@ -225,18 +232,6 @@
   --dur: 260ms;
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
 
-  /* 인트로 연출 — 랜딩 교체 때 걷어낸다. */
-  --ease-intro: cubic-bezier(0.2, 0.8, 0.2, 1);
-  --dur-title: 0.88s;
-  --dur-sub: 0.78s;
-  --dur-cta: 0.72s;
-  --dur-fade: 0.7s;
-  --delay-eyebrow: 0.08s;
-  --delay-title: 0.22s;
-  --delay-title-step: 0.08s;
-  --delay-sub: 1.02s;
-  --delay-cta: 1.44s;
-  --delay-micro: 1.92s;
 }
 
 /* 다크 모드는 대응하지 않는다 — 확정된 것은 라이트 하나다. 토큰 이름과

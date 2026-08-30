@@ -15,7 +15,7 @@
 //   ③ 아직 확인 못 함 → 해당 질문 직행 → 답 변경 → 원래 자리 복귀
 //   ④ 건물 종류 '그 외' → 안내 범위 화면의 두 갈래
 //   ⑤ 기기 뒤로가기 — 히스토리가 앱의 화면 순서와 같은가
-//   ⑥ 다시 설문하기 — 브릿지에서 답을 다시 걷고, 지우지 않는가
+//   ⑥ 처음으로 — 브릿지에서 답을 다시 걷고, 지우지 않는가
 
 import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
@@ -98,8 +98,16 @@ await 열기();
 
 t("랜딩이 뜬다", $("intro").hidden === false && $("flow").hidden === true);
 t("서비스명과 메인 문구가 확정 문구다",
-  has($("intro"), "일상으로") && has($("intro"), "불이 꺼진 뒤, 다시 일상으로 가는 길을 함께 합니다"),
+  has($("intro"), "일상으로") &&
+    has($("intro"), "불이 꺼진 뒤,") &&
+    has($("intro"), "다시 일상으로 가는 길을 안내합니다."),
   texts($("intro")).join(" | "));
+// 시각 FINAL — 배경이 사진이고 글자 리빌은 폐기됐다.
+t("배경 사진이 실린다",
+  all($("intro"), (n) => n.tagName === "IMG").some((n) => /landing-bg\.webp$/.test(n.src || "")),
+  all($("intro"), (n) => n.tagName === "IMG").map((n) => n.src).join(" | "));
+t("배경 사진은 보조기술에서 건너뛴다",
+  all($("intro"), (n) => n.tagName === "IMG").every((n) => n.getAttribute("alt") === ""));
 t("푸터가 확정 문구다", has($("intro"), "흩어진 제도와 정보를, 당신의 상황과 시간에 맞게 잇습니다."));
 t("랜딩 동안 스크롤이 잠긴다", document.body.classList.contains("is-intro"));
 
@@ -128,7 +136,7 @@ await tick(30);
 
 t("설문 MASTER로 넘어간다", has(main(), "상황 확인") && 질문중() !== null, texts(main()).join(" | "));
 t("첫 질문이 날짜가 아니다", 질문중().own === "지금 그 집에서 지낼 수 있나요?", 질문중().own);
-t("하단 한 줄이 확정 문구다", has(main(), "답변에 따라 상황에 맞는 질문만 이어집니다."));
+t("하단 한 줄이 확정 문구다", has(main(), "답변에 따라 당신의 상황에 맞는 질문만 이어집니다."));
 t("분모형 진행률이 없다", !texts(main()).some((s) => /\d+\s*\/\s*\d+/.test(s)), texts(main()).join(" | "));
 t("첫 질문의 [이전]은 기본 확인으로 간다", $("top-right").children.length === 1);
 
@@ -145,8 +153,10 @@ t("첫 질문의 [이전]은 기본 확인으로 간다", $("top-right").childre
 
 const 문항수 = await 설문끝까지();
 t(`설문이 끝나고 전환 화면이 나온다 (남은 ${문항수}문항)`, has(main(), "확인했습니다"), texts(main()).join(" | "));
+// 기준 줄은 그 사람의 실제 값이다 — 자치구가 화면에 그대로 나온다.
 t("전환 문구가 확정 문구다",
-  has(main(), "지금 상황과 화재 후 경과 시간을 바탕으로") && has(main(), "먼저 확인할 것부터 정리합니다."));
+  has(main(), "당신의 회복에 필요한 내용을 안내합니다.") && has(main(), "강남구"),
+  texts(main()).join(" | "));
 t("'AI 분석 중'류 표현이 없다", !texts(main()).some((s) => /AI|분석 중|생성 중/.test(s)));
 
 button(main(), "내 회복 경로 보기").click();
@@ -157,7 +167,11 @@ t("핵심 카드가 셋이다", all(main(), (n) => hasClass(n, "hcard")).length 
 t("카드 제목이 확정 문구다",
   has(main(), "먼저 볼 내용") && has(main(), "체크리스트") && has(main(), "알아둘 내용"));
 t("보조 탐색이 둘이다", all(main(), (n) => hasClass(n, "mcard")).length === 2);
-t("경과시간 칩이 있다", texts(main()).some((s) => /^\d{2}일 \d{2}:\d{2}$/.test(s)), texts(main()).join(" | "));
+// 확정 화면이 칩을 걷고 문장 한 줄로 바꿨다. 현재 시각이 아니라 거리다.
+t("기준 줄에 자치구와 경과가 있다",
+  texts(main()).some((s) => /^강남구 · 화재 발생 후 .+ · 당신의 상황을 기준으로$/.test(s)),
+  texts(main()).join(" | "));
+t("경과시간 칩은 없다", !texts(main()).some((s) => /^\d{2}일 \d{2}:\d{2}$/.test(s)));
 t("HOME에는 [이전]이 없다", $("top-right").children.length === 0);
 t("D-015 1층이 결과 첫 도달에 뜬다", $("save-notice").hidden === false);
 
@@ -168,8 +182,8 @@ const 카드 = (name) => all(main(), (n) => hasClass(n, "hcard") || hasClass(n, 
 for (const [이름, 표시] of [
   ["먼저 볼 내용", "제일 먼저 확인해야 할 정보입니다."],
   ["체크리스트", "하나씩 해나가야 하는 일입니다."],
-  ["알아둘 내용", "당장 행동할 필요는 없지만, 알아두어야 할 정보입니다."],
-  ["시간 순서로 보기", "시간이 지나며 필요한 안내가 어떻게 이어지는지 보여드립니다."],
+  ["알아둘 내용", "당장 행동할 필요는 없지만, 이후를 위해 확인해둘 정보입니다."],
+  ["시간 순서로 보기", "회복 과정에서 언제 무엇을 확인하면 되는지 살펴보세요."],
   ["필요한 주제별로 보기", "지금 내 상황에 해당하는 안내를 주제별로 모았습니다."],
 ]) {
   카드(이름).click();
@@ -193,7 +207,7 @@ await tick(10);
     잠김.every((n) => all(n, (x) => hasClass(x, "lock__key")).length === 1));
   const 신호 = all(main(), (n) => hasClass(n, "chip--warn"));
   t("되돌리기 어려운 것에 글자 신호가 붙는다", 신호.length > 0 && 신호[0].textContent === "놓치면 되돌리기 어려움");
-  t("하단 문구가 확정 문구다", has(main(), "체크한 항목은 완료한 일로 표시됩니다."));
+  t("하단 문구가 확정 문구다", has(main(), "체크한 항목은 이 기기에 완료 상태로 기억됩니다."));
 
   const box = all(main(), (n) => hasClass(n, "card__box") && !hasClass(n, "card__box--off"))[0];
   const 전 = all(main(), (n) => hasClass(n, "card__box")).length;
@@ -243,10 +257,12 @@ t("화재 발생일을 보여준다", has(main(), "화재 발생일"));
 t("경과시간이 일·시간·분 세 토막이다",
   all(main(), (n) => hasClass(n, "elapsed__item")).length === 3);
 t("게이트 문구가 확정 문구다",
-  has(main(), "지금 시점에 맞춰") && has(main(), "필요한 안내를 다시 정리합니다."));
+  has(main(), "지금 시점에 맞는 안내로") && has(main(), "다시 정리합니다."),
+  texts(main()).join(" | "));
+t("경과 뒤에 '경과'가 붙는다", has(main(), "경과"));
 t("현재 시각 시계가 아니다", !texts(main()).some((s) => /일째/.test(s)));
 
-button(main(), "지금 안내 보기").click();
+button(main(), "안내 보기").click();
 await tick(30);
 t("게이트를 지나면 HOME이다", has(main(), "지금 필요한 안내를 정리했습니다."));
 t("답한 내용이 이어진다 (체크한 것이 남아 있다)",
@@ -457,7 +473,7 @@ t("① 전환을 지나면 HOME이다", has(main(), "지금 필요한 안내를 
   await 열기(); // 같은 저장소로 다시 진입 = 재방문
   t("재방문은 경과시간 게이트다", has(main(), "화재 발생 후"));
   const 깊이 = dom.depth();
-  button(main(), "지금 안내 보기").click();
+  button(main(), "안내 보기").click();
   await tick(30);
   t("게이트를 지나면 HOME이다", has(main(), "지금 필요한 안내를 정리했습니다."));
   t("게이트는 칸을 쌓지 않고 덮는다 (소비되는 화면)", dom.depth() === 깊이,
@@ -465,8 +481,8 @@ t("① 전환을 지나면 HOME이다", has(main(), "지금 필요한 안내를 
   t("HOME에서 기기 뒤로가기는 앱을 나간다 (트랩 없음)", dom.back().left === true);
 }
 
-// ── ⑥ 다시 설문하기 ────────────────────────────────
-section("⑥ 다시 설문하기 — 브릿지에서 답을 다시 걷는다");
+// ── ⑥ 처음으로 ────────────────────────────────────
+section("⑥ 처음으로 — 브릿지에서 답을 다시 걷는다");
 
 // 재방문 브릿지의 갈 곳이 CTA 하나뿐이었다. 우상단에 답을 다시 걷는 문을
 // 둔다(사용자 결정). **지우는 것이 아니다** — 답·완료 체크가 전부 남는다.
@@ -497,17 +513,17 @@ t("완료 체크를 하나 남겼다", has(main(), "완료한 것"));
 $("top-right").children[0].click();
 await tick(10);
 
-// ① 브릿지 → 다시 설문하기 → 랜딩 → 기본 확인 → 첫 질문
+// ① 브릿지 → 처음으로 → 랜딩 → 기본 확인 → 첫 질문
 await 열기(); // 재진입 = 재방문
 t("① 재방문 브릿지다", has(main(), "화재 발생 후"));
-t("① 브릿지 우상단에 [다시 설문하기]가 있다",
-  $("top-right").children[0]?.textContent === "다시 설문하기",
+t("① 브릿지 우상단에 [처음으로]가 있다",
+  $("top-right").children[0]?.textContent === "처음으로",
   $("top-right").children[0]?.textContent);
 
 $("top-right").children[0].click();
 await tick(20);
 t("① 탭하면 랜딩이다 (브랜드 문부터)",
-  $("intro").hidden === false && has($("intro"), "불이 꺼진 뒤, 다시 일상으로 가는 길을 함께 합니다"),
+  $("intro").hidden === false && has($("intro"), "다시 일상으로 가는 길을 안내합니다."),
   texts($("intro")).join(" | "));
 
 // 기기 뒤로가기 = 브릿지 복귀 (브릿지는 소비되는 화면이지만 여기서만 쌓는다)
@@ -558,7 +574,7 @@ t("① 바꾼 답이 결과에 반영된다 (금지 하나가 빠진다)",
   $("top-right").children[0].click();
   await tick(10);
 }
-t("① HOME에는 [다시 설문하기]가 없다 (브릿지 자리다)", $("top-right").children.length === 0);
+t("① HOME에는 [처음으로]가 없다 (브릿지 자리다)", $("top-right").children.length === 0);
 
 // ② 재설문 중 upstream 답 변경 → pruneStale이 뒤 질문을 지운다
 await 열기();
@@ -600,7 +616,7 @@ await 한문항();
 t("③ 재설문 도중이다", 질문중() !== null, texts(main()).slice(0, 3).join(" | "));
 await 열기(); // 이탈 후 재진입
 t("③ 재진입은 평소처럼 브릿지다", has(main(), "화재 발생 후"), texts(main()).slice(0, 4).join(" | "));
-button(main(), "지금 안내 보기").click();
+button(main(), "안내 보기").click();
 await tick(30);
 t("③ 브릿지 CTA는 그대로 HOME이다 (재설문 플래그가 안 남는다)",
   has(main(), "지금 필요한 안내를 정리했습니다."), texts(main()).slice(0, 4).join(" | "));

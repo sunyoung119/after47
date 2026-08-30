@@ -27,7 +27,7 @@ body {
 
 body {
   margin: 0;
-  /* 덱은 차분한 단색에 가깝다 — 새벽 글로우는 인트로에만 있다. */
+  /* 화면 바탕. 아주 연한 벽돌빛에서 살짝 가라앉은 면으로 흐른다. */
   background: var(--c-bg);
   background-image: linear-gradient(180deg, var(--c-bg) 0%, var(--c-bg-soft) 100%);
   background-attachment: fixed;
@@ -63,264 +63,154 @@ a {
   color: var(--c-ink);
 }
 
-/* ── ① 인트로 ──────────────────────────────────── */
-/* 사용자가 확정한 시안. 새벽 글로우(radial)는 **이 화면에만** 있다 —
-   덱 네 장은 차분한 단색이다. 매 화면이 일출이면 아무 화면도 일출이 아니다.
+/* ── ① 랜딩 ────────────────────────────────────── */
+/* 확정 사진 배경 위에 글자를 얹는다. **이 화면만 어둡다** — 나머지는
+   전부 밝은 바탕에 짙은 글자다.
 
-   ★★ 기본 상태는 **보이는 것**이다. 등장 연출은 keyframes의 `from`에만 있고
-      fill-mode는 `backwards`다(지연 동안만 숨긴다). 애니메이션이 어떤
-      이유로든 안 돌면 **정적으로 전부 보이는 화면**이 남는다.
+   ★★ 등장 연출이 없다. 새벽 글로우와 글자 리빌은 시각 FINAL에서
+      폐기됐고 사진이 그 자리를 대신한다. 그래서 **기본 상태가 곧 완성된
+      화면**이고, 연출이 콘텐츠의 전제가 되는 자리가 아예 사라졌다.
 
-      실기기에서 그 사고가 났다. 새 마크업 + 캐시에 남은 옛 `tokens.css`
-      조합에서 `var(--delay-eyebrow)` 같은 인트로 토큰이 안 풀렸고,
-      CSS 규칙상 var()가 해석되지 않으면 **그 선언이 통째로 무효**가 된다
-      → `animation` 없음 → `opacity: 0`으로 시작하던 글자가 영원히
-      나타나지 않았다. 연출이 콘텐츠의 전제가 되면 안 된다.
+      그 사고를 기억해 둔다 — 새 마크업 + 캐시에 남은 옛 `tokens.css`
+      조합에서 인트로 토큰이 안 풀렸고, var()가 해석되지 않으면 **그
+      선언이 통째로 무효**가 되어 `opacity: 0`으로 시작하던 글자가 영원히
+      나타나지 않았다. 연출을 다시 넣는다면 keyframes의 `from`에만 두고
+      `animation`의 var에 리터럴 폴백을 붙여라.
 
-   ★★ 그래서 인트로가 쓰는 var()에는 전부 **리터럴 폴백**이 붙어 있다.
-      폴백 값은 시안 원본이다. 토큰이 하나도 없어도 선언은 살아남는다. */
+      (여기서 앳(@) 기호를 안 쓴 것은 일부러다 — view.test가 keyframes
+      블록을 정규식으로 걷어내고 나머지를 검사하는데, 주석 안의 그 단어가
+      규칙까지 함께 먹는다.)
+
+   ★★ 사진이 안 떠도 화면은 남는다. 바탕이 짙은 남색이고 글자가 흰색이라
+      그림 없이도 읽힌다 — 배경을 콘텐츠의 전제로 만들지 않는다. */
 .intro {
   position: fixed;
   inset: 0;
   z-index: 20;
   min-height: 100dvh;
-  display: grid;
-  place-items: center;
-  isolation: isolate;
   overflow: hidden;
-  background:
-    radial-gradient(
-      95% 70% at 50% 112%,
-      var(--c-glow-0, rgba(241, 201, 167, 0.84)) 0%,
-      var(--c-glow-1, rgba(217, 161, 127, 0.6)) 23%,
-      var(--c-glow-2, rgba(169, 119, 121, 0.4)) 43%,
-      var(--c-glow-3, rgba(90, 77, 111, 0.2)) 67%,
-      transparent 79%
-    ),
-    linear-gradient(
-      180deg,
-      var(--c-bg, #0a0d1d) 0%,
-      var(--c-bg-soft, #11152b) 33%,
-      var(--c-surface, #20213d) 64%,
-      var(--c-bg-deep, #4b4059) 100%
-    );
+  background: var(--c-landing-bg, #2261ac);
+  color: var(--c-landing-ink, #ffffff);
 }
-/* 아래에서 천천히 숨 쉬는 번짐. 장식이라 안 돌아도 배경만 남는다. */
-.intro::before {
-  content: "";
+/* 사진 — 폭을 채우고 비율대로 흐른다. 위에서 조금 내려 하늘의 여백을
+   남기는 것이 시안의 구도다. **잘라서 채우지 않는다**(구도가 바뀐다). */
+.intro__bg {
   position: absolute;
-  left: -18vw;
-  right: -18vw;
-  bottom: -34vh;
-  height: 68vh;
-  border-radius: 50%;
-  background: var(--c-glow-soft, rgba(255, 218, 184, 0.12));
-  filter: blur(82px);
-  animation: intro-breathe 8s ease-in-out infinite alternate;
-  z-index: -2;
+  z-index: 0;
+  left: 0;
+  top: var(--s5, 24px);
+  width: 100%;
+  height: auto;
+  display: block;
 }
-/* 미세 입자 — 넓은 그라데이션에 생기는 띠를 깬다 */
-.intro::after {
-  content: "";
+.intro__veil {
   position: absolute;
-  inset: 0;
-  z-index: -1;
+  z-index: 1;
+  left: 0;
+  right: 0;
   pointer-events: none;
-  opacity: 0.12;
-  background-image: radial-gradient(
-    circle,
-    var(--c-grain, rgba(255, 255, 255, 0.11)) 0 0.55px,
-    transparent 0.7px
-  );
-  background-size: 6px 6px;
-  mix-blend-mode: soft-light;
 }
-.intro__content {
-  width: min(92vw, 1040px);
-  padding: 8vh var(--s5, 24px) 10vh;
-  text-align: center;
+.intro__veil--top {
+  top: 0;
+  height: 38%;
+  background: linear-gradient(
+    180deg,
+    var(--c-veil-top-0, rgba(5, 33, 66, 0.17)),
+    var(--c-veil-top-1, rgba(5, 33, 66, 0.04)) 52%,
+    transparent
+  );
+}
+.intro__veil--bottom {
+  bottom: 0;
+  height: 31%;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    var(--c-veil-bottom-1, rgba(7, 18, 29, 0.2)) 36%,
+    var(--c-veil-bottom-2, rgba(7, 18, 29, 0.67)) 100%
+  );
 }
 .intro__eyebrow {
-  margin: 0 0 var(--s-intro-eyebrow, 34px);
-  font-size: var(--f-intro-eyebrow, 13px);
-  font-weight: var(--w-bold, 600);
-  letter-spacing: var(--ls-eyebrow, 0.08em);
-  color: var(--c-ink-faint, rgba(255, 248, 241, 0.48));
-  animation: intro-fade 0.55s var(--delay-eyebrow, 0.08s) ease backwards;
+  position: absolute;
+  z-index: 2;
+  top: var(--s-landing-eyebrow, 18px);
+  left: var(--s-landing-edge, 24px);
+  right: var(--s-landing-edge, 24px);
+  margin: 0;
+  font-size: var(--f-landing-eyebrow, 13px);
+  line-height: var(--lh-tight, 1.4);
+  font-weight: var(--w-bold, 700);
+  letter-spacing: -0.15px;
+  color: var(--c-landing-ink-dim, rgba(255, 255, 255, 0.92));
+  text-shadow: 0 1px 12px var(--c-landing-shadow, rgba(0, 23, 48, 0.16));
+}
+.intro__content {
+  position: absolute;
+  z-index: 2;
+  top: var(--s-landing-title, 82px);
+  left: var(--s-landing-edge, 24px);
+  right: var(--s-landing-edge, 24px);
+  text-shadow: 0 1px 16px var(--c-landing-shadow, rgba(0, 23, 48, 0.16));
 }
 .intro__title {
   margin: 0;
-  font-size: var(--f-intro-title, clamp(68px, 10.2vw, 148px));
-  line-height: var(--lh-intro-title, 0.98);
+  font-size: var(--f-landing-title, 50px);
+  line-height: var(--lh-landing-title, 1.06);
   font-weight: var(--w-heavy, 700);
-  letter-spacing: var(--ls-title, -0.085em);
-  color: var(--c-ink, #fffaf5);
-  text-shadow: 0 0 14px var(--c-title-glow, rgba(255, 230, 210, 0.05));
-}
-/* 글자 하나씩 왼쪽부터 드러난다. 보조기술은 h1의 aria-label을 읽는다.
-   **기본 상태에 opacity·blur·clip-path를 두지 않는다** — 연출이 없으면
-   그냥 제목이다. */
-.intro__reveal {
-  display: inline-flex;
-  gap: 0.01em;
-  white-space: nowrap;
-}
-.intro__reveal span {
-  display: inline-block;
-  animation: intro-title-in var(--dur-title, 0.88s)
-    var(--ease-intro, cubic-bezier(0.2, 0.8, 0.2, 1)) backwards;
-}
-.intro__reveal span:nth-child(1) {
-  animation-delay: var(--delay-title, 0.22s);
-}
-.intro__reveal span:nth-child(2) {
-  animation-delay: calc(var(--delay-title, 0.22s) + var(--delay-title-step, 0.08s));
-}
-.intro__reveal span:nth-child(3) {
-  animation-delay: calc(var(--delay-title, 0.22s) + var(--delay-title-step, 0.08s) * 2);
-}
-.intro__reveal span:nth-child(4) {
-  animation-delay: calc(var(--delay-title, 0.22s) + var(--delay-title-step, 0.08s) * 3);
+  letter-spacing: var(--ls-landing-title, -2px);
+  color: var(--c-landing-ink, #ffffff);
 }
 .intro__sub {
-  width: min(92%, 760px);
-  margin: var(--s-intro-sub, 48px) auto 0;
-  font-size: var(--f-intro-sub, clamp(17px, 1.95vw, 23px));
-  line-height: var(--lh-intro-sub, 1.75);
+  margin: var(--s-landing-sub, 22px) 0 0;
+  max-width: 328px;
+  font-size: var(--f-landing-sub, 18px);
+  line-height: var(--lh-landing-sub, 1.62);
   font-weight: 400;
-  letter-spacing: var(--ls, -0.02em);
-  color: var(--c-ink-soft, rgba(255, 248, 241, 0.78));
-  animation: intro-fade-clear var(--dur-sub, 0.78s) var(--delay-sub, 1.02s) ease backwards;
-  text-wrap: balance;
+  letter-spacing: -0.5px;
+  color: var(--c-landing-ink-soft, rgba(255, 255, 255, 0.96));
+  word-break: keep-all;
 }
 .intro__actions {
-  margin-top: var(--s-intro-actions, 52px);
-  animation: intro-fade-up var(--dur-cta, 0.72s) var(--delay-cta, 1.44s) ease backwards;
+  position: absolute;
+  z-index: 3;
+  left: var(--s-landing-edge, 24px);
+  right: var(--s-landing-edge, 24px);
+  bottom: var(--s-landing-actions, 30px);
 }
 /* 진짜 버튼이다. 키보드·보조기술이 그대로 받고, 터치 목표를 지킨다. */
 .intro__cta {
   appearance: none;
+  display: block;
+  width: 100%;
   min-height: var(--tap, 44px);
-  border: 1px solid var(--c-line, rgba(255, 255, 255, 0.18));
-  background: var(--c-cta, rgba(125, 119, 139, 0.62));
-  color: var(--c-ink, #fffaf5);
-  padding: var(--s4, 16px) 18px 17px;
-  border-radius: var(--r1, 3px);
-  font: var(--w-bold, 600) var(--f-intro-cta, 15px) / 1
-    var(--font, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif);
-  letter-spacing: var(--ls, -0.02em);
-  box-shadow:
-    inset 0 1px 0 var(--c-glow-soft, rgba(255, 218, 184, 0.12)),
-    0 10px 28px var(--c-glow-3, rgba(90, 77, 111, 0.2));
+  height: 58px;
+  border: 0;
+  border-radius: var(--r1, 8px);
+  background: var(--c-cta, #173a59);
+  color: var(--c-cta-ink, #ffffff);
+  font: var(--w-bold, 700) var(--f-landing-cta, 17px) / 1
+    var(--font, "NanumSquare", "Noto Sans KR", sans-serif);
+  letter-spacing: -0.3px;
   cursor: pointer;
-  transition:
-    background var(--dur, 260ms) ease,
-    transform var(--dur, 260ms) ease;
 }
-.intro__cta:hover {
-  background: var(--c-cta-hover, rgba(140, 133, 153, 0.72));
-  transform: translateY(-1px);
-}
-/* 확정 마이크로카피. 화면 아래에 고정된다. */
+/* 확정 마이크로카피. CTA 아래에 붙는다. */
 .intro__footer {
-  position: absolute;
-  left: 50%;
-  bottom: var(--s-intro-micro, 21px);
-  translate: -50% 0;
-  margin: 0;
-  font-size: var(--f-intro-micro, 11px);
-  line-height: var(--lh-tight, 1.4);
-  white-space: nowrap;
-  color: var(--c-ink-micro, rgba(255, 248, 241, 0.34));
-  animation: intro-fade var(--dur-fade, 0.7s) var(--delay-micro, 1.92s) ease backwards;
+  margin: var(--s-landing-footer, 17px) 0 0;
+  text-align: center;
+  font-size: var(--f-landing-footer, 12px);
+  line-height: 1.55;
+  letter-spacing: -0.2px;
+  color: var(--c-landing-ink-faint, rgba(255, 255, 255, 0.82));
+  word-break: keep-all;
 }
 
-/* keyframes는 **from에만 있다.** 끝 상태는 요소의 기본 스타일이고,
-   그래서 애니메이션이 사라져도 화면은 그 기본 스타일로 남는다. */
-@keyframes intro-title-in {
-  from {
-    opacity: 0;
-    filter: blur(7px);
-    transform: translateY(14px);
-    clip-path: inset(0 100% 0 0);
-  }
-  50% {
-    opacity: 0.75;
-    filter: blur(2px);
-  }
-}
-@keyframes intro-fade-clear {
-  from {
-    opacity: 0;
-    filter: blur(4px);
-    transform: translateY(8px);
-  }
-}
-@keyframes intro-fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-}
-@keyframes intro-fade {
-  from {
-    opacity: 0;
-  }
-}
-@keyframes intro-breathe {
-  from {
-    transform: scale(0.96);
-    opacity: 0.74;
-  }
-  to {
-    transform: scale(1.04);
-    opacity: 1;
-  }
-}
-
-@media (max-width: 640px) {
-  .intro__content {
-    width: min(90vw, 420px);
-    padding: 10vh var(--s5, 24px) 12vh;
-  }
-  .intro__eyebrow {
-    font-size: var(--f-intro-eyebrow-sm, 12px);
-    line-height: var(--lh-tight, 1.4);
-  }
+/* 좁은 화면에서 제목이 두 줄로 접히지 않게 조금 줄인다. */
+@media (max-width: 360px) {
   .intro__title {
-    font-size: var(--f-intro-title-sm, clamp(64px, 18vw, 92px));
-    line-height: var(--lh-intro-title-sm, 1.02);
-    letter-spacing: var(--ls-title-sm, -0.08em);
+    font-size: calc(var(--f-landing-title, 50px) * 0.86);
   }
   .intro__sub {
-    width: 100%;
-    margin-top: var(--s-intro-sub-sm, 52px);
-    font-size: var(--f-intro-sub-sm, 19px);
-    line-height: var(--lh-intro-sub-sm, 1.85);
-  }
-  .intro__actions {
-    margin-top: var(--s-intro-actions-sm, 72px);
-  }
-  .intro__cta {
-    font-size: var(--f-intro-cta-sm, 14px);
-    padding: var(--s3, 12px) var(--s4, 16px) 15px;
-  }
-  .intro__footer {
-    width: min(86vw, 320px);
-    white-space: normal;
-    text-wrap: balance;
-    line-height: var(--lh-intro-sub, 1.75);
-  }
-}
-
-/* 움직임을 줄여 달라고 한 사람에게는 연출만 걷어낸다.
-   **opacity를 되돌릴 필요가 없다** — 기본 상태가 이미 보이는 것이다. */
-@media (prefers-reduced-motion: reduce) {
-  .intro *,
-  .intro::before,
-  .intro::after {
-    animation: none !important;
-    transition: none !important;
+    font-size: calc(var(--f-landing-sub, 18px) * 0.94);
   }
 }
 
@@ -583,14 +473,17 @@ a {
   font: inherit;
   cursor: pointer;
 }
+.q__choice:hover,
 .q__choice--on {
   border-color: var(--c-accent);
+  background: var(--c-selected);
 }
 /* 탭이 먹혔다는 감각. **표시가 이 연출의 끝에 걸려 있지 않다** —
-   다음 질문으로 가는 것은 setTimeout이고 이 클래스는 눈에 보이는 것뿐이다. */
+   다음 질문으로 가는 것은 setTimeout이고 이 클래스는 눈에 보이는 것뿐이다.
+   바탕을 진하게 덮지 않는다 — 글자가 안 읽히면 피드백이 아니라 사고다. */
 .q__choice--tapped {
   border-color: var(--c-accent);
-  background: var(--c-cta, rgba(125, 119, 139, 0.62));
+  background: var(--c-selected);
 }
 .q__mark {
   color: var(--c-ink-soft);
@@ -630,19 +523,53 @@ a {
   letter-spacing: var(--ls-tight, -0.03em);
 }
 .gate__lines {
-  margin: var(--s5) 0 0;
+  margin: var(--s1) 0 0;
   color: var(--c-ink-soft);
   line-height: var(--lh);
 }
-.gate__label {
-  margin: var(--s5) 0 var(--s1);
+/* 기준 줄 — 그 사람의 자치구와 경과시간이다. 값만 진하고 이음말은 흐리다. */
+.gate__basis {
+  margin: var(--s4) auto 0;
+  max-width: 330px;
   color: var(--c-ink-soft);
   font-size: var(--f-sm);
-  letter-spacing: var(--ls-eyebrow, 0.08em);
+  line-height: var(--lh);
+}
+.gate__basis strong {
+  color: var(--c-ink);
+  font-weight: var(--w-bold);
+}
+/* 라벨은 작고 값은 크다. **정보 사이 간격을 촘촘히 묶는다**(패킷 D-030) —
+   날짜와 경과가 한 덩어리로 읽혀야 "지금 어디쯤인가"가 한눈에 온다. */
+.gate__label {
+  margin: 15px 0 0;
+  color: var(--c-ink-soft);
+  font-size: var(--f-gate-label);
+  font-weight: var(--w-bold);
 }
 .gate__date {
-  margin: 0;
-  font-size: var(--f-lg);
+  margin: 7px 0 0;
+  font-size: var(--f-gate-value);
+  font-weight: var(--w-bold);
+  font-variant-numeric: tabular-nums;
+}
+/* 재방문 게이트만 왼쪽으로 선다(확정 화면 05). 전환(04)은 가운데다. */
+.gate--revisit {
+  align-items: flex-start;
+  text-align: left;
+  padding-top: 128px;
+}
+.gate--revisit .gate__label:first-child {
+  margin-top: 0;
+  color: var(--c-accent);
+}
+.gate--revisit .gate__lines {
+  margin-top: 42px;
+  font-size: var(--f-gate-message);
+  line-height: 1.45;
+  font-weight: var(--w-heavy);
+  color: var(--c-ink);
+  letter-spacing: var(--ls-tight, -0.03em);
 }
 .gate .pg__cta {
   max-width: var(--page);
@@ -651,34 +578,36 @@ a {
 .elapsed {
   display: flex;
   align-items: baseline;
-  gap: var(--s4);
-  margin-top: var(--s2);
+  gap: var(--s2);
+  margin-top: 7px;
 }
 .elapsed__item {
   display: inline-flex;
   align-items: baseline;
   gap: var(--s1);
 }
+/* 날짜와 **같은 크기**다. 경과가 더 크면 화면이 시계처럼 읽힌다. */
 .elapsed__num {
-  font-size: var(--f-hero);
-  font-weight: var(--w-heavy);
+  font-size: var(--f-gate-value);
+  font-weight: var(--w-bold);
   font-variant-numeric: tabular-nums;
-  letter-spacing: var(--ls-tight, -0.03em);
 }
 .elapsed__unit {
+  font-size: var(--f-gate-value);
+  font-weight: var(--w-bold);
+}
+/* 숫자 뒤에 작게. 날짜와 경과 본체는 같은 크기이고 이것만 작다 —
+   둘이 같은 층의 정보라는 것을 크기로 말한다(확정 화면 05). */
+.elapsed__suffix {
+  margin-left: var(--s1);
   color: var(--c-ink-soft);
-  font-size: var(--f-sm);
+  font-size: var(--f-gate-label);
+  font-weight: var(--w-bold);
 }
 
 /* ── 내 회복 경로 HOME ─────────────────────────── */
 .home__hero {
   margin-top: var(--s6);
-}
-.home__titlerow {
-  display: flex;
-  align-items: baseline;
-  gap: var(--s3);
-  flex-wrap: wrap;
 }
 .home__title {
   margin: 0;
@@ -686,25 +615,16 @@ a {
   font-weight: var(--w-heavy);
   letter-spacing: var(--ls-tight, -0.03em);
 }
-.home__time {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--s2);
-}
-.home__chip {
-  padding: var(--s0) var(--s2);
-  border: 1px solid var(--c-line-strong);
-  border-radius: var(--r2);
-  font-variant-numeric: tabular-nums;
-  font-size: var(--f-xs);
-  color: var(--c-ink-soft);
-}
+/* 기준 줄 — 자치구 · 화재로부터의 거리 · 상황. **경과시간 칩을 대신한다.**
+   숫자를 따로 띄우면 그것이 화면의 주인공이 되는데, 여기 주인공은 카드 셋이다. */
 .home__basis {
-  color: var(--c-ink-faint);
-  font-size: var(--f-xs);
+  margin: var(--s3) 0 0;
+  color: var(--c-ink-soft);
+  font-size: var(--f-sm);
+  line-height: var(--lh-tight);
 }
 .home__lead {
-  margin: var(--s3) 0 0;
+  margin: var(--s1) 0 0;
   color: var(--c-ink-soft);
 }
 .home__cards {
@@ -786,14 +706,61 @@ a {
   gap: var(--s3);
 }
 .card {
+  position: relative;
   display: flex;
   align-items: stretch;
   gap: var(--s2);
   border: 1px solid var(--c-line);
   border-radius: var(--r2);
   background: var(--c-surface);
+  overflow: hidden;
   /* 긴 제목·선행문이 잘리면 안 된다. 높이는 내용에 따라 늘어난다. */
   overflow-wrap: anywhere;
+}
+/* 카드 왼쪽 의미 띠 — **색이 혼자 말하지 않는다.** 같은 뜻이 배지 글자와
+   선행 문장으로도 있고, 띠는 목록에서 눈이 먼저 닿는 자리를 만들 뿐이다.
+   띠를 그리는 근거는 제목 문자열이 아니라 클래스(=뷰모델의 판단)다. */
+.card--irreversible::before,
+.card--locked::before,
+.card--done::before,
+.pg__sec--do_not .card::before,
+.pg__sec--missed .card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+}
+/* 되돌릴 수 없는 것이 선행보다 강한 신호다 — 둘 다면 이쪽이 이긴다. */
+.card--locked::before {
+  background: var(--c-prereq);
+}
+.card--irreversible::before {
+  background: var(--c-irreversible);
+}
+.card--done::before {
+  background: var(--c-done);
+}
+.pg__sec--do_not .card::before {
+  background: var(--c-irreversible);
+}
+.pg__sec--missed .card::before {
+  background: var(--c-prereq);
+}
+/* 섹션 제목도 같은 갈래의 색을 쓴다. 확정 화면 07 그대로다. */
+.pg__sec--do_not .pg__sechead {
+  color: var(--c-irreversible);
+}
+.pg__sec--missed .pg__sechead {
+  color: var(--c-prereq);
+}
+/* 띠가 생긴 만큼 글자를 안쪽으로 민다. */
+.card--irreversible > .card__hit,
+.card--locked > .card__hit,
+.pg__sec--do_not .card__hit,
+.pg__sec--missed .card__hit {
+  padding-left: calc(var(--s4) + var(--s1));
 }
 .card__hit {
   display: flex;
@@ -844,26 +811,54 @@ a {
   padding: var(--s4);
   color: var(--c-ink-soft);
 }
+.card--done {
+  background: var(--c-done-card-bg);
+  border-color: var(--c-done-card-line);
+  padding-left: calc(var(--s4) + var(--s1));
+}
+.card--done .card__title {
+  color: var(--c-done-ink);
+}
 .card--dim .card__title,
 .card--done .card__title {
   margin: 0;
 }
-/* 상태는 색이 아니라 글자로 말한다(WCAG 1.4.1). */
+/* 상태는 색이 아니라 글자로 말한다(WCAG 1.4.1). 색은 그 글자를 거드는
+   두 번째 신호일 뿐이라, 배지에서 색을 빼도 뜻이 남는다. */
 .chip {
   display: inline-block;
-  padding: var(--s0) var(--s2);
+  padding: 5px 9px;
   border: 1px solid var(--c-line-strong);
-  border-radius: var(--r1);
+  border-radius: var(--r-pill);
   font-size: var(--f-xs);
+  font-weight: var(--w-bold);
+  line-height: 1.2;
   color: var(--c-ink-soft);
 }
-/* 되돌릴 수 없는 것의 신호. 확정 와이어프레임은 빨강이지만 D-022 팔레트에
-   위험색이 없다 — 색을 새로 만들지 않고 굵기와 테두리로 위계를 세운다.
-   최종 색은 시각 디자인 패스의 몫이고 의미 위계는 여기서 지킨다. */
+/* 되돌릴 수 없는 것의 신호. */
 .chip--warn {
-  color: var(--c-ink);
-  border-color: var(--c-ink-soft);
-  font-weight: var(--w-bold);
+  color: var(--c-irreversible);
+  border-color: var(--c-irreversible-line);
+  background: var(--c-irreversible-bg);
+}
+/* 완료 · 기다리는 중 · 아직 확인 못 함 — 뜻이 다르면 색도 다르다.
+   **`기다리는 중`은 경고가 아니다** — 사용자가 할 일은 끝났고 외부
+   절차가 도는 중이라 차분한 청회색이다. */
+.card--done .chip,
+.chip--done {
+  color: var(--c-done);
+  border-color: var(--c-done-line);
+  background: var(--c-done-bg);
+}
+.chip--waiting {
+  color: var(--c-waiting);
+  border-color: var(--c-waiting-line);
+  background: var(--c-waiting-bg);
+}
+.chip--undetermined {
+  color: var(--c-undetermined);
+  border-color: var(--c-undetermined-line);
+  background: var(--c-undetermined-bg);
 }
 /* 체크 — 잠긴 것은 체크할 수 없어 자리만 남는다(줄이 어긋나지 않게). */
 .card__box {
@@ -872,7 +867,7 @@ a {
   min-height: var(--tap);
   align-self: flex-start;
   margin: var(--s2) 0 0 var(--s2);
-  border: 2px solid var(--c-line-strong);
+  border: 2px solid var(--c-check-line);
   border-radius: var(--r1);
   background: transparent;
   cursor: pointer;
@@ -882,19 +877,30 @@ a {
   opacity: 0.4;
   cursor: default;
 }
-/* 잠긴 카드의 선행 문장 — 표면에 그대로 있다. 더보기에 숨기지 않는다. */
+/* 잠긴 카드의 선행 문장 — 표면에 그대로 있다. 더보기에 숨기지 않는다.
+   확정 화면 08에서 이 문장이 상자를 얻었다. 카드 안의 다른 글과 섞이면
+   "무엇을 먼저 해야 하는가"가 안 보이기 때문이다. */
 .lock {
   display: block;
-  color: var(--c-ink-soft);
+  margin-top: var(--s2);
+  padding: 10px 11px;
+  border: 1px solid var(--c-prereq-line);
+  border-radius: var(--r2);
+  background: var(--c-prereq-bg);
+  color: var(--c-prereq-ink);
   font-size: var(--f-sm);
-  line-height: var(--lh);
+  line-height: var(--lh-tight);
 }
 .lock--block {
   margin: var(--s4) 0 0;
 }
 .lock__key {
-  color: var(--c-accent);
+  color: var(--c-prereq);
   font-weight: var(--w-bold);
+}
+/* 완료한 것에는 선행 안내를 그리지 않는다 — 이미 지나온 문턱이다. */
+.card--done .lock {
+  display: none;
 }
 
 /* ── 접힘 (완료 · 조건부 · 제외) ───────────────── */
@@ -927,7 +933,7 @@ a {
   position: relative;
   padding-left: var(--s5);
   padding-bottom: var(--s5);
-  border-left: 1px solid var(--c-line);
+  border-left: 2px solid var(--c-axis);
 }
 .tline__node:last-child {
   border-left-color: transparent;
@@ -943,6 +949,18 @@ a {
 }
 .tline__node--info .tline__dot {
   background: var(--c-accent);
+}
+/* 단계 카드의 높이를 맞춘다 — 개수가 다르다고 칸이 들쭉날쭉하면
+   "지금 어디쯤인가"를 읽는 눈금이 흔들린다(확정 화면 10). */
+.tline__sum {
+  min-height: 56px;
+}
+/* 조사서가 나온 뒤 — 잠김은 **보조문구 한 줄로만** 말한다. 자물쇠 그림도
+   경고색도 없다. 조사서를 받으면 열리는 자리이지 막힌 곳이 아니다. */
+.tline__node--locked .tline__body {
+  background: var(--c-bg-soft);
+  border-radius: var(--r2);
+  padding: 0 var(--s3);
 }
 .tline__label {
   font-weight: var(--w-bold);
@@ -1060,10 +1078,40 @@ a {
   border-top: 1px solid var(--c-line);
   font-size: var(--f-sm);
 }
+/* 압축형 — 확정 화면 13에서 초기안의 3분의 2 높이가 됐다. 출처가 본문보다
+   커 보이면 위계가 뒤집힌다. */
 .src--card {
-  border: 1px solid var(--c-line);
+  border: 1px solid var(--c-line-strong);
   border-radius: var(--r2);
-  padding: var(--s4);
+  padding: 11px 14px 10px;
+  margin-top: var(--s5);
+  border-top: 1px solid var(--c-line-strong);
+  background: var(--c-surface);
+}
+.src__item + .src__item {
+  margin-top: var(--s3);
+  padding-top: var(--s3);
+  border-top: 1px solid var(--c-rule-strong);
+}
+/* 확인일과 원문 링크가 아래 한 줄에서 마주 본다. */
+.src__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s3);
+  margin-top: var(--s3);
+  padding-top: var(--s2);
+  border-top: 1px solid var(--c-rule-strong);
+}
+.src__checked {
+  color: var(--c-ink-faint);
+  font-size: var(--f-xs);
+}
+/* 목록 카드에서 첫 항목 뒤에 붙는다 — 근거가 하나뿐인 것처럼 보이지 않게. */
+.src__more {
+  margin-left: var(--s1);
+  color: var(--c-ink-faint);
+  font-size: var(--f-xs);
 }
 .card__src {
   display: flex;

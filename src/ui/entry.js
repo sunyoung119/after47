@@ -9,7 +9,7 @@
 
 import { COPY } from "./copy.js";
 import { surveyView, formatDate } from "./view.js";
-import { elapsedParts, isoDay } from "./format.js";
+import { elapsedParts, elapsedText, isoDay, splitEmphasis } from "./format.js";
 
 // 선택지를 탭한 뒤 다음 질문으로 넘어가기까지의 시간. 확정 범위는
 // 150–250ms다 — **탭이 먹혔다는 감각**을 주기 위한 것이고, 그 이상 끌면
@@ -21,8 +21,11 @@ export const BASIC_KEYS = ["fire_at"];
 
 // ── 랜딩 (첫 방문만) ───────────────────────────────
 //
-// 기능 목록을 늘어놓는 홈이 아니라 서비스의 **문**이다. 이미지는 쓰지
-// 않는다 — 남의 집 화재 사진은 지금 이 사람이 볼 것이 아니다.
+// 기능 목록을 늘어놓는 홈이 아니라 서비스의 **문**이다.
+//
+// **배경은 확정 사진이다.** 화재 사진이 아니라 불이 꺼진 뒤의 하늘이고,
+// negative space를 충분히 남기는 것이 시안의 요구다. 글자 리빌 연출은
+// 폐기됐다 — 사진이 그 자리를 대신한다.
 //
 // 플래그는 **state에 넣어 saveState로 저장한다** — localStorage 직접
 // 호출 금지는 UI에서도 그대로다(누수 탐지가 잡는다).
@@ -31,9 +34,8 @@ export function landingView(state = {}) {
     show: state.intro_seen !== true,
     eyebrow: COPY.landing.eyebrow,
     brand: COPY.landing.brand,
-    // 글자가 하나씩 드러나지만 보조기술에는 한 덩어리로 읽힌다.
-    letters: COPY.landing.letters,
-    lead: COPY.landing.lead,
+    // 두 줄이다. 화면 코드가 줄바꿈을 만들지 않도록 여기서 나눠 준다.
+    lead: COPY.landing.lead.split("\n"),
     cta: COPY.landing.cta,
     footer: COPY.landing.footer,
   };
@@ -59,6 +61,8 @@ export function basicCheckView({ state = {}, data = {}, now = Date.now() } = {})
     label: COPY.basic.label,
     title: COPY.basic.title,
     help: COPY.basic.help,
+    // `경과 시간`과 `지역`만 굵다. 화면은 조각을 받아 그리기만 한다.
+    helpParts: splitEmphasis(COPY.basic.help, COPY.basic.helpEmphasis),
     date: {
       label: COPY.basic.date,
       value,
@@ -133,10 +137,21 @@ export function scopeNoticeView(state = {}) {
 //
 // **'AI 분석 중'·'결과 생성 중'류 표현 금지.** 기술 시스템이 주인공인
 // 말은 지금 이 사람에게 아무 의미가 없다.
-export function transitionView() {
+// 기준 줄은 **그 사람의 실제 값으로 조립한다.** 값이 없는 조각은 빠지고
+// (자치구를 못 고른 경우), 남은 것만 가운뎃점으로 이어진다. 화면 코드는
+// 이 배열을 강조해 그리고 뒤에 `을 바탕으로`를 붙인다.
+export function transitionView({ state = {}, data = {}, now = Date.now() } = {}) {
+  const 구 = (data.districts || []).find((d) => d.id === state.district) || null;
+  const elapsed = elapsedText(state.fire_at ?? null, now);
   return {
     title: COPY.transition.title,
-    lines: COPY.transition.lines,
+    basis: [
+      구?.name ?? null,
+      elapsed ? COPY.transition.elapsedLabel(elapsed) : null,
+      COPY.transition.situation,
+    ].filter(Boolean),
+    basisTail: COPY.transition.basisTail,
+    message: COPY.transition.message,
     cta: COPY.transition.cta,
   };
 }
@@ -158,8 +173,13 @@ export function revisitView({ state = {}, saved = null, now = Date.now() } = {})
     date: fireAt ? formatDate(fireAt) : null,
     elapsedLabel: COPY.revisit.elapsedLabel,
     elapsed: elapsedItems(fireAt, now),
+    // 숫자 뒤에 작게 붙는 한 글자. 날짜와 경과가 같은 크기로 나란히 서고
+    // 이것만 작아서, 둘이 같은 층의 정보라는 것이 크기로 읽힌다.
+    elapsedSuffix: COPY.revisit.elapsedSuffix,
     lines: COPY.revisit.lines,
     cta: COPY.revisit.cta,
+    // 우상단. **랜딩으로 갈 뿐 아무것도 지우지 않는다.**
+    home: COPY.revisit.home,
   };
 }
 

@@ -58,9 +58,29 @@ export function elapsedParts(fireAt, now = Date.now()) {
 // HOME 상단 칩. 확정 화면의 형식은 `01일 03:00`이다 — 일은 두 자리로
 // 채우고 시각은 시계 표기를 쓴다. 게이트의 `1일 03시간 30분`과 다른 것이
 // 의도다(entry.js의 elapsedItems가 그쪽을 만든다).
+//
+// ★ **지금 화면에 없다.** 시각 FINAL이 HOME의 칩을 걷고 문장 안의
+//   `화재 발생 후 1일 3시간`(아래 elapsedText)으로 바꿨다. 형식은 남겨
+//   둔다 — 칩이 다시 필요해지면 여기가 그 자리다.
 export function elapsedChip(fireAt, now = Date.now()) {
   const p = elapsedParts(fireAt, now);
   return p ? `${pad2(p.days)}일 ${pad2(p.hours)}:${pad2(p.minutes)}` : null;
+}
+
+// 문장 안에 들어가는 경과 — `1일 3시간`. HOME과 전환 화면이 쓴다.
+//
+// 게이트의 `1일 03시간 30분`과 달리 **분을 말하지 않고 자리를 채우지도
+// 않는다.** 게이트는 그 숫자가 화면의 주인공이라 정확하고, 이쪽은 문장의
+// 일부라 읽기 쉬운 쪽이 맞다(확정 화면 04·06).
+//
+// 하루가 안 지났으면 `3시간`, 한 시간도 안 지났으면 `30분`이다. `0일
+// 0시간`은 진입 직후의 흔한 값인데 아무 말도 하지 않는 표기다.
+export function elapsedText(fireAt, now = Date.now()) {
+  const p = elapsedParts(fireAt, now);
+  if (!p) return null;
+  if (p.days > 0) return `${p.days}일 ${p.hours}시간`;
+  if (p.hours > 0) return `${p.hours}시간`;
+  return `${p.minutes}분`;
 }
 
 // "2026-08-29" — <input type="date">에 넣는 값. 로컬 시각 기준이다.
@@ -69,4 +89,29 @@ export function isoDay(iso) {
   const d = parse(iso);
   if (!d) return null;
   return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+}
+
+// 문장 안에서 몇 낱말만 굵게 — `경과 시간`과 `지역`처럼.
+//
+// **화면 코드가 문자열을 다시 뒤지지 않게** 여기서 조각으로 만든다.
+// 강조어가 문장에 없으면 그냥 한 조각으로 돌아온다(빠뜨려도 화면은 산다).
+export function splitEmphasis(text, words = []) {
+  let parts = [{ text: String(text ?? ""), strong: false }];
+  for (const w of words) {
+    if (!w) continue;
+    const next = [];
+    for (const part of parts) {
+      const i = part.strong ? -1 : part.text.indexOf(w);
+      if (i < 0) {
+        next.push(part);
+        continue;
+      }
+      if (i > 0) next.push({ text: part.text.slice(0, i), strong: false });
+      next.push({ text: w, strong: true });
+      const rest = part.text.slice(i + w.length);
+      if (rest) next.push({ text: rest, strong: false });
+    }
+    parts = next;
+  }
+  return parts;
 }

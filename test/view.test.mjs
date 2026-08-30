@@ -513,14 +513,22 @@ t(
     .slice(기본.indexOf(".intro {"), 기본.indexOf("/* ── 셸"))
     .replace(/\/\*[\s\S]*?\*\//g, "");
 
-  t("인트로 기본 상태에 opacity:0이 없다 (연출 없이도 보인다)", !/opacity:\s*0\s*;/.test(인트로));
+  t("랜딩 기본 상태에 opacity:0이 없다 (연출 없이도 보인다)", !/opacity:\s*0\s*;/.test(인트로));
   t("숨겼다 되돌리는 forwards를 쓰지 않는다", !/forwards/.test(인트로));
-  // 폴백이 없으면 토큰 하나가 빠지는 순간 연출이 통째로 사라진다.
+  // 시각 FINAL에서 등장 연출이 통째로 폐기됐다(사진 배경이 대신한다).
+  // **검사는 남긴다** — 연출이 다시 들어오면 그 순간부터 폴백을 요구한다.
+  // 폴백이 없으면 토큰 하나가 빠지는 순간 선언이 통째로 무효가 되고,
+  // 그것이 인트로 글자가 영원히 안 보였던 사고의 뿌리였다.
   const anim = 인트로.match(/animation[^;]*;/g) || [];
   t(
-    `animation의 var에 전부 리터럴 폴백이 있다 (${anim.length}개 선언)`,
-    anim.length >= 5 && anim.every((a) => !/var\(--[a-z0-9-]+\)/.test(a))
+    `랜딩 animation의 var에 전부 리터럴 폴백이 있다 (${anim.length}개 선언)`,
+    anim.every((a) => !/var\(--[a-z0-9-]+\)/.test(a)),
+    anim.join(" | ")
   );
+  // 사진이 안 떠도 화면은 남아야 한다 — 배경을 콘텐츠의 전제로 만들지 않는다.
+  t("사진이 없어도 바탕색과 글자색이 있다",
+    /\.intro\s*\{[^}]*background:[^;]*--c-landing-bg/.test(인트로) &&
+      /\.intro\s*\{[^}]*color:[^;]*--c-landing-ink/.test(인트로));
   // 옛 tokens.css가 캐시에 남아 있으면 새 토큰이 안 풀린다. 폴백이 유일한
   // 방어다. **연출에 쓰는 var가 안 풀리면 선언 전체가 무효**가 되고, 그것이
   // 인트로 글자가 통째로 사라졌던 사고의 뿌리였다.
@@ -530,11 +538,13 @@ t(
   // 배경색만 빠질 뿐 글자가 남는다. 대신 인트로 전용 색을 전부 넣어
   // 검사를 좁히는 대신 촘촘하게 했다.
   const 신설 = [
-    "--c-glow-0", "--c-glow-1", "--c-glow-2", "--c-glow-3", "--c-glow-soft",
-    "--c-grain", "--c-title-glow", "--c-ink-micro", "--c-bg-deep", "--ls", "--ls-tight",
+    "--c-landing-bg", "--c-landing-ink", "--c-landing-ink-soft", "--c-landing-ink-dim",
+    "--c-landing-ink-faint", "--c-veil-top-0", "--c-veil-bottom-2", "--c-landing-shadow",
+    "--f-landing-title", "--f-landing-sub", "--f-landing-cta", "--s-landing-edge",
+    "--ls", "--ls-tight",
   ];
   t(
-    "인트로 전용 토큰은 어디서도 폴백 없이 쓰이지 않는다",
+    "랜딩 전용 토큰은 어디서도 폴백 없이 쓰이지 않는다",
     신설.every((v) => !css.includes(`var(${v})`)),
     신설.filter((v) => css.includes(`var(${v})`)).join(", ")
   );
@@ -648,7 +658,7 @@ t(
   const refs = html.match(/(?:href|src)="src\/ui\/[^"]+"/g) || [];
   // ★ 값까지 본다. 존재만 보면 "올리는 것을 잊은 배포"를 못 잡는다 —
   //   화면 파일을 고치면서 v를 올리면 **이 줄의 숫자도 함께 올린다.**
-  const V = "?v=10";
+  const V = "?v=11";
   t(
     `화면 파일 참조가 전부 ${V}다 (${refs.length}개)`,
     refs.length >= 3 && refs.every((r) => r.includes(V)),
@@ -667,16 +677,18 @@ t("설명(descriptor)이 확정 문구다", lv.eyebrow === "화재피해 회복 
 t("서비스명이 확정 문구다", lv.brand === "일상으로");
 t(
   "메인 문구가 확정 문구 그대로다",
-  lv.lead === "불이 꺼진 뒤, 다시 일상으로 가는 길을 함께 합니다",
-  lv.lead
+  lv.lead.join("\n") === "불이 꺼진 뒤,\n다시 일상으로 가는 길을 안내합니다.",
+  lv.lead.join(" / ")
 );
+t("두 줄로 나뉘어 온다 (화면이 줄바꿈을 만들지 않는다)", lv.lead.length === 2);
 t("CTA가 확정 문구다", lv.cta === "회복 시작하기");
 t(
   "푸터가 확정 문구다",
   lv.footer === "흩어진 제도와 정보를, 당신의 상황과 시간에 맞게 잇습니다.",
   lv.footer
 );
-t("쪼개진 글자를 붙이면 서비스명이 된다", lv.letters.join("") === lv.brand);
+// 글자 리빌은 시각 FINAL에서 폐기됐다 — 사진 배경이 그 자리를 대신한다.
+t("글자 리빌 연출이 없다", !("letters" in lv));
 // 6단계의 마이크로카피는 확정 랜딩에서 빠졌다. 남아 있으면 확정 화면과 다르다.
 t("6단계 마이크로카피가 랜딩에 없다", !("micro" in lv));
 t("푸터에 링크가 없다", !("links" in lv));
@@ -688,6 +700,14 @@ t("라벨·제목·help가 확정 문구다",
     bc.title === "화재가 있었던 날짜와 지역을 알려주세요" &&
     bc.help === "경과 시간과 지역에 따라 필요한 안내가 달라집니다.");
 t("필드 이름이 '화재 발생일'과 '지역'이다", bc.date.label === "화재 발생일" && bc.district.label === "지역");
+// `경과 시간`과 `지역`만 굵다. **화면이 문자열을 다시 뒤지지 않게** 조각으로 온다.
+t("help가 조각으로 온다", Array.isArray(bc.helpParts) && bc.helpParts.length === 4, JSON.stringify(bc.helpParts));
+t(
+  "굵은 조각이 '경과 시간'과 '지역' 둘뿐이다",
+  bc.helpParts.filter((x) => x.strong).map((x) => x.text).join(",") === "경과 시간,지역",
+  bc.helpParts.filter((x) => x.strong).map((x) => x.text).join(",")
+);
+t("조각을 이으면 원래 문장이다", bc.helpParts.map((x) => x.text).join("") === bc.help);
 t("CTA가 '다음'이다", bc.cta === "다음");
 t("QR로 들어온 지역이 채워져 있고 이름으로 보인다", bc.district.id === "mapo" && bc.district.name === "마포구");
 t("지역은 25개 전수에서 고른다", bc.district.options.length === 25);
@@ -707,7 +727,7 @@ t("채운 날짜를 '답했다'고 세지 않는다", bc빈.date.answered === fa
 // 질문 MASTER 문법 — 모든 질문 화면이 같은 문법을 쓴다.
 const mv = masterView({ questions, state: { district: "mapo", fire_at: FIRE }, data, now: NOW });
 t("소라벨이 '상황 확인'이다", mv.eyebrow === "상황 확인");
-t("하단 한 줄이 확정 문구다", mv.footer === "답변에 따라 상황에 맞는 질문만 이어집니다.", mv.footer);
+t("하단 한 줄이 확정 문구다", mv.footer === "답변에 따라 당신의 상황에 맞는 질문만 이어집니다.", mv.footer);
 t("좌상단이 서비스명이다", mv.brand === "일상으로");
 // ★ 분모형 진행률 금지. 조건에 따라 질문 수가 변해서 `3/18`이 거짓말이 된다.
 t(
@@ -742,15 +762,27 @@ t("본문이 확정된 세 문장 그대로다",
 t("두 갈래 버튼이 확정 문구다", sc.primary === "이 범위로 계속하기" && sc.secondary === "건물 종류 다시 선택");
 
 // 질문 종료 전환 — 기술이 주인공인 표현 금지.
-const tr = transitionView();
+// 기준 줄은 **그 사람의 실제 값으로 조립된다.** 일반론이 아니다.
+const tr = transitionView({
+  state: { district: "mapo", fire_at: FIRE },
+  data,
+  now: Date.parse(FIRE) + 27 * 36e5,
+});
 t("전환 제목이 '확인했습니다'다", tr.title === "확인했습니다");
-t("전환 문구가 확정 두 줄이다",
-  tr.lines.join("\n") === "지금 상황과 화재 후 경과 시간을 바탕으로\n먼저 확인할 것부터 정리합니다.",
-  tr.lines.join(" / "));
+t(
+  "기준 줄이 자치구 · 경과 · 상황 셋이다",
+  tr.basis.join(" · ") === "마포구 · 화재 발생 후 1일 3시간 · 당신의 상황",
+  tr.basis.join(" · ")
+);
+t("이음말이 '을 바탕으로'다", tr.basisTail === "을 바탕으로");
+t("전환 문구가 확정 한 줄이다", tr.message === "당신의 회복에 필요한 내용을 안내합니다.", tr.message);
 t("전환 CTA가 '내 회복 경로 보기'다", tr.cta === "내 회복 경로 보기");
+// 자치구를 못 고른 사람에게 빈 조각을 그리지 않는다.
+const tr구없이 = transitionView({ state: { fire_at: FIRE }, data, now: Date.parse(FIRE) + 27 * 36e5 });
+t("값이 없는 조각은 빠진다", tr구없이.basis.length === 2, tr구없이.basis.join(" · "));
 t(
   "'AI 분석 중'·'결과 생성 중'류 표현이 없다",
-  ![tr.title, ...tr.lines, tr.cta].some((s) => /AI|분석 중|생성 중|처리 중/.test(s))
+  ![tr.title, ...tr.basis, tr.message, tr.cta].some((s) => /AI|분석 중|생성 중|처리 중/.test(s))
 );
 
 // 재방문 경과시간 게이트 — 모든 재방문이 항상 거친다.
@@ -770,8 +802,14 @@ t(
   게이트.elapsed.map((e) => e.num + e.unit).join(" ")
 );
 t("게이트 문구가 확정 두 줄이다",
-  게이트.lines.join("\n") === "지금 시점에 맞춰\n필요한 안내를 다시 정리합니다.");
-t("게이트 CTA가 '지금 안내 보기'다", 게이트.cta === "지금 안내 보기");
+  게이트.lines.join("\n") === "지금 시점에 맞는 안내로\n다시 정리합니다.",
+  게이트.lines.join(" / "));
+t("게이트 CTA가 '안내 보기'다", 게이트.cta === "안내 보기");
+// 숫자 뒤에 작게 붙는다. 날짜와 경과가 같은 크기로 서고 이것만 작다.
+t("경과 뒤에 '경과'가 붙는다", 게이트.elapsedSuffix === "경과");
+// 우상단 — **랜딩으로 갈 뿐 아무것도 지우지 않는다.**
+t("우상단이 '처음으로'다", 게이트.home === "처음으로", 게이트.home);
+t("'다시 설문하기'는 개명됐다", !JSON.stringify(게이트).includes("다시 설문하기"));
 // 현재 시각 시계가 아니다. `3일째` 같은 중복 표기도 하지 않는다.
 t(
   "게이트가 현재 시각을 그리지 않는다",
@@ -787,8 +825,14 @@ const r1 = 결과(전.state);
 // HOME — 카드 셋과 보조 둘. 개수는 동적이다.
 t("HOME 제목이 '내 회복 경로'다", r1.home.title === "내 회복 경로");
 t("HOME 리드가 확정 문구다", r1.home.lead === "지금 필요한 안내를 정리했습니다.");
-t("경과시간 칩이 `NN일 HH:MM` 형식이다", /^\d{2}일 \d{2}:\d{2}$/.test(r1.home.chip), r1.home.chip);
-t("칩 옆에 '기준'이 붙는다", r1.home.basis === "기준");
+// 확정 화면이 경과시간 칩을 걷고 문장 한 줄로 바꿨다.
+t("경과시간 칩이 없다", !("chip" in r1.home));
+t(
+  "기준 줄이 자치구 · 경과 · 상황이다",
+  r1.home.basis === "마포구 · 화재 발생 후 3시간 · 당신의 상황을 기준으로",
+  r1.home.basis
+);
+t("기준 줄에 현재 시각이 없다", !/\d{2}:\d{2}/.test(r1.home.basis), r1.home.basis);
 t(
   "핵심 카드가 셋이고 확정 제목·설명이다",
   r1.home.cards.map((c) => `${c.title}/${c.desc}`).join(" | ") ===
@@ -845,7 +889,7 @@ t(
 // 체크리스트 — 실행해야 하는 것. 잠긴 불가역도 남는다.
 const cl = r1.checklist;
 t("체크리스트 desc가 확정 문구다", cl.desc === "하나씩 해나가야 하는 일입니다.");
-t("하단 문구가 확정 문구다", cl.footer === "체크한 항목은 완료한 일로 표시됩니다.");
+t("하단 문구가 확정 문구다", cl.footer === "체크한 항목은 이 기기에 완료 상태로 기억됩니다.", cl.footer);
 t("체크리스트는 전부 실행 안내(action)다", cl.items.every((i) => i.guidanceType === "action"));
 t(
   "금지와 지나간 것은 체크리스트에 없다",
@@ -909,7 +953,8 @@ t(
   const 대기 = 결과({ ...전.state, adjuster_present: true, completed: ["investigation-report"] },
     Date.parse(FIRE) + 8 * 24 * 36e5);
   t("알아둘 desc가 확정 문구다",
-    대기.reference.desc === "당장 행동할 필요는 없지만, 알아두어야 할 정보입니다.");
+    대기.reference.desc === "당장 행동할 필요는 없지만, 이후를 위해 확인해둘 정보입니다.",
+    대기.reference.desc);
   t("폐기된 desc를 쓰지 않는다",
     !JSON.stringify(대기.reference).includes("당장은 하지 않아도 되는 정보입니다."));
   t("awareness와 waiting이 한 목록에 있다",
@@ -926,7 +971,7 @@ t(
 // 회복 타임라인 — 노드 다섯. 날짜를 만들어내지 않는다.
 const tlv = r1.timeline;
 t("타임라인 desc가 확정 문구다",
-  tlv.desc === "시간이 지나며 필요한 안내가 어떻게 이어지는지 보여드립니다.");
+  tlv.desc === "회복 과정에서 언제 무엇을 확인하면 되는지 살펴보세요.", tlv.desc);
 t(
   "노드가 화재 발생일 → 오늘 → 가까운 시일에 → 계속 확인 → 조사서가 나온 뒤다",
   tlv.nodes.map((n) => n.label).join(" → ") ===

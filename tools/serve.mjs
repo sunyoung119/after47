@@ -30,6 +30,7 @@ const MIME = {
   // 자체 호스팅 웹폰트. 없으면 octet-stream으로 나가는데, 브라우저마다
   // 받아주는 정도가 달라 로컬에서만 폰트가 안 먹는 일이 생긴다.
   ".woff2": "font/woff2",
+  ".webp": "image/webp",
 };
 
 const server = createServer(async (req, res) => {

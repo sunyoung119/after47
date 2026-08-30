@@ -11,7 +11,7 @@
 import { COPY, STATUS_LABEL, NODE_LABEL, TOPIC_ORDER, topicLabel } from "./copy.js";
 import { buildRows } from "./rows.js";
 import { formatDate } from "./view.js";
-import { dotDate, clockTime, shortDate, elapsedChip } from "./format.js";
+import { dotDate, clockTime, shortDate, elapsedText } from "./format.js";
 
 // HOME에서 갈 수 있는 다섯 화면.
 export const RESULT_PAGES = ["priority", "checklist", "reference", "timeline", "topics"];
@@ -32,6 +32,11 @@ const SCENE_RELEASE = "scene-release";
 // 자치구 미선택(그쪽은 자치구 선택으로 보낸다)과 이 보험 두 키.
 // **test/view.test.mjs가 이 목록이 여전히 전부인지 검사한다.**
 const UNDETERMINED_KEYS = ["insurance_self", "insurance_dwelling"];
+
+// 상태 배지의 색 갈래. **엔진 status가 근거다** — 라벨 문자열을 읽어
+// 색을 고르지 않는다(제목·id에서 의미를 추론하지 않는 규칙과 같다).
+// 여기 없는 status는 색 없는 기본 배지로 그려진다.
+const CHIP_KIND = { 완료: "done", 미판정: "undetermined" };
 
 // ── 바탕 ───────────────────────────────────────────
 // 화면 여섯이 같은 행 묶음을 읽는다. 화면마다 다시 만들면 같은 사람의
@@ -59,11 +64,13 @@ export function homeView(base) {
   const p = priorityView(base);
   const c = checklistView(base);
   const r = referenceView(base);
+  // 기준 줄 — **그 사람의 자치구와 화재로부터의 거리다.** 확정 화면이
+  // 경과시간 칩을 걷고 이 문장으로 바꿨다. 숫자를 따로 띄우면 그것이
+  // 화면의 주인공이 되는데, HOME에서 주인공은 다음에 볼 카드 셋이다.
+  const 구 = (base.data?.districts || []).find((d) => d.id === base.state?.district) || null;
   return {
     title: COPY.home.title,
-    // 경과시간 칩. 현재 시각이 아니라 화재로부터의 거리다.
-    chip: elapsedChip(base.fireAt, base.now),
-    basis: COPY.home.basis,
+    basis: COPY.home.basis(구?.name ?? null, elapsedText(base.fireAt, base.now)),
     lead: COPY.home.lead,
     // 핵심 카드 셋. 개수는 동적이다 — 와이어프레임의 숫자는 예시였다.
     cards: [
@@ -114,6 +121,7 @@ export function checklistView(base) {
   const done = base.done.map((r) => ({
     ...r,
     statusLabel: STATUS_LABEL["완료"],
+    statusKind: CHIP_KIND["완료"],
     // 기록이 없다고 완료가 아닌 것은 아니다.
     doneOn: r.completedAt ? formatDate(r.completedAt) : null,
   }));
@@ -175,7 +183,11 @@ export function referenceView(base) {
   const awareness = base.sections
     .filter((r) => r.guidanceType === "awareness")
     .map((r) => ({ ...r, stateLabel: null }));
-  const waiting = base.waiting.map((r) => ({ ...r, stateLabel: COPY.reference.waiting }));
+  const waiting = base.waiting.map((r) => ({
+    ...r,
+    stateLabel: COPY.reference.waiting,
+    stateKind: "waiting",
+  }));
   const items = [...awareness, ...waiting];
   return {
     title: COPY.reference.title,
@@ -273,12 +285,17 @@ export function topicDetailView(base, group) {
     .map((r) => ({ ...r, statusLabel: null }));
   const undetermined = base.excluded
     .filter((r) => mine(r) && r.status === "미판정")
-    .map((r) => ({ ...r, statusLabel: STATUS_LABEL["미판정"], undetermined: true }));
+    .map((r) => ({
+      ...r,
+      statusLabel: STATUS_LABEL["미판정"],
+      statusKind: CHIP_KIND["미판정"],
+      undetermined: true,
+    }));
   // 완료했다고 그 안내가 내 상황에 해당하지 않게 되는 것은 아니다.
   // 완료 '처리'는 체크리스트의 일이고, 여기는 지도다.
   const done = base.done
     .filter(mine)
-    .map((r) => ({ ...r, statusLabel: STATUS_LABEL["완료"] }));
+    .map((r) => ({ ...r, statusLabel: STATUS_LABEL["완료"], statusKind: CHIP_KIND["완료"] }));
 
   const items = [...live, ...undetermined, ...done].map((r) => ({
     ...r,
@@ -288,13 +305,16 @@ export function topicDetailView(base, group) {
   const pick = (status) =>
     base.excluded
       .filter((r) => mine(r) && r.status === status)
-      .map((r) => ({ ...r, statusLabel: STATUS_LABEL[status] }));
+      .map((r) => ({ ...r, statusLabel: STATUS_LABEL[status], statusKind: CHIP_KIND[status] ?? null }));
   const conditional = pick("조건부");
   const excluded = pick("제외");
 
+  const label = topicLabel(group);
   return {
     group,
-    label: topicLabel(group),
+    label,
+    // 주제명 아래 한 줄. 표시 라벨로 조합한다(맞춤 문장은 콘텐츠 백로그).
+    desc: COPY.topicDetail.desc(label),
     countLabel: COPY.topicDetail.count(items.length),
     count: items.length,
     items,
@@ -324,6 +344,7 @@ export function actionDetailView(base, id) {
     lock: checkItem(r).lock,
     warn: r.irreversible ? COPY.checklist.irreversible : null,
     statusLabel: r.status && r.status !== "해당" ? STATUS_LABEL[r.status] ?? null : null,
+    statusKind: r.status && r.status !== "해당" ? CHIP_KIND[r.status] ?? null : null,
     // 조례 항목의 degrade(D-003) — 지원 여부와 금액을 확정하는 곳은 구청이다.
     // 금액은 25개 구 전부 미상이고 부서도 9개 구가 null이라 이 줄이 기본 경로다.
     ordinanceNote: r.ordinanceBased ? COPY.actionDetail.ordinanceNote(r.dept) : null,
@@ -354,6 +375,7 @@ export function undeterminedView(base, id, { questions = [] } = {}) {
 
   return {
     label: COPY.undetermined.label,
+    labelKind: CHIP_KIND["미판정"],
     topic: topicLabel(r.group),
     title: r.title,
     summary: r.summary,
@@ -411,6 +433,9 @@ export function sourceOf(r) {
           url: s.url,
         })
       ),
+      // 목록 카드는 첫 항목만 싣는다. 나머지가 몇 건인지는 밝힌다 —
+      // **없는 척하지 않는다.** 전량은 Action 상세가 그린다.
+      more: r.sources.length > 1 ? COPY.topicDetail.sourceMore(r.sources.length - 1) : null,
     };
   }
 
@@ -429,6 +454,7 @@ export function sourceOf(r) {
           url: null,
         }),
       ],
+      more: null,
     };
   }
 
@@ -437,6 +463,7 @@ export function sourceOf(r) {
       kind: "legacy",
       label: COPY.actionDetail.sourceTitle,
       items: [item({ checkedAt: dotDate(r.checkedAt), url: r.sourceUrl })],
+      more: null,
     };
   }
 

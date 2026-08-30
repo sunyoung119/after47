@@ -30,8 +30,12 @@ const btn = (cls, label, fn) => {
 
 // ── 랜딩 (첫 방문만) ───────────────────────────────
 //
-// 기존 인트로의 새벽 그라데이션과 글자 리빌 연출을 그대로 쓰고 콘텐츠만
-// 바꾼다. [회복 시작하기]가 진짜 버튼이고 화면 탭은 보조다.
+// **확정 사진 배경 위에 글자를 얹는다.** 새벽 그라데이션과 글자 리빌
+// 연출은 폐기됐다 — 사진이 그 자리를 대신한다.
+//
+// 사진은 `<img>`다. CSS 배경이 아니라 요소로 두는 것은 확정 화면의 구조
+// 그대로이고(위에서 조금 내려 하늘의 여백을 남긴다), 사진이 안 떠도
+// 어두운 바탕에 흰 글자가 남아 읽힌다.
 //
 // ★ `{ once: true }`를 걸지 않는다. 첫 탭이 저장을 기다리다 소진되면
 //   사람이 첫 화면에 갇힌다.
@@ -39,18 +43,29 @@ export function renderLanding(host, lv, onPass) {
   clear(host);
   host.hidden = false;
 
+  const bg = el("img", "intro__bg");
+  // 배경 사진이다. 정보를 나르지 않으므로 보조기술에서 건너뛴다.
+  bg.src = "assets/img/landing-bg.webp";
+  bg.setAttribute("alt", "");
+  bg.setAttribute("aria-hidden", "true");
+  // 첫 화면의 그림이라 늦게 받을 이유가 없다.
+  bg.setAttribute("fetchpriority", "high");
+  host.appendChild(bg);
+  // 위아래 그라데이션 — 글자가 얹히는 자리만 어둡게 눌러 준다.
+  host.appendChild(el("div", "intro__veil intro__veil--top"));
+  host.appendChild(el("div", "intro__veil intro__veil--bottom"));
+
+  host.appendChild(el("p", "intro__eyebrow", lv.eyebrow));
+
   const content = el("section", "intro__content");
-  content.appendChild(el("p", "intro__eyebrow", lv.eyebrow));
-
-  const title = el("h1", "intro__title");
-  title.setAttribute("aria-label", lv.brand);
-  const reveal = el("span", "intro__reveal");
-  reveal.setAttribute("aria-hidden", "true");
-  for (const ch of lv.letters) reveal.appendChild(el("span", null, ch));
-  title.appendChild(reveal);
-  content.appendChild(title);
-
-  content.appendChild(el("p", "intro__sub", lv.lead));
+  content.appendChild(el("h1", "intro__title", lv.brand));
+  const sub = el("p", "intro__sub");
+  lv.lead.forEach((line, i) => {
+    if (i) sub.appendChild(el("br"));
+    sub.appendChild(el("span", null, line));
+  });
+  content.appendChild(sub);
+  host.appendChild(content);
 
   const actions = el("div", "intro__actions");
   const cta = el("button", "intro__cta", lv.cta);
@@ -60,10 +75,9 @@ export function renderLanding(host, lv, onPass) {
     onPass();
   });
   actions.appendChild(cta);
-  content.appendChild(actions);
-  host.appendChild(content);
+  actions.appendChild(el("p", "intro__footer", lv.footer));
+  host.appendChild(actions);
 
-  host.appendChild(el("p", "intro__footer", lv.footer));
   host.addEventListener("click", onPass);
 }
 
@@ -74,7 +88,9 @@ export function renderLanding(host, lv, onPass) {
 export function renderBasicCheck(main, bv, { onDate, onDistrict, onNext }) {
   main.appendChild(el("p", "pg__eyebrow", bv.label));
   main.appendChild(el("h2", "pg__title", bv.title));
-  main.appendChild(el("p", "pg__desc", bv.help));
+  const help = el("p", "pg__desc");
+  for (const part of bv.helpParts) help.appendChild(el(part.strong ? "strong" : "span", null, part.text));
+  main.appendChild(help);
 
   const f1 = el("div", "field");
   f1.appendChild(el("label", "field__label", bv.date.label));
@@ -175,12 +191,17 @@ export function renderTransition(main, tv, onGo) {
   mark.setAttribute("aria-hidden", "true");
   box.appendChild(mark);
   box.appendChild(el("h2", "gate__title", tv.title));
-  const lines = el("p", "gate__lines");
-  tv.lines.forEach((l, i) => {
-    if (i) lines.appendChild(el("br"));
-    lines.appendChild(el("span", null, l));
+
+  // 기준 줄 — 그 사람의 실제 값이다. 조각만 진하고 이음말은 흐리다.
+  const basis = el("p", "gate__basis");
+  tv.basis.forEach((part, i) => {
+    if (i) basis.appendChild(el("span", null, " · "));
+    basis.appendChild(el("strong", null, part));
   });
-  box.appendChild(lines);
+  basis.appendChild(el("span", null, tv.basisTail));
+  box.appendChild(basis);
+
+  box.appendChild(el("p", "gate__lines", tv.message));
   const go = el("button", "btn btn--primary pg__cta", tv.cta);
   go.type = "button";
   go.addEventListener("click", onGo);
@@ -203,6 +224,8 @@ export function renderRevisit(main, rv, onGo) {
     item.appendChild(el("span", "elapsed__unit", e.unit));
     panel.appendChild(item);
   }
+  // 숫자 뒤에 작게. 날짜와 경과가 같은 크기로 서고 이것만 작다.
+  if (rv.elapsedSuffix) panel.appendChild(el("span", "elapsed__suffix", rv.elapsedSuffix));
   box.appendChild(panel);
 
   const lines = el("p", "gate__lines");

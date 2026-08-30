@@ -335,7 +335,7 @@ function render() {
   if (app.screen === "survey") return renderSurvey(main);
   if (app.screen === "scope") return renderScope(main);
   if (app.screen === "transition")
-    return renderTransition(main, transitionView(), () => go({ screen: "home" }));
+    return renderTransition(main, transitionView({ state: app.state, data: app.session.data, now: Date.now() }), () => go({ screen: "home" }));
   if (app.screen === "revisit")
     return renderRevisit(main, revisitView({ state: app.state, saved: true }), passGate);
 
@@ -371,7 +371,7 @@ function renderHeader() {
 // 자리·톤으로 답을 다시 걷는 문을 둔다(사용자 결정). 확정 화면 22에는
 // 없던 요소지만 백로그의 "결과 진입 이후 전역 답 수정 진입점"이 이것이다.
 function topRight() {
-  if (app.screen === "revisit") return { label: COPY.revisit.again, on: startAgain };
+  if (app.screen === "revisit") return { label: COPY.revisit.home, on: startAgain };
   const back = backTarget();
   return back ? { label: COPY.master.back, on: back } : null;
 }

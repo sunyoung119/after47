@@ -14,6 +14,10 @@
 import { COPY } from "./copy.js";
 import { el, clear } from "./render.js";
 
+// 상태 배지. **갈래는 뷰모델이 정한다** — 여기서 라벨 문자열을 읽어
+// 색을 고르지 않는다.
+const chip = (label, kind) => el("span", kind ? `chip chip--${kind}` : "chip", label);
+
 const btn = (cls, label, fn) => {
   const b = el("button", cls, label);
   b.type = "button";
@@ -38,16 +42,9 @@ function empty(main) {
 // 0개라고 말한다. 자리가 늘 같아야 재방문에서 화면 구조가 안 흔들린다.
 export function renderHome(main, hv, { onGo, onSave, saved }) {
   const hero = el("section", "home__hero");
-  const row = el("div", "home__titlerow");
-  row.appendChild(el("h2", "home__title", hv.title));
-  if (hv.chip) {
-    const wrap = el("div", "home__time");
-    // 경과시간은 현재 시각이 아니다. 화재로부터의 거리다.
-    wrap.appendChild(el("span", "home__chip", hv.chip));
-    wrap.appendChild(el("span", "home__basis", hv.basis));
-    row.appendChild(wrap);
-  }
-  hero.appendChild(row);
+  hero.appendChild(el("h2", "home__title", hv.title));
+  // 기준 줄 — 자치구와 화재로부터의 거리. **현재 시각이 아니다.**
+  if (hv.basis) hero.appendChild(el("p", "home__basis", hv.basis));
   hero.appendChild(el("p", "home__lead", hv.lead));
   main.appendChild(hero);
 
@@ -89,7 +86,7 @@ export function renderPriority(main, pv, { onOpen }) {
   head(main, pv.title, pv.desc);
   if (!pv.count) return empty(main);
   for (const s of pv.sections) {
-    const sec = el("section", "pg__sec");
+    const sec = el("section", `pg__sec pg__sec--${s.key}`);
     sec.appendChild(el("h3", "pg__sechead", s.label));
     const ul = el("ul", "cards");
     for (const r of s.items) ul.appendChild(simpleCard(r, onOpen));
@@ -124,7 +121,7 @@ export function renderChecklist(main, cv, { onOpen, onCheck }) {
       const line = el("p", "card__title", r.title);
       li.appendChild(line);
       const meta = el("p", "card__meta");
-      meta.appendChild(el("span", "chip", r.statusLabel));
+      meta.appendChild(chip(r.statusLabel, r.statusKind));
       // completed_at이 없다고 완료가 아닌 것은 아니다.
       meta.appendChild(el("span", null, r.doneOn || COPY.checklist.doneNoDate));
       li.appendChild(meta);
@@ -160,7 +157,13 @@ export function renderTimelinePage(main, tv, { onOpen }) {
   const line = el("ol", "tline");
 
   for (const n of tv.nodes) {
-    const li = el("li", `tline__node tline__node--${n.kind}${n.empty ? " tline__node--empty" : ""}`);
+    // 잠김은 섹션의 성질이다(조사서를 받으면 열린다). 행의 locked와 다르다.
+    const li = el(
+      "li",
+      `tline__node tline__node--${n.kind}` +
+        `${n.empty ? " tline__node--empty" : ""}` +
+        `${n.unlocked === false ? " tline__node--locked" : ""}`
+    );
     li.appendChild(el("span", "tline__dot"));
 
     if (n.kind === "info") {
@@ -213,9 +216,12 @@ export function renderTopics(main, tv, { onOpen }) {
     return;
   }
   const grid = el("div", "topics");
-  tv.topics.forEach((t, i) => {
-    const last = i === tv.topics.length - 1 && tv.topics.length % 2 === 1;
-    const b = btn(`tcard${last ? " tcard--wide" : ""}`, null, () => onOpen(t.group));
+  // **`필요서류`만 전체 폭이다**(확정 화면 11). 서류는 다른 주제와 성격이
+  // 달라서 — 나머지가 '무엇을 하는가'라면 이쪽은 '무엇을 챙기는가'다.
+  // 데이터의 domain_group으로 고른다(표시 라벨 문자열이 아니라).
+  tv.topics.forEach((t) => {
+    const wide = t.group === "서류";
+    const b = btn(`tcard${wide ? " tcard--wide" : ""}`, null, () => onOpen(t.group));
     b.appendChild(el("span", "tcard__label", t.label));
     const tail = el("span", "tcard__tail");
     tail.appendChild(el("span", "tcard__count", COPY.topics.count(t.count)));
@@ -234,6 +240,8 @@ export function renderTopics(main, tv, { onOpen }) {
 export function renderTopicDetail(main, td, { onOpen }) {
   main.appendChild(el("p", "pg__eyebrow", COPY.topics.title));
   main.appendChild(el("h2", "pg__title", td.label));
+  // 주제명 아래 한 줄. 표시 라벨로 조합한 문장이다.
+  if (td.desc) main.appendChild(el("p", "pg__desc", td.desc));
   main.appendChild(el("p", "pg__count", td.countLabel));
 
   if (!td.count) empty(main);
@@ -254,7 +262,7 @@ export function renderTopicDetail(main, td, { onOpen }) {
       // 왜 아닌지가 정보다. 사유 없이 접기만 하면 D-011이 무의미해진다.
       if (r.reason) li.appendChild(el("p", "card__reason", r.reason));
       const meta = el("p", "card__meta");
-      meta.appendChild(el("span", "chip", r.statusLabel));
+      meta.appendChild(chip(r.statusLabel, r.statusKind));
       li.appendChild(meta);
       ul.appendChild(li);
     }
@@ -271,8 +279,8 @@ export function renderActionDetail(main, ad, { onGoTo }) {
   main.appendChild(el("h2", "pg__title", ad.title));
 
   const flags = el("p", "card__meta");
-  if (ad.statusLabel) flags.appendChild(el("span", "chip", ad.statusLabel));
-  if (ad.warn) flags.appendChild(el("span", "chip chip--warn", ad.warn));
+  if (ad.statusLabel) flags.appendChild(chip(ad.statusLabel, ad.statusKind));
+  if (ad.warn) flags.appendChild(chip(ad.warn, "warn"));
   if (flags.childNodes.length) main.appendChild(flags);
 
   if (ad.summary) main.appendChild(el("p", "detail__summary", ad.summary));
@@ -295,7 +303,7 @@ export function renderActionDetail(main, ad, { onGoTo }) {
 export function renderUndetermined(main, uv, { onAnswer }) {
   main.appendChild(el("p", "pg__eyebrow", uv.topic));
   const flags = el("p", "card__meta");
-  flags.appendChild(el("span", "chip", uv.label));
+  flags.appendChild(chip(uv.label, uv.labelKind));
   main.appendChild(flags);
   main.appendChild(el("h2", "pg__title", uv.title));
   if (uv.summary) main.appendChild(el("p", "detail__summary", uv.summary));
@@ -340,8 +348,8 @@ function simpleCard(r, onOpen) {
   b.appendChild(el("span", "card__title", r.title));
   if (r.summary) b.appendChild(el("span", "card__summary", r.summary));
   const meta = el("span", "card__meta");
-  if (r.stateLabel) meta.appendChild(el("span", "chip", r.stateLabel));
-  if (r.statusLabel) meta.appendChild(el("span", "chip", r.statusLabel));
+  if (r.stateLabel) meta.appendChild(chip(r.stateLabel, r.stateKind));
+  if (r.statusLabel) meta.appendChild(chip(r.statusLabel, r.statusKind));
   if (meta.childNodes.length) b.appendChild(meta);
   b.appendChild(el("span", "chev", "›"));
   li.appendChild(b);
@@ -349,6 +357,11 @@ function simpleCard(r, onOpen) {
 }
 
 // 주제 상세의 카드 — 출처 한 줄이 붙는다.
+//
+// **첫 항목만 싣되 나머지가 몇 건인지는 밝힌다**(`외 N건`). 목록에서
+// 출처를 여러 줄로 쌓으면 카드의 주인공이 안내가 아니라 근거가 되고,
+// 그렇다고 말없이 하나만 보이면 근거가 하나뿐인 것처럼 읽힌다.
+// 전량은 Action 상세가 그린다.
 function topicCard(r, onOpen) {
   const li = simpleCard(r, onOpen);
   const src = r.source;
@@ -361,6 +374,7 @@ function topicCard(r, onOpen) {
       if (it.article) t.appendChild(el("span", "src__article", it.article));
       box.appendChild(t);
     }
+    if (src.more) box.appendChild(el("span", "src__more", src.more));
     if (it.url) box.appendChild(extLink(it.url, it.link));
     if (it.meta) box.appendChild(el("span", "src__meta", it.meta));
     li.appendChild(box);
@@ -370,7 +384,10 @@ function topicCard(r, onOpen) {
 
 // 체크리스트 카드 — 체크와 상세 진입이 별개 버튼이다(중첩 버튼 금지).
 function checkCard(r, { onOpen, onCheck }) {
-  const li = el("li", `card card--check${r.lock ? " card--locked" : ""}`);
+  const li = el(
+    "li",
+    `card card--check${r.warn ? " card--irreversible" : ""}${r.lock ? " card--locked" : ""}`
+  );
   li.dataset.row = r.id;
 
   if (r.checkable && onCheck) {
@@ -387,7 +404,7 @@ function checkCard(r, { onOpen, onCheck }) {
   b.appendChild(el("span", "card__title", r.title));
   if (r.warn) {
     const m = el("span", "card__meta");
-    m.appendChild(el("span", "chip chip--warn", r.warn));
+    m.appendChild(chip(r.warn, "warn"));
     b.appendChild(m);
   }
   if (r.lock) b.appendChild(lockText(r.lock));
@@ -429,19 +446,31 @@ function bodyBlock(body) {
 }
 
 // 출처 카드 — 본문보다 낮은 위계다. 없으면 통째로 안 그린다.
+//
+// **압축형이다.** 문서명·발행처를 쌓고 확인일과 원문 링크는 아래 한 줄에
+// 마주 세운다. 줄 수를 줄이는 것이 목적이 아니라, 출처가 본문보다 커
+// 보이면 위계가 뒤집히기 때문이다.
+//
+// `it.meta`(`발행처 · 확인일 확인`)는 여기서 쓰지 않는다 — 발행처 줄과
+// 겹쳐 같은 기관명이 두 번 나온다. 그 형식은 목록 카드의 것이다.
+// **sources 여러 건은 전부 그린다**(목록은 첫 항목 + `외 N건`).
 function sourceCard(src) {
   if (!src) return null;
   const box = el("section", "src src--card");
   box.appendChild(el("p", "src__label", src.label));
   for (const it of src.items) {
+    const one = el("div", "src__item");
     if (it.title) {
       const t = el("p", "src__title", it.title);
       if (it.article) t.appendChild(el("span", "src__article", it.article));
-      box.appendChild(t);
+      one.appendChild(t);
     }
-    if (it.publisher) box.appendChild(el("p", "src__pub", it.publisher));
-    if (it.url) box.appendChild(extLink(it.url, it.link, "p"));
-    if (it.meta) box.appendChild(el("p", "src__meta", it.meta));
+    if (it.publisher) one.appendChild(el("p", "src__pub", it.publisher));
+    const foot = el("div", "src__foot");
+    if (it.checkedAt) foot.appendChild(el("span", "src__checked", COPY.actionDetail.checked(it.checkedAt)));
+    if (it.url) foot.appendChild(extLink(it.url, it.link));
+    if (foot.childNodes.length) one.appendChild(foot);
+    box.appendChild(one);
   }
   return box;
 }
