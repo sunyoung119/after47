@@ -74,6 +74,10 @@ import { COPY } from "./copy.js";
 // 여기 빠지면 그 화면에 [이전]이 안 그려지고 뒤로가기도 HOME으로 안 간다.
 const RESULT = [...RESULT_PAGES];
 
+// 첫 화면 사진을 까는 화면. **도착 화면과 허브 둘**이고 여기 목록이
+// 유일한 근거다 — 화면 코드가 제 배경을 따로 정하면 농도가 갈린다.
+const PHOTO_BG = new Set(["timeline", "home"]);
+
 // ── 상태 ───────────────────────────────────────────
 const app = {
   session: null,
@@ -357,13 +361,14 @@ function render() {
     $("save-notice").hidden = true;
     app.noticeAt = null;
   }
-  // 배경 수미상관 — 첫 화면 사진의 흐린 버전을 **허브(`home`)에만** 깐다.
-  // 도착 화면이 타임라인으로 옮겨 가면서 사진은 **한 칸 뒤**에 남았다.
-  // 옮기지 않은 것은 지시에 없어서다 — 실기기 확인 25번이 그것을 본다.
-  // 다른 화면은 영향이 없다(클래스가 붙어 있을 때만 레이어가 생긴다).
+  // 배경 수미상관 — 첫 화면 사진을 **결과의 두 화면에** 깐다(사용자 결정):
+  // 도착 화면 `내 회복 경로`(timeline)와 허브 `나를 위한 안내`(home).
+  // **클래스 하나로 제어한다** — 두 화면이 다른 농도를 가지면 오가는 동안
+  // 다른 앱처럼 보인다. 다른 화면은 영향이 없다(클래스가 붙어 있을 때만
+  // 레이어가 생긴다).
   // (`toggle`을 쓰지 않는다 — 인트로 잠금과 같은 add/remove 문법으로 맞춘다)
-  if (app.screen === "home") document.body.classList.add("home-bg");
-  else document.body.classList.remove("home-bg");
+  if (PHOTO_BG.has(app.screen)) document.body.classList.add("photo-bg");
+  else document.body.classList.remove("photo-bg");
 
   if (app.screen === "basic") return renderBasic(main);
   if (app.screen === "survey") return renderSurvey(main);

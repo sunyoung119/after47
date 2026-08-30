@@ -699,15 +699,20 @@ a {
   letter-spacing: var(--ls-tight, -0.03em);
 }
 
-/* 배경 수미상관 — 첫 화면 사진을 **톤으로만** 깐다.
+/* 배경 수미상관 — 첫 화면 사진을 **두 화면**에 깐다(사용자 결정):
+ * 도착 화면 `내 회복 경로`(타임라인)와 허브 `나를 위한 안내`.
+ * **클래스 하나·토큰 하나로 제어한다** — 두 화면이 다른 농도를 가지면
+ * 오가는 동안 다른 앱처럼 보인다.
  *
  * `background-attachment: fixed`는 iOS에서 깨지므로 쓰지 않는다.
- * 고정 레이어(`position: fixed`) 하나를 화면 뒤에 두고 그 위에 흰 베일을
- * 얹는다. **HOME에서만** 붙는 클래스라 다른 화면은 영향이 없다.
+ * 고정 레이어(`position: fixed`) 하나를 화면 뒤에 두고 그 위에 베일을 얹는다.
+ * 클래스가 붙은 화면에서만 레이어가 생기므로 다른 화면은 영향이 없다.
  *
- * 베일 α는 실측으로 정했다(0.92) — 사진의 가장 어두운 픽셀 위에서도
- * 본문 11.02 · 뮤트 5.17 · 남색 7.53으로 전부 AA다. */
-.home-bg::before {
+ * ★ **전면 베일 0.50.** 0.92 → 0.80 → 0.50으로 내려왔고 여기가 확정
+ * 범위(0.45~0.55)다. 이 값만으로는 어떤 글자도 AA가 안 나오므로
+ * (뮤트 1.56) **가독은 아래 두 층이 책임진다** — 위아래 국소 보정과
+ * 행·카드의 불투명 면. **전면 베일을 올려서 풀지 마라.** */
+.photo-bg::before {
   content: "";
   position: fixed;
   inset: 0;
@@ -717,31 +722,44 @@ a {
   background-position: center top;
   pointer-events: none;
 }
-.home-bg::after {
+.photo-bg::after {
   content: "";
   position: fixed;
   inset: 0;
   z-index: -1;
-  /* 전면 베일 + **국소 보정 둘.** 글자가 앉는 위아래만 한 겹 더 밝히고
-     가운데는 사진을 살린다(합성 0.92 → 헤더·고지 AA). */
+  /* 전면 베일 + **국소 보정 둘.**
+     위: 헤더(브랜드·[이전])와 화면 제목·설명이 앉는 자리. 평탄부로 헤더를
+         덮고 그 아래로 페이드한다 — 페이드 구간에 들어가는 설명은
+         본문색으로 한 단계 진해진다(아래 규칙).
+     아래: 하단 주석과 만료 고지.
+     합성 0.88에서 뮤트 4.67 · 브랜드 4.72 · 제목 9.95로 전부 AA다. */
   background:
     linear-gradient(
       180deg,
-      var(--home-veil-edge, rgba(255, 255, 255, 0.6)) 0,
-      transparent 18%
+      var(--photo-veil-edge, rgba(255, 255, 255, 0.76)) 0,
+      var(--photo-veil-edge, rgba(255, 255, 255, 0.76)) 96px,
+      transparent 40%
     ),
     linear-gradient(
       0deg,
-      var(--home-veil-edge, rgba(255, 255, 255, 0.6)) 0,
-      transparent 14%
+      var(--photo-veil-edge, rgba(255, 255, 255, 0.76)) 0,
+      var(--photo-veil-edge, rgba(255, 255, 255, 0.76)) 72px,
+      transparent 30%
     ),
-    var(--home-veil, rgba(255, 255, 255, 0.8));
+    var(--photo-veil, rgba(255, 255, 255, 0.5));
   pointer-events: none;
 }
-/* 사진 위에서는 만료 고지를 한 단계 진하게 — 보조 뮤트(4.70)가 베일 위에서
-   3.94로 떨어진다. 뮤트(5.17)면 AA가 남는다. */
-.home-bg .foot__line {
+/* 사진 위에서는 **보조 뮤트를 쓰지 않는다** — 합성 0.88에서도 3.73이다.
+   만료 고지와 하단 주석이 한 단계씩 진해진다(뮤트 4.67 · AA). */
+.photo-bg .foot__line,
+.photo-bg .pg__foot {
   color: var(--c-ink-soft);
+}
+/* 화면 설명은 국소 보정의 **페이드 구간**에 앉는다(평탄부 아래). 거기서는
+   뮤트가 2.7~3.1까지 떨어지므로 본문색으로 올린다 — 5.5 이상이 남고,
+   위계는 색이 아니라 크기와 무게로 이미 갈려 있다. */
+.photo-bg .pg__desc {
+  color: var(--c-ink);
 }
 /* 기준 줄 — 자치구 · 화재로부터의 거리 · 상황. **경과시간 칩을 대신한다.**
    숫자를 따로 띄우면 그것이 화면의 주인공이 되는데, 여기 주인공은 카드 셋이다. */
@@ -1180,12 +1198,32 @@ a {
 .tline__sum {
   min-height: 56px;
 }
-/* 조사서가 나온 뒤 — 잠김은 **보조문구 한 줄로만** 말한다. 자물쇠 그림도
-   경고색도 없다. 조사서를 받으면 열리는 자리이지 막힌 곳이 아니다. */
-.tline__node--locked .tline__body {
-  background: var(--c-bg-soft);
+/* ★ **행이 스스로 면을 갖는다.** 타임라인은 사진 배경 위에만 서는데
+   전면 베일 0.50 위에서는 뮤트가 1.56이고, 화면 가운데는 국소 보정이
+   닿지 않는다. **불투명 흰 면**이라야 AA가 나온다(뮤트 6.16) —
+   반투명은 사진과 겹쳐 글자 뒤가 자리마다 달라지고 어수선해진다.
+   면은 요약 줄에만 준다. 펼친 안쪽은 이미 카드가 면을 갖고 있어서
+   면 안에 면이 겹치면 층이 하나 더 생긴다. */
+.tline__sum,
+.tline__info {
+  background: var(--c-surface);
+  border: 1px solid var(--c-line-strong);
   border-radius: var(--r2);
-  padding: 0 var(--s3);
+  box-shadow: var(--shadow-card);
+  padding: var(--s3) var(--s4);
+}
+/* 빈 노드의 한 줄도 사진 위에 직접 놓이지 않는다. */
+.tline__body .pg__empty {
+  margin: var(--s3) 0 0;
+  padding: var(--s3) var(--s4);
+  border-radius: var(--r2);
+  background: var(--c-surface);
+}
+/* 조사서가 나온 뒤 — 잠김은 **보조문구 한 줄로만** 말한다. 자물쇠 그림도
+   경고색도 없다. 조사서를 받으면 열리는 자리이지 막힌 곳이 아니다.
+   면이 생긴 뒤로는 그 면의 색으로 말한다. */
+.tline__node--locked .tline__sum {
+  background: var(--c-bg-soft);
 }
 .tline__label {
   font-weight: var(--w-bold);
@@ -1200,6 +1238,10 @@ a {
 }
 .tline__info p {
   margin: 0;
+}
+/* 펼치면 카드가 요약 면 아래로 붙는다 — 사이를 벌려 둘이 다른 층으로 읽힌다. */
+.tline__body .cards {
+  margin-top: var(--s3);
 }
 .tline__sum {
   display: flex;

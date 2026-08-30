@@ -176,6 +176,8 @@ t("전환 CTA가 타임라인으로 데려간다",
   has(main(), "내 회복 경로") && all(main(), (n) => hasClass(n, "tline__node")).length === 5,
   texts(main()).slice(0, 4).join(" | "));
 t("D-015 1층이 결과 첫 도달(타임라인)에 뜬다", $("save-notice").hidden === false);
+// ★ 사진 배경이 **도착 화면에도** 깔린다(사용자 결정) — 허브와 같은 클래스다.
+t("타임라인에 사진 배경이 붙는다", document.body.classList.contains("photo-bg"));
 t("타임라인 우상단이 [이전]과 [처음으로]다",
   texts($("top-right")).join(",") === "이전,처음으로",
   texts($("top-right")).join(" | "));
@@ -207,7 +209,7 @@ t("기준 줄이 없다",
   texts(main()).join(" | "));
 t("리드가 없다", !has(main(), "지금 필요한 안내를 정리했습니다."));
 // 배경 수미상관 — 첫 화면 사진의 흐린 버전이 **허브에만** 깔린다.
-t("허브에 배경 클래스가 붙는다", document.body.classList.contains("home-bg"));
+t("허브에 배경 클래스가 붙는다", document.body.classList.contains("photo-bg"));
 t("경과시간 칩은 없다", !texts(main()).some((s) => /^\d{2}일 \d{2}:\d{2}$/.test(s)));
 // HOME 우상단은 [이전]이 아니라 [처음으로]다(사용자 실기기 검수 결정) —
 // 결과에 닿은 뒤로는 브릿지를 다시 만날 일이 없어 답을 고치러 갈 길이
@@ -240,7 +242,9 @@ for (const [이름, 표시] of [
   // 타임라인만 둘이다 — 도착 화면이라 [처음으로]가 함께 선다.
   t(`[${이름}] 화면에 [이전]이 있다`,
     $("top-right").children.length === (이름 === "내 회복 경로" ? 2 : 1));
-  t(`[${이름}]에는 허브 배경이 없다`, !document.body.classList.contains("home-bg"));
+  // ★ 사진은 **두 화면**이 깐다 — 도착 화면(타임라인)과 허브.
+  t(`[${이름}] 배경은 사진 두 화면에만 있다`,
+    document.body.classList.contains("photo-bg") === (이름 === "내 회복 경로"));
   $("top-right").children[0].click();
   await tick(10);
   // 타임라인의 [이전]은 **온 길**이다 — 허브에서 눌러 들어왔으니 허브다.
@@ -421,9 +425,9 @@ t("게이트 문구가 확정 문구다",
 t("경과 뒤에 '경과'가 붙는다", has(main(), "경과"));
 t("현재 시각 시계가 아니다", !texts(main()).some((s) => /일째/.test(s)));
 
-button(main(), "안내 보기").click();
+button(main(), "내 회복 경로 보기").click();
 await tick(30);
-// ★ 브릿지의 [안내 보기]도 **타임라인 도착**이다(사용자 결정) — 결과로
+// ★ 브릿지 CTA도 **타임라인 도착**이고 라벨도 도착지 이름이다 — 결과로
 //   들어오는 문 셋이 같은 자리에 닿는다.
 t("게이트를 지나면 타임라인이다",
   has(main(), "내 회복 경로") && all(main(), (n) => hasClass(n, "tline__node")).length === 5,
@@ -642,7 +646,7 @@ t("① 타임라인의 문이 허브로 잇는다", has(main(), "나를 위한 �
   await 열기(); // 같은 저장소로 다시 진입 = 재방문
   t("재방문은 경과시간 게이트다", has(main(), "화재 발생 후"));
   const 깊이 = dom.depth();
-  button(main(), "안내 보기").click();
+  button(main(), "내 회복 경로 보기").click();
   await tick(30);
   // ★ 결과로 들어오는 문이 **전부 타임라인 도착으로 통일**됐다(사용자 결정).
   t("게이트를 지나면 타임라인이다",
@@ -799,7 +803,7 @@ await 한문항();
 t("③ 재설문 도중이다", 질문중() !== null, texts(main()).slice(0, 3).join(" | "));
 await 열기(); // 이탈 후 재진입
 t("③ 재진입은 평소처럼 브릿지다", has(main(), "화재 발생 후"), texts(main()).slice(0, 4).join(" | "));
-button(main(), "안내 보기").click();
+button(main(), "내 회복 경로 보기").click();
 await tick(30);
 t("③ 브릿지 CTA는 그대로 타임라인이다 (재설문 플래그가 안 남는다)",
   all(main(), (n) => hasClass(n, "tline__node")).length === 5,
