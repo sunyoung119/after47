@@ -20,6 +20,7 @@
     "source_url": "https://www.elis.go.kr/",
     "checked_at": "2026-08-26",
     "support_items": [],
+    "support_articles": {},
     "exclusion_exempt_items": [],
     "exclusion_note": null
   },
@@ -47,6 +48,10 @@
       "housing",
       "meal"
     ],
+    "support_articles": {
+      "housing": "제3조제1호",
+      "meal": "제3조제2호"
+    },
     "exclusion_exempt_items": [],
     "exclusion_note": null
   },
@@ -71,6 +76,7 @@
     "source_url": "https://www.elis.go.kr/",
     "checked_at": "2026-08-26",
     "support_items": [],
+    "support_articles": {},
     "exclusion_exempt_items": [],
     "exclusion_note": null
   },
@@ -100,6 +106,12 @@
       "housing",
       "supplies"
     ],
+    "support_articles": {
+      "psych": "제5조제1항제1호",
+      "waste": "제5조제1항제2호",
+      "housing": "제5조제1항제3호",
+      "supplies": "제5조제1항제4호"
+    },
     "exclusion_exempt_items": [],
     "exclusion_note": null
   },
@@ -127,6 +139,10 @@
       "housing",
       "meal"
     ],
+    "support_articles": {
+      "housing": "제4조제1호",
+      "meal": "제4조제2호"
+    },
     "exclusion_exempt_items": [],
     "exclusion_note": null
   },
@@ -156,6 +172,12 @@
       "supplies",
       "waste"
     ],
+    "support_articles": {
+      "psych": "제5조제1항제1호",
+      "housing": "제5조제1항제2호",
+      "supplies": "제5조제1항제3호",
+      "waste": "제5조제1항제4호"
+    },
     "exclusion_exempt_items": [],
     "exclusion_note": null
   },
@@ -180,6 +202,7 @@
     "source_url": "https://www.elis.go.kr/",
     "checked_at": "2026-08-26",
     "support_items": [],
+    "support_articles": {},
     "exclusion_exempt_items": [],
     "exclusion_note": null
   },
@@ -210,6 +233,13 @@
       "psych",
       "waste"
     ],
+    "support_articles": {
+      "housing": "제5조제1항제1호",
+      "meal": "제5조제1항제2호",
+      "supplies": "제5조제1항제2호",
+      "psych": "제5조제1항제3호",
+      "waste": "제5조제1항제4호"
+    },
     "exclusion_exempt_items": [],
     "exclusion_note": null
   },
@@ -234,6 +264,7 @@
     "source_url": "https://www.elis.go.kr/",
     "checked_at": "2026-08-26",
     "support_items": [],
+    "support_articles": {},
     "exclusion_exempt_items": [],
     "exclusion_note": null
   },
@@ -258,6 +289,7 @@
     "source_url": "https://www.elis.go.kr/",
     "checked_at": "2026-08-26",
     "support_items": [],
+    "support_articles": {},
     "exclusion_exempt_items": [],
     "exclusion_note": null
   },
@@ -282,6 +314,7 @@
     "source_url": "https://www.elis.go.kr/",
     "checked_at": "2026-08-26",
     "support_items": [],
+    "support_articles": {},
     "exclusion_exempt_items": [],
     "exclusion_note": null
   },
@@ -311,6 +344,12 @@
       "psych",
       "waste"
     ],
+    "support_articles": {
+      "housing": "제5조제1항제1호",
+      "supplies": "제5조제1항제2호",
+      "psych": "제5조제1항제3호",
+      "waste": "제5조제1항제4호"
+    },
     "exclusion_exempt_items": [],
     "exclusion_note": null
   },
@@ -335,6 +374,7 @@
     "source_url": "https://www.elis.go.kr/",
     "checked_at": "2026-08-26",
     "support_items": [],
+    "support_articles": {},
     "exclusion_exempt_items": [],
     "exclusion_note": null
   },
@@ -359,6 +399,7 @@
     "source_url": "https://www.elis.go.kr/",
     "checked_at": "2026-08-26",
     "support_items": [],
+    "support_articles": {},
     "exclusion_exempt_items": [],
     "exclusion_note": null
   },
@@ -387,6 +428,11 @@
       "waste",
       "housing"
     ],
+    "support_articles": {
+      "psych": "제5조제1항제1호",
+      "waste": "제5조제1항제2호",
+      "housing": "제5조제1항제3호"
+    },
     "exclusion_exempt_items": [
       "psych",
       "housing"
@@ -414,6 +460,7 @@
     "source_url": "https://www.elis.go.kr/",
     "checked_at": "2026-08-26",
     "support_items": [],
+    "support_articles": {},
     "exclusion_exempt_items": [],
     "exclusion_note": null
   },
@@ -443,6 +490,12 @@
       "meal",
       "supplies"
     ],
+    "support_articles": {
+      "psych": "제5조제1호",
+      "housing": "제5조제2호",
+      "meal": "제5조제3호",
+      "supplies": "제5조제3호"
+    },
     "exclusion_exempt_items": [],
     "exclusion_note": null
   },
@@ -472,6 +525,12 @@
       "psych",
       "waste"
     ],
+    "support_articles": {
+      "housing": "제5조제1항제1호",
+      "meal": "제5조제1항제2호",
+      "psych": "제5조제1항제3호",
+      "waste": "제5조제1항제4호"
+    },
     "exclusion_exempt_items": [],
     "exclusion_note": null
   },
@@ -502,6 +561,13 @@
       "meal",
       "supplies"
     ],
+    "support_articles": {
+      "psych": "제5조제1항제1호",
+      "housing": "제5조제1항제2호",
+      "waste": "제5조제1항제3호",
+      "meal": "제5조제1항제4호",
+      "supplies": "제5조제1항제5호"
+    },
     "exclusion_exempt_items": [],
     "exclusion_note": null
   },
@@ -526,6 +592,7 @@
     "source_url": "https://www.elis.go.kr/",
     "checked_at": "2026-08-26",
     "support_items": [],
+    "support_articles": {},
     "exclusion_exempt_items": [],
     "exclusion_note": null
   },
@@ -555,6 +622,12 @@
       "supplies",
       "waste"
     ],
+    "support_articles": {
+      "psych": "제4조제1항제1호",
+      "housing": "제4조제1항제2호",
+      "supplies": "제4조제1항제3호",
+      "waste": "제4조제1항제4호"
+    },
     "exclusion_exempt_items": [],
     "exclusion_note": "원문 「피해주택에 대한 화재보험이 가입되어 보험금을 지급받는 경우」 — 주택 기준 가입 AND 보험금 수령의 결합. 현행 enum에 없어 수령 요건으로 근사했다."
   },
@@ -579,6 +652,7 @@
     "source_url": "https://www.elis.go.kr/",
     "checked_at": "2026-08-26",
     "support_items": [],
+    "support_articles": {},
     "exclusion_exempt_items": [],
     "exclusion_note": null
   },
@@ -608,6 +682,12 @@
       "housing",
       "supplies"
     ],
+    "support_articles": {
+      "psych": "제5조제1항제1호",
+      "waste": "제5조제1항제2호",
+      "housing": "제5조제1항제3호",
+      "supplies": "제5조제1항제4호"
+    },
     "exclusion_exempt_items": [],
     "exclusion_note": null
   },
@@ -635,6 +715,10 @@
       "housing",
       "meal"
     ],
+    "support_articles": {
+      "housing": "제4조제1호",
+      "meal": "제4조제2호"
+    },
     "exclusion_exempt_items": [],
     "exclusion_note": null
   },
@@ -659,6 +743,7 @@
     "source_url": "https://www.elis.go.kr/",
     "checked_at": "2026-08-26",
     "support_items": [],
+    "support_articles": {},
     "exclusion_exempt_items": [],
     "exclusion_note": null
   }

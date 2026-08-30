@@ -662,6 +662,37 @@ t(
     신설.every((v) => !css.includes(`var(${v})`))
   );
 }
+// ── 출처 구조가 행에 실리는가 (커밋 3) ──────
+//
+// sources는 지금 전부 빈 배열이다. **그 상태에서도 화면이 죽지 않아야**
+// 하고, 조례 항목은 Action이 아니라 그 사람의 자치구 조례에서 출처를
+// 조합해야 해서 행이 재료를 실고 있어야 한다.
+{
+  const 양천 = tl({ ...전.state, district: "yangcheon" });
+  const 모두 = [
+    ...양천.cards.rest, 양천.cards.lead,
+    ...양천.more.flatMap((m) => m.items),
+    ...양천.anytime.items, ...양천.standing.items,
+    ...양천.waiting, ...양천.blocked, ...양천.excluded,
+  ].filter(Boolean);
+  t("모든 행이 sources 배열을 실어 나른다", 모두.every((r) => Array.isArray(r.sources)));
+  t("지금은 전부 비어 있다 (콘텐츠 패스 전)", 모두.every((r) => r.sources.length === 0));
+  const 조례행 = 모두.filter((r) => r.ordinanceBased);
+  t("조례 행이 있다 (양천)", 조례행.length > 0, String(조례행.length));
+  t(
+    "조례 행이 조례 이름과 조문을 실고 있다",
+    조례행.every((r) => typeof r.ordinanceName === "string" && /^제\d+조/.test(r.ordinanceArticle || "")),
+    조례행.map((r) => `${r.id}=${r.ordinanceName}/${r.ordinanceArticle}`).join(" | ")
+  );
+  t(
+    "조례가 아닌 행은 그 재료가 null이다",
+    모두.filter((r) => !r.ordinanceBased).every((r) => r.ordinanceName === null && r.ordinanceArticle === null)
+  );
+  // 자치구를 안 고른 사람은 조례 이름을 알 수 없다 — 그래도 죽지 않는다.
+  const 구없음 = tl({ ...전.state, district: undefined });
+  t("자치구 미지정에서도 화면이 그려진다", Array.isArray(구없음.excluded));
+}
+
 // ── hidden이 살아 있는가 ────────────────────────────
 //
 // 화면 전환은 전부 `el.hidden = true/false`다. 그런데 hidden은 브라우저

@@ -26,7 +26,7 @@ export const CARD_BUDGET = 5;
 const SECTION_ORDER = ["today", "this_week", "after_report"];
 
 // 엔진 행 → 화면 행. 값이 없으면 null이지 키가 빠지지 않는다(엔진 계약과 같은 톤).
-function toRow(x) {
+function toRow(x, ctx = {}) {
   const a = x.action;
   return {
     id: a.id,
@@ -39,6 +39,16 @@ function toRow(x) {
     // 출처 한 줄을 그리기 위한 재료. 없는 항목이 21건이라 null이 정상이다.
     sourceUrl: a.source_url ?? null,
     sourceGrade: a.source_grade ?? null,
+    // 새 출처 구조. **아직 전부 빈 배열이다** — 채우는 것은 원문을 하나씩
+    // 확인하는 콘텐츠 패스의 일이고, URL이나 본문을 파싱해 문서명·조문을
+    // 만들어 내지 않는다. 화면은 sources → legacy sourceUrl → 생략 순으로 읽는다.
+    sources: a.sources ?? [],
+    // 조례 항목의 출처는 Action이 아니라 자치구 조례에 있다. 행이 조합에 필요한
+    // 재료(조례 이름·해당 조문)를 싣는다 — 엔진이 아니라 여기서.
+    ordinanceName: a.ordinance_based ? ctx.ordinanceName ?? null : null,
+    ordinanceArticle:
+      a.ordinance_based && a.support_item ? (ctx.articles ?? {})[a.support_item] ?? null : null,
+    ordinanceCheckedAt: a.ordinance_based ? ctx.ordinanceCheckedAt ?? null : null,
     // 조례 항목에만 붙는 문의 줄의 조건. 엔진이 `dept`·`amount_known`을
     // 조례 항목에만 채우지만, 자치구 미지정이면 그것도 null이 되므로
     // Action 쪽 플래그를 그대로 본다.
@@ -61,16 +71,23 @@ function toRow(x) {
   };
 }
 
-const sectionRows = (result) => {
+const sectionRows = (result, ctx) => {
   const out = [];
   for (const s of result.sections || [])
     for (const g of s.groups || [])
-      for (const it of g.items || []) out.push({ ...toRow(it), section: s.key });
+      for (const it of g.items || []) out.push({ ...toRow(it, ctx), section: s.key });
   return out;
 };
 
 export function timelineView({ result, state = {}, data = {}, budget = CARD_BUDGET } = {}) {
-  const rows = sectionRows(result);
+  // 조례 항목의 출처 재료. Action이 아니라 그 사람의 자치구 조례에 있다.
+  const 구 = (data.districts || []).find((d) => d.id === state.district) || null;
+  const ctx = {
+    ordinanceName: 구?.ordinance_name ?? null,
+    articles: 구?.support_articles ?? {},
+    ordinanceCheckedAt: 구?.checked_at ?? null,
+  };
+  const rows = sectionRows(result, ctx);
   const bySection = (key) => rows.filter((r) => r.section === key);
 
   // ── 카드 영역 — 자르는 것은 UI다 ────────────────
@@ -111,23 +128,23 @@ export function timelineView({ result, state = {}, data = {}, budget = CARD_BUDG
   // ── 버킷 ────────────────────────────────────────
   // 기다리는 중 — 정렬은 `wait_days` 하한이다. 버킷 행에는 rank가 없다.
   const waiting = (result.waiting || [])
-    .map(toRow)
+    .map((x) => toRow(x, ctx))
     .sort((a, b) => (a.waitDays?.[0] ?? 1e9) - (b.waitDays?.[0] ?? 1e9));
 
-  const blocked = (result.blocked || []).map(toRow);
+  const blocked = (result.blocked || []).map((x) => toRow(x, ctx));
 
   // 자치구를 안 골라서 미판정인 건은 화면에서 고르게 유도할 수 있다.
   // 다른 미판정(보험 unknown)은 설문으로 돌아가야 하므로 구분한다.
   const noDistrict = !state.district;
   const excluded = (result.excluded || []).map((x) => {
-    const r = toRow(x);
+    const r = toRow(x, ctx);
     return { ...r, needsDistrict: noDistrict && r.status === "미판정" };
   });
 
   // 완료 로그 — 아래에 쌓인다. 날짜가 있으면 함께, 없으면 날짜 없이.
   // **`completed_at`이 null이라고 완료가 아닌 것은 아니다**(4/4-F②).
   const done = (result.done || []).map((x) => {
-    const r = toRow(x);
+    const r = toRow(x, ctx);
     return { ...r, doneOn: r.completedAt ? formatDate(r.completedAt) : null };
   });
 

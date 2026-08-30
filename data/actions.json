@@ -24,6 +24,7 @@
     "knowledge_level": "전문",
     "source_grade": "학술",
     "source_url": null,
+    "sources": [],
     "checked_at": "2026-08-26"
   },
   {
@@ -53,6 +54,7 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": null,
+    "sources": [],
     "checked_at": "2026-08-26"
   },
   {
@@ -79,6 +81,7 @@
     "knowledge_level": "상식",
     "source_grade": "공적",
     "source_url": "https://www.kesco.or.kr/",
+    "sources": [],
     "checked_at": "2026-08-26",
     "when": "standing",
     "summary": "젖은 가전에 전원을 넣으면 그 순간 망가집니다.",
@@ -106,6 +109,7 @@
     "knowledge_level": "전문",
     "source_grade": "해외공적",
     "source_url": "https://www.redcross.org/get-help/how-to-prepare-for-emergencies/types-of-emergencies/fire/checking-home-after-fire.html",
+    "sources": [],
     "checked_at": "2026-08-26",
     "when": "today",
     "summary": "치우기 전에 방마다 사진을 남겨야 손해를 입증할 수 있습니다.",
@@ -138,6 +142,7 @@
     "knowledge_level": "전문",
     "source_grade": "해외공적",
     "source_url": null,
+    "sources": [],
     "checked_at": "2026-08-26",
     "when": "standing",
     "summary": "발화가 의심되는 제품은 버리거나 분해하면 안 됩니다.",
@@ -170,6 +175,7 @@
     "knowledge_level": "전문",
     "source_grade": "출처필요",
     "source_url": null,
+    "sources": [],
     "checked_at": "2026-08-26",
     "when": "standing",
     "summary": "제조사가 제품을 가져가겠다고 해도 그 자리에서 내주지 마세요.",
@@ -199,6 +205,7 @@
     "knowledge_level": "전문",
     "source_grade": "해외공적",
     "source_url": "https://www.epa.gov/wildfires/protect-yourself-ash",
+    "sources": [],
     "checked_at": "2026-08-26",
     "when": "today",
     "summary": "분말 청소 전에 마스크(최소 N95)를 준비하세요.",
@@ -231,6 +238,7 @@
     "knowledge_level": "전문",
     "source_grade": "학술",
     "source_url": null,
+    "sources": [],
     "checked_at": "2026-08-26",
     "when": "today",
     "summary": "소화 분말은 금속과 회로를 부식시키니 되도록 빨리 치우세요.",
@@ -260,6 +268,7 @@
     "knowledge_level": "전문",
     "source_grade": "해외공적",
     "source_url": "https://www.epa.gov/mold/brief-guide-mold-moisture-and-your-home",
+    "sources": [],
     "checked_at": "2026-08-26",
     "when": "today",
     "summary": "젖은 곳은 48시간 안에 말려야 곰팡이가 생기지 않습니다.",
@@ -290,6 +299,7 @@
     "knowledge_level": "전문",
     "source_grade": "학술",
     "source_url": null,
+    "sources": [],
     "checked_at": "2026-08-26",
     "when": "today",
     "summary": "그을음은 놔둘수록 부식·착색이 진행됩니다. 닦을 수 있는 표면부터 빨리 제거하세요.",
@@ -319,6 +329,7 @@
     "knowledge_level": "전문",
     "source_grade": "해외공적",
     "source_url": null,
+    "sources": [],
     "checked_at": "2026-08-26",
     "when": "this_week",
     "summary": "그을음 밴 옷은 그냥 세탁하면 오염이 번질 수 있습니다.",
@@ -346,6 +357,7 @@
     "knowledge_level": "전문",
     "source_grade": "해외공적",
     "source_url": "https://www.fsis.usda.gov/",
+    "sources": [],
     "checked_at": "2026-08-26",
     "when": "today",
     "summary": "정전 4시간이 지난 냉장·냉동식품은 폐기하세요.",
@@ -378,6 +390,7 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": null,
+    "sources": [],
     "checked_at": "2026-08-26",
     "when": "standing",
     "summary": "보존조치 중에는 물건을 옮기거나 치울 수 없습니다.",
@@ -410,6 +423,7 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": null,
+    "sources": [],
     "checked_at": "2026-08-26",
     "when": "today",
     "summary": "조사관에게 현장 정리를 시작해도 되는지 확인하세요.",
@@ -437,6 +451,7 @@
     "knowledge_level": "상식",
     "source_grade": "공적",
     "source_url": "https://www.law.go.kr/%EB%B2%95%EB%A0%B9/%EC%86%8C%EB%B0%A9%EC%9D%98%ED%99%94%EC%9E%AC%EC%A1%B0%EC%82%AC%EC%97%90%EA%B4%80%ED%95%9C%EB%B2%95%EB%A5%A0",
+    "sources": [],
     "checked_at": "2026-08-26",
     "when": "this_week",
     "summary": "각종 신청의 공통 증빙입니다. 조사가 끝나기를 기다리지 않아도 됩니다.",
@@ -466,6 +481,7 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": null,
+    "sources": [],
     "checked_at": "2026-08-26",
     "when": "this_week",
     "summary": "보험 처리에 실제로 쓰이는 건 이 문서입니다. 정보공개청구가 필요합니다.",
@@ -500,6 +516,7 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://www.law.go.kr/%EB%B2%95%EB%A0%B9/%EC%86%8C%EB%B0%A9%EC%9D%98%ED%99%94%EC%9E%AC%EC%A1%B0%EC%82%AC%EC%97%90%EA%B4%80%ED%95%9C%EB%B2%95%EB%A5%A0",
+    "sources": [],
     "checked_at": "2026-08-26",
     "when": "after_report",
     "summary": "기다리는 것은 서류 처리가 아니라 조사입니다. 그동안 보험 처리 방향이 정해지지 않습니다.",
@@ -532,6 +549,7 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": null,
+    "sources": [],
     "checked_at": "2026-08-26",
     "when": "this_week",
     "summary": "손해사정사는 보험사가 고용한 사람이지 당신의 대리인이 아닙니다.",
@@ -562,6 +580,7 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": null,
+    "sources": [],
     "checked_at": "2026-08-26",
     "when": "this_week",
     "summary": "불이 어디서 시작됐느냐에 따라 책임이 달라집니다. 지금은 인정하거나 합의를 서두르지 마세요.",
@@ -592,6 +611,7 @@
     "knowledge_level": "전문",
     "source_grade": "학술",
     "source_url": null,
+    "sources": [],
     "checked_at": "2026-08-26",
     "when": "after_report",
     "summary": "공용부에서 난 불이면 임차인 책임이 아닐 수 있습니다.",
@@ -624,6 +644,7 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": null,
+    "sources": [],
     "checked_at": "2026-08-26",
     "when": "after_report",
     "summary": "서울시 화재피해분쟁조정위원회에 무료로 신청할 수 있습니다.",
@@ -653,6 +674,7 @@
     "knowledge_level": "상식",
     "source_grade": "공적",
     "source_url": null,
+    "sources": [],
     "checked_at": "2026-08-26",
     "when": "this_week",
     "summary": "자치구에서 심리상담을 지원합니다.",
@@ -685,6 +707,7 @@
     "knowledge_level": "상식",
     "source_grade": "공적",
     "source_url": null,
+    "sources": [],
     "checked_at": "2026-08-26",
     "when": "this_week",
     "summary": "자치구에서 화재 폐기물 처리를 지원합니다.",
@@ -716,6 +739,7 @@
     "knowledge_level": "상식",
     "source_grade": "공적",
     "source_url": null,
+    "sources": [],
     "checked_at": "2026-08-26",
     "when": "today",
     "summary": "자치구에서 임시로 지낼 곳을 지원합니다.",
@@ -745,6 +769,7 @@
     "knowledge_level": "상식",
     "source_grade": "공적",
     "source_url": null,
+    "sources": [],
     "checked_at": "2026-08-26",
     "when": "today",
     "summary": "자치구에서 식수와 긴급생활용품을 지원합니다.",
@@ -777,6 +802,7 @@
     "knowledge_level": "상식",
     "source_grade": "공적",
     "source_url": "https://www.law.go.kr/법령/긴급복지지원법/제2조",
+    "sources": [],
     "checked_at": "2026-08-28"
   },
   {
@@ -803,6 +829,7 @@
     "knowledge_level": "상식",
     "source_grade": "공적",
     "source_url": null,
+    "sources": [],
     "checked_at": "2026-08-26",
     "when": "this_week",
     "summary": "이 구에는 전용 지원 조례가 없어 다른 경로를 확인해야 합니다.",
@@ -830,6 +857,7 @@
     "knowledge_level": "상식",
     "source_grade": "공적",
     "source_url": null,
+    "sources": [],
     "checked_at": "2026-08-26",
     "when": "anytime",
     "summary": "소방서 청소지원 사업 대상 후보입니다.",
@@ -865,6 +893,7 @@
     "knowledge_level": "전문",
     "source_grade": "해외공적",
     "source_url": "https://www.epa.gov/mold/brief-guide-mold-moisture-and-your-home",
+    "sources": [],
     "checked_at": "2026-08-26"
   },
   {
@@ -899,6 +928,7 @@
     "knowledge_level": "상식",
     "source_grade": "해외공적",
     "source_url": "https://www.epa.gov/mold/brief-guide-mold-moisture-and-your-home",
+    "sources": [],
     "checked_at": "2026-08-26"
   },
   {
@@ -928,6 +958,7 @@
     "knowledge_level": "상식",
     "source_grade": "공적",
     "source_url": "https://law.go.kr/LSW//lsSideInfoP.do?lsiSeq=276941&joNo=0063&joBrNo=00&docCls=jo&urlMode=lsScJoRltInfoR",
+    "sources": [],
     "checked_at": "2026-08-26"
   },
   {
@@ -962,6 +993,7 @@
     "knowledge_level": "전문",
     "source_grade": "학술",
     "source_url": "https://casenote.kr/%EB%8C%80%EB%B2%95%EC%9B%90/2010%EB%8B%A471318",
+    "sources": [],
     "checked_at": "2026-08-26"
   },
   {
@@ -994,6 +1026,7 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://www.law.go.kr/%EB%B2%95%EB%A0%B9/%EC%86%8C%EB%B0%A9%EA%B8%B0%EB%B3%B8%EB%B2%95",
+    "sources": [],
     "checked_at": "2026-08-26"
   },
   {
@@ -1026,6 +1059,7 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://casenote.kr/%EB%B2%95%EB%A0%B9/%EC%8B%A4%ED%99%94%EC%B1%85%EC%9E%84%EC%97%90_%EA%B4%80%ED%95%9C_%EB%B2%95%EB%A5%A0/%EC%A0%9C3%EC%A1%B0",
+    "sources": [],
     "checked_at": "2026-08-26"
   },
   {
@@ -1058,6 +1092,7 @@
     "knowledge_level": "상식",
     "source_grade": "공적",
     "source_url": "https://casenote.kr/%EB%B2%95%EB%A0%B9/%EC%8B%A4%ED%99%94%EC%B1%85%EC%9E%84%EC%97%90_%EA%B4%80%ED%95%9C_%EB%B2%95%EB%A5%A0/%EC%A0%9C3%EC%A1%B0",
+    "sources": [],
     "checked_at": "2026-08-26"
   },
   {
@@ -1087,6 +1122,7 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?csmSeq=526&ccfNo=4&cciNo=3&cnpClsNo=2",
+    "sources": [],
     "checked_at": "2026-08-26"
   },
   {
@@ -1118,6 +1154,7 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://www.law.go.kr/LSW//lsSideInfoP.do?lsiSeq=265389&joNo=0185&joBrNo=00&docCls=jo&urlMode=lsScJoRltInfoR",
+    "sources": [],
     "checked_at": "2026-08-26"
   },
   {
@@ -1147,6 +1184,7 @@
     "knowledge_level": "상식",
     "source_grade": "공적",
     "source_url": "https://www.law.go.kr/LSW//lsSideInfoP.do?lsiSeq=265389&joNo=0185&joBrNo=00&docCls=jo&urlMode=lsScJoRltInfoR",
+    "sources": [],
     "checked_at": "2026-08-26"
   },
   {
@@ -1179,6 +1217,7 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://www.law.go.kr/LSW/lsLawLinkInfo.do?lsJoLnkSeq=900329244&chrClsCd=010202",
+    "sources": [],
     "checked_at": "2026-08-26"
   },
   {
@@ -1208,6 +1247,7 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=1771&ccfNo=4&cciNo=1&cnpClsNo=1",
+    "sources": [],
     "checked_at": "2026-08-26"
   },
   {
@@ -1240,6 +1280,7 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://www.law.go.kr/lsInfoP.do?lsiSeq=193470",
+    "sources": [],
     "checked_at": "2026-08-26"
   },
   {
@@ -1272,6 +1313,7 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://www.law.go.kr/LSW//lsSideInfoP.do?lsiSeq=265389&joNo=0185&joBrNo=00&docCls=jo&urlMode=lsScJoRltInfoR",
+    "sources": [],
     "checked_at": "2026-08-26"
   },
   {
@@ -1301,6 +1343,7 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://casenote.kr/%EB%B2%95%EB%A0%B9/%EB%AF%BC%EB%B2%95/%EC%A0%9C615%EC%A1%B0",
+    "sources": [],
     "checked_at": "2026-08-26"
   },
   {
@@ -1332,6 +1375,7 @@
     "knowledge_level": "전문",
     "source_grade": "학술",
     "source_url": "https://kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002549501",
+    "sources": [],
     "checked_at": "2026-08-26"
   },
   {
@@ -1361,6 +1405,7 @@
     "knowledge_level": "상식",
     "source_grade": "공적",
     "source_url": "https://www.law.go.kr/%EB%B2%95%EB%A0%B9/%EB%AF%BC%EB%B2%95",
+    "sources": [],
     "checked_at": "2026-08-26"
   },
   {
@@ -1393,6 +1438,7 @@
     "knowledge_level": "전문",
     "source_grade": "학술",
     "source_url": "https://kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002549501",
+    "sources": [],
     "checked_at": "2026-08-26"
   },
   {
@@ -1422,6 +1468,7 @@
     "knowledge_level": "상식",
     "source_grade": "공적",
     "source_url": "https://casenote.kr/%EB%B2%95%EB%A0%B9/%EB%AF%BC%EB%B2%95/%EC%A0%9C615%EC%A1%B0",
+    "sources": [],
     "checked_at": "2026-08-26"
   },
   {
@@ -1451,6 +1498,7 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://www.law.go.kr/%EB%B2%95%EB%A0%B9/%EC%A0%9C%EC%A1%B0%EB%AC%BC%EC%B1%85%EC%9E%84%EB%B2%95",
+    "sources": [],
     "checked_at": "2026-08-26"
   },
   {
@@ -1480,6 +1528,7 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://casenote.kr/%EB%B2%95%EB%A0%B9/%EC%A0%9C%EC%A1%B0%EB%AC%BC_%EC%B1%85%EC%9E%84%EB%B2%95/%EC%A0%9C7%EC%A1%B0",
+    "sources": [],
     "checked_at": "2026-08-26"
   },
   {
@@ -1509,6 +1558,7 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?csmSeq=669&ccfNo=4&cciNo=1&cnpClsNo=3",
+    "sources": [],
     "checked_at": "2026-08-26"
   },
   {
@@ -1538,6 +1588,7 @@
     "knowledge_level": "상식",
     "source_grade": "출처필요",
     "source_url": null,
+    "sources": [],
     "checked_at": "2026-08-26"
   },
   {
@@ -1567,6 +1618,7 @@
     "knowledge_level": "상식",
     "source_grade": "공적",
     "source_url": "https://www.consumer.go.kr/user/ftc/consumer/recallInfo/60/selectRecallInfoInternalList.do",
+    "sources": [],
     "checked_at": "2026-08-26"
   },
   {
@@ -1594,6 +1646,7 @@
     "knowledge_level": "상식",
     "source_grade": "공적",
     "source_url": "http://www.moj.go.kr/cvs/2728/subview.do",
+    "sources": [],
     "checked_at": "2026-08-26"
   },
   {
@@ -1621,6 +1674,7 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://www.easylaw.go.kr/CSP/CnpClsMain.laf?csmSeq=239&ccfNo=1&cciNo=1&cnpClsNo=1",
+    "sources": [],
     "checked_at": "2026-08-26"
   },
   {
@@ -1650,6 +1704,7 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=568&ccfNo=5&cciNo=3&cnpClsNo=3",
+    "sources": [],
     "checked_at": "2026-08-26"
   },
   {
@@ -1681,6 +1736,7 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=1771&ccfNo=4&cciNo=1&cnpClsNo=1",
+    "sources": [],
     "checked_at": "2026-08-26"
   },
   {
@@ -1713,6 +1769,7 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://casenote.kr/%EB%B2%95%EB%A0%B9/%EC%8B%A4%ED%99%94%EC%B1%85%EC%9E%84%EC%97%90_%EA%B4%80%ED%95%9C_%EB%B2%95%EB%A5%A0/%EC%A0%9C2%EC%A1%B0",
+    "sources": [],
     "checked_at": "2026-08-26"
   },
   {
@@ -1748,6 +1805,7 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://law.go.kr/LSW//lsSideInfoP.do?lsiSeq=276941&joNo=0063&joBrNo=00&docCls=jo&urlMode=lsScJoRltInfoR",
+    "sources": [],
     "checked_at": "2026-08-26"
   },
   {
@@ -1780,6 +1838,7 @@
     "knowledge_level": "전문",
     "source_grade": "공적",
     "source_url": "https://www.easylaw.go.kr/CSP/CnpClsMain.laf?csmSeq=1409&ccfNo=2&cciNo=1&cnpClsNo=1",
+    "sources": [],
     "checked_at": "2026-08-26"
   }
 ]

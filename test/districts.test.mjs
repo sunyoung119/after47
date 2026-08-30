@@ -55,7 +55,8 @@ const FIELDS = [
   "id", "name", "has_ordinance", "ordinance_name", "ordinance_no", "enacted",
   "amended", "dept", "tier", "insurance_exclusion", "deadline_days", "residency",
   "housing_only", "emergency_exception", "amount_source", "amount_known",
-  "fallback", "source_url", "checked_at", "support_items", "exclusion_exempt_items",
+  "fallback", "source_url", "checked_at", "support_items", "support_articles",
+  "exclusion_exempt_items",
   "exclusion_note",
 ];
 const lacking = districts.filter((d) => FIELDS.some((f) => !(f in d)));
@@ -449,6 +450,60 @@ for (const d of districts) {
       `${d.residency.padEnd(19)}${items}`
   );
 }
+
+section("5. 출처 구조 — sources[] · support_articles");
+
+// sources는 이번 단계에서 **전부 빈 배열**이다. 채우는 것은 원문을
+// 하나씩 확인하는 콘텐츠 패스의 일이고, URL이나 본문을 파싱해 문서명·조문을
+// 만들어 내는 것은 금지다. 그래도 스키마를 지금 박아 둔다 — 나중에 채울 때
+// 모양이 제각각이 되는 것을 막는다.
+const GRADES = ["law", "ordinance", "public_guidance", "case", "academic"];
+t(
+  `Action ${actions.length}건 전부 sources 배열을 갖는다`,
+  actions.every((a) => Array.isArray(a.sources)),
+  actions.filter((a) => !Array.isArray(a.sources)).map((a) => a.id).join(", ")
+);
+for (const a of actions) {
+  for (const src of a.sources) {
+    t(
+      `${a.id} 출처 항목이 계약을 지킨다`,
+      GRADES.includes(src.type) && typeof src.title === "string" && src.title.length > 0 &&
+        typeof src.checked_at === "string" && (src.url || src.article),
+      JSON.stringify(src)
+    );
+  }
+}
+// 근거가 없다고 적어 둔 것에 출처를 달면 둘 중 하나는 거짓말이 된다.
+t(
+  "source_grade가 '출처필요'인 Action은 sources가 비어 있다",
+  actions.filter((a) => a.source_grade === "출처필요").every((a) => a.sources.length === 0)
+);
+
+// 조례 지원 항목의 근거 조문. **raw_13/ 원문을 직접 판독해 적었다.**
+// 키가 support_items를 벗어나면 없는 지원의 근거를 만든 것이다.
+t(
+  "25구 전부 support_articles 키를 갖는다",
+  districts.every((d) => d.support_articles && typeof d.support_articles === "object")
+);
+for (const d of districts) {
+  const items = new Set(d.support_items || []);
+  const 밖 = Object.keys(d.support_articles).filter((k) => !items.has(k));
+  t(`${d.name} 조문 키가 support_items의 부분집합이다`, 밖.length === 0, 밖.join(", "));
+}
+// 조례가 없는 구에 조문이 있으면 어딘가에서 베껴 온 것이다.
+t(
+  "조례 미보유 12구는 조문이 비어 있다",
+  districts.filter((d) => !d.has_ordinance).every((d) => Object.keys(d.support_articles).length === 0)
+);
+// 조례 보유 구는 support_items 전부가 조문으로 받침되어야 한다.
+for (const d of districts.filter((x) => x.has_ordinance)) {
+  const 빠짐 = (d.support_items || []).filter((k) => !(k in d.support_articles));
+  t(`${d.name} 지원 항목이 전부 조문으로 특정된다`, 빠짐.length === 0, 빠짐.join(", "));
+}
+t(
+  "조문 표기가 '제·조'로 시작한다",
+  districts.every((d) => Object.values(d.support_articles).every((v) => /^제\d+조/.test(v)))
+);
 
 // ── 결과 ───────────────────────────────────────────
 console.log(`\n${"=".repeat(62)}`);
