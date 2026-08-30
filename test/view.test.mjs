@@ -466,7 +466,8 @@ section("6. 연락처 — 라우팅에서 분리했고 판단은 살아 있다")
 // 이 커밋에서 걷혔다.
 {
   const dv = directoryView(바탕(전.state));
-  t("연락처가 9건이다", dv.count === 9, String(dv.count));
+  // 전역 9 + 그 구의 관할 소방서 1.
+  t("연락처가 전역 9건 + 소방서 1줄이다", dv.count === 10, String(dv.count));
   // 심리 그룹이 둘이다 — 재난 전용(1670-9512)과 급성 위기(1577-0199).
   t("심리 그룹이 둘이다",
     dv.groups.find((g) => g.group === "심리").items.length === 2);
@@ -479,14 +480,31 @@ section("6. 연락처 — 라우팅에서 분리했고 판단은 살아 있다")
   t("전부 tel: 링크를 만든다", dv.groups.every((g) => g.items.every((c) => c.telHref === `tel:${c.tel}`)));
   t("'검증됨'·'공식 인증' 같은 과장이 없다", !/검증됨|공식 인증/.test(JSON.stringify(dv)));
 
-  // 자치구 줄 — 조례 안내가 화면에 있을 때만, **번호 없이.**
-  t("조례가 없는 구에는 구청 줄이 없다", dv.district === null);
-  const 강남state = { ...전.state, district: "gangnam" };
-  const dvG = directoryView(바탕(강남state));
-  t("조례가 있는 구는 담당 부서를 안내한다", dvG.district?.dept === "안전교통국 재난안전과");
-  t("구별 번호 자리는 비어 있다 (보류 유지)", dvG.district?.tel === null);
-  t("부서를 모르면 '구청 재난안전 담당 부서'로 degrade한다",
-    /재난안전 담당 부서/.test(COPY.contacts.deptUnknown("도봉구")));
+  // 자치구 줄 — **그 구의 관할 소방서 화재조사 직통.** 옛 구청 부서 줄을
+  // 대신한다: 구청 대표번호는 걸면 120으로 연결되어 도달점이 같고,
+  // 이 사람이 지금 물어야 하는 것은 그쪽이 답하지 않는다.
+  t("소방서 줄이 있다", dv.district !== null && /소방서 화재조사$/.test(dv.district.org),
+    JSON.stringify(dv.district));
+  t("소방서 줄에 번호와 tel: 링크가 있다",
+    /^\d{2}-\d{3,4}-\d{4}$/.test(dv.district.tel) &&
+      dv.district.telHref === `tel:${dv.district.tel}`);
+  t("보조 한 줄이 확정 문구다",
+    dv.district.note === "화재증명원 발급·조사 진행 문의 (주간)", dv.district.note);
+  // 중구만 관할 이름이 다르다.
+  const dvJung = directoryView(바탕({ ...전.state, district: "jung" }));
+  t("중구는 중부소방서다", dvJung.district.org === "중부소방서 화재조사", dvJung.district.org);
+  // 구를 안 골랐으면 줄 자체가 없다 — 없는 것은 없다.
+  const dv무구 = directoryView(바탕({ ...전.state, district: undefined }));
+  t("구를 안 골랐으면 소방서 줄이 없다", dv무구.district === null);
+  // 옛 구청 부서 카피는 걷혔다.
+  t("구청 부서 카피가 없다",
+    !("deptUnknown" in COPY.contacts) && !("viaMain" in COPY.contacts) &&
+      !("deptNote" in COPY.contacts));
+  // 번호도 링크도 없는 문장 하나.
+  t("민간 구호 문장이 있다",
+    dv.relief.includes("지자체를 통해 전달됩니다") && dv.relief.includes("동주민센터"),
+    dv.relief);
+  t("민간 구호 문장에 번호가 없다", !/\d{3,4}-\d{3,4}/.test(dv.relief));
 }
 
 // 근거 법령 화면 — 그 사람 안내들의 sources를 묶는다. **재판정하지 않는다.**
@@ -762,7 +780,7 @@ t(
   const refs = html.match(/(?:href|src)="src\/ui\/[^"]+"/g) || [];
   // ★ 값까지 본다. 존재만 보면 "올리는 것을 잊은 배포"를 못 잡는다 —
   //   화면 파일을 고치면서 v를 올리면 **이 줄의 숫자도 함께 올린다.**
-  const V = "?v=14";
+  const V = "?v=15";
   t(
     `화면 파일 참조가 전부 ${V}다 (${refs.length}개)`,
     refs.length >= 3 && refs.every((r) => r.includes(V)),

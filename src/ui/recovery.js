@@ -12,7 +12,7 @@
 //   연출이 있다면 @keyframes의 from에만 둔다. 실기기 사고(cc6a865)의 교훈이다.
 
 import { COPY } from "./copy.js";
-import { el, clear } from "./render.js";
+import { el, clear, telIcon } from "./render.js";
 
 // 상태 배지. **갈래는 뷰모델이 정한다** — 여기서 라벨 문자열을 읽어
 // 색을 고르지 않는다.
@@ -305,44 +305,52 @@ export function renderDirectory(main, dv, {}) {
     const sec = el("section", "pg__sec");
     sec.appendChild(el("h3", "pg__sechead", g.group));
     const ul = el("ul", "cards");
-    for (const c of g.items) {
-      const li = el("li", "card card--tel");
-      const box = el("div", "tel__box");
-      if (c.url) {
-        const p = el("p", "tel__org");
-        const a = el("a", "src__org", c.org);
-        a.href = c.url;
-        a.target = "_blank";
-        a.rel = "noopener noreferrer";
-        p.appendChild(a);
-        box.appendChild(p);
-      } else {
-        box.appendChild(el("p", "tel__org", c.org));
-      }
-      if (c.tel) {
-        const a = el("a", "tel__num", c.tel);
-        a.href = c.telHref;
-        box.appendChild(a);
-      }
-      if (c.note) box.appendChild(el("p", "tel__note", c.note));
-      li.appendChild(box);
-      ul.appendChild(li);
-    }
+    for (const c of g.items) ul.appendChild(telCard(c));
     sec.appendChild(ul);
     main.appendChild(sec);
   }
 
-  // 자치구 줄 — **번호가 없다**(보류). 부서를 모르는 구는 이름도 없다.
+  // 자치구 줄 — **그 구의 관할 소방서 화재조사 직통.** 구를 안 골랐으면
+  // 줄 자체가 없다. 옛 구청 부서 줄을 대신한다.
   if (dv.district) {
     const sec = el("section", "pg__sec");
-    const li = el("div", "card card--tel");
-    const box = el("div", "tel__box");
-    box.appendChild(el("p", "tel__org", dv.district.label));
-    box.appendChild(el("p", "tel__note", dv.district.note));
-    li.appendChild(box);
-    sec.appendChild(li);
+    const ul = el("ul", "cards");
+    ul.appendChild(telCard(dv.district));
+    sec.appendChild(ul);
     main.appendChild(sec);
   }
+
+  // 번호도 링크도 없는 문장 하나. **개인이 거는 곳이 아니라는 사실이 정보다** —
+  // 번호를 실으면 헛걸음을 만든다.
+  if (dv.relief) main.appendChild(el("p", "pg__foot", dv.relief));
+}
+
+// 연락처 카드 한 장. 기관명 · 큰 번호 · 보조 한 줄.
+function telCard(c) {
+  const li = el("li", "card card--tel");
+  const box = el("div", "tel__box");
+  if (c.url) {
+    const p = el("p", "tel__org");
+    const a = el("a", "src__org", c.org);
+    a.href = c.url;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    p.appendChild(a);
+    box.appendChild(p);
+  } else {
+    box.appendChild(el("p", "tel__org", c.org));
+  }
+  if (c.tel) {
+    const a = el("a", "tel__num");
+    a.href = c.telHref;
+    // 아이콘이 먼저, 번호가 뒤. **아이콘은 `tel:`에만 붙는다.**
+    a.appendChild(telIcon());
+    a.appendChild(el("span", "tel__digits", c.tel));
+    box.appendChild(a);
+  }
+  if (c.note) box.appendChild(el("p", "tel__note", c.note));
+  li.appendChild(box);
+  return li;
 }
 
 // ── 주제 상세 (7주제 공통 템플릿) ──────────────────
@@ -625,8 +633,12 @@ function contactLine(c) {
   }
   if (c.tel) {
     const p = el("p", "contact-line__tel");
-    const a = el("a", "src__link", `☎ ${c.tel}`);
+    const a = el("a", "src__link");
     a.href = c.telHref;
+    // 연락처 페이지와 **같은 아이콘**이다. 이모지(☎)를 쓰지 않는다 —
+    // 기기마다 모양과 크기가 달라 같은 화면이 사람마다 달라진다.
+    a.appendChild(telIcon());
+    a.appendChild(el("span", "tel__digits", c.tel));
     p.appendChild(a);
     box.appendChild(p);
   }

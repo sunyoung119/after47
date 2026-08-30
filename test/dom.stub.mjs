@@ -81,6 +81,10 @@ class Node {
   }
   setAttribute(k, v) {
     this.attrs[k] = String(v);
+    // 실제 DOM에서 `class` 속성과 `className`은 같은 것을 가리킨다.
+    // SVG 요소는 `className`에 대입할 수 없어 `setAttribute`를 쓰는데,
+    // 스텁이 그것을 반영하지 않으면 `hasClass`가 아이콘을 못 본다.
+    if (k === "class") this.className = String(v);
   }
   getAttribute(k) {
     return this.attrs[k] ?? null;
@@ -119,6 +123,9 @@ export function installDom() {
   const hist = { entries: [{ state: null }], i: 0 };
   const doc = {
     createElement: (tag) => new Node(tag),
+    // 인라인 SVG(전화기 아이콘)가 이것을 쓴다. 스텁에서는 네임스페이스를
+    // 구분할 이유가 없으므로 같은 Node를 돌려준다.
+    createElementNS: (_ns, tag) => new Node(tag),
     getElementById: (id) => byId.get(id) ?? null,
     querySelector: () => null,
     createRange: () => ({ selectNodeContents() {} }),

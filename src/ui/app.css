@@ -1312,11 +1312,31 @@ a {
   font-weight: var(--w-heavy);
   color: var(--c-cta);
   letter-spacing: var(--ls-tight, -0.03em);
-  font-variant-numeric: tabular-nums;
   text-decoration: none;
   min-height: var(--tap);
   display: flex;
   align-items: center;
+  gap: var(--s2);
+}
+/* 숫자만 등폭으로. 아이콘까지 등폭이면 자간이 벌어진다. */
+.tel__digits {
+  font-variant-numeric: tabular-nums;
+}
+/* 전화기 아이콘 — 글자 높이에 맞추고 색은 `currentColor`를 따라간다.
+   **`tel:` 링크에만 붙는다**(아이콘 = "누르면 걸린다"는 약속이다). */
+.telicon {
+  flex: none;
+  width: 1em;
+  height: 1em;
+  /* 수화기 무게중심이 글자보다 위라 살짝 내린다. */
+  transform: translateY(0.06em);
+}
+/* Action 상세의 문의처 줄 — 같은 아이콘, 작은 크기. */
+.contact-line__tel .src__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s1);
+  min-height: var(--tap);
 }
 .tel__note {
   margin: 0;

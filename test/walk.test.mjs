@@ -303,12 +303,23 @@ await tick(10);
     ["긴급", "복지·긴급지원", "법률·분쟁", "심리"].every((g) => has(main(), g)),
     texts(main()).join(" | "));
   const tel = all(main(), (n) => n.tagName === "A" && /^tel:/.test(n.href || ""));
-  t("번호가 tel: 링크다", tel.length === 9, String(tel.length));
+  // 전역 9 + 그 구의 관할 소방서 1.
+  t("번호가 tel: 링크다", tel.length === 10, String(tel.length));
+  // **전화기 아이콘은 `tel:`에만 붙는다** — 아이콘이 "누르면 걸린다"는
+  // 약속이라 안 걸리는 자리에 달면 거짓말이 된다.
+  t("모든 번호에 전화기 아이콘이 있다",
+    tel.every((a) => a.children.some((c) => hasClass(c, "telicon"))),
+    String(tel.filter((a) => !a.children.some((c) => hasClass(c, "telicon"))).length));
+  t("아이콘은 보조기술에서 건너뛴다",
+    all(main(), (n) => hasClass(n, "telicon")).every((n) => n.getAttribute("aria-hidden") === "true"));
   t("119와 1670-9512가 있다",
     tel.some((a) => a.href === "tel:119") && tel.some((a) => a.href === "tel:1670-9512"),
     tel.map((a) => a.href).join(" "));
-  // 자치구 줄 — 번호 없이 대표번호 안내만.
-  t("구청 줄에는 번호가 없다", has(main(), "구청 대표번호로 문의하세요."));
+  // 자치구 줄 — **관할 소방서 화재조사 직통**이다(옛 구청 부서 줄을 대신).
+  t("관할 소방서 줄이 있다", has(main(), "강남소방서 화재조사"), texts(main()).join(" | "));
+  t("구청 부서 줄은 사라졌다", !has(main(), "구청 대표번호로 문의하세요."));
+  // 번호도 링크도 없는 문장 하나.
+  t("민간 구호 문장이 있다", has(main(), "동주민센터에 피해를 등록하는 것이 관문입니다."));
   t("'검증됨' 같은 과장이 없다", !texts(main()).some((x) => /검증됨|공식 인증/.test(x)));
   $("top-right").children[0].click();
   await tick(10);

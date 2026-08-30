@@ -571,17 +571,22 @@ export function directoryView(base) {
       })),
   }));
 
-  // 조례 안내가 그 사람 화면에 있을 때만 구청 줄을 그린다 — 설문 맞춤이다.
+  // 그 사람 구의 **관할 소방서 화재조사 직통.** 구를 안 골랐으면 줄 자체를
+  // 그리지 않는다 — 없는 것은 없다.
+  //
+  // 옛 구청 부서 줄을 대신한다. 구청 대표번호는 걸면 120으로 연결되어
+  // 도달점이 같고, 이 사람이 지금 물어야 하는 것(화재증명원 발급·조사
+  // 진행)은 그쪽이 답하지 않는다.
   const 구 = (base.data?.districts || []).find((d) => d.id === base.state?.district) || null;
-  const hasOrdinanceRow = [...base.all].some((r) => r && r.ordinanceBased);
+  const f = 구?.fire_investigation ?? null;
   const district =
-    구 && hasOrdinanceRow
+    f && f.tel
       ? {
-          name: 구.name,
-          dept: 구.dept ?? null,
-          label: 구.dept ? COPY.contacts.deptNote(구.name, 구.dept) : COPY.contacts.deptUnknown(구.name),
-          note: COPY.contacts.viaMain,
-          tel: null,
+          org: COPY.contacts.fireStation(f.station),
+          tel: f.tel,
+          telHref: `tel:${f.tel}`,
+          url: null,
+          note: COPY.contacts.fireStationNote,
         }
       : null;
 
@@ -590,7 +595,9 @@ export function directoryView(base) {
     desc: COPY.contacts.desc,
     groups,
     district,
-    count: groups.reduce((n, g) => n + g.items.length, 0),
+    // 번호·링크 없는 문장 하나. 개인이 거는 곳이 아니라는 사실이 정보다.
+    relief: COPY.contacts.relief,
+    count: groups.reduce((n, g) => n + g.items.length, 0) + (district ? 1 : 0),
   };
 }
 
