@@ -434,10 +434,12 @@ a {
   font: inherit;
   cursor: pointer;
 }
+/* 누르는 것은 남색이다. 벽돌색(--c-accent)은 읽는 것(라벨·개수)에만
+   붙는다 — 확정 팔레트가 강조를 그렇게 둘로 나눠 놨다. */
 .btn--primary {
-  background: var(--c-accent);
-  border-color: var(--c-accent);
-  color: var(--c-accent-ink);
+  background: var(--c-cta);
+  border-color: var(--c-cta);
+  color: var(--c-cta-ink);
   font-weight: var(--w-bold);
 }
 .btn--quiet {

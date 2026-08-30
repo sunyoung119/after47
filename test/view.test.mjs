@@ -521,11 +521,22 @@ t(
     `animation의 var에 전부 리터럴 폴백이 있다 (${anim.length}개 선언)`,
     anim.length >= 5 && anim.every((a) => !/var\(--[a-z0-9-]+\)/.test(a))
   );
-  // 7단계에서 새로 생긴 토큰은 옛 tokens.css에 없다. 폴백이 유일한 방어다.
-  const 신설 = ["--c-glow-0", "--c-ink-micro", "--c-cta", "--c-bg-deep", "--ls", "--ls-tight"];
+  // 옛 tokens.css가 캐시에 남아 있으면 새 토큰이 안 풀린다. 폴백이 유일한
+  // 방어다. **연출에 쓰는 var가 안 풀리면 선언 전체가 무효**가 되고, 그것이
+  // 인트로 글자가 통째로 사라졌던 사고의 뿌리였다.
+  //
+  // 라이트 전환에서 `--c-cta`가 목록에서 빠졌다 — 이제 인트로 밖
+  // (.btn--primary)에서도 쓰이는 일반 토큰이고, 그쪽은 값이 안 풀려도
+  // 배경색만 빠질 뿐 글자가 남는다. 대신 인트로 전용 색을 전부 넣어
+  // 검사를 좁히는 대신 촘촘하게 했다.
+  const 신설 = [
+    "--c-glow-0", "--c-glow-1", "--c-glow-2", "--c-glow-3", "--c-glow-soft",
+    "--c-grain", "--c-title-glow", "--c-ink-micro", "--c-bg-deep", "--ls", "--ls-tight",
+  ];
   t(
-    "7단계 신설 토큰은 어디서도 폴백 없이 쓰이지 않는다",
-    신설.every((v) => !css.includes(`var(${v})`))
+    "인트로 전용 토큰은 어디서도 폴백 없이 쓰이지 않는다",
+    신설.every((v) => !css.includes(`var(${v})`)),
+    신설.filter((v) => css.includes(`var(${v})`)).join(", ")
   );
 }
 // ── 새 화면이 두 사고를 다시 부르지 않는가 (커밋 4-② self-check) ──
@@ -566,6 +577,56 @@ t(
   );
 }
 
+// ── 시각이 tokens.css 하나인가 ──────────────────────
+//
+// 색·글꼴을 마크업·JS·다른 CSS에 적으면 시안이 바뀔 때 그 파일들을 전부
+// 찾아다녀야 하고, 하나를 놓치면 화면 안에서 팔레트가 갈라진다. 규칙은
+// 처음부터 있었지만 지키는지 보는 눈은 없었다 — 라이트 전환처럼 색을
+// 통째로 갈아끼우는 작업이 이 검사를 필요하게 만들었다.
+//
+// **`var(--x, 리터럴)`의 폴백은 하드코딩이 아니다.** 그쪽은 오히려 규칙이
+// 요구하는 것이다(위 재발 방지 검사 참고).
+{
+  const 색 = /#[0-9a-fA-F]{3,8}\b|\brgba?\(|\bhsla?\(/g;
+  const 벗기기 = (s) =>
+    s
+      .replace(/\/\*[\s\S]*?\*\//g, " ")
+      .replace(/^\s*\/\/.*$/gm, " ")
+      .replace(/var\(\s*--[a-z0-9-]+\s*,[^()]*(?:\([^()]*\))?[^()]*\)/g, " ");
+  const 대상 = [
+    "src/ui/app.css", "src/ui/app.js", "src/ui/screens.js", "src/ui/recovery.js",
+    "src/ui/render.js", "src/ui/copy.js", "index.html",
+  ];
+  for (const f of 대상) {
+    const hits = 벗기기(readFileSync(join(D, f), "utf8")).match(색) || [];
+    t(`${f}에 토큰 밖 색이 없다`, hits.length === 0, hits.slice(0, 8).join(" "));
+  }
+  // 폰트도 마찬가지다. font-family를 화면 코드에 적으면 폴백 체인이 갈라진다.
+  const css = readFileSync(join(D, "src/ui/app.css"), "utf8");
+  t("app.css가 font-family를 직접 적지 않는다", !/font-family\s*:/.test(css));
+}
+
+// ── 웹폰트가 실재하는가 ─────────────────────────────
+//
+// @font-face가 없는 파일을 가리키면 브라우저는 조용히 폴백으로 넘어간다.
+// 화면은 멀쩡해 보이고 디자인만 어긋난다 — 눈으로 잡기 어려운 종류다.
+{
+  const tk = readFileSync(join(D, "src/ui/tokens.css"), "utf8");
+  const srcs = [...tk.matchAll(/url\("([^"]+)"\)/g)].map((m) => m[1]);
+  t("@font-face가 둘이다 (400 · 700)", srcs.length === 2, srcs.join(" "));
+  t(
+    "가리키는 woff2 파일이 실제로 있다",
+    srcs.every((u) => existsSync(join(D, "src/ui", u))),
+    srcs.filter((u) => !existsSync(join(D, "src/ui", u))).join(" ")
+  );
+  t("라이선스 파일을 함께 둔다", existsSync(join(D, "assets/fonts/LICENSE-NanumSquare.txt")));
+  // 폰트가 늦어도 글자는 먼저 보여야 한다. 이 서비스에서 빈 화면은
+  // "안 열리는 앱"으로 읽힌다.
+  const 선언만 = tk.replace(/\/\*[\s\S]*?\*\//g, " ");
+  t("두 @font-face 다 font-display: swap이다", (선언만.match(/font-display:\s*swap/g) || []).length === 2);
+  t("외부 CDN에서 폰트를 받지 않는다", !/@import|https?:\/\//.test(tk));
+}
+
 // ── hidden이 살아 있는가 ────────────────────────────
 //
 // 화면 전환은 전부 `el.hidden = true/false`다. 그런데 hidden은 브라우저
@@ -587,7 +648,7 @@ t(
   const refs = html.match(/(?:href|src)="src\/ui\/[^"]+"/g) || [];
   // ★ 값까지 본다. 존재만 보면 "올리는 것을 잊은 배포"를 못 잡는다 —
   //   화면 파일을 고치면서 v를 올리면 **이 줄의 숫자도 함께 올린다.**
-  const V = "?v=9";
+  const V = "?v=10";
   t(
     `화면 파일 참조가 전부 ${V}다 (${refs.length}개)`,
     refs.length >= 3 && refs.every((r) => r.includes(V)),
