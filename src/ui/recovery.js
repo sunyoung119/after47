@@ -41,11 +41,10 @@ function empty(main) {
 // 카드 셋 + 보조 둘. **개수가 0이어도 카드를 지우지 않는다** — 0개면
 // 0개라고 말한다. 자리가 늘 같아야 재방문에서 화면 구조가 안 흔들린다.
 export function renderHome(main, hv, { onGo, onSave, saved }) {
+  // **제목 하나다.** 기준 줄과 리드는 바로 앞 전환 화면이 이미 말했다 —
+  // 도착지에서 같은 문장을 다시 보이면 "아직 시작 안 됐다"로 읽힌다.
   const hero = el("section", "home__hero");
   hero.appendChild(el("h2", "home__title", hv.title));
-  // 기준 줄 — 자치구와 화재로부터의 거리. **현재 시각이 아니다.**
-  if (hv.basis) hero.appendChild(el("p", "home__basis", hv.basis));
-  hero.appendChild(el("p", "home__lead", hv.lead));
   main.appendChild(hero);
 
   const list = el("div", "home__cards");

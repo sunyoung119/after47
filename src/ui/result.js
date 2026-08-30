@@ -118,14 +118,11 @@ export function homeView(base) {
   const p = priorityView(base);
   const c = checklistView(base);
   const r = referenceView(base);
-  // 기준 줄 — **그 사람의 자치구와 화재로부터의 거리다.** 확정 화면이
-  // 경과시간 칩을 걷고 이 문장으로 바꿨다. 숫자를 따로 띄우면 그것이
-  // 화면의 주인공이 되는데, HOME에서 주인공은 다음에 볼 카드 셋이다.
-  const 구 = (base.data?.districts || []).find((d) => d.id === base.state?.district) || null;
+  // **기준 줄과 리드가 없다**(사용자 실기기 검수 결정). 바로 앞 전환
+  // 화면이 같은 말을 하고, 여기는 도착지다 — 도착지의 일은 갈 곳을
+  // 보여 주는 것이다.
   return {
     title: COPY.home.title,
-    basis: COPY.home.basis(구?.name ?? null, elapsedText(base.fireAt, base.now)),
-    lead: COPY.home.lead,
     // 핵심 카드 셋. 개수는 동적이다 — 와이어프레임의 숫자는 예시였다.
     cards: [
       { key: "priority", ...COPY.home.cards.priority, count: p.count },

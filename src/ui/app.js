@@ -337,6 +337,11 @@ function render() {
   // D-015 1층은 HOME의 자리다. 다른 화면으로 넘어가면 닫는다 —
   // HOME의 2층 버튼으로 다시 열 수 있다.
   if (app.screen !== "home") $("save-notice").hidden = true;
+  // 배경 수미상관 — 첫 화면 사진의 흐린 버전을 **HOME에만** 깐다.
+  // 다른 화면은 영향이 없다(클래스가 붙어 있을 때만 레이어가 생긴다).
+  // (`toggle`을 쓰지 않는다 — 인트로 잠금과 같은 add/remove 문법으로 맞춘다)
+  if (app.screen === "home") document.body.classList.add("home-bg");
+  else document.body.classList.remove("home-bg");
 
   if (app.screen === "basic") return renderBasic(main);
   if (app.screen === "survey") return renderSurvey(main);
@@ -364,12 +369,13 @@ function renderHeader() {
   $("brand").textContent = COPY.brand;
   const slot = $("top-right");
   clear(slot);
-  const right = topRight();
-  if (!right) return;
-  const b = el("button", "top__back", right.label);
-  b.type = "button";
-  b.addEventListener("click", right.on);
-  slot.appendChild(b);
+  // 하나일 수도 둘일 수도 있다 — HOME에는 [이전]과 [처음으로]가 함께 선다.
+  for (const item of [topRight()].flat().filter(Boolean)) {
+    const b = el("button", "top__back", item.label);
+    b.type = "button";
+    b.addEventListener("click", item.on);
+    slot.appendChild(b);
+  }
 }
 
 // 머리 오른쪽에 무엇을 두는가.
@@ -382,7 +388,16 @@ function topRight() {
   // HOME에도 같은 문을 둔다(사용자 실기기 검수 결정) — 결과에 닿은 뒤로는
   // 브릿지를 다시 만날 일이 없어서, 답을 고치러 갈 길이 상세 화면의
   // CTA 하나뿐이었다. **자리·톤·동작이 브릿지의 것과 같다.**
-  if (app.screen === "home") return { label: COPY.revisit.home, on: startAgain };
+  // HOME에는 둘이 선다 — 온 길로 되돌리는 [이전]과 랜딩으로 가는 [처음으로].
+  //
+  // [이전]은 **기기 뒤로가기와 같은 자리**로 간다. `parentOf`는 HOME의
+  // 부모를 HOME으로 보므로(결과 화면들의 허브라서) 여기서는 온 길을
+  // 직접 고른다 — 재방문이면 경과시간 게이트, 첫 방문이면 전환 화면.
+  if (app.screen === "home")
+    return [
+      { label: COPY.home.back, on: () => go({ screen: app.returning ? "revisit" : "transition" }) },
+      { label: COPY.revisit.home, on: startAgain },
+    ];
   const back = backTarget();
   return back ? { label: COPY.master.back, on: back } : null;
 }

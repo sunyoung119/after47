@@ -192,8 +192,11 @@ a {
   height: 56px;
   border: 1px solid var(--c-landing-cta-line, rgba(255, 255, 255, 0.28));
   border-radius: var(--r1, 8px);
-  background: var(--c-cta, #2261ac);
-  color: var(--c-cta-ink, #ffffff);
+  /* **진한 남색이다.** 자리와 크기는 그대로고 면 색만 바꿨다 —
+     이 색이 HOME의 진입 버튼 일곱과 같아서, 첫 화면과 도착지가
+     "누르는 것 = 남색"으로 이어진다(수미상관). */
+  background: var(--c-entry, #1b4a80);
+  color: var(--c-entry-ink, #ffffff);
   font: var(--w-bold, 700) var(--f-landing-cta, 17px) / 1
     var(--font, "NanumSquare", "Noto Sans KR", sans-serif);
   letter-spacing: -0.3px;
@@ -523,7 +526,10 @@ a {
   min-height: 68vh;
   padding-top: var(--s6);
 }
+/* 제목이 체크 표시 쪽으로 올라간다 — 둘이 한 덩어리로 읽히고,
+   그만큼 아래 기준 목록이 숨 쉴 자리를 얻는다. */
 .gate__title {
+  margin-top: calc(var(--s5) * -1);
   margin-bottom: auto;
 }
 .gate .pg__cta {
@@ -548,16 +554,31 @@ a {
   line-height: var(--lh-tight);
 }
 /* 기준 줄 — 그 사람의 자치구와 경과시간이다. 값만 진하고 이음말은 흐리다. */
+/* 기준 세 줄 — **목록이다.**
+ *
+ *   ① 블록은 화면 가운데, **글자는 왼쪽 정렬.** 세 조각이 같은 x에서
+ *      시작해야 목록으로 읽힌다. 각 줄을 가운데 정렬하면 길이가 달라
+ *      들쭉날쭉해지고 "세 개가 나란한 사실"이라는 것이 사라진다
+ *   ② 줄 간격을 본문보다 넉넉히(2.0) — 노안에서 줄을 놓치지 않게
+ *   ③ `keep-all` — `화재 발생 후 1일 3시간`이 어절 안에서 안 끊긴다
+ *   ④ 글자는 본문색이다(12.56:1). 흐린 회색으로 두면 "부가 정보"로
+ *      읽히는데, 이 셋은 화면이 하는 말의 근거 전부다
+ *   ⑤ 불릿·아이콘 없음. 장식이 정보를 넘지 않는다
+ */
 .gate__basis {
+  list-style: none;
   margin: 0 auto;
-  max-width: 330px;
-  color: var(--c-ink-soft);
-  font-size: var(--f-md);
-  line-height: var(--lh);
-}
-.gate__basis strong {
+  padding: 0;
+  max-width: 20rem;
+  text-align: left;
   color: var(--c-ink);
+  font-size: var(--f-lg);
   font-weight: var(--w-bold);
+  line-height: 2;
+  word-break: keep-all;
+}
+.gate__basisitem + .gate__basisitem {
+  margin-top: var(--s1);
 }
 /* 라벨은 작고 값은 크다. **정보 사이 간격을 촘촘히 묶는다**(패킷 D-030) —
    날짜와 경과가 한 덩어리로 읽혀야 "지금 어디쯤인가"가 한눈에 온다. */
@@ -633,14 +654,49 @@ a {
 .home__hero {
   margin-top: var(--s6);
 }
-/* **도착지가 화면에서 가장 큰 글자다.** 실기기에서 히어로가 카드에
-   묻혔다 — 여기가 목적지라는 것이 크기로 읽혀야 한다. */
+/* **도착지가 화면에서 가장 큰 글자다.** 가운데 정렬이고, 아래 문장이
+   없다 — 기준 줄과 리드는 바로 앞 전환 화면이 이미 말했다. */
+.home__hero {
+  text-align: center;
+}
 .home__title {
   margin: 0;
   font-size: var(--f-home-title);
   font-weight: var(--w-heavy);
   line-height: 1.2;
   letter-spacing: var(--ls-tight, -0.03em);
+}
+
+/* 배경 수미상관 — 첫 화면 사진을 **톤으로만** 깐다.
+ *
+ * `background-attachment: fixed`는 iOS에서 깨지므로 쓰지 않는다.
+ * 고정 레이어(`position: fixed`) 하나를 화면 뒤에 두고 그 위에 흰 베일을
+ * 얹는다. **HOME에서만** 붙는 클래스라 다른 화면은 영향이 없다.
+ *
+ * 베일 α는 실측으로 정했다(0.92) — 사진의 가장 어두운 픽셀 위에서도
+ * 본문 11.02 · 뮤트 5.17 · 남색 7.53으로 전부 AA다. */
+.home-bg::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background-image: url("../../assets/img/landing-bg.webp");
+  background-size: cover;
+  background-position: center top;
+  pointer-events: none;
+}
+.home-bg::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: var(--home-veil, rgba(255, 255, 255, 0.92));
+  pointer-events: none;
+}
+/* 사진 위에서는 만료 고지를 한 단계 진하게 — 보조 뮤트(4.70)가 베일 위에서
+   3.94로 떨어진다. 뮤트(5.17)면 AA가 남는다. */
+.home-bg .foot__line {
+  color: var(--c-ink-soft);
 }
 /* 기준 줄 — 자치구 · 화재로부터의 거리 · 상황. **경과시간 칩을 대신한다.**
    숫자를 따로 띄우면 그것이 화면의 주인공이 되는데, 여기 주인공은 카드 셋이다. */
@@ -669,11 +725,11 @@ a {
   min-height: calc(var(--tap) + var(--s5));
   padding: var(--s4);
   text-align: left;
-  border: 1px solid var(--c-line-strong);
+  border: 0;
   border-radius: var(--r2);
-  background: var(--c-surface);
+  background: var(--c-entry);
   box-shadow: var(--shadow-card);
-  color: var(--c-ink);
+  color: var(--c-entry-ink);
   font: inherit;
   cursor: pointer;
 }
@@ -687,7 +743,7 @@ a {
   font-weight: var(--w-heavy);
 }
 .hcard__desc {
-  color: var(--c-ink-soft);
+  color: var(--c-entry-soft);
   font-size: var(--f-sm);
 }
 .hcard__tail {
@@ -695,10 +751,15 @@ a {
   align-items: center;
   flex: none;
 }
+/* 개수 — 남색 면 위에서 벽돌색은 2.30까지 떨어진다. 흰색으로 간다. */
 .hcard__count {
-  color: var(--c-accent);
+  color: var(--c-entry-ink);
   font-weight: var(--w-bold);
   font-variant-numeric: tabular-nums;
+}
+.hcard .chev,
+.mcard .chev {
+  color: var(--c-entry-soft);
 }
 /* 보조 탐색 — 핵심 셋 아래 충분한 간격. 중간 heading은 없다.
    **위 카드 셋과 같은 흰 면이다**(사용자 결정) — 투명 박스일 때
@@ -709,6 +770,8 @@ a {
   gap: var(--s3);
   margin-top: var(--s6);
 }
+/* 보조·참고 넷도 같은 남색이다. **색이 통일된 만큼 위계는 크기로 남는다** —
+   핵심 셋은 104px 높이에 20px 제목, 이쪽은 그 절반 남짓에 작은 글자다. */
 .mcard {
   display: flex;
   align-items: center;
@@ -717,11 +780,11 @@ a {
   min-height: calc(var(--tap) + var(--s2));
   padding: var(--s4) var(--s3);
   text-align: left;
-  border: 1px solid var(--c-line-strong);
+  border: 0;
   border-radius: var(--r2);
-  background: var(--c-surface);
+  background: var(--c-entry);
   box-shadow: var(--shadow-card);
-  color: var(--c-ink);
+  color: var(--c-entry-ink);
   font: inherit;
   font-size: var(--f-sm);
   font-weight: var(--w-bold);

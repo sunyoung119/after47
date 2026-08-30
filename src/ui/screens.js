@@ -186,13 +186,12 @@ export function renderTransition(main, tv, onGo) {
   box.appendChild(mark);
   box.appendChild(el("h2", "gate__title", tv.title));
 
-  // 기준 줄 — 그 사람의 실제 값이다. 조각만 진하고 이음말은 흐리다.
-  const basis = el("p", "gate__basis");
-  tv.basis.forEach((part, i) => {
-    if (i) basis.appendChild(el("span", null, " · "));
-    basis.appendChild(el("strong", null, part));
-  });
-  basis.appendChild(el("span", null, tv.basisTail));
+  // 기준 줄 — 그 사람의 실제 값이다. **세로 목록으로 읽힌다**(사용자
+  // 실기기 검수 결정). 가운뎃점 한 줄이던 것을 줄바꿈으로 나눴다:
+  // 세 조각이 각각 다른 종류의 사실(장소·시간·상황)이라 한 줄에 이으면
+  // 하나의 긴 문장으로 읽히고, 노안에서는 어디서 끊어 읽을지가 안 보인다.
+  const basis = el("ul", "gate__basis");
+  for (const part of tv.basis) basis.appendChild(el("li", "gate__basisitem", part));
   box.appendChild(basis);
 
   box.appendChild(el("p", "gate__lines", tv.message));

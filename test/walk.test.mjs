@@ -162,7 +162,7 @@ t("'AI 분석 중'류 표현이 없다", !texts(main()).some((s) => /AI|분석 �
 button(main(), "내 회복 경로 보기").click();
 await tick(30);
 
-t("HOME이 나온다", has(main(), "내 회복 경로") && has(main(), "지금 필요한 안내를 정리했습니다."));
+t("HOME이 나온다", has(main(), "내 회복 경로") && all(main(), (n) => hasClass(n, "hcard")).length === 3);
 t("핵심 카드가 셋이다", all(main(), (n) => hasClass(n, "hcard")).length === 3);
 t("카드 제목이 확정 문구다",
   has(main(), "먼저 볼 내용") && has(main(), "체크리스트") && has(main(), "알아둘 내용"));
@@ -172,17 +172,21 @@ t("보조 탐색과 참고 자료가 각 둘이다",
   all(main(), (n) => hasClass(n, "mcard")).length === 4 &&
     has(main(), "근거 법령") && has(main(), "연락처"),
   texts(main()).join(" | "));
-// 확정 화면이 칩을 걷고 문장 한 줄로 바꿨다. 현재 시각이 아니라 거리다.
-t("기준 줄에 자치구와 경과가 있다",
-  texts(main()).some((s) => /^강남구 · 화재 발생 후 .+ · 당신의 상황을 기준으로$/.test(s)),
+// **HOME은 제목 하나로 시작한다**(사용자 실기기 검수 결정). 기준 줄과
+// 리드는 바로 앞 전환 화면이 이미 말했다.
+t("기준 줄이 없다",
+  !texts(main()).some((s) => /당신의 상황을 기준으로/.test(s)),
   texts(main()).join(" | "));
+t("리드가 없다", !has(main(), "지금 필요한 안내를 정리했습니다."));
+// 배경 수미상관 — 첫 화면 사진의 흐린 버전이 **HOME에만** 깔린다.
+t("HOME에 배경 클래스가 붙는다", document.body.classList.contains("home-bg"));
 t("경과시간 칩은 없다", !texts(main()).some((s) => /^\d{2}일 \d{2}:\d{2}$/.test(s)));
 // HOME 우상단은 [이전]이 아니라 [처음으로]다(사용자 실기기 검수 결정) —
 // 결과에 닿은 뒤로는 브릿지를 다시 만날 일이 없어 답을 고치러 갈 길이
 // 상세 화면의 CTA 하나뿐이었다.
-t("HOME 우상단이 [처음으로]다",
-  $("top-right").children.length === 1 &&
-    $("top-right").children[0].textContent === "처음으로",
+// HOME 우상단에 둘이 선다 — 온 길로 되돌리는 [이전]과 랜딩으로 가는 [처음으로].
+t("HOME 우상단이 [이전]과 [처음으로]다",
+  texts($("top-right")).join(",") === "이전,처음으로",
   texts($("top-right")).join(" | "));
 t("D-015 1층이 결과 첫 도달에 뜬다", $("save-notice").hidden === false);
 
@@ -204,9 +208,10 @@ for (const [이름, 표시] of [
   await tick(10);
   t(`[${이름}] → 그 화면이 그려진다`, has(main(), 표시), texts(main()).slice(0, 6).join(" | "));
   t(`[${이름}] 화면에 [이전]이 있다`, $("top-right").children.length === 1);
+  t(`[${이름}]에는 HOME 배경이 없다`, !document.body.classList.contains("home-bg"));
   $("top-right").children[0].click();
   await tick(10);
-  t(`[${이름}] → [이전]이 HOME으로 되돌린다`, has(main(), "지금 필요한 안내를 정리했습니다."));
+  t(`[${이름}] → [이전]이 HOME으로 되돌린다`, has(main(), "내 회복 경로"));
 }
 
 t("HOME으로 돌아와도 저장 안내가 다시 뜨지 않는다 (한 번뿐)", $("save-notice").hidden === true);
@@ -287,7 +292,7 @@ await tick(10);
   t("[이전]이 근거 화면으로 되돌린다", has(main(), "이 안내가 어떤 법령과 자료를 근거로 하는지 모았습니다."));
   $("top-right").children[0].click();
   await tick(10);
-  t("한 번 더 [이전]이면 HOME이다", has(main(), "지금 필요한 안내를 정리했습니다."));
+  t("한 번 더 [이전]이면 HOME이다", has(main(), "내 회복 경로"));
 }
 
 // ── 연락처 — 번호가 tel: 링크다 ────────────────────
@@ -307,12 +312,12 @@ await tick(10);
   t("'검증됨' 같은 과장이 없다", !texts(main()).some((x) => /검증됨|공식 인증/.test(x)));
   $("top-right").children[0].click();
   await tick(10);
-  t("[이전]이 HOME으로 되돌린다", has(main(), "지금 필요한 안내를 정리했습니다."));
+  t("[이전]이 HOME으로 되돌린다", has(main(), "내 회복 경로"));
 }
 
 // 주제별 → 주제 상세 → Action 상세 → 뒤로 두 번
-$("top-right").children[0].click();
-await tick(10);
+// (앞 블록이 이미 HOME으로 돌아왔다. HOME의 우상단 첫 버튼은 이제
+//  [이전]이라 여기서 누르면 전환 화면으로 나간다.)
 카드("주제별 보기").click();
 await tick(10);
 {
@@ -374,7 +379,7 @@ t("현재 시각 시계가 아니다", !texts(main()).some((s) => /일째/.test(
 
 button(main(), "안내 보기").click();
 await tick(30);
-t("게이트를 지나면 HOME이다", has(main(), "지금 필요한 안내를 정리했습니다."));
+t("게이트를 지나면 HOME이다", has(main(), "내 회복 경로"));
 t("답한 내용이 이어진다 (체크한 것이 남아 있다)",
   Number((all(main(), (n) => hasClass(n, "hcard"))[1].textContent.match(/(\d+)개/) || [])[1]) > 0);
 
@@ -449,7 +454,7 @@ await 설문끝까지();
 t("'그 외'로도 끝까지 도달한다", has(main(), "확인했습니다"));
 button(main(), "내 회복 경로 보기").click();
 await tick(30);
-t("'그 외'도 내 회복 경로에 닿는다", has(main(), "지금 필요한 안내를 정리했습니다."));
+t("'그 외'도 내 회복 경로에 닿는다", has(main(), "내 회복 경로"));
 
 // ── ⑤ 기기 뒤로가기 ────────────────────────────────
 section("⑤ 기기 뒤로가기 — [이전] 버튼과 같은 자리로 가는가");
@@ -496,7 +501,7 @@ await 설문끝까지({ "본인 명의로 든 화재보험이 있나요?": "잘 
 t("① 되돌아왔다가 진행해도 전환에 닿는다", has(main(), "확인했습니다"));
 button(main(), "내 회복 경로 보기").click();
 await tick(30);
-t("① 전환을 지나면 HOME이다", has(main(), "지금 필요한 안내를 정리했습니다."));
+t("① 전환을 지나면 HOME이다", has(main(), "내 회복 경로"));
 
 // ② HOME → 체크리스트 → 상세 → 기기 뒤로 2번 = HOME
 {
@@ -512,7 +517,7 @@ t("① 전환을 지나면 HOME이다", has(main(), "지금 필요한 안내를 
     texts(main()).slice(0, 4).join(" | "));
   dom.back();
   await tick(20);
-  t("② 기기 뒤로 2번 = HOME", has(main(), "지금 필요한 안내를 정리했습니다."),
+  t("② 기기 뒤로 2번 = HOME", has(main(), "내 회복 경로"),
     texts(main()).slice(0, 4).join(" | "));
 }
 
@@ -585,7 +590,7 @@ t("① 전환을 지나면 HOME이다", has(main(), "지금 필요한 안내를 
   const 깊이 = dom.depth();
   button(main(), "안내 보기").click();
   await tick(30);
-  t("게이트를 지나면 HOME이다", has(main(), "지금 필요한 안내를 정리했습니다."));
+  t("게이트를 지나면 HOME이다", has(main(), "내 회복 경로"));
   t("게이트는 칸을 쌓지 않고 덮는다 (소비되는 화면)", dom.depth() === 깊이,
     `${깊이} → ${dom.depth()}`);
   t("HOME에서 기기 뒤로가기는 앱을 나간다 (트랩 없음)", dom.back().left === true);
@@ -673,7 +678,7 @@ t("① 발화 위치를 그대로 두면 제품 질문을 지나간다",
   재설문질문.join(" → "));
 button(main(), "내 회복 경로 보기").click();
 await tick(30);
-t("① 전환을 지나면 HOME이다", has(main(), "지금 필요한 안내를 정리했습니다."));
+t("① 전환을 지나면 HOME이다", has(main(), "내 회복 경로"));
 t("① 바꾼 답이 결과에 반영된다 (금지 하나가 빠진다)",
   먼저볼() === 처음먼저볼 - 1, `${처음먼저볼} → ${먼저볼()}`);
 {
@@ -688,9 +693,9 @@ t("① 바꾼 답이 결과에 반영된다 (금지 하나가 빠진다)",
 }
 // HOME에도 [처음으로]가 있다 — 브릿지와 같은 문이고, 재설문을 마치고
 // 돌아온 뒤에도 다시 걸을 수 있다는 뜻이다.
-t("① 재설문을 마치면 HOME이고 우상단은 [처음으로]다",
-  has(main(), "지금 필요한 안내를 정리했습니다.") &&
-    $("top-right").children[0]?.textContent === "처음으로",
+t("① 재설문을 마치면 HOME이고 우상단에 [처음으로]가 있다",
+  has(main(), "내 회복 경로") &&
+    texts($("top-right")).includes("처음으로"),
   texts($("top-right")).join(" | "));
 
 // ② 재설문 중 upstream 답 변경 → pruneStale이 뒤 질문을 지운다
@@ -736,7 +741,7 @@ t("③ 재진입은 평소처럼 브릿지다", has(main(), "화재 발생 후")
 button(main(), "안내 보기").click();
 await tick(30);
 t("③ 브릿지 CTA는 그대로 HOME이다 (재설문 플래그가 안 남는다)",
-  has(main(), "지금 필요한 안내를 정리했습니다."), texts(main()).slice(0, 4).join(" | "));
+  has(main(), "내 회복 경로"), texts(main()).slice(0, 4).join(" | "));
 
 // ── 결과 ───────────────────────────────────────────
 console.log(`\n${"=".repeat(62)}`);

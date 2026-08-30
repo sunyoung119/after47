@@ -137,9 +137,9 @@ export function scopeNoticeView(state = {}) {
 //
 // **'AI 분석 중'·'결과 생성 중'류 표현 금지.** 기술 시스템이 주인공인
 // 말은 지금 이 사람에게 아무 의미가 없다.
-// 기준 줄은 **그 사람의 실제 값으로 조립한다.** 값이 없는 조각은 빠지고
-// (자치구를 못 고른 경우), 남은 것만 가운뎃점으로 이어진다. 화면 코드는
-// 이 배열을 강조해 그리고 뒤에 `을 바탕으로`를 붙인다.
+// 기준 줄은 **그 사람의 실제 값으로 조립한다.** 값이 없는 조각은 빠진다
+// (자치구를 못 고른 경우). 화면 코드는 이 배열을 **세로로** 나열한다 —
+// 가운뎃점 한 줄이었던 것을 목록으로 바꿨다(사용자 실기기 검수 결정).
 export function transitionView({ state = {}, data = {}, now = Date.now() } = {}) {
   const 구 = (data.districts || []).find((d) => d.id === state.district) || null;
   const elapsed = elapsedText(state.fire_at ?? null, now);
@@ -150,7 +150,6 @@ export function transitionView({ state = {}, data = {}, now = Date.now() } = {})
       elapsed ? COPY.transition.elapsedLabel(elapsed) : null,
       COPY.transition.situation,
     ].filter(Boolean),
-    basisTail: COPY.transition.basisTail,
     message: COPY.transition.message,
     cta: COPY.transition.cta,
   };
