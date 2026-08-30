@@ -92,23 +92,13 @@ export function entryView(session) {
   // 검증됐고 무엇이 범위 밖인지 말하고, 계속할지 건물 종류를 다시 고를지
   // 묻는다. 판단은 entry.js의 scopeNoticeView에 있다.
 
-  const needed = !selected;
   const expiresNotice = notices.find((n) => n.type === "expires_at");
 
+  // **자치구 선택 자리(picker)는 사라졌다.** 지역은 확정 화면 `기본 확인`의
+  // 필드가 되었고 선택지는 basicCheckView가 만든다. 여기 남는 것은 진입
+  // 알림과 보관 기간 고지다.
   return {
     district: selected ? { id: selected, name: nameOf(selected) } : null,
-    picker: {
-      needed,
-      reason: needed ? notices.find((n) => n.type === "district_needed")?.reason ?? null : null,
-      // 25개 전부 고를 수 있다. **조례 유무를 표시하지 않는다** — 선택은
-      // "내가 사는 곳"을 고르는 사실 확인이지 구 비교가 아니고, 조례 없는
-      // 구에 낙인을 찍는 표시가 된다. 차이는 결과 화면의 fallback 안내로
-      // 자연히 드러난다.
-      options: districts
-        .map((d) => ({ id: d.id, name: d.name }))
-        .sort((a, b) => a.name.localeCompare(b.name, "ko")),
-      selected,
-    },
     banners,
     expires: expiresNotice
       ? { at: expiresNotice.at, text: COPY.expires(formatDate(expiresNotice.at)) }

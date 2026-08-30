@@ -324,6 +324,9 @@ export function actionDetailView(base, id) {
     lock: checkItem(r).lock,
     warn: r.irreversible ? COPY.checklist.irreversible : null,
     statusLabel: r.status && r.status !== "해당" ? STATUS_LABEL[r.status] ?? null : null,
+    // 조례 항목의 degrade(D-003) — 지원 여부와 금액을 확정하는 곳은 구청이다.
+    // 금액은 25개 구 전부 미상이고 부서도 9개 구가 null이라 이 줄이 기본 경로다.
+    ordinanceNote: r.ordinanceBased ? COPY.actionDetail.ordinanceNote(r.dept) : null,
     source: sourceOf(r),
     footer: COPY.actionDetail.footer,
   };

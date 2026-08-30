@@ -15,9 +15,8 @@ import { openSession, anchorSession } from "../src/session.js";
 import { evaluate } from "../src/engine.js";
 import { applyDefaults } from "../src/questions.js";
 import { entryView, surveyView, saveNoticeView } from "../src/ui/view.js";
-import { timelineView, locate, waitLabel } from "../src/ui/timeline.js";
-import { introView, guideView, summaryView, checkView, sourcesView, contactsView, deckView, DECK } from "../src/ui/pages.js";
-import { COPY, BUCKET_LABEL, STATUS_LABEL } from "../src/ui/copy.js";
+import { contactsView } from "../src/ui/contacts.js";
+import { COPY, STATUS_LABEL, CONTACT_BY_ACTION } from "../src/ui/copy.js";
 import { TOPIC_LABEL, TOPIC_ORDER, NODE_LABEL, topicLabel } from "../src/ui/copy.js";
 import {
   landingView, basicCheckView, masterView, scopeNoticeView, transitionView, revisitView,
@@ -52,37 +51,23 @@ section("1. 진입 — notice 다섯 종과 notice가 없는 여섯째");
 새백엔드();
 let s = await openSession({ url: "https://after47.kr/?d=mapo" });
 let v = entryView(s);
-t("① ?d=mapo → 자치구 선택 화면이 안 뜬다", v.picker.needed === false);
 t("① ?d=mapo → district_needed 배너가 없다", !bannerTypes(v).includes("district_needed"));
 t("① 보이는 구가 마포다", v.district?.id === "mapo" && v.district.name === "마포구");
 
 // (2) 자치구를 모르는 두 경우 — 이유가 다르면 문구도 달라야 한다
 새백엔드();
 v = entryView(await openSession({ url: "https://after47.kr/" }));
-t("② ?d= 없음 → picker.needed, reason 'missing'", v.picker.needed && v.picker.reason === "missing");
+t("② ?d= 없음 → 자치구를 알려 달라는 배너가 뜬다", bannerTypes(v).includes("district_needed"));
 const missingText = v.banners.find((b) => b.type === "district_needed")?.text;
 
 새백엔드();
 v = entryView(await openSession({ url: "https://after47.kr/?d=bucheon" }));
-t(
-  "② 서울 밖 값(bucheon) → picker.needed, reason 'unknown'",
-  v.picker.needed && v.picker.reason === "unknown"
-);
+t("② 서울 밖 값(bucheon)도 같은 배너를 낸다", bannerTypes(v).includes("district_needed"));
 t(
   "② 두 경우의 문구가 다르다 (모르는 값은 '다시 골라 주세요')",
   v.banners.find((b) => b.type === "district_needed")?.text !== missingText
 );
-t("② 25개 구가 전부 고를 수 있다", v.picker.options.length === 25);
-t(
-  "② picker가 가나다순이다",
-  v.picker.options[0].name === "강남구" && v.picker.options[24].name === "중랑구",
-  `${v.picker.options[0].name} … ${v.picker.options[24].name}`
-);
-// 조례 유무는 선택 화면에 나오지 않는다 — 없는 구에 낙인을 찍는 표시가 된다.
-t(
-  "② picker 항목은 id와 이름뿐이다 (조례 유무를 표시하지 않는다)",
-  v.picker.options.every((o) => Object.keys(o).sort().join(",") === "id,name")
-);
+// 지역 목록은 이제 확정 화면 `기본 확인`의 필드가 갖는다 — 절 7이 본다.
 
 // (3) 저장값이 ?d=를 이기되 조용히 넘기지 않는다
 새백엔드();
@@ -144,7 +129,7 @@ t(
   !bannerTypes(고른뒤).includes("district_needed"),
   JSON.stringify(bannerTypes(고른뒤))
 );
-t("고른 구가 보인다", 고른뒤.district?.id === "gangnam" && !고른뒤.picker.needed);
+t("고른 구가 보인다", 고른뒤.district?.id === "gangnam");
 
 새백엔드();
 s = await openSession({ url: "https://after47.kr/?d=seongbuk" });
@@ -329,7 +314,12 @@ t(
 t("2층은 이 박스를 쓰지 않는다", saveNoticeView({ persisted: true }).show === false);
 
 // 문구 정정 4건 (승인됨)
-t("헤더 제목이 '화재피해 회복 내비게이션'다", COPY.app.title === "화재피해 회복 내비게이션");
+// 브랜드는 2층이다 — 서비스명과 설명이 각자 자리를 갖는다(D-023).
+t(
+  "서비스명과 설명이 따로 있다",
+  COPY.brand === "일상으로" && COPY.descriptor === "화재피해 회복 내비게이션",
+  `${COPY.brand} / ${COPY.descriptor}`
+);
 t(
   "token_invalid에서 사용자 탓 어조를 뺐다",
   COPY.banner.token_invalid === "이 주소로는 저장된 기록을 찾지 못해 새로 시작합니다.",
@@ -337,17 +327,21 @@ t(
 );
 t(
   "미판정 계열 명칭이 '아직 확인 못 함' 하나다",
-  BUCKET_LABEL.excluded === "아직 확인 못 함" && STATUS_LABEL.미판정 === "아직 확인 못 함",
-  `${BUCKET_LABEL.excluded} / ${STATUS_LABEL.미판정}`
+  STATUS_LABEL.미판정 === "아직 확인 못 함" && COPY.undetermined.label === "아직 확인 못 함",
+  `${STATUS_LABEL.미판정} / ${COPY.undetermined.label}`
 );
 t(
   "화면 어디에도 '미판정'·'해당 여부 확인 필요'가 남아 있지 않다",
   !/미판정|해당 여부 확인 필요/.test(
-    JSON.stringify(COPY) + JSON.stringify(BUCKET_LABEL) + JSON.stringify(Object.values(STATUS_LABEL))
+    JSON.stringify(COPY) + JSON.stringify(Object.values(STATUS_LABEL))
   )
 );
 
-// 고지문 — D-006의 "말하지 않는 것"이 사용자 언어로 들어 있는가
+// 고지문 — **지금 화면에 자리가 없다.** 옛 근거 페이지 하단에 있었는데
+// 확정 IA에 그 페이지가 없다. 임의로 새 자리를 만들지 않았고 문구는
+// 남겨 두었다(보고 대상). D-002 보관 고지는 푸터 한 줄로 살아 있다.
+//
+// D-006의 "말하지 않는 것"이 사용자 언어로 들어 있는가
 // 고지문은 **하는 것 두 줄 + 저장·출처**로 줄였다(마무리 수정).
 // 면책 목록은 읽는 사람을 방어적으로 만들 뿐 행동을 돕지 않는다 —
 // 경계는 안내 본문 안에서 지킨다(조례 카드의 "구청이 확정합니다").
@@ -370,271 +364,136 @@ t(
   !/다른 기기에서도/.test(문구)
 );
 
-// ── 5. 타임라인 ────────────────────────────────────
-section("5. 타임라인 — 자르고 접는 것은 UI다");
+// ── 5. 행 계약 ─────────────────────────────────────
+section("5. 행 계약 — 결과 화면 여섯이 같은 행을 읽는다");
 
 const 판정 = (state, now = NOW) => evaluate(applyDefaults(questions, state, now), data, now);
-const tl = (state, now = NOW) => timelineView({ result: 판정(state, now), state, data });
+const 바탕 = (state, now = NOW) => resultBase({ result: 판정(state, now), state, data, now });
+const 결과 = (state, now = NOW) => resultView({ result: 판정(state, now), state, data, now });
 
-const t1 = tl(전.state);
-t(
-  "가로 암시선은 양 끝점뿐이다 — 끝은 화살표, 라벨은 '회복으로'",
-  t1.header.start === "화재발생" && t1.header.end === "회복으로",
-  JSON.stringify(t1.header)
-);
-t("확정 문구가 그대로다", t1.header.line === "불이 꺼졌듯, 이 시간도 지나갑니다.");
-
-t("큰 카드는 rank 1이다", t1.cards.lead?.rank === 1, String(t1.cards.lead?.rank));
-t(
-  "그 아래 넉 줄은 rank 2~5다",
-  t1.cards.rest.length === 4 && t1.cards.rest.every((r, i) => r.rank === i + 2),
-  JSON.stringify(t1.cards.rest.map((r) => r.rank))
-);
-t("카드 영역이 예산(5)을 넘지 않는다", 1 + t1.cards.rest.length <= 5);
-t(
-  "큰 카드가 제목·요약·본문을 갖는다 (읽을 것은 하나)",
-  Boolean(t1.cards.lead.title && t1.cards.lead.summary && t1.cards.lead.body)
-);
-t(
-  "접힌 구간은 라벨과 개수를 갖는다 (지우는 것이 아니라 접는 것이다)",
-  t1.more.length > 0 && t1.more.every((m) => m.label && typeof m.count === "number")
-);
-t(
-  "접힌 구간에는 rank 6 이상만 있다",
-  t1.more.every((m) => m.items.every((r) => r.rank > 5)),
-  JSON.stringify(t1.more.flatMap((m) => m.items.map((r) => r.rank)).filter((r) => r <= 5))
-);
-
-// standing과 missed는 순위 경쟁 밖이다(D-019 §0 · UI-A② 개정)
-t(
-  "금지 밴드가 있고 rank가 전부 null이다",
-  t1.standing.count > 0 && t1.standing.items.every((r) => r.rank === null)
-);
-t("금지는 체크할 수 없다", t1.standing.items.every((r) => r.checkable === false));
-t(
-  "카드 영역에 standing이 섞이지 않는다",
-  ![t1.cards.lead, ...t1.cards.rest].some((r) => r.when === "standing")
-);
-
-const 늦게 = tl(전.state, Date.parse(FIRE) + 5 * 24 * 36e5);
-t("+5d에는 지나간 것이 생긴다", 늦게.missed.count > 0, String(늦게.missed.count));
-t("지나간 것은 rank가 null이다", 늦게.missed.items.every((r) => r.rank === null));
-t(
-  "지나간 것이 카드 예산을 먹지 않는다 (UI-A② 개정의 핵심)",
-  ![늦게.cards.lead, ...늦게.cards.rest].some((r) => r.when === "missed"),
-  JSON.stringify([늦게.cards.lead, ...늦게.cards.rest].map((r) => r.rank + ":" + r.when))
-);
-t(
-  "+5d에도 첫 카드는 같다",
-  늦게.cards.lead?.id === t1.cards.lead?.id,
-  t1.cards.lead?.id + " → " + 늦게.cards.lead?.id
-);
-
-// 잠김 — 여는 열쇠가 어디 있는지 뷰모델이 답한다
-const 잠긴 = [t1.cards.lead, ...t1.cards.rest, ...t1.more.flatMap((m) => m.items)].filter(
-  (r) => r.locked
-);
-t(
-  "잠긴 행은 선행 제목을 싣고 있다 (콘텐츠를 새로 쓰지 않는다)",
-  잠긴.every((r) => r.blockedBy.length > 0 && r.blockedBy[0].title)
-);
-// 선행이 이 사람 화면에 **아예 없을 수 있다.** applies_when에 안 맞아 그
-// Action이 안 뜨는데 depends_on은 그대로라 잠김만 남는다. 레퍼런스 케이스가
-// 그렇다 — scene_preserved:true라 scene-release가 안 뜬다(엔진·데이터 쪽
-// 문제. 보고했다). 화면은 갈 곳이 있을 때만 버튼을 그려야 한다.
-t("잠긴 행마다 leadTo / leadMissing 중 하나가 정해진다",
-  잠긴.every((r) => (r.leadTo === null) === (r.leadMissing === true)));
-const 갈수있는 = 잠긴.filter((r) => r.leadTo);
-const 못가는 = 잠긴.filter((r) => r.leadMissing);
-t("갈 곳이 있는 잠김은 locate로 찾힌다",
-  갈수있는.every((r) => locate(t1, r.leadTo.id) !== null),
-  JSON.stringify(갈수있는.map((r) => r.leadTo.id)));
-t("선행이 화면에 없으면 leadMissing이다 (버튼을 그리지 않는 근거)",
-  못가는.every((r) => locate(t1, r.blockedBy[0].id) === null),
-  JSON.stringify(못가는.map((r) => r.id + "←" + r.blockedBy[0].id)));
-console.log(`      실측 — 잠김 ${잠긴.length}건 중 갈 곳 있음 ${갈수있는.length} / 없음 ${못가는.length}`);
-t("화면에 없는 id는 null이다", locate(t1, "없는-액션") === null);
-
-// 대기 — 기간을 약속하지 않되 숫자는 준다
-t(
-  "대기 항목은 wait_days 하한으로 정렬된다",
-  t1.waiting.every((r, i, a) => i === 0 || (a[i - 1].waitDays?.[0] ?? 1e9) <= (r.waitDays?.[0] ?? 1e9))
-);
-t("범위를 숫자로 만든다", waitLabel([15, 60]) === "15~60일", String(waitLabel([15, 60])));
-t("값이 없으면 null이다 — 화면은 기간 없이 상태만 말한다", waitLabel(null) === null);
-
-// 완료 로그
-const 체크 = {
-  ...전.state,
-  completed: ["fire-cert"],
-  completed_at: { "fire-cert": "2026-03-02T12:00:00.000Z" },
-};
-const t2 = tl(체크);
-t("체크한 것이 완료 로그로 간다", t2.done.count === 1 && t2.done.items[0].id === "fire-cert");
-t("완료에 날짜가 붙는다", t2.done.items[0].doneOn === "2026년 3월 2일", t2.done.items[0].doneOn);
-t(
-  "날짜가 없어도 완료다 (completed_at이 null이라고 완료가 아닌 것은 아니다)",
-  tl({ ...전.state, completed: ["fire-cert"] }).done.items[0].doneOn === null
-);
-t(
-  "완료한 것은 카드에서 빠진다",
-  ![t2.cards.lead, ...t2.cards.rest].some((r) => r.id === "fire-cert")
-);
-
-// 해당 여부 — 자치구 미지정만 화면에서 고르게 유도한다
-const { district: _d2, ...구없이2 } = 전.state;
-const t3 = tl(구없이2);
-t(
-  "자치구 미지정 미판정은 [자치구 고르기]로 유도한다",
-  t3.excluded.filter((r) => r.needsDistrict).length === 4,
-  String(t3.excluded.filter((r) => r.needsDistrict).length)
-);
-t("자치구를 고른 뒤에는 그 유도가 없다", t1.excluded.every((r) => !r.needsDistrict));
-
-// after_report — unlocked로 라벨이 바뀐다
-const 전라벨 = tl({ ...전.state, report_received: false }).more.find((m) => m.key === "after_report");
-const 후라벨 = tl({ ...전.state, report_received: true }).more.find((m) => m.key === "after_report");
-t("after_report 구간이 양쪽에 다 있다", Boolean(전라벨 && 후라벨));
-if (전라벨 && 후라벨) {
-  t("조사서 전에는 '조사서가 나온 뒤에'", 전라벨.label === "조사서가 나온 뒤에", 전라벨.label);
-  t("조사서를 받으면 '이제 할 수 있는 것'", 후라벨.label === "이제 할 수 있는 것", 후라벨.label);
+{
+  const b = 바탕(전.state);
+  const 필수 = [
+    "id", "title", "summary", "body", "group", "category", "irreversible", "guidanceType",
+    "sourceUrl", "sourceGrade", "checkedAt", "sources", "ordinanceName", "ordinanceArticle",
+    "ordinanceCheckedAt", "ordinanceBased", "when", "rank", "locked", "checkable",
+    "blockedBy", "blocksReason", "status", "statusIfPending", "reason", "dept",
+    "amountKnown", "waitDays", "deadlineDays", "completedAt",
+  ];
+  t(
+    "모든 행이 같은 키를 싣는다 (값이 없으면 null이지 키가 빠지지 않는다)",
+    b.all.every((r) => 필수.every((k) => k in r)),
+    필수.filter((k) => !(k in b.all[0])).join(",")
+  );
+  t("행이 하나 이상 있다", b.all.length > 0, String(b.all.length));
+  t("섹션 행은 자기가 어느 섹션인지 안다", b.sections.every((r) => typeof r.section === "string"));
+  t("버킷 행에는 rank가 없다", [...b.waiting, ...b.blocked, ...b.excluded].every((r) => r.rank === null));
 }
 
-// ★ 6단계 — anytime은 타임라인의 접힌 구간에서 빠지고 체크 페이지로 갔다.
-// 타임라인은 "지금 어디쯤"을 말하는 곳인데 anytime은 시점이 없다.
-t(
-  "타임라인 접힘 구간에 anytime이 없다",
-  !t1.more.some((m) => m.key === "anytime"),
-  JSON.stringify(t1.more.map((m) => m.key))
-);
-t("접힘 구간은 today · this_week · after_report뿐이다",
-  t1.more.every((m) => ["today", "this_week", "after_report"].includes(m.key)));
-t("anytime은 별도로 실려 나온다 (체크 페이지가 쓴다)",
-  t1.anytime.count > 0 && t1.anytime.groups.length > 0);
-// 카드 영역은 **전 구간 대상 그대로**다 — anytime 행이 상위 5에 들면 카드로
-// 뜬다(3년 시효가 그렇다). 그러면 체크 페이지와 중복되는데 의도된 것이다.
-const 카드anytime = [t1.cards.lead, ...t1.cards.rest].filter((r) => r.when === "anytime");
-// 관측 창을 여러 시각으로 넓힌다 — 한 시각의 순위 재배열이 계약 위반으로 오인되지 않게.
-const 어딘가카드 = [
-  t1,
-  tl({ ...전.state, product_suspected: true }),
-  tl(전.state, Date.parse(FIRE) + 90 * 24 * 36e5),
-].some((v) => [v.cards.lead, ...v.cards.rest].some((r) => r.when === "anytime"));
-t(
-  "카드 영역은 anytime도 대상이다 (rank ≤ 5면 카드로 뜬다)",
-  어딘가카드,
-  "어느 조합에서도 anytime이 상위 5에 못 들면 산식이나 데이터가 바뀐 것이다"
-);
-if (카드anytime.length)
+// 잠긴 행의 선행이 이 사람 화면에 있는가 — 레퍼런스 케이스가 그 경계다.
+{
+  const b = 바탕(전.state);
+  const 잠긴 = b.all.filter((r) => r.blockedBy.length);
+  t("선행이 있는 행이 있다", 잠긴.length > 0, String(잠긴.length));
+  t("leadTo는 화면에 실제로 있는 선행만 가리킨다",
+    잠긴.every((r) => !r.leadTo || b.byId.has(r.leadTo.id)));
+  t("선행이 하나도 없을 때만 leadMissing이다",
+    잠긴.every((r) => r.leadMissing === (r.leadTo === null)));
+  t("scene_preserved=true인 사람에게 scene-release는 안 뜬다 (알려진 사각)",
+    !b.byId.has("scene-release") && 전.state.scene_preserved === true);
+}
+
+// 출처 재료 — sources는 아직 비어 있고 조례는 자치구에서 온다(커밋 3).
+{
+  const 양천 = 바탕({ ...전.state, district: "yangcheon" });
+  t("모든 행이 sources 배열을 실어 나른다", 양천.all.every((r) => Array.isArray(r.sources)));
+  t("지금은 전부 비어 있다 (콘텐츠 패스 전)", 양천.all.every((r) => r.sources.length === 0));
+  const 조례행 = 양천.all.filter((r) => r.ordinanceBased);
+  t("조례 행이 있다 (양천)", 조례행.length > 0, String(조례행.length));
   t(
-    "카드에 뜬 anytime은 체크 페이지에도 있다 (의도된 중복 · 체크 상태 공유)",
-    카드anytime.every((r) => t1.anytime.items.some((x) => x.id === r.id))
+    "조례 행이 조례 이름과 조문을 실고 있다",
+    조례행.every((r) => typeof r.ordinanceName === "string" && /^제\d+조/.test(r.ordinanceArticle || "")),
+    조례행.map((r) => `${r.id}=${r.ordinanceArticle}`).join(" | ")
   );
+  t(
+    "조례가 아닌 행은 그 재료가 null이다",
+    양천.all.filter((r) => !r.ordinanceBased).every((r) => r.ordinanceName === null && r.ordinanceArticle === null)
+  );
+  // 자치구를 안 고른 사람은 조례 이름을 알 수 없다 — 그래도 죽지 않는다.
+  const 구없음 = 바탕({ ...전.state, district: undefined });
+  t("자치구 미지정에서도 행이 만들어진다", Array.isArray(구없음.excluded) && 구없음.all.length > 0);
+  t("자치구 미선택 미판정은 그 사실을 표시한다",
+    구없음.excluded.filter((r) => r.status === "미판정").every((r) => r.needsDistrict === true));
+}
 
-// ★ 고지문이 "본문에 출처를 밝혀 두었습니다"라고 말하므로 **행이 출처를
-//   실어 나르지 않으면 그 문장이 거짓이 된다.**
-const 출처있는 = [...t1.more.flatMap((m) => m.items), t1.cards.lead, ...t1.cards.rest].filter(
-  (r) => r.sourceUrl
-);
-t("출처가 있는 행은 sourceUrl을 싣는다", 출처있는.length > 0, String(출처있는.length));
-t(
-  "출처가 없는 항목은 null이다 (빈 '출처:'를 그리지 않기 위해)",
-  [t1.cards.lead, ...t1.cards.rest].every((r) => r.sourceUrl === null || typeof r.sourceUrl === "string")
-);
-
-// 조례 항목에만 "구청이 확정합니다" 줄이 붙는다 — 면책이 아니라 정보다.
-const 조례행 = [...t1.excluded, ...t1.more.flatMap((m) => m.items)].filter((r) => r.ordinanceBased);
-t(
-  "조례 항목만 ordinanceBased다",
-  조례행.every((r) => r.id.startsWith("support-")),
-  JSON.stringify(조례행.map((r) => r.id))
-);
-// 조례 4건은 섹션·blocked·excluded 어디에든 흩어질 수 있다. 전부 합쳐 센다.
-const 강남 = tl({ ...전.state, district: "gangnam" });
-const 강남조례 = [
-  강남.cards.lead,
-  ...강남.cards.rest,
-  ...강남.more.flatMap((m) => m.items),
-  ...강남.missed.items,
-  ...강남.blocked,
-  ...강남.excluded,
-  ...강남.waiting,
-  ...강남.done.items,
-].filter((r) => r && r.ordinanceBased);
-t(
-  "조례가 있는 구에서는 그 행이 4건이다",
-  강남조례.length === 4,
-  JSON.stringify(강남조례.map((r) => r.id))
-);
-t(
-  "조례가 없는 구에서는 0건이다 (support_items가 비어 skip된다)",
-  [
-    t1.cards.lead,
-    ...t1.cards.rest,
-    ...t1.more.flatMap((m) => m.items),
-    ...t1.blocked,
-    ...t1.excluded,
-  ].filter((r) => r && r.ordinanceBased).length === 0
-);
-t("문의 문장이 확정 주체를 밝힌다", /구청이 확정합니다/.test(COPY.timeline.ordinanceNote("가")));
-t(
-  "부서를 모르면 '구청 재난안전과'로 degrade한다 (dept가 null인 구가 9개)",
-  /구청 재난안전과/.test(COPY.timeline.ordinanceNote(null))
-);
+// 완료 — 기록이 없다고 완료가 아닌 것은 아니다.
+{
+  const b = 바탕({ ...전.state, completed: ["photo-before-cleanup"] });
+  t("완료한 행은 done으로 간다", b.done.some((r) => r.id === "photo-before-cleanup"));
+  t("완료 행의 status가 '완료'다", b.done.every((r) => r.status === "완료"));
+  t("완료가 아니었다면 무엇이었을지가 남는다", b.done.every((r) => r.statusIfPending != null));
+}
 
 
-// ── 6. 페이지 (6단계 — 가로 덱) ────────────────────
-section("6. 페이지 — 가로 덱의 네 장");
+// ── 6. 연락처 — 보류 중인 모듈 ─────────────────────
+section("6. 연락처 — 라우팅에서 분리했고 판단은 살아 있다");
 
-// 인트로 — 첫 방문만. **플래그는 state에 있고 storage 경유로 저장된다.**
-t("처음이면 인트로가 뜬다", introView({}).show === true);
-t("본 적 있으면 안 뜬다", introView({ intro_seen: true }).show === false);
-// 누수 탐지와 같은 방식으로 본다 — 주석에 낱말이 나오는 것까지 막을 필요는 없다.
+// 확정 결과 IA에 연락처 화면은 없다. **지우지 않은 이유**는 이 판단이
+// 이미 한 번 내려진 것이라서다 — 어떤 Action에 어떤 창구가 붙는지,
+// 부서를 모르는 구를 어떻게 degrade하는지. 후속 패스가 화면을 정하면
+// 이 함수가 그 자리에 붙는다. 그때까지 이 검사만 그것을 밟는다.
+{
+  const 마포 = 바탕(전.state);
+  const cont = contactsView(마포, { state: 전.state, data });
+  t("전역 번호 둘이 있다", cont.global.length === 2 && cont.global.every((c) => c.tel));
+  t("129와 120이다", cont.global.map((c) => c.tel).join(",") === "129,120");
+  t("조례가 없는 구에는 구청 줄이 없다", cont.district === null);
+  t("화면에 나온 안내의 창구만 뜬다", cont.orgs.every((o) => typeof o.tel === "string"));
+
+  const 강남state = { ...전.state, district: "gangnam" };
+  const contG = contactsView(바탕(강남state), { state: 강남state, data });
+  t("조례가 있는 구는 담당 부서를 안내한다", contG.district?.dept === "안전교통국 재난안전과");
+  t("구별 번호 자리는 비어 있다 (다음 패스)", contG.district?.tel === null);
+  t("부서를 모르면 '구청 재난안전 담당 부서'로 degrade한다",
+    /재난안전 담당 부서/.test(COPY.contacts.deptUnknown("도봉구")));
+}
+// 이 패스에서 연락처를 확정하지 않는다 — placeholder 번호도, 120/129/132를
+// Action에 임의로 매핑하는 것도 금지다.
+t(
+  "번호가 붙은 Action은 본문에 이미 그 번호가 있는 하나뿐이다",
+  Object.keys(CONTACT_BY_ACTION).length === 1 &&
+    Object.keys(CONTACT_BY_ACTION)[0] === "legal-aid-klac"
+);
+
+// ── 화면 코드의 위생 ───────────────────────────────
+// 누수 탐지와 같은 방식으로 본다 — 주석에 낱말이 나오는 것까지 막을
+// 필요는 없다.
 const 코드만 = (f) =>
   readFileSync(join(D, f), "utf8").replace(/\/\/.*$/gm, "").replace(/\/\*[\s\S]*?\*\//g, "");
 t(
-  "인트로 플래그는 state 필드다 (저장은 storage 경유)",
-  !/localStorage|sessionStorage/.test(코드만("src/ui/pages.js"))
-);
-t(
   "화면 코드가 저장소를 직접 만지지 않는다",
-  ["src/ui/app.js", "src/ui/render.js", "src/ui/screens.js"]
+  ["src/ui/app.js", "src/ui/render.js", "src/ui/screens.js", "src/ui/recovery.js"]
     .filter((f) => existsSync(join(D, f)))
     .every((f) => !/localStorage|sessionStorage|document\.cookie/.test(코드만(f)))
 );
-// 시안 확정 문구 넣 — 라벨·제목·부제·마이크로카피. 줄이면 안 된다.
-const iv = introView({});
-t("인트로 문구가 확정 문구다", iv.line === "불이 꺼진 뒤, 다시 일상으로 가는 길을 함께합니다.");
-t(
-  "마이크로카피가 확정 문구 그대로다 (줄이지 않는다)",
-  iv.micro === "불이 꺼졌듯, 이 시간도 지나갑니다. 다시 일어설 수 있습니다."
-);
-t("상단 라벨이 확정된 서비스명이다", iv.eyebrow === "화재피해 회복 내비게이션");
-t("CTA가 행동을 말한다", iv.cta === "내 상황 확인하기");
-// 제목은 글자로 쪼져 드러나지만 보조기술은 한 덩어리를 읽어야 한다.
-t("제목이 글자로 쪼개져 있다", Array.isArray(iv.letters) && iv.letters.length === 4);
-t("쪼개진 글자를 붙이면 제목이 된다", iv.letters.join("") === iv.lead);
-// 인트로가 canvas 픽셀을 읽지 않는다 — 못 읽는 환경이 있었다.
-t(
-  "인트로가 getImageData에 의존하지 않는다",
-  !/getImageData/.test(코드만("src/ui/screens.js"))
-);
+// 랜딩이 canvas 픽셀을 읽지 않는다 — 못 읽는 환경이 있었다.
+t("랜딩이 getImageData에 의존하지 않는다", !/getImageData/.test(코드만("src/ui/screens.js")));
 // 첫 탭이 저장을 기다리다 소진되면 첫 화면에 갇힌다.
 t(
-  "인트로 통과가 once로 한 번만 살아 있지 않다",
+  "랜딩 통과가 once로 한 번만 살아 있지 않다",
   !/once:\s*true/.test(코드만("src/ui/screens.js"))
 );
 // 전환이 먼저다 — route/render 뒤에 persist가 온다.
 {
   const src = 코드만("src/ui/app.js");
   const body = src.slice(src.indexOf("async function passLanding"));
-  // passIntro 다음 선언까지만 자른다.
   const 본문 = body.slice(0, body.indexOf("function", 30));
   t(
     "랜딩 통과는 저장을 기다리지 않는다 (render 뒤에 persist)",
     본문.indexOf("render()") < 본문.indexOf("persist()")
   );
 }
+
 
 // ── 연출이 안 돌아도 화면은 남는가 (실기기 사고 재발 방지) ──────
 //
@@ -705,37 +564,6 @@ t(
   );
 }
 
-// ── 출처 구조가 행에 실리는가 (커밋 3) ──────
-//
-// sources는 지금 전부 빈 배열이다. **그 상태에서도 화면이 죽지 않아야**
-// 하고, 조례 항목은 Action이 아니라 그 사람의 자치구 조례에서 출처를
-// 조합해야 해서 행이 재료를 실고 있어야 한다.
-{
-  const 양천 = tl({ ...전.state, district: "yangcheon" });
-  const 모두 = [
-    ...양천.cards.rest, 양천.cards.lead,
-    ...양천.more.flatMap((m) => m.items),
-    ...양천.anytime.items, ...양천.standing.items,
-    ...양천.waiting, ...양천.blocked, ...양천.excluded,
-  ].filter(Boolean);
-  t("모든 행이 sources 배열을 실어 나른다", 모두.every((r) => Array.isArray(r.sources)));
-  t("지금은 전부 비어 있다 (콘텐츠 패스 전)", 모두.every((r) => r.sources.length === 0));
-  const 조례행 = 모두.filter((r) => r.ordinanceBased);
-  t("조례 행이 있다 (양천)", 조례행.length > 0, String(조례행.length));
-  t(
-    "조례 행이 조례 이름과 조문을 실고 있다",
-    조례행.every((r) => typeof r.ordinanceName === "string" && /^제\d+조/.test(r.ordinanceArticle || "")),
-    조례행.map((r) => `${r.id}=${r.ordinanceName}/${r.ordinanceArticle}`).join(" | ")
-  );
-  t(
-    "조례가 아닌 행은 그 재료가 null이다",
-    모두.filter((r) => !r.ordinanceBased).every((r) => r.ordinanceName === null && r.ordinanceArticle === null)
-  );
-  // 자치구를 안 고른 사람은 조례 이름을 알 수 없다 — 그래도 죽지 않는다.
-  const 구없음 = tl({ ...전.state, district: undefined });
-  t("자치구 미지정에서도 화면이 그려진다", Array.isArray(구없음.excluded));
-}
-
 // ── hidden이 살아 있는가 ────────────────────────────
 //
 // 화면 전환은 전부 `el.hidden = true/false`다. 그런데 hidden은 브라우저
@@ -757,97 +585,13 @@ t(
   const refs = html.match(/(?:href|src)="src\/ui\/[^"]+"/g) || [];
   // ★ 값까지 본다. 존재만 보면 "올리는 것을 잊은 배포"를 못 잡는다 —
   //   화면 파일을 고치면서 v를 올리면 **이 줄의 숫자도 함께 올린다.**
-  const V = "?v=6";
+  const V = "?v=7";
   t(
     `화면 파일 참조가 전부 ${V}다 (${refs.length}개)`,
     refs.length >= 3 && refs.every((r) => r.includes(V)),
     refs.join(" ")
   );
 }
-
-// 안내 — 속도도 결과도 약속하지 않는다
-const gv = guideView();
-t("안내는 왜 묻는지만 말한다", gv.lines.length >= 2 && Boolean(gv.cta));
-t(
-  "속도를 약속하는 말이 없다",
-  !/빠르|금방|즉시|신속|바로 해결/.test(gv.lines.join(" ") + gv.title),
-  gv.lines.join(" ")
-);
-
-// 요약 — 답한 것이 질문·답 쌍으로, 각 줄이 그 질문으로 돌아가는 문
-const sm = summaryView({ questions, state: 전.state, data, now: NOW });
-t("요약이 답한 것을 전부 싣는다", sm.rows.length > 0 && sm.complete === true);
-t(
-  "각 줄이 질문·답 쌍이고 돌아갈 id를 갖는다",
-  sm.rows.every((r) => r.id && r.key && r.question && r.answer)
-);
-t(
-  "답을 라벨로 보여준다 (raw 값이 아니다)",
-  sm.rows.find((r) => r.key === "tenure")?.answer !== "renter",
-  JSON.stringify(sm.rows.find((r) => r.key === "tenure"))
-);
-const sm2 = summaryView({ questions, state: { district: "mapo" }, data, now: NOW });
-t("아직 안 답했으면 빈 목록이고 complete가 아니다", sm2.rows.length === 0 && !sm2.complete);
-
-// 체크 페이지 — 성격이 정반대인 둘을 탭으로 가른다
-const cv = checkView(t1);
-t("탭이 둘이다", cv.tabs.length === 2);
-t(
-  "기본 탭이 '해두면 좋은 일'이다 (첫인상이 금지 목록이면 안 된다)",
-  cv.tabs[0].key === "todo" && cv.tabs[0].label === "해두면 좋은 일"
-);
-t("해두면 좋은 일 = anytime", cv.todo.items.length === t1.anytime.count);
-t(
-  "★ standing 전부가 체크 페이지에 있다",
-  cv.avoid.items.length === t1.standing.count && cv.avoid.items.length > 0,
-  `${cv.avoid.items.length} / ${t1.standing.count}`
-);
-t("금지는 체크할 수 없다", cv.avoid.items.every((r) => r.checkable === false));
-t("완료 로그가 이 페이지에 있다", cv.done && typeof cv.done.count === "number");
-
-// 근거 페이지 — 엔진 행에서 그대로 뽑는다(재판정 금지)
-const sv2 = sourcesView(t1);
-t("출처가 있는 것만 모은다", sv2.groups.every((g) => g.items.every((x) => x.url && x.host)));
-t("분야로 묶는다", sv2.groups.length > 0 && sv2.groups.every((g) => g.group));
-t("같은 항목이 두 번 안 나온다", (() => {
-  const ids = sv2.groups.flatMap((g) => g.items.map((x) => x.id));
-  return new Set(ids).size === ids.length;
-})());
-t("해당 없는 것도 사유와 함께 남는다 (D-011)", Array.isArray(sv2.excluded));
-// 설문 결과에 따라 달라진다
-const sv3 = sourcesView(tl({ ...전.state, product_suspected: true }));
-t(
-  "답이 바뀌면 근거 목록도 바뀐다",
-  sv3.count !== sv2.count,
-  `${sv2.count} → ${sv3.count}`
-);
-
-// 연락처 — v1은 구별 번호 없이. 없는 것을 "준비 중"으로 쓰지 않는다.
-const cont = contactsView(t1, { state: 전.state, data });
-t("전역 번호 둘이 있다", cont.global.length === 2 && cont.global.every((c) => c.tel));
-t("129와 120이다", cont.global.map((c) => c.tel).join(",") === "129,120");
-const contG = contactsView(tl({ ...전.state, district: "gangnam" }), {
-  state: { ...전.state, district: "gangnam" },
-  data,
-});
-t("조례가 있는 구는 담당 부서를 안내한다", contG.district?.dept === "안전교통국 재난안전과");
-t("구별 번호 자리는 비어 있다 (다음 패스)", contG.district?.tel === null);
-t("조례가 없는 구에는 구청 줄이 없다", contactsView(t1, { state: 전.state, data }).district === null);
-t(
-  "화면에 나온 안내의 창구만 뜬다 (설문 맞춤)",
-  cont.orgs.every((o) => typeof o.tel === "string")
-);
-
-// 덱 — 네 장, 라벨 탭으로도 이동
-const dv = deckView("timeline");
-t("덱이 네 장이다", dv.pages.length === 4 && DECK.length === 4);
-t("순서가 타임라인·체크·근거·연락처다",
-  dv.pages.map((p) => p.label).join(",") === "타임라인,체크,근거,연락처");
-t("첫 장에서는 이전이 없다", dv.prev === null && dv.next === "check");
-t("마지막 장에서는 다음이 없다", deckView("contacts").next === null);
-t("현재 장이 표시된다", dv.pages[0].current === true && dv.pages[1].current === false);
-
-
 
 // ── 7. 진입 흐름 (확정 UX) ─────────────────────────
 section("7. 진입 흐름 — 랜딩 · 기본 확인 · 질문 MASTER · 전환 · 재방문 게이트");
@@ -884,6 +628,9 @@ t("필드 이름이 '화재 발생일'과 '지역'이다", bc.date.label === "�
 t("CTA가 '다음'이다", bc.cta === "다음");
 t("QR로 들어온 지역이 채워져 있고 이름으로 보인다", bc.district.id === "mapo" && bc.district.name === "마포구");
 t("지역은 25개 전수에서 고른다", bc.district.options.length === 25);
+t("지역이 가나다순이다",
+  bc.district.options[0].name === "강남구" && bc.district.options[24].name === "중랑구",
+  `${bc.district.options[0].name} … ${bc.district.options[24].name}`);
 t("조례 유무를 선택지에 표시하지 않는다",
   bc.district.options.every((o) => Object.keys(o).join(",") === "id,name"));
 t("날짜 입력값이 YYYY-MM-DD다", /^\d{4}-\d{2}-\d{2}$/.test(bc.date.inputValue), bc.date.inputValue);
@@ -971,9 +718,6 @@ t(
 
 // ── 8. 내 회복 경로 (결과 IA) ──────────────────────
 section("8. 내 회복 경로 — HOME과 다섯 화면");
-
-const 바탕 = (state, now = NOW) => resultBase({ result: 판정(state, now), state, data, now });
-const 결과 = (state, now = NOW) => resultView({ result: 판정(state, now), state, data, now });
 
 const r1 = 결과(전.state);
 

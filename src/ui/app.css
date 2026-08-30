@@ -1040,6 +1040,17 @@ a {
   line-height: var(--lh);
 }
 
+/* 조례 항목의 degrade 줄 — 확정하는 곳은 구청이라는 사실(D-003). */
+.detail__note {
+  margin: var(--s5) 0 0;
+  padding: var(--s3);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r2);
+  color: var(--c-ink-soft);
+  font-size: var(--f-sm);
+  line-height: var(--lh);
+}
+
 /* 출처 — 본문보다 낮은 위계다. 없으면 통째로 안 그린다. */
 .src {
   margin-top: var(--s6);

@@ -114,8 +114,8 @@ export function renderChecklist(main, cv, { onOpen, onCheck }) {
   if (cv.done.count) {
     const det = el("details", "fold");
     const sum = el("summary", "fold__sum");
-    sum.appendChild(el("span", "fold__label", COPY.timeline.doneTitle));
-    sum.appendChild(el("span", "fold__count", COPY.timeline.doneCount(cv.done.count)));
+    sum.appendChild(el("span", "fold__label", COPY.checklist.doneTitle));
+    sum.appendChild(el("span", "fold__count", COPY.checklist.doneCount(cv.done.count)));
     det.appendChild(sum);
     const dl = el("ul", "cards");
     for (const r of cv.done.items) {
@@ -126,10 +126,10 @@ export function renderChecklist(main, cv, { onOpen, onCheck }) {
       const meta = el("p", "card__meta");
       meta.appendChild(el("span", "chip", r.statusLabel));
       // completed_at이 없다고 완료가 아닌 것은 아니다.
-      meta.appendChild(el("span", null, r.doneOn || COPY.timeline.doneNoDate));
+      meta.appendChild(el("span", null, r.doneOn || COPY.checklist.doneNoDate));
       li.appendChild(meta);
       if (r.checkable && onCheck)
-        li.appendChild(btn("btn btn--quiet", COPY.timeline.uncheck, () => onCheck(r.id, false)));
+        li.appendChild(btn("btn btn--quiet", COPY.checklist.uncheck, () => onCheck(r.id, false)));
       dl.appendChild(li);
     }
     det.appendChild(dl);
@@ -279,6 +279,9 @@ export function renderActionDetail(main, ad, { onGoTo }) {
   // 잠김의 의미는 체크리스트와 같은 문장으로. 새 화면 유형을 만들지 않는다.
   if (ad.lock) main.appendChild(lockLine(ad.lock, onGoTo));
   if (ad.body) main.appendChild(bodyBlock(ad.body));
+  // 조례 항목에만 붙는 줄. 앱이 "해당"이라 해도 확정하는 곳은 구청이다 —
+  // 확정 템플릿에는 없지만 이 줄이 없으면 앱이 자기 권한을 넘겨 말한다.
+  if (ad.ordinanceNote) main.appendChild(el("p", "detail__note", ad.ordinanceNote));
 
   const src = sourceCard(ad.source);
   if (src) main.appendChild(src);
@@ -373,7 +376,7 @@ function checkCard(r, { onOpen, onCheck }) {
   if (r.checkable && onCheck) {
     const box = btn("card__box", null, () => onCheck(r.id, true));
     box.setAttribute("aria-pressed", "false");
-    box.setAttribute("aria-label", `${r.title} — ${COPY.timeline.check}`);
+    box.setAttribute("aria-label", `${r.title} — ${COPY.checklist.check}`);
     li.appendChild(box);
   } else {
     // 선행이 안 끝난 것은 체크할 수 없다. 자리를 비워 두면 줄이 어긋난다.
@@ -413,7 +416,7 @@ function lockLine(lock, onGoTo) {
   const box = el("p", "lock lock--block");
   box.appendChild(lockText(lock));
   if (lock.goTo && onGoTo)
-    box.appendChild(btn("btn btn--quiet", COPY.timeline.lockedGo, () => onGoTo(lock.goTo)));
+    box.appendChild(btn("btn btn--quiet", COPY.checklist.lockedGo, () => onGoTo(lock.goTo)));
   return box;
 }
 
