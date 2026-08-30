@@ -722,11 +722,19 @@ function showSaveNotice(stage) {
     return;
   }
   box.hidden = false;
+  // 1층은 조용한 블록, 예외(저장 막힘)는 원래 크기 그대로다.
+  box.className = sn.variant === "saved" ? "savebox savebox--lite" : "savebox";
 
-  box.appendChild(el("h2", "h2", sn.lines[0]));
-  box.appendChild(el("p", "savebox__line", sn.lines[1]));
+  // 제목이 있는 것은 예외 화면뿐이다. 1층은 한 줄이다.
+  if (sn.lines.length > 1) {
+    box.appendChild(el("h2", "h2", sn.lines[0]));
+    box.appendChild(el("p", "savebox__line", sn.lines[1]));
+  } else {
+    box.appendChild(el("p", "savebox__line", sn.lines[0]));
+  }
 
-  // 주소를 큰 글씨로. 종이에 적고 전화로 불러줄 수 있어야 한다.
+  // 주소를 보여 준다 — 무엇을 복사하는지 보이지 않으면 버튼이 불투명하다.
+  // 예외 화면에서는 종이에 적고 전화로 불러줄 수 있어야 해서 크다.
   const addr = el("p", "savebox__url", sn.url);
   box.appendChild(addr);
   const spell = el("p", "savebox__spell", spellToken(sn.token));

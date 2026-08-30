@@ -195,17 +195,18 @@ export function saveNoticeView({
     return {
       show: true,
       variant: "saved",
-      lines: [COPY.save.saveTitle, COPY.save.saveLine],
+      // **한 줄이다.** 제목을 없앴다(사용자 실기기 검수 결정) —
+      // 큰 제목 + 긴 설명 + 버튼 넷이 결과 화면에서 경고처럼 읽혔다.
+      lines: [COPY.save.saveLine],
       url,
       token,
       actions: [
         // OS 공유 시트. 미지원이면 화면이 복사로 폴백한다.
         ...(canShare ? [{ id: "share", label: COPY.save.share }] : []),
         { id: "copy", label: COPY.save.copy },
-        { id: "spell", label: COPY.save.spell },
-        // "나중에"를 둔다. 없으면 사람은 X를 찾고, 그래도 안 보이면 화면을
-        // 닫는다. 대신 2층으로 내려간다(D-015).
-        { id: "later", label: COPY.save.later },
+        // ★ `한 글자씩 보기`와 `나중에`를 뺐다. 전자는 저장이 막힌
+        //   브라우저(blocked)의 도구이고, 후자는 없어도 갇히지 않는다 —
+        //   HOME을 떠나면 이 블록은 사라진다.
       ],
     };
   }

@@ -136,7 +136,7 @@ await tick(30);
 
 t("설문 MASTER로 넘어간다", has(main(), "상황 확인") && 질문중() !== null, texts(main()).join(" | "));
 t("첫 질문이 날짜가 아니다", 질문중().own === "지금 그 집에서 지낼 수 있나요?", 질문중().own);
-t("하단 한 줄이 확정 문구다", has(main(), "답변에 따라 당신의 상황에 맞는 질문만 이어집니다."));
+t("하단 한 줄이 확정 문구다", has(main(), "답변에 따라 당신의 상황에 필요한 질문만 이어집니다."));
 t("분모형 진행률이 없다", !texts(main()).some((s) => /\d+\s*\/\s*\d+/.test(s)), texts(main()).join(" | "));
 t("첫 질문의 [이전]은 기본 확인으로 간다", $("top-right").children.length === 1);
 
@@ -232,6 +232,23 @@ await tick(10);
   await tick(10);
   t("주제 상세가 그려진다", has(main(), "건강") && texts(main()).some((s) => /^\d+개의 안내$/.test(s)));
   t("주제 상세 하단 문구가 확정 문구다", has(main(), "원문 링크가 확인된 안내에만 ‘원문 보기’를 표시합니다."));
+
+  // ★ 카드 마크업 순서를 고정한다. 실기기에서 제목이 한 글자 열로
+  //   떨어진 사고의 절반이 **출처 줄이 제목의 형제로 나란히 선 것**이었다.
+  //   확정 위계는 세로다 — 제목·요약이 먼저, 출처 줄이 뒤.
+  {
+    const 출처카드 = all(main(), (n) => hasClass(n, "card--stack"));
+    if (출처카드.length) {
+      const kids = 출처카드[0].children.map((c) => c.className || "");
+      t("출처가 있는 카드는 card--stack이다", 출처카드.length > 0);
+      t(
+        "제목 묶음이 먼저이고 출처 줄이 뒤다",
+        kids.indexOf("card__hit") >= 0 &&
+          kids.indexOf("card__src") > kids.indexOf("card__hit"),
+        kids.join(" | ")
+      );
+    }
+  }
 
   const 첫카드 = all(main(), (n) => hasClass(n, "card__hit"))[0];
   첫카드.click();

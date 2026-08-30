@@ -366,6 +366,9 @@ function topicCard(r, onOpen) {
   const li = simpleCard(r, onOpen);
   const src = r.source;
   if (src) {
+    // **출처 줄은 제목 아래다.** 형제로 붙는데 `.card`가 row라 좌우로
+    // 섰고, 그것이 제목을 한 글자 열로 짜부라뜨렸다(실기기 사고).
+    li.classList.add("card--stack");
     const box = el("div", "card__src");
     box.appendChild(el("span", "src__label", src.label));
     const it = src.items[0];

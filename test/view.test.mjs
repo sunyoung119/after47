@@ -300,10 +300,17 @@ const 일층 = saveNoticeView({
   canShare: true,
 });
 t("1층은 결과 첫 도달에서 열린다", 일층.show === true && 일층.variant === "saved");
+// **[나중에]를 뺐다**(사용자 실기기 검수 결정). 없어도 갇히지 않는다 —
+// HOME을 떠나면 이 블록이 사라진다(app.js가 화면으로 판단한다).
+// 남는 것은 공유와 복사 둘뿐이고, 블록 자체가 조용해졌다.
+t("1층은 한 줄이다 (제목을 없앴다)", 일층.lines.length === 1, 일층.lines.join(" / "));
 t(
-  "1층에는 '나중에'가 있다 (없으면 사람은 X를 찾고, 안 보이면 화면을 닫는다)",
-  일층.actions.some((a) => a.id === "later")
+  "1층 버튼은 공유와 복사 둘뿐이다",
+  일층.actions.map((a) => a.id).join(",") === "share,copy",
+  일층.actions.map((a) => a.id).join(",")
 );
+t("'나중에'와 '한 글자씩 보기'는 1층에 없다",
+  !일층.actions.some((a) => a.id === "later" || a.id === "spell"));
 t(
   "카톡 보내기는 공유를 지원할 때만 나온다",
   일층.actions.some((a) => a.id === "share") &&
@@ -616,6 +623,32 @@ t(
   t("app.css가 font-family를 직접 적지 않는다", !/font-family\s*:/.test(css));
 }
 
+// ── 한국어가 한 글자씩 세로로 떨어지지 않는가 ───────
+//
+// 실기기에서 카드 제목이 **한 글자 열**로 렌더됐다. 원인이 둘이었다.
+//
+//   ① `.card { overflow-wrap: anywhere }` — anywhere는 요소의 min-content
+//      폭을 한 글자까지 줄인다. flex 아이템은 기본 `min-width: auto`
+//      (=min-content)라, 옆 형제가 폭을 요구하면 제목이 1글자로 짜부라진다
+//   ② 주제 상세 카드가 출처 줄을 제목의 **형제**로 붙이는데 `.card`가
+//      row라 둘이 좌우로 섰다 — ①의 방아쇠였다
+//
+// 눈으로만 지킬 수 없어서 규칙을 코드로 박는다.
+{
+  const css = readFileSync(join(D, "src/ui/app.css"), "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+  const cardRule = css.slice(css.indexOf(".card {"), css.indexOf("}", css.indexOf(".card {")));
+  t("카드가 어절 단위로 끊는다 (keep-all)", /word-break:\s*keep-all/.test(cardRule), cardRule);
+  t(
+    "카드에 overflow-wrap: anywhere가 없다 (한 글자 열의 원인)",
+    !/overflow-wrap:\s*anywhere/.test(cardRule),
+    cardRule
+  );
+  // 긴 URL만은 예외다 — 안 끊으면 카드를 밀고 나간다.
+  t("URL 자리에는 anywhere가 남아 있다", /\.src__link[^{]*\{[^}]*overflow-wrap:\s*anywhere/.test(css));
+  // 출처 줄을 가진 카드는 세로로 쌓인다.
+  t("card--stack이 세로 방향이다", /\.card--stack\s*\{[^}]*flex-direction:\s*column/.test(css));
+}
+
 // ── 웹폰트가 실재하는가 ─────────────────────────────
 //
 // @font-face가 없는 파일을 가리키면 브라우저는 조용히 폴백으로 넘어간다.
@@ -658,7 +691,7 @@ t(
   const refs = html.match(/(?:href|src)="src\/ui\/[^"]+"/g) || [];
   // ★ 값까지 본다. 존재만 보면 "올리는 것을 잊은 배포"를 못 잡는다 —
   //   화면 파일을 고치면서 v를 올리면 **이 줄의 숫자도 함께 올린다.**
-  const V = "?v=11";
+  const V = "?v=12";
   t(
     `화면 파일 참조가 전부 ${V}다 (${refs.length}개)`,
     refs.length >= 3 && refs.every((r) => r.includes(V)),
@@ -727,7 +760,7 @@ t("채운 날짜를 '답했다'고 세지 않는다", bc빈.date.answered === fa
 // 질문 MASTER 문법 — 모든 질문 화면이 같은 문법을 쓴다.
 const mv = masterView({ questions, state: { district: "mapo", fire_at: FIRE }, data, now: NOW });
 t("소라벨이 '상황 확인'이다", mv.eyebrow === "상황 확인");
-t("하단 한 줄이 확정 문구다", mv.footer === "답변에 따라 당신의 상황에 맞는 질문만 이어집니다.", mv.footer);
+t("하단 한 줄이 확정 문구다", mv.footer === "답변에 따라 당신의 상황에 필요한 질문만 이어집니다.", mv.footer);
 t("좌상단이 서비스명이다", mv.brand === "일상으로");
 // ★ 분모형 진행률 금지. 조건에 따라 질문 수가 변해서 `3/18`이 거짓말이 된다.
 t(
