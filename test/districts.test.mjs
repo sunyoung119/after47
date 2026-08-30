@@ -505,6 +505,48 @@ t(
   districts.every((d) => Object.values(d.support_articles).every((v) => /^제\d+조/.test(v)))
 );
 
+section("6. 연락처 — contacts[]");
+
+// 데이터 층만 세운 단계다. **화면에는 아직 소비자가 없다** — 노출 방식은
+// 시각 디자인 패스가 정한다. 그래도 스키마와 검증 규칙을 지금 박아 둔다:
+// 번호는 사람이 실제로 거는 것이라, 틀린 값이 들어가는 쪽이 빈 값보다 나쁘다.
+t(
+  `Action ${actions.length}건 전부 contacts 배열을 갖는다`,
+  actions.every((a) => Array.isArray(a.contacts)),
+  actions.filter((a) => !Array.isArray(a.contacts)).map((a) => a.id).join(", ")
+);
+const 연락처있음 = actions.filter((a) => a.contacts.length);
+t("1군 5건만 채워져 있다", 연락처있음.length === 5, 연락처있음.map((a) => a.id).join(", "));
+t(
+  "나머지는 빈 배열이다 (키가 빠지지 않는다)",
+  actions.filter((a) => !a.contacts.length).length === actions.length - 연락처있음.length
+);
+for (const a of 연락처있음) {
+  for (const c of a.contacts) {
+    // 누가·언제·어디서 확인했는지가 없으면 그 번호는 근거가 없는 값이다.
+    t(
+      `${a.id} 연락처가 계약을 지킨다`,
+      typeof c.org === "string" && c.org.length > 0 &&
+        /^\d{4}-\d{2}-\d{2}$/.test(c.checked_at || "") &&
+        /^https:\/\//.test(c.verified_at_url || ""),
+      JSON.stringify(c)
+    );
+    // 걸 곳도 갈 곳도 없는 연락처는 연락처가 아니다.
+    t(`${a.id} 전화나 주소 중 하나는 있다`, Boolean(c.tel || c.url), JSON.stringify(c));
+    // `tel:` 링크에 그대로 들어갈 값이다. 괄호·안내문이 섞이면 전화가 안 걸린다.
+    t(`${a.id} 번호가 숫자와 하이픈뿐이다`, c.tel === null || /^[\d-]+$/.test(c.tel), String(c.tel));
+    t(`${a.id} 주소가 있으면 https다`, c.url === null || /^https:\/\//.test(c.url), String(c.url));
+  }
+}
+// 조례 항목의 문의처는 구청(`dept`)이지 국가 창구가 아니다. 심리 지원의
+// 국가 경로(1670-9512)는 별도 Action 검토 대상이고, 여기 달면 25개 구
+// 전부에서 같은 번호를 구청 창구인 것처럼 보이게 된다.
+t(
+  "조례 항목에는 연락처를 달지 않았다",
+  actions.filter((a) => a.ordinance_based).every((a) => a.contacts.length === 0),
+  actions.filter((a) => a.ordinance_based && a.contacts.length).map((a) => a.id).join(", ")
+);
+
 // ── 결과 ───────────────────────────────────────────
 console.log(`\n${"=".repeat(62)}`);
 console.log(failed ? `실패 ${failed}건` : "전부 통과");
