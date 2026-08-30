@@ -18,6 +18,15 @@ import { entryView, surveyView, saveNoticeView } from "../src/ui/view.js";
 import { timelineView, locate, waitLabel } from "../src/ui/timeline.js";
 import { introView, guideView, summaryView, checkView, sourcesView, contactsView, deckView, DECK } from "../src/ui/pages.js";
 import { COPY, BUCKET_LABEL, STATUS_LABEL } from "../src/ui/copy.js";
+import { TOPIC_LABEL, TOPIC_ORDER, NODE_LABEL, topicLabel } from "../src/ui/copy.js";
+import {
+  landingView, basicCheckView, masterView, scopeNoticeView, transitionView, revisitView,
+  SELECT_FEEDBACK_MS, BASIC_KEYS,
+} from "../src/ui/entry.js";
+import {
+  resultBase, resultView, priorityView, checklistView, topicsView, topicDetailView,
+  actionDetailView, undeterminedView, sourceOf, RESULT_PAGES,
+} from "../src/ui/result.js";
 
 const D = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (f) => JSON.parse(readFileSync(join(D, f), "utf8"));
@@ -714,7 +723,7 @@ t(
   const refs = html.match(/(?:href|src)="src\/ui\/[^"]+"/g) || [];
   // ★ 값까지 본다. 존재만 보면 "올리는 것을 잊은 배포"를 못 잡는다 —
   //   화면 파일을 고치면서 v를 올리면 **이 줄의 숫자도 함께 올린다.**
-  const V = "?v=4";
+  const V = "?v=5";
   t(
     `화면 파일 참조가 전부 ${V}다 (${refs.length}개)`,
     refs.length >= 3 && refs.every((r) => r.includes(V)),
@@ -804,6 +813,465 @@ t("첫 장에서는 이전이 없다", dv.prev === null && dv.next === "check");
 t("마지막 장에서는 다음이 없다", deckView("contacts").next === null);
 t("현재 장이 표시된다", dv.pages[0].current === true && dv.pages[1].current === false);
 
+
+
+// ── 7. 진입 흐름 (확정 UX) ─────────────────────────
+section("7. 진입 흐름 — 랜딩 · 기본 확인 · 질문 MASTER · 전환 · 재방문 게이트");
+
+// 랜딩 — 서비스의 문이다. 기능 목록을 늘어놓는 홈이 아니다.
+const lv = landingView({});
+t("첫 방문이면 랜딩이 뜬다", lv.show === true);
+t("본 적 있으면 안 뜬다", landingView({ intro_seen: true }).show === false);
+t("설명(descriptor)이 확정 문구다", lv.eyebrow === "화재피해 회복 내비게이션");
+t("서비스명이 확정 문구다", lv.brand === "일상으로");
+t(
+  "메인 문구가 확정 문구 그대로다",
+  lv.lead === "불이 꺼진 뒤, 다시 일상으로 가는 길을 함께 합니다",
+  lv.lead
+);
+t("CTA가 확정 문구다", lv.cta === "회복 시작하기");
+t(
+  "푸터가 확정 문구다",
+  lv.footer === "흩어진 제도와 정보를, 당신의 상황과 시간에 맞게 잇습니다.",
+  lv.footer
+);
+t("쪼개진 글자를 붙이면 서비스명이 된다", lv.letters.join("") === lv.brand);
+// 6단계의 마이크로카피는 확정 랜딩에서 빠졌다. 남아 있으면 확정 화면과 다르다.
+t("6단계 마이크로카피가 랜딩에 없다", !("micro" in lv));
+t("푸터에 링크가 없다", !("links" in lv));
+
+// 기본 확인 — 날짜와 지역을 한 화면에서. QR 값이 있어도 고칠 수 있어야 한다.
+const bc = basicCheckView({ state: { district: "mapo", fire_at: FIRE }, data, now: NOW });
+t("라벨·제목·help가 확정 문구다",
+  bc.label === "기본 확인" &&
+    bc.title === "화재가 있었던 날짜와 지역을 알려주세요" &&
+    bc.help === "경과 시간과 지역에 따라 필요한 안내가 달라집니다.");
+t("필드 이름이 '화재 발생일'과 '지역'이다", bc.date.label === "화재 발생일" && bc.district.label === "지역");
+t("CTA가 '다음'이다", bc.cta === "다음");
+t("QR로 들어온 지역이 채워져 있고 이름으로 보인다", bc.district.id === "mapo" && bc.district.name === "마포구");
+t("지역은 25개 전수에서 고른다", bc.district.options.length === 25);
+t("조례 유무를 선택지에 표시하지 않는다",
+  bc.district.options.every((o) => Object.keys(o).join(",") === "id,name"));
+t("날짜 입력값이 YYYY-MM-DD다", /^\d{4}-\d{2}-\d{2}$/.test(bc.date.inputValue), bc.date.inputValue);
+t("지역을 골랐으면 넘어갈 수 있다", bc.ready === true);
+const bc빈 = basicCheckView({ state: {}, data, now: NOW });
+t("지역을 안 골랐으면 못 넘어간다", bc빈.ready === false);
+// 기본 진입점이 화재 당일이라 날짜는 채워 둔다. 채운 것과 답한 것은 갈린다.
+t("날짜는 오늘로 채워져 있다", typeof bc빈.date.value === "string" && bc빈.date.inputValue !== null);
+t("채운 날짜를 '답했다'고 세지 않는다", bc빈.date.answered === false && bc.date.answered === true);
+
+// 질문 MASTER 문법 — 모든 질문 화면이 같은 문법을 쓴다.
+const mv = masterView({ questions, state: { district: "mapo", fire_at: FIRE }, data, now: NOW });
+t("소라벨이 '상황 확인'이다", mv.eyebrow === "상황 확인");
+t("하단 한 줄이 확정 문구다", mv.footer === "답변에 따라 상황에 맞는 질문만 이어집니다.", mv.footer);
+t("좌상단이 서비스명이다", mv.brand === "일상으로");
+// ★ 분모형 진행률 금지. 조건에 따라 질문 수가 변해서 `3/18`이 거짓말이 된다.
+t(
+  "MASTER에도 분모가 없다",
+  분모후보.every((k) => !(k in mv)) && !("remaining" in mv),
+  Object.keys(mv).join(", ")
+);
+t("화재 발생일은 기본 확인이 가진 질문이다", BASIC_KEYS.includes("fire_at"));
+t("설문 첫 질문이 날짜가 아니다", mv.current?.key === "residence_possible", mv.current?.key);
+t("첫 질문에서는 설문 안에 뒤가 없다 (기본 확인으로 돌아간다)", mv.atStart === true && mv.back === null);
+const mv2 = masterView({ questions, state: 전.state, data, now: NOW, cursor: "q-tenure" });
+t("두 번째 질문부터는 [이전]이 있다", mv2.back?.label === "이전" && mv2.atStart === false);
+// 탭이 먹혔다는 감각. 그 이상 끌면 멈춘 화면이 된다.
+t("선택 피드백이 150~250ms 안이다", SELECT_FEEDBACK_MS >= 150 && SELECT_FEEDBACK_MS <= 250);
+
+// 안내 범위 — 건물 종류가 '그 외'일 때만.
+const sc = scopeNoticeView({ housing_type: "other" });
+t("'그 외'를 고른 사람에게만 뜬다",
+  sc.show === true &&
+    scopeNoticeView({ housing_type: "apartment" }).show === false &&
+    scopeNoticeView({}).show === false);
+t("확인하면 다시 세우지 않는다", scopeNoticeView({ housing_type: "other", scope_ack: true }).show === false);
+t("소라벨이 '안내 범위'다", sc.label === "안내 범위");
+t("큰 제목이 없는 화면이다", !("title" in sc));
+t("본문이 확정된 세 문장 그대로다",
+  sc.lines.length === 3 &&
+    sc.lines[0] === "현재 ‘일상으로’는 주택 화재를 기준으로 안내 내용을 검증하고 있습니다." &&
+    sc.lines[1] ===
+      "주택 화재가 아닌 경우에도 화재 직후 필요한 현장 보존, 보험, 서류, 피해 기록 등 공통 안내는 계속 확인할 수 있습니다." &&
+    sc.lines[2] === "다만 영업 피해, 사업장 특유의 보상·복구 절차 등은 현재 안내 범위에 포함되지 않습니다.",
+  sc.lines.join(" / "));
+t("두 갈래 버튼이 확정 문구다", sc.primary === "이 범위로 계속하기" && sc.secondary === "건물 종류 다시 선택");
+
+// 질문 종료 전환 — 기술이 주인공인 표현 금지.
+const tr = transitionView();
+t("전환 제목이 '확인했습니다'다", tr.title === "확인했습니다");
+t("전환 문구가 확정 두 줄이다",
+  tr.lines.join("\n") === "지금 상황과 화재 후 경과 시간을 바탕으로\n먼저 확인할 것부터 정리합니다.",
+  tr.lines.join(" / "));
+t("전환 CTA가 '내 회복 경로 보기'다", tr.cta === "내 회복 경로 보기");
+t(
+  "'AI 분석 중'·'결과 생성 중'류 표현이 없다",
+  ![tr.title, ...tr.lines, tr.cta].some((s) => /AI|분석 중|생성 중|처리 중/.test(s))
+);
+
+// 재방문 경과시간 게이트 — 모든 재방문이 항상 거친다.
+const 게이트 = revisitView({
+  state: { fire_at: "2026-03-01T12:00:00.000Z" },
+  saved: { expires_at: "x" },
+  now: Date.parse("2026-03-02T15:30:00.000Z"),
+});
+t("저장된 기록이 있으면 뜬다", 게이트.show === true);
+t("첫 방문에는 안 뜬다", revisitView({ state: {}, saved: null }).show === false);
+t("화재 발생일을 날짜로 보여준다", 게이트.date === "2026년 3월 1일", 게이트.date);
+t("라벨이 '화재 발생일'과 '화재 발생 후'다",
+  게이트.dateLabel === "화재 발생일" && 게이트.elapsedLabel === "화재 발생 후");
+t(
+  "경과시간이 일·시간·분 세 토막이다 (1일 03시간 30분)",
+  게이트.elapsed.map((e) => e.num + e.unit).join(" ") === "1일 03시간 30분",
+  게이트.elapsed.map((e) => e.num + e.unit).join(" ")
+);
+t("게이트 문구가 확정 두 줄이다",
+  게이트.lines.join("\n") === "지금 시점에 맞춰\n필요한 안내를 다시 정리합니다.");
+t("게이트 CTA가 '지금 안내 보기'다", 게이트.cta === "지금 안내 보기");
+// 현재 시각 시계가 아니다. `3일째` 같은 중복 표기도 하지 않는다.
+t(
+  "게이트가 현재 시각을 그리지 않는다",
+  !JSON.stringify(게이트).includes("일째") && 게이트.elapsed.length === 3
+);
+
+
+// ── 8. 내 회복 경로 (결과 IA) ──────────────────────
+section("8. 내 회복 경로 — HOME과 다섯 화면");
+
+const 바탕 = (state, now = NOW) => resultBase({ result: 판정(state, now), state, data, now });
+const 결과 = (state, now = NOW) => resultView({ result: 판정(state, now), state, data, now });
+
+const r1 = 결과(전.state);
+
+// HOME — 카드 셋과 보조 둘. 개수는 동적이다.
+t("HOME 제목이 '내 회복 경로'다", r1.home.title === "내 회복 경로");
+t("HOME 리드가 확정 문구다", r1.home.lead === "지금 필요한 안내를 정리했습니다.");
+t("경과시간 칩이 `NN일 HH:MM` 형식이다", /^\d{2}일 \d{2}:\d{2}$/.test(r1.home.chip), r1.home.chip);
+t("칩 옆에 '기준'이 붙는다", r1.home.basis === "기준");
+t(
+  "핵심 카드가 셋이고 확정 제목·설명이다",
+  r1.home.cards.map((c) => `${c.title}/${c.desc}`).join(" | ") ===
+    "먼저 볼 내용/제일 먼저 확인해야 할 정보 | 체크리스트/하나씩 해나가야 하는 일 | 알아둘 내용/당장은 하지 않아도 되는 정보",
+  r1.home.cards.map((c) => `${c.title}/${c.desc}`).join(" | ")
+);
+t(
+  "보조 탐색이 둘이다",
+  r1.home.more.map((m) => m.label).join(",") === "시간 순서로 보기,필요한 주제별로 보기"
+);
+t("'다른 방식으로 보기' 같은 중간 heading이 없다", !("moreHeading" in r1.home));
+t(
+  "카드 개수가 각 화면의 개수와 같다",
+  r1.home.cards[0].count === r1.priority.count &&
+    r1.home.cards[1].count === r1.checklist.count &&
+    r1.home.cards[2].count === r1.reference.count
+);
+// ★ HOME의 '알아둘 내용' 설명과 상세 페이지 설명은 **다른 것이 의도다.**
+t(
+  "HOME 카드 설명과 상세 desc가 다르다 (동기화 금지)",
+  r1.home.cards[2].desc !== r1.reference.desc,
+  `${r1.home.cards[2].desc} vs ${r1.reference.desc}`
+);
+t("HOME에서 갈 수 있는 화면이 다섯이다", RESULT_PAGES.length === 5);
+
+// 먼저 볼 내용 — 하지 마세요 / 늦었어도 확인하세요
+const 늦게8 = 결과(전.state, Date.parse(FIRE) + 30 * 24 * 36e5);
+t("먼저 볼 desc가 확정 문구다", r1.priority.desc === "제일 먼저 확인해야 할 정보입니다.");
+t(
+  "두 섹션 라벨이 확정 문구다",
+  늦게8.priority.sections.map((s) => s.label).join(",") === "하지 마세요,늦었어도 확인하세요",
+  늦게8.priority.sections.map((s) => s.label).join(",")
+);
+t("'혹시 늦었어도'는 폐기됐다", !JSON.stringify(늦게8.priority).includes("혹시 늦었어도"));
+// 제목 문자열이 아니라 guidance_type으로 갈린다(UI가 의미를 다시 만들지 않는다).
+t(
+  "'하지 마세요'는 전부 guidance_type=do_not이다",
+  늦게8.priority.sections[0].items.every((r) => r.guidanceType === "do_not"),
+  늦게8.priority.sections[0].items.map((r) => `${r.id}:${r.guidanceType}`).join(",")
+);
+t(
+  "'늦었어도 확인하세요'는 전부 missed 버킷이다",
+  늦게8.priority.sections[1].items.every((r) => r.section === "missed") &&
+    늦게8.priority.sections[1].items.length > 0
+);
+t(
+  "missed를 '이제 할 수 없음'으로 단정하지 않는다",
+  !/이제 할 수 없|끝났|늦어서 못/.test(JSON.stringify(늦게8.priority.sections[1]))
+);
+
+// 체크리스트 — 실행해야 하는 것. 잠긴 불가역도 남는다.
+const cl = r1.checklist;
+t("체크리스트 desc가 확정 문구다", cl.desc === "하나씩 해나가야 하는 일입니다.");
+t("하단 문구가 확정 문구다", cl.footer === "체크한 항목은 완료한 일로 표시됩니다.");
+t("체크리스트는 전부 실행 안내(action)다", cl.items.every((i) => i.guidanceType === "action"));
+t(
+  "금지와 지나간 것은 체크리스트에 없다",
+  cl.items.every((i) => i.section !== "standing" && i.section !== "missed")
+);
+{
+  const ranked = cl.items.filter((i) => typeof i.rank === "number").map((i) => i.rank);
+  t("엔진 rank 순서 그대로다 (UI가 다시 계산하지 않는다)",
+    ranked.every((v, i) => i === 0 || ranked[i - 1] <= v), ranked.join(","));
+  const 첫버킷 = cl.items.findIndex((i) => i.rank == null);
+  t("rank 없는 버킷 행(blocked)은 뒤에 붙는다",
+    첫버킷 === -1 || cl.items.slice(첫버킷).every((i) => i.rank == null));
+}
+{
+  // 레퍼런스 케이스 — scene_preserved:true라 scene-release가 안 뜨는데
+  // 그것을 선행으로 둔 항목들이 잠긴 채 상위에 있다.
+  const 잠긴 = cl.items.filter((i) => i.lock);
+  t("잠긴 카드가 있다", 잠긴.length > 0, String(잠긴.length));
+  t("선행 문장이 카드 표면에 있다 (더보기에 숨기지 않는다)",
+    잠긴.every((i) => typeof i.lock.sentence === "string" && i.lock.sentence.length > 0));
+  t("문장 안에서 '먼저 확인'만 강조한다",
+    잠긴.every((i) => i.lock.emphasis === "먼저 확인" && i.lock.sentence.includes("먼저 확인")));
+  const scene = 잠긴.filter((i) => i.blockedBy.some((b) => b.id === "scene-release"));
+  t("선행이 현장 정리 확인이면 확정 문장을 쓴다",
+    scene.length > 0 &&
+      scene.every((i) => i.lock.sentence === "화재조사관에게 현장 정리 가능 여부를 먼저 확인하세요."),
+    scene.map((i) => i.id).join(","));
+  const 기타 = 잠긴.filter((i) => !i.blockedBy.some((b) => b.id === "scene-release"));
+  t("그 밖의 선행은 제목으로 문장을 만든다",
+    기타.every((i) => i.lock.sentence === `‘${i.blockedBy[0].title}’을(를) 먼저 확인하세요.`),
+    기타.map((i) => i.lock.sentence).join(" | "));
+  t("갈 곳이 없으면 이동을 그리지 않는다",
+    잠긴.filter((i) => i.lock.missing).every((i) => i.lock.goTo === null));
+  t("잠김을 '기다리는 중'으로 표현하지 않는다",
+    !잠긴.some((i) => JSON.stringify(i.lock).includes("기다리는 중")));
+}
+t(
+  "불가역 신호는 irreversible에만 붙는다",
+  cl.items.every((i) => (i.warn === null) === !i.irreversible) &&
+    cl.items.some((i) => i.warn === "놓치면 되돌리기 어려움")
+);
+{
+  const 완료 = 결과({ ...전.state, completed: ["photo-before-cleanup"] });
+  t("완료한 것은 하단 완료 블록으로 내려간다",
+    완료.checklist.done.count === 1 && !완료.checklist.items.some((i) => i.id === "photo-before-cleanup"));
+  t("완료 라벨이 붙는다", 완료.checklist.done.items[0].statusLabel === "완료");
+}
+
+// 알아둘 내용 — awareness와 waiting을 한 목록에, waiting만 상태 라벨
+{
+  const 대기 = 결과({ ...전.state, adjuster_present: true, completed: ["investigation-report"] },
+    Date.parse(FIRE) + 8 * 24 * 36e5);
+  t("알아둘 desc가 확정 문구다",
+    대기.reference.desc === "당장 행동할 필요는 없지만, 알아두어야 할 정보입니다.");
+  t("폐기된 desc를 쓰지 않는다",
+    !JSON.stringify(대기.reference).includes("당장은 하지 않아도 되는 정보입니다."));
+  t("awareness와 waiting이 한 목록에 있다",
+    대기.reference.items.some((i) => i.guidanceType === "awareness") &&
+      대기.reference.items.some((i) => i.stateLabel === "기다리는 중"),
+    대기.reference.items.map((i) => `${i.id}:${i.stateLabel ?? "-"}`).join(","));
+  t("중간 heading 없이 카드로 나열한다", !("sections" in 대기.reference) && Array.isArray(대기.reference.items));
+  t("waiting에만 '기다리는 중'이 붙는다",
+    대기.reference.items.filter((i) => i.stateLabel).every((i) => i.category === "대기" || i.waitDays));
+  t("blocked는 알아둘 내용에 없다 (waiting과 다르다)",
+    대기.base.blocked.every((b) => !대기.reference.items.some((i) => i.id === b.id)));
+}
+
+// 회복 타임라인 — 노드 다섯. 날짜를 만들어내지 않는다.
+const tlv = r1.timeline;
+t("타임라인 desc가 확정 문구다",
+  tlv.desc === "시간이 지나며 필요한 안내가 어떻게 이어지는지 보여드립니다.");
+t(
+  "노드가 화재 발생일 → 오늘 → 가까운 시일에 → 계속 확인 → 조사서가 나온 뒤다",
+  tlv.nodes.map((n) => n.label).join(" → ") ===
+    "화재 발생일 → 오늘 → 가까운 시일에 → 계속 확인 → 조사서가 나온 뒤",
+  tlv.nodes.map((n) => n.label).join(" → ")
+);
+t("엔진 키는 그대로다 (this_week를 바꾸지 않는다)",
+  tlv.nodes[2].key === "this_week" && NODE_LABEL.this_week === "가까운 시일에");
+t("`7일 안에` 같은 기한을 만들어내지 않는다",
+  !/7일|일 안에|까지|이내/.test(tlv.nodes.map((n) => `${n.label}${n.note ?? ""}`).join(" ")));
+t("화재 발생일이 박스 없는 날짜·시각이다",
+  /^\d{4}\.\d{2}\.\d{2}$/.test(tlv.nodes[0].date) && /^\d{2}:\d{2}$/.test(tlv.nodes[0].time));
+t("'오늘' 노드에 실제 오늘 날짜가 보조로 붙는다", /^\d+월 \d+일$/.test(tlv.nodes[1].note), tlv.nodes[1].note);
+t("missed와 standing은 타임라인에 없다",
+  tlv.nodes.every((n) => n.key !== "missed" && n.key !== "standing") &&
+    tlv.nodes.slice(1).every((n) => n.items.every((i) => i.section !== "missed" && i.section !== "standing")));
+t("하단 문구가 확정 문구다",
+  tlv.footer === "타임라인에서는 전체 흐름을 보고, 완료 처리는 체크리스트에서 합니다.");
+{
+  const 전조사 = tlv.nodes.find((n) => n.key === "after_report");
+  const 후조사 = 결과({ ...전.state, report_received: true }, Date.parse(FIRE) + 8 * 24 * 36e5)
+    .timeline.nodes.find((n) => n.key === "after_report");
+  t("조사서를 받기 전에는 잠긴 이유를 말한다",
+    전조사.unlocked === false && 전조사.note === "화재현장조사서를 받은 뒤 확인할 수 있습니다.");
+  t("받은 뒤에는 그 줄이 사라진다", 후조사.unlocked === true && 후조사.note === null);
+}
+
+// 주제별로 보기 — 표시 라벨만 갈아 끼운다
+const tp = r1.topics;
+t("주제별 desc가 확정 문구다", tp.desc === "지금 내 상황에 해당하는 안내를 주제별로 모았습니다.");
+t("주제별 footer가 확정 문구다", tp.footer === "현재 내 상황에 해당하는 안내가 있는 주제만 보여줍니다.");
+t("표시 라벨은 몸→건강, 서류→필요서류다", TOPIC_LABEL["몸"] === "건강" && TOPIC_LABEL["서류"] === "필요서류");
+t("나머지 주제는 그대로다", topicLabel("보험과 돈") === "보험과 돈" && topicLabel("집 정리") === "집 정리");
+t(
+  "데이터의 domain_group은 바뀌지 않았다",
+  !data.actions.some((a) => a.domain_group === "건강" || a.domain_group === "필요서류")
+);
+t("주제가 일곱이다 (SCHEMA 산문의 '6개'는 stale이다)", TOPIC_ORDER.length === 7);
+t("해당하는 안내가 있는 주제만 나온다", tp.topics.every((x) => x.count > 0));
+t("주제 카드에는 출처가 없다 (출처는 Action 단위다)",
+  tp.topics.every((x) => Object.keys(x).join(",") === "group,label,count"));
+
+// 주제 상세 — 조건부·제외를 나눠서 접고, 미판정은 본목록에 남긴다
+{
+  const 제외있는 = 바탕({ ...전.state, district: "guro" }, Date.parse(FIRE) + 8 * 24 * 36e5);
+  const 그룹 = 제외있는.excluded.find((r) => r.status === "제외")?.group;
+  const td = topicDetailView(제외있는, 그룹);
+  t("주제 상세 개수 문구가 `N개의 안내`다", td.countLabel === `${td.count}개의 안내`);
+  t("주제 상세 footer가 확정 문구다",
+    td.footer === "원문 링크가 확인된 안내에만 ‘원문 보기’를 표시합니다.");
+  t("제외 접힘 문구가 확정 문구다",
+    td.folds.some((f) => f.key === "제외" && f.label === `현재는 해당하지 않는 안내 ${f.items.length}개`),
+    td.folds.map((f) => f.label).join(" | "));
+  t("제외를 사유와 함께 남긴다 (지우지 않는다 — D-011)",
+    td.folds.find((f) => f.key === "제외").items.every((r) => typeof r.reason === "string"));
+}
+{
+  const 조건부있는 = 바탕({ ...전.state, district: "seongbuk", registered_resident: false });
+  const 그룹 = 조건부있는.excluded.find((r) => r.status === "조건부")?.group;
+  const td = topicDetailView(조건부있는, 그룹);
+  t("조건부 접힘 문구가 확정 문구다",
+    td.folds.some((f) => f.key === "조건부" && f.label === `예외적으로 확인해볼 수 있는 안내 ${f.items.length}개`),
+    td.folds.map((f) => f.label).join(" | "));
+  t("조건부와 제외를 한 그룹으로 뭉치지 않는다",
+    td.folds.every((f) => f.items.every((r) => r.status === f.key)));
+  t("조건부를 '해당 없음'으로 부르지 않는다",
+    !td.folds.filter((f) => f.key === "조건부").some((f) => f.label.includes("해당 없음")));
+}
+{
+  const 미판정있는 = 바탕({ ...전.state, district: "gangnam", insurance_self: "unknown" });
+  const 행 = 미판정있는.excluded.find((r) => r.status === "미판정");
+  const td = topicDetailView(미판정있는, 행.group);
+  t("미판정은 접힘이 아니라 본목록에 남는다",
+    td.items.some((i) => i.id === 행.id) && !td.folds.some((f) => f.items.some((x) => x.id === 행.id)));
+  t("미판정 카드에 '아직 확인 못 함'이 붙는다",
+    td.items.find((i) => i.id === 행.id).statusLabel === "아직 확인 못 함");
+  t("미판정을 '해당 없음'으로 표시하지 않는다",
+    td.items.find((i) => i.id === 행.id).statusLabel !== "해당 없음");
+
+  // 아직 확인 못 함 상세
+  const uv = undeterminedView(미판정있는, 행.id, { questions });
+  t("상태 라벨이 '아직 확인 못 함'이다", uv.label === "아직 확인 못 함");
+  t("왜 못 하는지는 엔진 reason 그대로다", uv.why.line === 행.reason && uv.why.title === "왜 아직 확인할 수 없나요?");
+  t("확인하려면 무엇을 바꾸면 되는지 말한다", uv.how.title === "확인하려면" &&
+    uv.how.line === "보험 가입 여부를 확인한 뒤 답변을 바꾸면, 현재 자치구 기준으로 다시 판단합니다.");
+  t("바꿔야 할 답이 실제 '잘 모르겠어요'인 질문이다",
+    uv.how.targets.length > 0 && uv.how.targets.every((q) => 미판정있는.state[q.key] === "unknown"),
+    uv.how.targets.map((q) => q.id).join(","));
+  t("그 질문으로 바로 가는 CTA가 있다", uv.how.cta === "보험 답변 다시 확인하기");
+  t("안내 기준은 그 구의 조례다", uv.basis?.title === "서울특별시 강남구 화재피해주민 지원 조례");
+  // elis 홈페이지는 정확한 원문이 아니다. 원문 링크로 걸지 않는다.
+  t("조례 원문 링크는 걸지 않는다 (홈페이지 URL뿐이다)", uv.basis?.url === null);
+  // 자치구 미선택은 이 화면의 대상이 아니다 — 그쪽은 자치구 선택으로 보낸다.
+  const 구없이 = 바탕({ ...전.state, district: undefined });
+  const 구없이행 = 구없이.excluded.find((r) => r.status === "미판정");
+  t("자치구 미선택은 이 화면의 대상이 아니다",
+    구없이행.needsDistrict === true && undeterminedView(구없이, 구없이행.id, { questions }) === null);
+}
+
+// 출처 — sources → 조례 → legacy → 생략
+{
+  const 강남 = 바탕({ ...전.state, district: "gangnam" });
+  const 모든행 = 강남.all;
+  t("sources는 아직 전부 비어 있다 (콘텐츠 패스 전)", 모든행.every((r) => r.sources.length === 0));
+  t("sources가 비어도 화면이 죽지 않는다", 모든행.every((r) => sourceOf(r) !== undefined));
+  const legacy = 모든행.filter((r) => !r.ordinanceBased && r.sourceUrl);
+  t("URL이 있으면 원문 보기를 건다",
+    legacy.length > 0 && legacy.every((r) => sourceOf(r).items[0].link === "원문 보기 ↗"));
+  t("문서명은 지어내지 않는다 (sources가 빌 때)",
+    legacy.every((r) => sourceOf(r).items[0].title === null));
+  const 없음 = 모든행.filter((r) => !r.ordinanceBased && !r.sourceUrl);
+  t("URL이 없으면 출처 영역이 통째로 없다", 없음.length > 0 && 없음.every((r) => sourceOf(r) === null));
+  const 조례 = 모든행.filter((r) => r.ordinanceBased);
+  t("조례 행은 조례 이름과 조문으로 출처를 만든다",
+    조례.length > 0 &&
+      조례.every((r) => {
+        const s = sourceOf(r);
+        return s.kind === "ordinance" && s.items[0].title === r.ordinanceName && /^제\d+조/.test(s.items[0].article);
+      }));
+  t("조례 출처에는 원문 링크가 없다", 조례.every((r) => sourceOf(r).items[0].link === null));
+  t("확인일이 YYYY.MM.DD다", 조례.every((r) => /^\d{4}\.\d{2}\.\d{2}$/.test(sourceOf(r).items[0].checkedAt)));
+}
+
+// Action 상세 — 공통 템플릿
+{
+  // 본인 보험이 있는 사람의 화면에서 고른다 — 이 안내는 그 사람 것이다.
+  const 보험 = { ...전.state, insurance_self: true };
+  const ad = actionDetailView(바탕(보험), "insurance-claim-limitation");
+  t("Action 상세에 주제 표시 라벨이 붙는다", ad.topic === "보험과 돈");
+  t("제목·요약·본문을 그대로 싣는다",
+    typeof ad.title === "string" && typeof ad.summary === "string" && typeof ad.body === "string");
+  t("상세 하단 문구가 확정 문구다",
+    ad.footer === "안내 내용은 확인된 근거를 바탕으로 정리하며, 원문이 있는 경우 직접 확인할 수 있습니다.");
+  t("'검증됨'·'공식 인증' 같은 과장이 없다", !/검증됨|공식 인증/.test(JSON.stringify(ad)));
+  t("없는 Action을 물으면 null이다", actionDetailView(바탕(전.state), "no-such-action") === null);
+  const 몸 = actionDetailView(바탕(전.state), "fridge-4h");
+  t("몸은 화면에서 '건강'으로 불린다", 몸.topic === "건강");
+}
+
+// ── 불변식 — 페르소나 훑기 ─────────────────────────
+//
+// 화면 하나를 고치다 다른 화면이 조용히 어긋나는 것을 막는다.
+{
+  const 훑기 = [
+    ["마포", { district: "mapo" }],
+    ["강남", { district: "gangnam" }],
+    ["강남·본인보험 모름", { district: "gangnam", insurance_self: "unknown" }],
+    ["구로·건물보험", { district: "guro" }],
+    ["성북·거주요건", { district: "seongbuk", registered_resident: false }],
+    ["양천·보상금", { district: "yangcheon", compensated: true }],
+    ["구 없음", { district: undefined }],
+    ["조사서 수령", { district: "gangnam", report_received: true }],
+    ["조사서 신청 완료", { district: "gangnam", completed: ["investigation-report"] }],
+  ];
+  const 시각 = [3 * 36e5, 5 * 24 * 36e5, 8 * 24 * 36e5, 30 * 24 * 36e5, 90 * 24 * 36e5];
+  let 조합 = 0, 사라진주제 = [], 엉뚱한미판정 = [], 겹침 = [], 라벨없음 = [];
+  for (const [이름, over] of 훑기)
+    for (const dt of 시각) {
+      조합++;
+      const state = { ...전.state, ...over };
+      const b = 바탕(state, Date.parse(FIRE) + dt);
+      const 주제 = new Set(topicsView(b).topics.map((x) => x.group));
+      // ① 어느 행도 주제 목록에서 사라지지 않는다(D-011).
+      for (const r of b.excluded) if (!주제.has(r.group)) 사라진주제.push(`${이름}+${dt / 36e5}h ${r.id}`);
+      // ② 미판정의 원인은 자치구 미선택 아니면 보험 unknown 둘뿐이다.
+      //    (undeterminedView가 보험 질문으로 보내는 근거다.)
+      for (const r of b.excluded)
+        if (r.status === "미판정" && !r.needsDistrict &&
+            state.insurance_self !== "unknown" && state.insurance_dwelling !== "unknown")
+          엉뚱한미판정.push(`${이름}+${dt / 36e5}h ${r.id}`);
+      // ③ 같은 행이 체크리스트와 먼저 볼 내용에 동시에 있지 않다.
+      const ck = new Set(checklistView(b).items.map((i) => i.id));
+      for (const s of priorityView(b).sections)
+        for (const i of s.items) if (ck.has(i.id)) 겹침.push(`${이름}+${dt / 36e5}h ${i.id}`);
+      // ④ 상태를 색이 아니라 글자로 말한다 — 미판정·대기·완료에 라벨이 있다.
+      for (const g of TOPIC_ORDER)
+        for (const i of topicDetailView(b, g).items)
+          if (i.status !== "해당" && !i.statusLabel) 라벨없음.push(`${이름} ${i.id}:${i.status}`);
+    }
+  t(`① excluded 행의 주제가 목록에서 사라지지 않는다 (${조합}조합)`, 사라진주제.length === 0, 사라진주제.slice(0, 3).join(" | "));
+  t("② 미판정의 원인은 자치구 미선택 아니면 보험 unknown뿐이다", 엉뚱한미판정.length === 0, 엉뚱한미판정.slice(0, 3).join(" | "));
+  t("③ 체크리스트와 먼저 볼 내용이 같은 행을 겹쳐 담지 않는다", 겹침.length === 0, 겹침.slice(0, 3).join(" | "));
+  t("④ 해당이 아닌 행에는 상태 라벨이 붙는다 (색만으로 말하지 않는다)", 라벨없음.length === 0, 라벨없음.slice(0, 3).join(" | "));
+}
+
+// 새 뷰모델도 저장소를 직접 만지지 않는다(D-002 누수 탐지와 같은 방식).
+t(
+  "새 뷰모델이 브라우저 저장소를 부르지 않는다",
+  ["src/ui/entry.js", "src/ui/result.js", "src/ui/rows.js", "src/ui/format.js"].every(
+    (f) => !/localStorage|sessionStorage|document\.cookie/.test(코드만(f))
+  )
+);
+// 뷰모델은 DOM을 모른다 — 판단이 브라우저 안에 숨으면 계기판이 못 본다.
+t(
+  "새 뷰모델이 DOM을 모른다",
+  ["src/ui/entry.js", "src/ui/result.js", "src/ui/rows.js", "src/ui/format.js"].every(
+    (f) => !/\bdocument\.|\bwindow\.|createElement/.test(코드만(f))
+  )
+);
 
 // ── 결과 ───────────────────────────────────────────
 console.log(`\n${"=".repeat(62)}`);
