@@ -30,7 +30,7 @@
   {
     "id": "q-housing-type",
     "key": "housing_type",
-    "text": "어떤 집인가요?",
+    "text": "불이 난 건물의 종류가 무엇인가요?",
     "type": "single",
     "options": [
       {
@@ -47,25 +47,25 @@
       },
       {
         "value": "other",
-        "label": "그 외 (상가·고시원·공장 등)"
+        "label": "그 외"
       }
     ],
     "ask_when": null,
-    "help": "자치구 지원을 주택으로 한정하는 곳이 있고, 복도·계단 같은 공용부가 있는 건물인지에 따라 책임 안내가 달라집니다."
+    "help": "건물 종류에 따라 안내 내용이 달라집니다."
   },
   {
     "id": "q-tenure",
     "key": "tenure",
-    "text": "그 집은 본인 소유인가요, 임차인가요?",
+    "text": "불이 난 곳은 본인 소유인가요, 임차 중인가요?",
     "type": "single",
     "options": [
       {
-        "value": "renter",
-        "label": "임차(전세·월세)"
-      },
-      {
         "value": "owner",
         "label": "본인 소유"
+      },
+      {
+        "value": "renter",
+        "label": "전세·월세 등 임차"
       }
     ],
     "ask_when": null,
@@ -74,124 +74,108 @@
   {
     "id": "q-registered",
     "key": "registered_resident",
-    "text": "그 집에 주민등록이 되어 있고 실제로 살고 계셨나요?",
+    "text": "불이 난 곳에 주민등록을 두고, 실제로 거주하고 계셨나요?",
     "type": "single",
     "options": [
       {
         "value": true,
-        "label": "그렇다"
+        "label": "네"
       },
       {
         "value": false,
-        "label": "아니다"
+        "label": "아니요"
       }
     ],
     "ask_when": null,
-    "help": "자치구에 따라 주민등록과 실거주를 함께 요구하는 곳이 있습니다."
-  },
-  {
-    "id": "q-insurance-self",
-    "key": "insurance_self",
-    "text": "본인 명의로 든 화재보험이 있나요?",
-    "type": "single",
-    "options": [
-      {
-        "value": true,
-        "label": "있다"
-      },
-      {
-        "value": false,
-        "label": "없다"
-      },
-      {
-        "value": "unknown",
-        "label": "모르겠다"
-      }
-    ],
-    "ask_when": null,
-    "help": null
-  },
-  {
-    "id": "q-insurance-dwelling",
-    "key": "insurance_dwelling",
-    "text": "그 건물이나 집에 화재보험이 들어 있나요?",
-    "type": "single",
-    "options": [
-      {
-        "value": true,
-        "label": "들어 있다"
-      },
-      {
-        "value": false,
-        "label": "없다"
-      },
-      {
-        "value": "unknown",
-        "label": "모르겠다"
-      }
-    ],
-    "ask_when": {
-      "tenure": "renter"
-    },
-    "help": "집주인이나 건물 관리 주체가 든 보험입니다. 모르셔도 괜찮습니다."
-  },
-  {
-    "id": "q-compensated",
-    "key": "compensated",
-    "text": "이번 화재와 관련해 보험금이나 보상금을 이미 받으셨나요?",
-    "type": "single",
-    "default": false,
-    "options": [
-      {
-        "value": false,
-        "label": "아직 받지 않았다"
-      },
-      {
-        "value": true,
-        "label": "받았다"
-      }
-    ],
-    "ask_when": {
-      "district_insurance_exclusion": "compensated"
-    },
-    "help": "보험금·상대방이 준 손해배상금·다른 보상금을 포함합니다."
+    "help": "일부 지원은 주민등록과 실제 거주 여부를 함께 확인합니다."
   },
   {
     "id": "q-scene",
     "key": "scene_preserved",
-    "text": "조사관에게 현장을 정리해도 된다고 들으셨나요?",
+    "text": "화재조사관에게 현장을 정리해도 된다고 들으셨나요?",
     "type": "single",
     "default": "unknown",
     "options": [
       {
         "value": false,
-        "label": "정리해도 된다고 들었다"
+        "label": "정리해도 된다고 들었어요"
       },
       {
         "value": true,
-        "label": "아직 손대지 말라고 들었다"
+        "label": "아직 손대지 말라고 들었어요"
       },
       {
         "value": "unknown",
-        "label": "못 들었거나 기억나지 않는다"
+        "label": "못 들었거나 기억나지 않아요"
       }
     ],
     "ask_when": null,
-    "help": "보존조치 중에는 물건을 옮길 수 없습니다. 확실하지 않으면 조사관에게 확인하세요."
+    "help": "확실하지 않다면 현장은 그대로 두고 조사관에게 확인하는 편이 안전합니다."
+  },
+  {
+    "id": "q-origin-area",
+    "key": "origin_area",
+    "text": "불이 어디에서 시작됐는지 들으셨나요?",
+    "type": "single",
+    "default": "unknown",
+    "options": [
+      {
+        "value": "private",
+        "label": "우리 집 안"
+      },
+      {
+        "value": "common",
+        "label": "공용공간"
+      },
+      {
+        "value": "unknown",
+        "label": "아직 모르거나 듣지 못했어요"
+      }
+    ],
+    "ask_when": null,
+    "help": "공용부에서 시작된 불이면 임차인 책임이 아닐 수 있습니다. 조사 직후에는 모르는 것이 정상이고, 나중에 조사서를 받은 뒤 다시 고르시면 됩니다."
+  },
+  {
+    "id": "q-product-suspected",
+    "key": "product_suspected",
+    "text": "불이 사용하던 제품에서 시작됐다고 들으셨나요?",
+    "type": "single",
+    "default": "unknown",
+    "options": [
+      {
+        "value": true,
+        "label": "제품에서 시작됐다고 들었어요"
+      },
+      {
+        "value": false,
+        "label": "제품과 관계없다고 들었어요"
+      },
+      {
+        "value": "unknown",
+        "label": "모르거나 듣지 못했어요"
+      }
+    ],
+    "ask_when": {
+      "origin_area": [
+        "private",
+        "common"
+      ]
+    },
+    "help": "원인이 제품으로 지목되면 해야 할 일이 달라집니다. 모르시면 '아직 모른다'로 두세요. 그동안은 그 제품을 버리거나 남에게 내주지 않는 쪽으로 안내합니다."
   },
   {
     "id": "q-powder",
     "key": "powder_present",
-    "text": "집에 소화기 분말이 남아 있나요?",
+    "text": "불이 난 곳에 소화기 분말이 남아 있나요?",
     "type": "single",
     "options": [
       {
         "value": true,
-        "label": "하얗게 남아 있다"
+        "label": "남아 있어요"
       },
       {
         "value": false,
-        "label": "없다"
+        "label": "없어요"
       }
     ],
     "ask_when": null,
@@ -205,83 +189,37 @@
     "options": [
       {
         "value": true,
-        "label": "있다"
+        "label": "있어요"
       },
       {
         "value": false,
-        "label": "없다"
+        "label": "없어요"
       }
     ],
     "ask_when": null,
     "help": null
-  },
-  {
-    "id": "q-origin-area",
-    "key": "origin_area",
-    "text": "불이 어디서 시작됐는지 들으셨나요?",
-    "type": "single",
-    "default": "unknown",
-    "options": [
-      {
-        "value": "private",
-        "label": "우리 집 안에서 시작됐다고 들었다"
-      },
-      {
-        "value": "common",
-        "label": "복도·계단·전기실 같은 공용부에서 시작됐다고 들었다"
-      },
-      {
-        "value": "unknown",
-        "label": "아직 모른다 / 못 들었다"
-      }
-    ],
-    "ask_when": null,
-    "help": "공용부에서 시작된 불이면 임차인 책임이 아닐 수 있습니다. 조사 직후에는 모르는 것이 정상이고, 나중에 조사서를 받은 뒤 다시 고르시면 됩니다."
-  },
-  {
-    "id": "q-product-suspected",
-    "key": "product_suspected",
-    "text": "불이 제품에서 시작됐다고 들으셨나요?",
-    "type": "single",
-    "default": "unknown",
-    "options": [
-      {
-        "value": true,
-        "label": "제품에서 시작됐다고 들었다"
-      },
-      {
-        "value": false,
-        "label": "제품과는 관계없다고 들었다"
-      },
-      {
-        "value": "unknown",
-        "label": "아직 모른다 / 못 들었다"
-      }
-    ],
-    "ask_when": null,
-    "help": "원인이 제품으로 지목되면 해야 할 일이 달라집니다. 모르시면 '아직 모른다'로 두세요. 그동안은 그 제품을 버리거나 남에게 내주지 않는 쪽으로 안내합니다."
   },
   {
     "id": "q-other-units",
     "key": "other_units_affected",
-    "text": "다른 집이나 이웃 세대에도 피해가 갔나요?",
+    "text": "이웃 세대에도 피해가 있었나요?",
     "type": "single",
     "options": [
       {
         "value": true,
-        "label": "그렇다"
+        "label": "있었어요"
       },
       {
         "value": false,
-        "label": "아니다"
+        "label": "없었어요"
       },
       {
         "value": "unknown",
-        "label": "모르겠다"
+        "label": "잘 모르겠어요"
       }
     ],
     "ask_when": null,
-    "help": null
+    "help": "불을 끄는 과정에서 생긴 물 피해는 제외하고 답해주세요. 물 피해는 뒤에서 따로 확인합니다."
   },
   {
     "id": "q-water-home",
@@ -328,19 +266,105 @@
     "help": null
   },
   {
-    "id": "q-report",
-    "key": "report_received",
-    "text": "화재현장조사서를 받으셨나요?",
+    "id": "q-insurance-self",
+    "key": "insurance_self",
+    "text": "본인 명의로 든 화재보험이 있나요?",
+    "type": "single",
+    "options": [
+      {
+        "value": true,
+        "label": "있어요"
+      },
+      {
+        "value": false,
+        "label": "없어요"
+      },
+      {
+        "value": "unknown",
+        "label": "잘 모르겠어요"
+      }
+    ],
+    "ask_when": null,
+    "help": null
+  },
+  {
+    "id": "q-insurance-dwelling",
+    "key": "insurance_dwelling",
+    "text": "집주인이나 건물 측에서 가입한 화재보험이 있나요?",
+    "type": "single",
+    "options": [
+      {
+        "value": true,
+        "label": "있어요"
+      },
+      {
+        "value": false,
+        "label": "없어요"
+      },
+      {
+        "value": "unknown",
+        "label": "잘 모르겠어요"
+      }
+    ],
+    "ask_when": {
+      "tenure": "renter"
+    },
+    "help": "집주인이나 건물 측 보험은 본인 보험과 보장 대상이 다를 수 있어 함께 확인합니다."
+  },
+  {
+    "id": "q-compensated",
+    "key": "compensated",
+    "text": "이번 화재와 관련해 보험금이나 보상금을 이미 받으셨나요?",
+    "type": "single",
+    "default": false,
+    "options": [
+      {
+        "value": false,
+        "label": "아직 받지 않았어요"
+      },
+      {
+        "value": true,
+        "label": "받았어요"
+      }
+    ],
+    "ask_when": {
+      "district_insurance_exclusion": "compensated"
+    },
+    "help": "일부 자치구는 보상을 받았는지에 따라 지원 여부가 달라질 수 있습니다."
+  },
+  {
+    "id": "q-adjuster",
+    "key": "adjuster_present",
+    "text": "이번 화재와 관련해 손해사정사가 배정되었거나, 연락 또는 방문했나요?",
     "type": "single",
     "default": false,
     "options": [
       {
         "value": true,
-        "label": "받았습니다"
+        "label": "네"
       },
       {
         "value": false,
-        "label": "아직 못 받았습니다"
+        "label": "아직 아니에요"
+      }
+    ],
+    "ask_when": null,
+    "help": "손해사정사는 피해 규모와 보상 범위를 확인하는 사람입니다."
+  },
+  {
+    "id": "q-report",
+    "key": "report_received",
+    "text": "화재현장조사서를 받아보셨나요?",
+    "type": "single",
+    "default": false,
+    "options": [
+      {
+        "value": true,
+        "label": "받았어요"
+      },
+      {
+        "value": false,
+        "label": "아직 받지 못했어요"
       }
     ],
     "ask_when": {
@@ -350,26 +374,7 @@
         "years"
       ]
     },
-    "help": "조사서에 적힌 원인에 따라 달라지는 안내가 있습니다. 보통 보름에서 두 달쯤 걸립니다."
-  },
-  {
-    "id": "q-adjuster",
-    "key": "adjuster_present",
-    "text": "보험사나 제조사에서 손해사정사가 나왔나요?",
-    "type": "single",
-    "default": false,
-    "options": [
-      {
-        "value": true,
-        "label": "나왔다"
-      },
-      {
-        "value": false,
-        "label": "아직 아니다"
-      }
-    ],
-    "ask_when": null,
-    "help": null
+    "help": "소방기관의 화재 원인과 조사 결과가 담긴 서류로, 정보공개청구를 통해 받을 수 있습니다."
   },
   {
     "id": "q-maker",
@@ -393,6 +398,6 @@
         "unknown"
       ]
     },
-    "help": "제조사와 연락이 시작되면 제품 인계와 증거 보존에 관한 안내가 달라집니다."
+    "help": "제조사와 연락이 시작되면 발화 의심 제품의 보관과 조사 대응에 관한 안내가 달라집니다."
   }
 ]

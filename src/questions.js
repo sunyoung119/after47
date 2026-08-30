@@ -46,6 +46,35 @@ export function applyDefaults(questions, state, now = new Date()) {
   return out;
 }
 
+// ── 사라진 질문의 답을 지운다 ───────────────────────
+//
+// 앞 답을 고치면 뒤 질문이 통째로 사라지는 일이 있다. 예: `origin_area`를
+// `unknown`으로 바꾸면 `product_suspected`를 더는 묻지 않고, 그러면 그 답에
+// 매달린 `product_maker_contacted`도 사라진다. **그때 옛 답이 state에 남아
+// 있으면 사용자가 지금 화면에서 볼 수도 고칠 수도 없는 값이 판정에 남는다.**
+//
+// 그래서 고정점까지 돈다 — 하나를 지우면 또 사라지는 질문이 생길 수 있다.
+// 질문이 소유한 키만 건드린다. `district`·`completed`·`completed_at`·
+// `intro_seen`처럼 질문이 아닌 키는 대상이 아니다.
+//
+// **`applyDefaults`와 헷갈리지 마라.** 이쪽은 저장하는 state에서 답을 빼고,
+// 그쪽은 판정용 사본에 기본값을 채운다. `product_suspected`는 지워져도
+// default `unknown`이 판정에서 다시 채워져 금지가 유지된다(D-013).
+export function pruneStale(questions, state, data, now = Date.now()) {
+  const owned = new Set(questions.map((q) => q.key));
+  let cur = state;
+  // 한 번에 최소 하나는 사라지므로 질문 수만큼 돌면 반드시 고정점에 닿는다.
+  for (let i = 0; i <= questions.length; i++) {
+    const visible = new Set(visibleQuestions(questions, cur, data, now).map((q) => q.key));
+    const stale = [...owned].filter((k) => k in cur && !visible.has(k));
+    if (!stale.length) return cur;
+    const next = { ...cur };
+    for (const k of stale) delete next[k];
+    cur = next;
+  }
+  return cur;
+}
+
 // ── 아직 답이 없는 키 ───────────────────────────────
 // 설문 진행률과 "다음 질문"에 쓴다.
 export function unansweredKeys(questions, state, data, now = Date.now()) {

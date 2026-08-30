@@ -6,7 +6,7 @@ import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 import { evaluate, deriveState } from "../src/engine.js";
-import { resolveDistrict, visibleQuestions, applyDefaults } from "../src/questions.js";
+import { resolveDistrict, visibleQuestions, applyDefaults, pruneStale } from "../src/questions.js";
 
 const D = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (f) => JSON.parse(readFileSync(join(D, f), "utf8"));
@@ -234,9 +234,9 @@ const SCENES = [
     {
       ...COMMON,
       origin_area: "unknown",
-      product_suspected: "unknown",
+      // origin_area가 unknown이면 제품 질문을 묻지 않는다(설문 확정본).
+      // 그래도 default "unknown"이 판정 사본을 채워 제품 금지는 그대로 뜼다(D-013).
       adjuster_present: false,
-      product_maker_contacted: false,
     },
     [
       "ppe-powder",
@@ -252,15 +252,14 @@ const SCENES = [
     {
       ...COMMON,
       origin_area: "unknown",
-      product_suspected: "unknown",
+      // 위와 같은 이유로 제품·제조사 답이 없다. 제조사 접촉을 물으려면
+      // 먼저 원인을 들어야 한다 — 그것이 새 게이트의 실질 효과다.
       adjuster_present: true,
-      product_maker_contacted: true,
     },
     [
       "adjuster-position",
       "adjusters-may-all-be-opposing",
       "my-side-channels-overview",
-      "product-maker-position-may-change",
       "origin-unknown",
       "preserve-product",
       // 본인 보험 없음 + 건물 보험 있음 = 레퍼런스 케이스의 조합.
@@ -380,6 +379,72 @@ t(
   buckets(noAnswer).has("preserve-product"),
   "product_suspected 기본값이 안전한 쪽으로 걸리지 않았다"
 );
+
+// 시각을 고정한다 — elapsed_bucket 게이트(report_received)가 실제 시간을 보면
+// 날짜가 바뀔 때마다 결과가 달라진다.
+const FIRE = "2026-03-01T12:00:00.000Z";
+const NOW = Date.parse(FIRE) + 3 * 36e5;
+
+section("6. 설문 확정본 — 순서·건너뛰기·사라진 답 정리");
+
+// 배열 순서가 곷 설문 순서다. 확정본과 한 칸도 달라지면 안 된다.
+const 확정순서 
+= ["fire_at","residence_possible","housing_type","tenure","registered_resident",
+   "scene_preserved","origin_area","product_suspected","powder_present",
+   "wet_appliances","other_units_affected","water_damage_home","water_damage_neighbor",
+   "insurance_self","insurance_dwelling","compensated","adjuster_present",
+   "report_received","product_maker_contacted"];
+t("설문 순서가 확정본과 같다",
+  questions.map((q) => q.key).join(",") === 확정순서.join(","),
+  questions.map((q) => q.key).join(","));
+
+// origin_area를 모르면 제품 질문을 건너뛰고, 그러면 제조사 질문도 함께 사라진다.
+const 보이는 = (st) => visibleQuestions(questions, st, data, NOW).map((q) => q.key);
+const 모름 = 보이는({ district: "mapo", origin_area: "unknown" });
+const 집안 = 보이는({ district: "mapo", origin_area: "private" });
+t("origin_area가 unknown이면 product_suspected를 안 묻는다", !모름.includes("product_suspected"));
+t("그때 product_maker_contacted도 함께 사라진다", !모름.includes("product_maker_contacted"));
+t("원인을 들은 사람에게는 product_suspected를 묻는다", 집안.includes("product_suspected"));
+
+// ★ D-013. 안 물었다고 No가 아니다 — default unknown이 판정 사본을 채워
+// 제품 보존 금지가 그대로 켜진다. 이것이 깨지면 모르는 사람이 증거를 버린다.
+{
+  const st = { district: "mapo", fire_at: FIRE, origin_area: "unknown" };
+  const 판정 = evaluate(applyDefaults(questions, st), data, NOW);
+  const ids = 판정.sections.flatMap((s) => s.groups.flatMap((g) => g.items.map((x) => x.action.id)));
+  t("origin_area unknown으로 product를 안 물어도 preserve-product는 뜼다",
+    ids.includes("preserve-product"));
+}
+
+// ── pruneStale — 사라진 질문의 답을 남기지 않는다 ──
+{
+  const base = { district: "mapo", fire_at: FIRE, completed: ["photo-before-cleanup"], intro_seen: true };
+  // ① 제품 가지로 들어가 답을 저장한다
+  const 들어감 = { ...base, origin_area: "private", product_suspected: true, product_maker_contacted: true };
+  t("① 가지 안에서는 두 답이 살아 있다",
+    pruneStale(questions, 들어감, data, NOW).product_suspected === true &&
+    pruneStale(questions, 들어감, data, NOW).product_maker_contacted === true);
+  // ② upstream을 고치면 가지가 사라지고 둘 다 지워진다(고정점까지)
+  const 바꿈 = pruneStale(questions, { ...들어감, origin_area: "unknown" }, data, NOW);
+  t("② upstream 수정으로 product_suspected가 지워진다", !("product_suspected" in 바꿈));
+  t("② 연쇄로 product_maker_contacted도 지워진다 (고정점)", !("product_maker_contacted" in 바꿈));
+  t("② 질문이 아닌 키는 건드리지 않는다",
+    바꿈.district === "mapo" && 바꿈.intro_seen === true &&
+    바꿈.completed.length === 1 && 바꿈.fire_at === FIRE);
+  // ③ 지운 뒤 판정에 잔존 영향이 없다 — 처음부터 그 가지에 안 들어간 사람과 같다
+  const 안들어간 = { ...base, origin_area: "unknown" };
+  t("③ 지운 뒤 판정이 '애초에 안 들어간 사람'과 같다",
+    JSON.stringify(evaluate(applyDefaults(questions, 바꿈), data, NOW)) ===
+    JSON.stringify(evaluate(applyDefaults(questions, 안들어간), data, NOW)));
+  // ④ 세 상태가 섞이지 않는다 — 안 물음(키 없음) / false / "unknown"
+  const 명시false = pruneStale(questions, { ...base, origin_area: "private", product_suspected: false }, data, NOW);
+  const 명시unknown = pruneStale(questions, { ...base, origin_area: "private", product_suspected: "unknown" }, data, NOW);
+  t("④ 명시적 false는 살아있고 안 물은 것과 구별된다",
+    명시false.product_suspected === false && !("product_suspected" in 바꿈));
+  t("④ 명시적 unknown도 그대로 남는다", 명시unknown.product_suspected === "unknown");
+  t("④ 명시적 false면 제조사 질문은 안 보인다 (ask_when이 [true,unknown])",
+    !보이는({ ...명시false }).includes("product_maker_contacted"));
+}
 
 // ── 결과 ───────────────────────────────────────────
 console.log(`\n${"=".repeat(62)}`);

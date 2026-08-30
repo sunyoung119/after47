@@ -13,7 +13,7 @@
 import { openSession, anchorSession, shareUrl, spellToken } from "../session.js";
 import { saveState } from "../storage.js";
 import { evaluate } from "../engine.js";
-import { applyDefaults } from "../questions.js";
+import { applyDefaults, pruneStale } from "../questions.js";
 import { entryView, surveyView, saveNoticeView } from "./view.js";
 import { timelineView, locate } from "./timeline.js";
 import {
@@ -351,7 +351,14 @@ function dateField(q) {
 }
 
 async function answer(key, value) {
-  app.state = { ...app.state, [key]: value };
+  // 앞 답을 고치면 뒤 질문이 통째로 사라질 수 있다. 그때 남은 옛 답은
+  // **사용자가 화면에서 볼 수도 고칠 수도 없는 값**이 되므로 함께 지운다.
+  // 지우는 것은 저장하는 state뿐이고, 판정용 기본값(applyDefaults)은 그대로다.
+  app.state = pruneStale(
+    app.session.data.questions,
+    { ...app.state, [key]: value },
+    app.session.data
+  );
   app.cursor = null;
 
   // ★ 저장하는 것은 **실제로 답한 것만**이다. 기본값을 state에 써 넣으면
