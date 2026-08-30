@@ -1,0 +1,455 @@
+// 내 회복 경로 그리기 — 뷰모델이 정한 것을 DOM으로 옮긴다.
+//
+//   HOME → { 먼저 볼 내용 · 체크리스트 · 알아둘 내용 ·
+//            회복 타임라인 · 주제별로 보기 } → 상세
+//
+// 판단은 result.js가 한다. 여기는 만들기만 한다 — 무엇을 담을지, 무엇을
+// 어떤 이름으로 부를지는 전부 뷰모델에서 온다.
+//
+// ★ 저장소를 직접 만지지 않는다(D-002). 누수 탐지가 src/ 아래를 재귀로 훑는다.
+// ★ 색값을 쓰지 않는다. 시각은 전부 tokens.css의 변수다.
+// ★ **표시 여부를 연출에 걸지 않는다.** 기본 상태는 보이는 것이고, 등장
+//   연출이 있다면 @keyframes의 from에만 둔다. 실기기 사고(cc6a865)의 교훈이다.
+
+import { COPY } from "./copy.js";
+import { el, clear } from "./render.js";
+
+const btn = (cls, label, fn) => {
+  const b = el("button", cls, label);
+  b.type = "button";
+  if (fn) b.addEventListener("click", fn);
+  return b;
+};
+
+// 화면 머리 — 큰 제목 + 한 줄 설명. 확정 화면 전부가 같은 형태다.
+function head(main, title, desc) {
+  main.appendChild(el("h2", "pg__title", title));
+  if (desc) main.appendChild(el("p", "pg__desc", desc));
+}
+
+// 개수가 0인 카드로 들어왔을 때. 한 줄만이다.
+function empty(main) {
+  main.appendChild(el("p", "pg__empty", COPY.emptyPage));
+}
+
+// ── HOME ───────────────────────────────────────────
+//
+// 카드 셋 + 보조 둘. **개수가 0이어도 카드를 지우지 않는다** — 0개면
+// 0개라고 말한다. 자리가 늘 같아야 재방문에서 화면 구조가 안 흔들린다.
+export function renderHome(main, hv, { onGo, onSave, saved }) {
+  const hero = el("section", "home__hero");
+  const row = el("div", "home__titlerow");
+  row.appendChild(el("h2", "home__title", hv.title));
+  if (hv.chip) {
+    const wrap = el("div", "home__time");
+    // 경과시간은 현재 시각이 아니다. 화재로부터의 거리다.
+    wrap.appendChild(el("span", "home__chip", hv.chip));
+    wrap.appendChild(el("span", "home__basis", hv.basis));
+    row.appendChild(wrap);
+  }
+  hero.appendChild(row);
+  hero.appendChild(el("p", "home__lead", hv.lead));
+  main.appendChild(hero);
+
+  const list = el("div", "home__cards");
+  for (const c of hv.cards) {
+    const b = btn("hcard", null, () => onGo(c.key));
+    const text = el("span", "hcard__text");
+    text.appendChild(el("span", "hcard__title", c.title));
+    text.appendChild(el("span", "hcard__desc", c.desc));
+    b.appendChild(text);
+    const tail = el("span", "hcard__tail");
+    tail.appendChild(el("span", "hcard__count", COPY.home.count(c.count)));
+    tail.appendChild(el("span", "chev", "›"));
+    b.appendChild(tail);
+    list.appendChild(b);
+  }
+  main.appendChild(list);
+
+  // 보조 탐색 — 핵심 셋 아래 충분한 간격. 중간 heading은 없다.
+  const more = el("div", "home__more");
+  for (const m of hv.more) {
+    const b = btn("mcard", null, () => onGo(m.key));
+    b.appendChild(el("span", null, m.label));
+    b.appendChild(el("span", "chev", "›"));
+    more.appendChild(b);
+  }
+  main.appendChild(more);
+
+  // D-015 2층 — 결과에 닿은 뒤로는 작게 상시. 헤더가 확정 화면에서
+  // `일상으로`/`이전`로 차 있어 이 자리로 왔다.
+  if (onSave) {
+    const s = btn("btn btn--quiet home__save", saved ? COPY.save.headerDone : COPY.save.header, onSave);
+    main.appendChild(s);
+  }
+}
+
+// ── 먼저 볼 내용 ───────────────────────────────────
+export function renderPriority(main, pv, { onOpen }) {
+  head(main, pv.title, pv.desc);
+  if (!pv.count) return empty(main);
+  for (const s of pv.sections) {
+    const sec = el("section", "pg__sec");
+    sec.appendChild(el("h3", "pg__sechead", s.label));
+    const ul = el("ul", "cards");
+    for (const r of s.items) ul.appendChild(simpleCard(r, onOpen));
+    sec.appendChild(ul);
+    main.appendChild(sec);
+  }
+}
+
+// ── 체크리스트 ─────────────────────────────────────
+//
+// 체크는 여기의 역할이다. 잠긴 카드는 표면에 선행 문장을 그대로 쓴다 —
+// 별도 heading도 badge도 없고, 더보기 안에 숨기지 않는다.
+export function renderChecklist(main, cv, { onOpen, onCheck }) {
+  head(main, cv.title, cv.desc);
+  if (!cv.count && !cv.done.count) return empty(main);
+
+  const ul = el("ul", "cards");
+  for (const r of cv.items) ul.appendChild(checkCard(r, { onOpen, onCheck }));
+  main.appendChild(ul);
+
+  // 완료 — 아래에 쌓인다. 배지도 축하도 없다.
+  if (cv.done.count) {
+    const det = el("details", "fold");
+    const sum = el("summary", "fold__sum");
+    sum.appendChild(el("span", "fold__label", COPY.timeline.doneTitle));
+    sum.appendChild(el("span", "fold__count", COPY.timeline.doneCount(cv.done.count)));
+    det.appendChild(sum);
+    const dl = el("ul", "cards");
+    for (const r of cv.done.items) {
+      const li = el("li", "card card--done");
+      li.dataset.row = r.id;
+      const line = el("p", "card__title", r.title);
+      li.appendChild(line);
+      const meta = el("p", "card__meta");
+      meta.appendChild(el("span", "chip", r.statusLabel));
+      // completed_at이 없다고 완료가 아닌 것은 아니다.
+      meta.appendChild(el("span", null, r.doneOn || COPY.timeline.doneNoDate));
+      li.appendChild(meta);
+      if (r.checkable && onCheck)
+        li.appendChild(btn("btn btn--quiet", COPY.timeline.uncheck, () => onCheck(r.id, false)));
+      dl.appendChild(li);
+    }
+    det.appendChild(dl);
+    main.appendChild(det);
+  }
+
+  main.appendChild(el("p", "pg__foot", cv.footer));
+}
+
+// ── 알아둘 내용 ────────────────────────────────────
+// 중간 heading 없이 카드 바로 나열. waiting만 카드 수준 상태로 구분한다.
+export function renderReference(main, rv, { onOpen }) {
+  head(main, rv.title, rv.desc);
+  if (!rv.count) return empty(main);
+  const ul = el("ul", "cards");
+  for (const r of rv.items) ul.appendChild(simpleCard(r, onOpen));
+  main.appendChild(ul);
+}
+
+// ── 회복 타임라인 ──────────────────────────────────
+//
+// 전체 흐름을 시간순으로. 노드는 기본 접힘이고 탭하면 펼쳐진다.
+// **여러 개를 동시에 펼 수 있다** — 한 번에 하나만 펴는 규칙은 확정되지
+// 않았고, 접힘/펼침을 서로 닫는 구현은 뒤로가기 감각을 흐린다.
+export function renderTimelinePage(main, tv, { onOpen }) {
+  head(main, tv.title, tv.desc);
+
+  const line = el("ol", "tline");
+
+  for (const n of tv.nodes) {
+    const li = el("li", `tline__node tline__node--${n.kind}${n.empty ? " tline__node--empty" : ""}`);
+    li.appendChild(el("span", "tline__dot"));
+
+    if (n.kind === "info") {
+      const box = el("div", "tline__info");
+      box.appendChild(el("p", "tline__label", n.label));
+      // 박스 없이 디지털 텍스트로. 시각이 없으면 날짜만 그린다.
+      if (n.date) {
+        const t = el("p", "tline__stamp", n.date);
+        if (n.time) t.appendChild(el("span", "tline__clock", n.time));
+        box.appendChild(t);
+      }
+      li.appendChild(box);
+      line.appendChild(li);
+      continue;
+    }
+
+    const det = el("details", "tline__body");
+    const sum = el("summary", "tline__sum");
+    const left = el("span", "tline__left");
+    left.appendChild(el("span", "tline__label", n.label));
+    if (n.note) left.appendChild(el("span", "tline__note", n.note));
+    sum.appendChild(left);
+    const right = el("span", "tline__tail");
+    right.appendChild(el("span", "tline__count", COPY.recovery.count(n.count)));
+    right.appendChild(el("span", "chev", "›"));
+    sum.appendChild(right);
+    det.appendChild(sum);
+
+    if (!n.count) det.appendChild(el("p", "pg__empty", COPY.emptyPage));
+    else {
+      const ul = el("ul", "cards");
+      for (const r of n.items) ul.appendChild(simpleCard(r, onOpen));
+      det.appendChild(ul);
+    }
+    li.appendChild(det);
+    line.appendChild(li);
+  }
+
+  main.appendChild(line);
+  main.appendChild(el("p", "pg__foot", tv.footer));
+}
+
+// ── 주제별로 보기 ──────────────────────────────────
+// 2열 카드 + 마지막이 홀수로 남으면 전체폭.
+export function renderTopics(main, tv, { onOpen }) {
+  head(main, tv.title, tv.desc);
+  if (!tv.topics.length) {
+    empty(main);
+    main.appendChild(el("p", "pg__foot", tv.footer));
+    return;
+  }
+  const grid = el("div", "topics");
+  tv.topics.forEach((t, i) => {
+    const last = i === tv.topics.length - 1 && tv.topics.length % 2 === 1;
+    const b = btn(`tcard${last ? " tcard--wide" : ""}`, null, () => onOpen(t.group));
+    b.appendChild(el("span", "tcard__label", t.label));
+    const tail = el("span", "tcard__tail");
+    tail.appendChild(el("span", "tcard__count", COPY.topics.count(t.count)));
+    tail.appendChild(el("span", "chev", "›"));
+    b.appendChild(tail);
+    grid.appendChild(b);
+  });
+  main.appendChild(grid);
+  main.appendChild(el("p", "pg__foot", tv.footer));
+}
+
+// ── 주제 상세 (7주제 공통 템플릿) ──────────────────
+//
+// 주제마다 화면을 따로 만들지 않는다. 조건부·제외는 아래에 **따로따로**
+// 접힌다(D-011: 사라지지 않는다). 미판정은 접힘이 아니라 본목록에 남는다.
+export function renderTopicDetail(main, td, { onOpen }) {
+  main.appendChild(el("p", "pg__eyebrow", COPY.topics.title));
+  main.appendChild(el("h2", "pg__title", td.label));
+  main.appendChild(el("p", "pg__count", td.countLabel));
+
+  if (!td.count) empty(main);
+  else {
+    const ul = el("ul", "cards");
+    for (const r of td.items) ul.appendChild(topicCard(r, onOpen));
+    main.appendChild(ul);
+  }
+
+  for (const f of td.folds) {
+    const det = el("details", "fold");
+    det.appendChild(el("summary", "fold__sum", f.label));
+    const ul = el("ul", "cards");
+    for (const r of f.items) {
+      const li = el("li", "card card--dim");
+      li.dataset.row = r.id;
+      li.appendChild(el("p", "card__title", r.title));
+      // 왜 아닌지가 정보다. 사유 없이 접기만 하면 D-011이 무의미해진다.
+      if (r.reason) li.appendChild(el("p", "card__reason", r.reason));
+      const meta = el("p", "card__meta");
+      meta.appendChild(el("span", "chip", r.statusLabel));
+      li.appendChild(meta);
+      ul.appendChild(li);
+    }
+    det.appendChild(ul);
+    main.appendChild(det);
+  }
+
+  main.appendChild(el("p", "pg__foot", td.footer));
+}
+
+// ── Action 상세 (공통 템플릿) ──────────────────────
+export function renderActionDetail(main, ad, { onGoTo }) {
+  main.appendChild(el("p", "pg__eyebrow", ad.topic));
+  main.appendChild(el("h2", "pg__title", ad.title));
+
+  const flags = el("p", "card__meta");
+  if (ad.statusLabel) flags.appendChild(el("span", "chip", ad.statusLabel));
+  if (ad.warn) flags.appendChild(el("span", "chip chip--warn", ad.warn));
+  if (flags.childNodes.length) main.appendChild(flags);
+
+  if (ad.summary) main.appendChild(el("p", "detail__summary", ad.summary));
+  // 잠김의 의미는 체크리스트와 같은 문장으로. 새 화면 유형을 만들지 않는다.
+  if (ad.lock) main.appendChild(lockLine(ad.lock, onGoTo));
+  if (ad.body) main.appendChild(bodyBlock(ad.body));
+
+  const src = sourceCard(ad.source);
+  if (src) main.appendChild(src);
+  main.appendChild(el("p", "pg__foot", ad.footer));
+}
+
+// ── 아직 확인 못 함 ────────────────────────────────
+//
+// `잘 모르겠어요`를 `해당 없음`으로 바꾸지 않고, 판단에 필요한 조건과
+// 다음 행동을 그대로 보여준다.
+export function renderUndetermined(main, uv, { onAnswer }) {
+  main.appendChild(el("p", "pg__eyebrow", uv.topic));
+  const flags = el("p", "card__meta");
+  flags.appendChild(el("span", "chip", uv.label));
+  main.appendChild(flags);
+  main.appendChild(el("h2", "pg__title", uv.title));
+  if (uv.summary) main.appendChild(el("p", "detail__summary", uv.summary));
+
+  const why = el("section", "und");
+  why.appendChild(el("h3", "und__head", uv.why.title));
+  // ★ 엔진이 준 사유 그대로다. 화면이 새로 쓰지 않는다.
+  why.appendChild(el("p", "und__line", uv.why.line));
+  main.appendChild(why);
+
+  const how = el("section", "und");
+  how.appendChild(el("h3", "und__head", uv.how.title));
+  how.appendChild(el("p", "und__line", uv.how.line));
+  if (uv.how.cta) {
+    // 바꿔야 할 답으로 바로 간다. 목적지가 없으면 버튼도 없다.
+    how.appendChild(btn("btn btn--primary", uv.how.cta, () => onAnswer(uv.how.targets)));
+    const ul = el("ul", "und__qs");
+    for (const q of uv.how.targets) ul.appendChild(el("li", null, q.text));
+    how.appendChild(ul);
+  }
+  main.appendChild(how);
+
+  if (uv.basis) {
+    const b = el("section", "src");
+    b.appendChild(el("p", "src__label", uv.basis.label));
+    const t = el("p", "src__title", uv.basis.title);
+    if (uv.basis.article) t.appendChild(el("span", "src__article", uv.basis.article));
+    b.appendChild(t);
+    // 조례 원문 URL이 정확할 때만 '원문 보기'. 지금은 홈페이지뿐이라 없다.
+    if (uv.basis.checkedAt) b.appendChild(el("p", "src__meta", COPY.actionDetail.checked(uv.basis.checkedAt)));
+    main.appendChild(b);
+  }
+}
+
+// ── 카드 ───────────────────────────────────────────
+
+// 제목 + 요약 + (상태) → 상세로. 확정 화면의 기본 카드다.
+function simpleCard(r, onOpen) {
+  const li = el("li", "card");
+  li.dataset.row = r.id;
+  const b = btn("card__hit", null, () => onOpen(r.id));
+  b.appendChild(el("span", "card__title", r.title));
+  if (r.summary) b.appendChild(el("span", "card__summary", r.summary));
+  const meta = el("span", "card__meta");
+  if (r.stateLabel) meta.appendChild(el("span", "chip", r.stateLabel));
+  if (r.statusLabel) meta.appendChild(el("span", "chip", r.statusLabel));
+  if (meta.childNodes.length) b.appendChild(meta);
+  b.appendChild(el("span", "chev", "›"));
+  li.appendChild(b);
+  return li;
+}
+
+// 주제 상세의 카드 — 출처 한 줄이 붙는다.
+function topicCard(r, onOpen) {
+  const li = simpleCard(r, onOpen);
+  const src = r.source;
+  if (src) {
+    const box = el("div", "card__src");
+    box.appendChild(el("span", "src__label", src.label));
+    const it = src.items[0];
+    if (it.title) {
+      const t = el("span", "src__title", it.title);
+      if (it.article) t.appendChild(el("span", "src__article", it.article));
+      box.appendChild(t);
+    }
+    if (it.url) box.appendChild(extLink(it.url, it.link));
+    if (it.meta) box.appendChild(el("span", "src__meta", it.meta));
+    li.appendChild(box);
+  }
+  return li;
+}
+
+// 체크리스트 카드 — 체크와 상세 진입이 별개 버튼이다(중첩 버튼 금지).
+function checkCard(r, { onOpen, onCheck }) {
+  const li = el("li", `card card--check${r.lock ? " card--locked" : ""}`);
+  li.dataset.row = r.id;
+
+  if (r.checkable && onCheck) {
+    const box = btn("card__box", null, () => onCheck(r.id, true));
+    box.setAttribute("aria-pressed", "false");
+    box.setAttribute("aria-label", `${r.title} — ${COPY.timeline.check}`);
+    li.appendChild(box);
+  } else {
+    // 선행이 안 끝난 것은 체크할 수 없다. 자리를 비워 두면 줄이 어긋난다.
+    li.appendChild(el("span", "card__box card__box--off"));
+  }
+
+  const b = btn("card__hit", null, () => onOpen(r.id));
+  b.appendChild(el("span", "card__title", r.title));
+  if (r.warn) {
+    const m = el("span", "card__meta");
+    m.appendChild(el("span", "chip chip--warn", r.warn));
+    b.appendChild(m);
+  }
+  if (r.lock) b.appendChild(lockText(r.lock));
+  b.appendChild(el("span", "chev", "›"));
+  li.appendChild(b);
+  return li;
+}
+
+// 잠긴 카드의 선행 문장. **문장 안의 `먼저 확인`만 강조한다** —
+// 별도 heading이나 badge를 만들지 않는다.
+function lockText(lock) {
+  const p = el("span", "lock");
+  const i = lock.sentence.indexOf(lock.emphasis);
+  if (i < 0) {
+    p.textContent = lock.sentence;
+    return p;
+  }
+  p.appendChild(el("span", null, lock.sentence.slice(0, i)));
+  p.appendChild(el("strong", "lock__key", lock.emphasis));
+  p.appendChild(el("span", null, lock.sentence.slice(i + lock.emphasis.length)));
+  return p;
+}
+
+// Action 상세의 잠김 줄 — 목적지가 있을 때만 이동을 그린다.
+function lockLine(lock, onGoTo) {
+  const box = el("p", "lock lock--block");
+  box.appendChild(lockText(lock));
+  if (lock.goTo && onGoTo)
+    box.appendChild(btn("btn btn--quiet", COPY.timeline.lockedGo, () => onGoTo(lock.goTo)));
+  return box;
+}
+
+// 본문 — 빈 줄로 문단을 나눈다. innerHTML을 쓰지 않는다.
+function bodyBlock(body) {
+  const box = el("div", "detail__body");
+  for (const para of String(body).split(/\n{2,}/))
+    if (para.trim()) box.appendChild(el("p", null, para.trim()));
+  return box;
+}
+
+// 출처 카드 — 본문보다 낮은 위계다. 없으면 통째로 안 그린다.
+function sourceCard(src) {
+  if (!src) return null;
+  const box = el("section", "src src--card");
+  box.appendChild(el("p", "src__label", src.label));
+  for (const it of src.items) {
+    if (it.title) {
+      const t = el("p", "src__title", it.title);
+      if (it.article) t.appendChild(el("span", "src__article", it.article));
+      box.appendChild(t);
+    }
+    if (it.publisher) box.appendChild(el("p", "src__pub", it.publisher));
+    if (it.url) box.appendChild(extLink(it.url, it.link, "p"));
+    if (it.meta) box.appendChild(el("p", "src__meta", it.meta));
+  }
+  return box;
+}
+
+// 외부 링크는 새 탭 + noopener. **정확한 원문이 있을 때만 부른다.**
+function extLink(url, label, tag = "span") {
+  const wrap = el(tag, "src__linkwrap");
+  const a = el("a", "src__link", label || COPY.actionDetail.link);
+  a.href = url;
+  a.target = "_blank";
+  a.rel = "noopener noreferrer";
+  wrap.appendChild(a);
+  return wrap;
+}

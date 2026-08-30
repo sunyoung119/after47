@@ -162,24 +162,20 @@ t(
 v = entryView(await openSession({ url: "https://after47.kr/?d=mapo&t=ab0k9m" }));
 t("망가진 토큰이면 token_invalid 배너가 뜬다", bannerTypes(v).includes("token_invalid"));
 
-// ⑦ 주거 형태가 "그 외"(상가·고시원·공장)일 때만 책임 경계를 말한다 (D-006).
-// 공통 행동은 그 사람에게도 유효하지만 상가 특유의 절차는 데이터에 없다 —
-// **말하지 않으면 "내 경우도 전부 다뤄진다"가 된다.** 반대로 안 고른 사람에게
-// 뜨면 아무 뜻도 없는 경고가 되므로 엄격 비교여야 한다.
+// ⑦ 주거 형태가 "그 외"일 때 말해야 하는 책임 경계(D-006)는 그대로지만
+// **배너가 아니라 확정 화면 `안내 범위`(04A)가 맡는다.** 배너 한 줄로는
+// 무엇이 검증됐고 무엇이 범위 밖인지 말할 수 없었고, 갈 곳(계속하기 /
+// 건물 종류 다시 선택)도 줄 수 없었다. 판정은 절 7의 scopeNoticeView가 본다.
 새백엔드();
 const 경계세션 = await openSession({ url: "https://after47.kr/?d=mapo" });
 const scopeBanners = (st) =>
   entryView({ ...경계세션, state: { ...경계세션.state, ...st } }).banners.filter(
     (b) => b.type === "scope"
   );
-const 그외 = scopeBanners({ housing_type: "other" });
-t(
-  "⑦ '그 외'를 고르면 경계 배너가 하나 뜨고 문구가 확정 문구 그대로다",
-  그외.length === 1 && 그외[0].text === COPY.banner.scope_other,
-  `개수=${그외.length} / 문구일치=${그외[0]?.text === COPY.banner.scope_other}`
-);
-t("⑦ 아파트에는 안 뜬다", scopeBanners({ housing_type: "apartment" }).length === 0);
-t("⑦ 아직 안 답한 사람에게는 안 뜬다", scopeBanners({}).length === 0);
+t("⑦ 경계 배너는 사라졌다 (안내 범위 화면이 대체한다)",
+  scopeBanners({ housing_type: "other" }).length === 0);
+t("⑦ 어떤 답에도 배너로는 안 뜬다",
+  scopeBanners({ housing_type: "apartment" }).length === 0 && scopeBanners({}).length === 0);
 
 // ── 2. 설문 ────────────────────────────────────────
 section("2. 설문 — 커서와 남은 수");
@@ -631,11 +627,11 @@ t(
 // 전환이 먼저다 — route/render 뒤에 persist가 온다.
 {
   const src = 코드만("src/ui/app.js");
-  const body = src.slice(src.indexOf("async function passIntro"));
+  const body = src.slice(src.indexOf("async function passLanding"));
   // passIntro 다음 선언까지만 자른다.
   const 본문 = body.slice(0, body.indexOf("function", 30));
   t(
-    "인트로 통과는 저장을 기다리지 않는다 (render 뒤에 persist)",
+    "랜딩 통과는 저장을 기다리지 않는다 (render 뒤에 persist)",
     본문.indexOf("render()") < 본문.indexOf("persist()")
   );
 }
@@ -671,6 +667,44 @@ t(
     신설.every((v) => !css.includes(`var(${v})`))
   );
 }
+// ── 새 화면이 두 사고를 다시 부르지 않는가 (커밋 4-② self-check) ──
+//
+// 지난 두 사고가 전부 이 계층이었다. 화면을 통째로 갈아엎을 때 가장 쉽게
+// 되돌아오는 자리라 규칙의 존재를 코드로 박는다.
+{
+  const css = readFileSync(join(D, "src/ui/app.css"), "utf8");
+
+  // ① 3a93c53 — 작성자의 display가 브라우저 기본 [hidden]{display:none}을
+  //    이겨 화면 전환(el.hidden)이 통째로 죽었다. 새 화면에도 display를
+  //    쓰는 곳이 많으므로(카드 flex·주제 grid) **display를 !important로
+  //    선언하는 곳이 [hidden] 하나뿐인지**까지 본다 — 규칙이 있어도 더 센
+  //    선언이 하나 생기면 그대로 무너진다.
+  const 강제 = [...css.matchAll(/([^{}]+)[{][^{}]*display:[ ]*[^;}]*!important/g)].map((m) =>
+    m[1].trim().split(String.fromCharCode(10)).pop().trim()
+  );
+  t(
+    `display를 !important로 선언하는 곳이 [hidden] 하나뿐이다 (${강제.length}건)`,
+    강제.length === 1 && 강제[0] === "[hidden]",
+    강제.join(" | ")
+  );
+
+  // ② cc6a865 — var 하나가 안 풀려 animation 선언이 무효가 됐고, opacity:0으로
+  //    시작하던 글자가 영원히 나타나지 않았다. **기본 상태는 보이는 것**이
+  //    화면 전체의 규칙이지 인트로만의 규칙이 아니다.
+  const 기본상태 = css.replace(/@keyframes[^{]*[{](?:[^{}]*[{][^{}]*[}])*[^{}]*[}]/g, "");
+  const 숨김 = 기본상태.match(/opacity:[ ]*0[ ]*[;}]/g) || [];
+  t(`@keyframes 밖에 opacity:0이 없다 (${숨김.length}건)`, 숨김.length === 0, 숨김.join(" "));
+  t("숨겼다 되돌리는 forwards가 어디에도 없다", !/forwards/.test(css));
+
+  // ③ 표시가 연출의 **완료**에 걸리면 연출이 안 도는 순간 콘텐츠가 사라진다.
+  //    선택 피드백(150~250ms)도 animationend가 아니라 시계로 잰다.
+  const 그리기 = ["src/ui/app.js", "src/ui/screens.js", "src/ui/recovery.js", "src/ui/render.js"];
+  t(
+    "표시 여부를 연출의 끝(animationend·transitionend)에 걸지 않는다",
+    그리기.every((f) => !/animationend|transitionend/.test(코드만(f)))
+  );
+}
+
 // ── 출처 구조가 행에 실리는가 (커밋 3) ──────
 //
 // sources는 지금 전부 빈 배열이다. **그 상태에서도 화면이 죽지 않아야**
@@ -723,7 +757,7 @@ t(
   const refs = html.match(/(?:href|src)="src\/ui\/[^"]+"/g) || [];
   // ★ 값까지 본다. 존재만 보면 "올리는 것을 잊은 배포"를 못 잡는다 —
   //   화면 파일을 고치면서 v를 올리면 **이 줄의 숫자도 함께 올린다.**
-  const V = "?v=5";
+  const V = "?v=6";
   t(
     `화면 파일 참조가 전부 ${V}다 (${refs.length}개)`,
     refs.length >= 3 && refs.every((r) => r.includes(V)),
@@ -972,6 +1006,9 @@ t(
   `${r1.home.cards[2].desc} vs ${r1.reference.desc}`
 );
 t("HOME에서 갈 수 있는 화면이 다섯이다", RESULT_PAGES.length === 5);
+// 개수가 0인 카드도 그대로 그린다(확정) — 0이면 0이라고 말한다.
+t("0개 카드를 숨기지 않는다", r1.home.cards.length === 3);
+t("빈 상세의 문구가 확정 한 줄이다", COPY.emptyPage === "지금 단계에서는 해당하는 안내가 없습니다.");
 
 // 먼저 볼 내용 — 하지 마세요 / 늦었어도 확인하세요
 const 늦게8 = 결과(전.state, Date.parse(FIRE) + 30 * 24 * 36e5);
@@ -1033,8 +1070,18 @@ t(
   t("그 밖의 선행은 제목으로 문장을 만든다",
     기타.every((i) => i.lock.sentence === `‘${i.blockedBy[0].title}’을(를) 먼저 확인하세요.`),
     기타.map((i) => i.lock.sentence).join(" | "));
-  t("갈 곳이 없으면 이동을 그리지 않는다",
+  // Q2 → 확정: 문장이 가리키는 선행과 목적지가 같을 때만 이동을 그린다.
+  t("문장이 가리키는 선행과 목적지가 다르면 이동을 안 그린다",
+    잠긴.every((i) => {
+      const named = i.blockedBy.find((b) => b.id === "scene-release") ?? i.blockedBy[0];
+      return i.lock.goTo === null || i.lock.goTo === named.id;
+    }),
+    잠긴.map((i) => `${i.id}:${i.lock.goTo}`).join(","));
+  t("선행이 하나도 화면에 없으면 이동이 없다",
     잠긴.filter((i) => i.lock.missing).every((i) => i.lock.goTo === null));
+  t("레퍼런스 케이스에서 현장 확인 문장 카드에는 이동이 없다",
+    scene.every((i) => i.lock.goTo === null),
+    scene.map((i) => `${i.id}:${i.lock.goTo}`).join(","));
   t("잠김을 '기다리는 중'으로 표현하지 않는다",
     !잠긴.some((i) => JSON.stringify(i.lock).includes("기다리는 중")));
 }

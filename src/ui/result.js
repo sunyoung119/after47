@@ -134,18 +134,26 @@ export function checklistView(base) {
 // 먼저 해야 하는지 말해 주는 것이다. 별도 heading·badge를 만들지 않고
 // 더보기 안에 숨기지 않는다.
 function checkItem(r) {
-  const scene = r.blockedBy.some((b) => b.id === SCENE_RELEASE);
-  const first = r.blockedBy[0] ?? null;
-  const lock = r.blockedBy.length
+  // 문장이 가리키는 선행. scene-release가 걸려 있으면 그것이고,
+  // 아니면 남은 선행 중 첫째다.
+  const named = r.blockedBy.find((b) => b.id === SCENE_RELEASE) ?? r.blockedBy[0] ?? null;
+  const lock = named
     ? {
-        sentence: scene
-          ? COPY.checklist.lockedScene
-          : COPY.checklist.lockedOther(first?.title ?? ""),
+        sentence:
+          named.id === SCENE_RELEASE
+            ? COPY.checklist.lockedScene
+            : COPY.checklist.lockedOther(named.title ?? ""),
         // 문장 안에서 이 부분만 강조한다.
         emphasis: COPY.checklist.lockedEmphasis,
-        // 갈 곳이 있을 때만 이동을 그린다 — 버튼이 사실이 아닌 것을
-        // 주장하면 안 된다. 선행이 이 사람 화면에 아예 없을 수 있다.
-        goTo: r.leadTo?.id ?? null,
+        // ★ **문장이 가리키는 선행과 목적지가 같을 때만 이동을 그린다.**
+        //   레퍼런스 케이스에서 둘이 갈린다 — powder-removal의 문장은
+        //   scene-release("조사관에게 확인")인데 그 Action이 그 사람
+        //   화면에 없어서 leadTo는 photo-before-cleanup이다. 그대로
+        //   버튼을 달면 읽은 문장과 도착한 카드가 다르다. 버튼이 사실이
+        //   아닌 것을 주장하지 않게 한다 — photo-before-cleanup은 어차피
+        //   rank 1 큰 카드라 길을 잃지 않는다.
+        goTo: r.leadTo && r.leadTo.id === named.id ? named.id : null,
+        // 선행이 하나도 화면에 없다(안내 문구용).
         missing: r.leadMissing === true,
       }
     : null;

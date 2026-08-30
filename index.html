@@ -7,7 +7,7 @@
     <title>화재피해 회복 내비게이션</title>
     <meta name="color-scheme" content="dark" />
     <!--
-      ★ 캐시 버전 v=5 — **화면 파일(css·js)을 고치면 이 숫자를 손으로 올린다.**
+      ★ 캐시 버전 v=6 — **화면 파일(css·js)을 고치면 이 숫자를 손으로 올린다.**
 
       빌드 도구가 없어서 파일 이름에 해시가 안 붙는다. 그러면 브라우저가
       옛 파일을 붙들고 새 마크업과 섞는 일이 생긴다 — 실제로 났다(v1 → v2):
@@ -22,8 +22,8 @@
       동작을 하면 그 자리를 의심하라.
     -->
     <!-- 색·글꼴·간격은 tokens.css에만 있다. 시안이 바뀌면 이 파일만 갈아끼운다. -->
-    <link rel="stylesheet" href="src/ui/tokens.css?v=5" />
-    <link rel="stylesheet" href="src/ui/app.css?v=5" />
+    <link rel="stylesheet" href="src/ui/tokens.css?v=6" />
+    <link rel="stylesheet" href="src/ui/app.css?v=6" />
   </head>
   <body>
     <!--
@@ -35,36 +35,25 @@
     -->
     <a class="skip" href="#main">본문으로 건너뛰기</a>
 
-    <!-- ① 인트로 — 첫 방문만. 탭하면 즉시 통과한다. -->
+    <!-- ① 랜딩 — 첫 방문만. 탭하면 즉시 통과한다. -->
     <section id="intro" class="intro" hidden></section>
 
     <div id="flow" class="flow" hidden>
+      <!-- 확정 화면의 머리 문법 — 좌상단 서비스명, 우상단 [이전]. -->
       <header class="top">
         <div class="top__bar">
-          <h1 class="top__title">화재피해 회복 내비게이션</h1>
-          <!-- D-015 2층 — 결과에 닿은 뒤 작게 상시 -->
-          <div id="addr-slot" class="top__addr"></div>
+          <h1 id="brand" class="top__brand"></h1>
+          <div id="top-right" class="top__right"></div>
         </div>
       </header>
 
       <!-- 진입 알림 — 자치구 충돌·이어보기·주소 문제 -->
       <div id="banners" class="banners" role="status" aria-live="polite"></div>
 
-      <!-- 안내 · 자치구 선택 · 설문 · 요약이 여기 그려진다 -->
+      <!-- 기본 확인·설문·전환·게이트·내 회복 경로가 여기 그려진다 -->
       <main id="main" class="main"></main>
 
-      <!-- ④ 가로 덱 — 타임라인 · 체크 · 근거 · 연락처 -->
-      <div id="deck" class="deck" hidden>
-        <nav id="deck-nav" class="deck__nav" aria-label="페이지"></nav>
-        <div id="deck-rail" class="deck__rail">
-          <section class="page" data-page="timeline" aria-label="타임라인"></section>
-          <section class="page" data-page="check" aria-label="체크"></section>
-          <section class="page" data-page="sources" aria-label="근거"></section>
-          <section class="page" data-page="contacts" aria-label="연락처"></section>
-        </div>
-      </div>
-
-      <!-- D-015 저장 안내 — 예외(저장 막힘)와 2층 버튼이 여는 패널 -->
+      <!-- D-015 저장 안내 — 예외(저장 막힘)와 HOME의 2층 버튼이 여는 패널 -->
       <div id="save-notice" class="savebox" hidden></div>
 
       <footer class="foot">
@@ -72,6 +61,6 @@
       </footer>
     </div>
 
-    <script type="module" src="src/ui/app.js?v=5"></script>
+    <script type="module" src="src/ui/app.js?v=6"></script>
   </body>
 </html>

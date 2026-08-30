@@ -4,12 +4,13 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "test": "node test/engine.test.mjs && node test/engine.snapshot.mjs && node test/questions.test.mjs && node test/districts.test.mjs && node test/view.test.mjs && node test/storage.test.mjs",
+    "test": "node test/engine.test.mjs && node test/engine.snapshot.mjs && node test/questions.test.mjs && node test/districts.test.mjs && node test/view.test.mjs && node test/walk.test.mjs && node test/storage.test.mjs",
     "test:engine": "node test/engine.test.mjs",
     "test:snapshot": "node test/engine.snapshot.mjs",
     "test:questions": "node test/questions.test.mjs",
     "test:districts": "node test/districts.test.mjs",
     "test:view": "node test/view.test.mjs",
+    "test:walk": "node test/walk.test.mjs",
     "test:storage": "node test/storage.test.mjs",
     "serve": "node tools/serve.mjs"
   }
