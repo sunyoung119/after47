@@ -29,9 +29,12 @@ export const BASIC_KEYS = ["fire_at"];
 //
 // 플래그는 **state에 넣어 saveState로 저장한다** — localStorage 직접
 // 호출 금지는 UI에서도 그대로다(누수 탐지가 잡는다).
-export function landingView(state = {}) {
+export function landingView(state = {}, { saved = null } = {}) {
   return {
     show: state.intro_seen !== true,
+    // 저장된 기록이 있는 사람에게만. **판정은 재방문 브릿지 것을 그대로
+    // 쓴다** — 새 로직을 만들면 두 화면이 다른 답을 낼 수 있다.
+    resume: revisitView({ state, saved }).show ? COPY.landing.resume : null,
     eyebrow: COPY.landing.eyebrow,
     brand: COPY.landing.brand,
     // 두 줄이다. 화면 코드가 줄바꿈을 만들지 않도록 여기서 나눠 준다.

@@ -192,16 +192,47 @@ a {
   height: 56px;
   border: 1px solid var(--c-landing-cta-line, rgba(255, 255, 255, 0.28));
   border-radius: var(--r1, 8px);
-  /* **진한 남색이다.** 자리와 크기는 그대로고 면 색만 바꿨다 —
-     이 색이 HOME의 진입 버튼 일곱과 같아서, 첫 화면과 도착지가
-     "누르는 것 = 남색"으로 이어진다(수미상관). */
-  background: var(--c-entry, #1b4a80);
+  /* **하늘색이다**(남색은 실기기에서 기각됐다). 이 색이 결과 화면의
+     진입 버튼들과 같아서, 첫 화면과 도착지가 "누르는 것 = 하늘"로
+     이어진다(수미상관). 폴백 리터럴도 함께 되돌렸다 — var 하나가
+     안 풀리면 화면에 나오는 것은 이 값이다. */
+  background: var(--c-entry, #2261ac);
   color: var(--c-entry-ink, #ffffff);
   font: var(--w-bold, 700) var(--f-landing-cta, 17px) / 1
     var(--font, "NanumSquare", "Noto Sans KR", sans-serif);
   letter-spacing: -0.3px;
   cursor: pointer;
 }
+/* 저장된 기록이 있는 사람에게만 뜨는 보조 문(사용자 결정).
+
+   ★ **흐름 밖에 세운다.** `.intro__actions`가 바닥 기준으로 위로 자라는
+   블록이라, 이 줄을 흐름 안에 두면 있고 없음에 따라 [회복 시작하기]가
+   위아래로 밀린다 — 지시가 금지한 레이아웃 점프다. 액션 블록 바로 위에
+   흐름 밖으로 얹어 CTA 자리를 고정한다.
+
+   위계는 크기가 아니라 무게다 — **면 색이 없고 윤곽뿐**이고, 탭 목표
+   44px과 글자 크기는 지킨다(정신없는 사람이 읽는다). */
+.intro__resume {
+  appearance: none;
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  width: min(100%, 260px);
+  margin: 0 auto var(--s3, 12px);
+  min-height: var(--tap, 44px);
+  padding: 0 var(--s4, 16px);
+  border: 1px solid var(--c-landing-cta-line, rgba(255, 255, 255, 0.28));
+  border-radius: var(--r1, 8px);
+  background: transparent;
+  color: var(--c-landing-ink, #ffffff);
+  font: var(--w-bold, 700) var(--f-landing-footer, 14px) / 1.4
+    var(--font, "NanumSquare", "Noto Sans KR", sans-serif);
+  letter-spacing: -0.3px;
+  text-shadow: 0 1px 12px var(--c-landing-shadow, rgba(0, 23, 48, 0.16));
+  cursor: pointer;
+}
+
 /* 확정 마이크로카피. CTA 아래에 붙는다. **더 크고 진하게**(사용자
    실기기 검수 결정) — 서비스가 무엇을 하는지 말하는 유일한 줄인데
    사진 위에서 묻혔다. 가독은 아래 veil이 보증한다. */
@@ -336,7 +367,7 @@ a {
   font: inherit;
   cursor: pointer;
 }
-/* 누르는 것은 남색이다. 벽돌색(--c-accent)은 읽는 것(라벨·개수)에만
+/* 누르는 것은 하늘색이다. 강조(--c-accent)는 읽는 것(라벨·개수)에만
    붙는다 — 확정 팔레트가 강조를 그렇게 둘로 나눠 놨다. */
 .btn--primary {
   background: var(--c-cta);
@@ -1109,6 +1140,15 @@ a {
 }
 
 /* ── 회복 타임라인 ─────────────────────────────── */
+/* 맞춤 안내로 가는 문. **제목 바로 아래, 본문이 시작되기 전이다** —
+   우상단 헤더에 숨기면 도착한 사람이 다음 자리를 못 찾는다. 전폭인 것은
+   결과 화면의 다른 진입 버튼들과 같은 문법이라서다. */
+.hub__go {
+  display: block;
+  width: 100%;
+  margin-top: var(--s5);
+}
+
 .tline {
   list-style: none;
   margin: var(--s6) 0 0;

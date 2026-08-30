@@ -140,8 +140,15 @@ export function renderReference(main, rv, { onOpen }) {
 // 전체 흐름을 시간순으로. 노드는 기본 접힘이고 탭하면 펼쳐진다.
 // **여러 개를 동시에 펼 수 있다** — 한 번에 하나만 펴는 규칙은 확정되지
 // 않았고, 접힘/펼침을 서로 닫는 구현은 뒤로가기 감각을 흐린다.
-export function renderTimelinePage(main, tv, { onOpen }) {
+export function renderTimelinePage(main, tv, { onOpen, onHub }) {
   head(main, tv.title, tv.desc);
+
+  // 맞춤 안내로 가는 문. **제목 바로 아래, 본문이 시작되기 전이다** —
+  // 헤더에 숨기면 도착한 사람이 다음 자리를 못 찾는다.
+  if (tv.toHub && onHub) {
+    const go = btn("btn btn--primary hub__go", tv.toHub, onHub);
+    main.appendChild(go);
+  }
 
   const line = el("ol", "tline");
 

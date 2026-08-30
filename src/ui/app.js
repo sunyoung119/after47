@@ -94,6 +94,7 @@ const app = {
   returnTo: null, // 답을 고치러 갔다가 돌아올 자리
   base: null, // 마지막 결과 바탕. 상세가 이것에 묻는다
   savedShown: false, // D-015 1층을 이번 방문에서 이미 띄웠다
+  noticeAt: null, // 저장 안내를 띄운 화면. 그 화면을 떠나면 닫는다
   spelled: false,
   addrTouched: false, // 주소를 복사하거나 한 글자씩 봤다 — 남겼는지는 모른다
 };
@@ -159,7 +160,11 @@ function route() {
   if (!ready() || app.again === "basic") return void (app.screen = "basic");
   if (scopeNoticeView(app.state).show) return void (app.screen = "scope");
   if (app.again === "survey" || survey(null).current) return void (app.screen = "survey");
-  app.screen = "home";
+  // ★ **결과의 도착 화면은 타임라인이다**(사용자 결정). 게이트를 지난
+  //   재방문자도, 전환 CTA를 누른 첫 방문자도 같은 자리에 닿는다 —
+  //   결과로 들어오는 문이 하나로 통일됐다. 허브(나를 위한 안내)는
+  //   그 다음 칸이다.
+  app.screen = "timeline";
 }
 
 // ── 기기 뒤로가기 ──────────────────────────────────
@@ -244,6 +249,17 @@ function parentOf(s) {
     return { screen: RESULT.includes(s.from) ? s.from : "home" };
   }
   if (s.screen === "topic") return { screen: "topics" };
+  // ★ **결과의 도착 화면이 타임라인이다**(사용자 결정). 사슬이 한 칸씩
+  //   밀렸다 — 타임라인의 뒤는 온 길(재방문이면 게이트, 첫 방문이면
+  //   전환)이고, 허브(나를 위한 안내)의 뒤는 타임라인이다.
+  if (s.screen === "timeline") {
+    // 허브에서 눌러 들어왔으면 **온 길이 허브다**. 기기 뒤로가기도 그리
+    // 가므로(허브에서 밀어 넣은 자리라 히스토리에 남아 있다) 둘이 갈리면
+    // 안 된다.
+    if (s.from === "home") return { screen: "home" };
+    return { screen: app.returning ? "revisit" : "transition" };
+  }
+  if (s.screen === "home") return { screen: "timeline" };
   return { screen: "home" };
 }
 
@@ -319,7 +335,7 @@ function render() {
     flow.hidden = true;
     // 뒤 화면이 비치거나 스크롤되면 안 된다. 복원은 바로 아래에서 한다.
     setIntroLock(true);
-    renderLanding(intro, landingView(app.state), passLanding);
+    renderLanding(intro, landingView(app.state, { saved: app.returning }), passLanding, resumeSaved);
     return;
   }
   setIntroLock(false);
@@ -334,10 +350,16 @@ function render() {
   const main = $("main");
   clear(main);
 
-  // D-015 1층은 HOME의 자리다. 다른 화면으로 넘어가면 닫는다 —
-  // HOME의 2층 버튼으로 다시 열 수 있다.
-  if (app.screen !== "home") $("save-notice").hidden = true;
-  // 배경 수미상관 — 첫 화면 사진의 흐린 버전을 **HOME에만** 깐다.
+  // 안내는 **띄운 그 화면에서만** 남는다. 1층은 도착 화면(타임라인),
+  // 2층 버튼은 허브에 있어 자리가 갈렸다 — 화면 이름을 박아 두면 한쪽이
+  // 뜨자마자 닫힌다.
+  if (app.noticeAt && app.screen !== app.noticeAt) {
+    $("save-notice").hidden = true;
+    app.noticeAt = null;
+  }
+  // 배경 수미상관 — 첫 화면 사진의 흐린 버전을 **허브(`home`)에만** 깐다.
+  // 도착 화면이 타임라인으로 옮겨 가면서 사진은 **한 칸 뒤**에 남았다.
+  // 옮기지 않은 것은 지시에 없어서다 — 실기기 확인 25번이 그것을 본다.
   // 다른 화면은 영향이 없다(클래스가 붙어 있을 때만 레이어가 생긴다).
   // (`toggle`을 쓰지 않는다 — 인트로 잠금과 같은 add/remove 문법으로 맞춘다)
   if (app.screen === "home") document.body.classList.add("home-bg");
@@ -347,7 +369,7 @@ function render() {
   if (app.screen === "survey") return renderSurvey(main);
   if (app.screen === "scope") return renderScope(main);
   if (app.screen === "transition")
-    return renderTransition(main, transitionView({ state: app.state, data: app.session.data, now: Date.now() }), () => go({ screen: "home" }));
+    return renderTransition(main, transitionView({ state: app.state, data: app.session.data, now: Date.now() }), () => go({ screen: "timeline" }));
   if (app.screen === "revisit")
     return renderRevisit(main, revisitView({ state: app.state, saved: true }), passGate);
 
@@ -388,14 +410,12 @@ function topRight() {
   // HOME에도 같은 문을 둔다(사용자 실기기 검수 결정) — 결과에 닿은 뒤로는
   // 브릿지를 다시 만날 일이 없어서, 답을 고치러 갈 길이 상세 화면의
   // CTA 하나뿐이었다. **자리·톤·동작이 브릿지의 것과 같다.**
-  // HOME에는 둘이 선다 — 온 길로 되돌리는 [이전]과 랜딩으로 가는 [처음으로].
-  //
-  // [이전]은 **기기 뒤로가기와 같은 자리**로 간다. `parentOf`는 HOME의
-  // 부모를 HOME으로 보므로(결과 화면들의 허브라서) 여기서는 온 길을
-  // 직접 고른다 — 재방문이면 경과시간 게이트, 첫 방문이면 전환 화면.
-  if (app.screen === "home")
+  // ★ **결과 도착 화면은 타임라인이다**(사용자 결정). 그 화면의 [이전]이
+  //   온 길(재방문이면 게이트, 첫 방문이면 전환)로 가고, 허브(나를 위한
+  //   안내)의 [이전]은 타임라인으로 간다 — 사슬이 한 칸씩 밀렸다.
+  if (app.screen === "timeline" || app.screen === "home")
     return [
-      { label: COPY.home.back, on: () => go({ screen: app.returning ? "revisit" : "transition" }) },
+      { label: COPY.home.back, on: goBack },
       { label: COPY.revisit.home, on: startAgain },
     ];
   const back = backTarget();
@@ -490,22 +510,35 @@ async function onBannerAction(a) {
 
 // ── 랜딩 · 게이트 ──────────────────────────────────
 async function passLanding() {
+  await leaveLanding(routeGo);
+}
+
+// 랜딩의 보조 버튼 — **설문을 다시 걷지 않고** 결과 도착 화면으로 간다.
+// 게이트도 지난 것으로 친다: 브릿지는 "이 기기에 기록이 있다"를 알려 주는
+// 화면인데, 이 버튼을 눌렀다는 것이 이미 그것을 안다는 뜻이다.
+async function resumeSaved() {
+  app.gate = true;
+  // [처음으로]로 랜딩에 온 사람이 여기서 마음을 바꿀 수 있다. **재설문
+  // 플래그를 걷는다** — 남겨 두면 다음 routeGo가 기본 확인으로 되돌린다.
+  app.again = false;
+  await leaveLanding(() => go({ screen: "timeline" }));
+}
+
+// 랜딩을 떠나는 절차. 문이 둘이 됐어도 **인트로 플래그를 세우고 저장하는
+// 일은 하나다.**
+function leaveLanding(move) {
   // 버튼과 화면 탭이 같이 들어와도 한 번만 통과한다. **플래그가 아니라
   // 화면으로 잡는다** — 기기 뒤로가기로 랜딩에 되돌아온 사람은 플래그가
   // 이미 서 있는데, 플래그로 막으면 그 사람이 문 앞에 갇힌다.
-  if (app.screen !== "landing") return;
+  if (app.screen !== "landing") return Promise.resolve();
   const 처음 = app.state.intro_seen !== true;
   // 플래그는 **state 필드**다. 저장은 saveState 경유이고 storage는 무변이다.
   if (처음) app.state = { ...app.state, intro_seen: true };
   // **전환이 먼저다.** 저장이 느리거나 막혀도 첫 화면에 갇히면 안 된다 —
   // 랜딩은 정보가 아니라 문이고, 문이 저장을 기다릴 이유가 없다.
-  routeGo();
-  if (!처음) return;
-  try {
-    await persist();
-  } catch {
-    // 저장 실패는 다음 화면의 D-015 안내가 말한다. 전환을 되돌리지 않는다.
-  }
+  move();
+  // 저장 실패는 다음 화면의 D-015 안내가 말한다. 전환을 되돌리지 않는다.
+  return 처음 ? persist().catch(() => {}) : Promise.resolve();
 }
 
 // 게이트는 이번 방문에서 한 번만. **저장하지 않는다** — 다음 방문에도
@@ -667,22 +700,26 @@ function renderResult(main) {
       onSave: () => showSaveNotice("result_first"),
       saved: app.addrTouched,
     });
-    // D-015 1층 — 결과에 **처음 닿았을 때 한 번**. HOME은 다섯 화면에서
-    // 돌아오는 허브라 조건이 "HOME이면"이면 매번 뜬다 — 그것이 곧
-    // 노이즈다. 주소를 이미 만져 본 사람에게도 띄우지 않는다.
-    // 다시 보고 싶으면 아래 2층 버튼이 연다.
-    if (!app.savedShown && !app.addrTouched) {
-      app.savedShown = true;
-      showSaveNotice("result_first");
-    }
     return;
   }
   if (app.screen === "priority") return renderPriority(main, priorityView(base), { onOpen: open });
   if (app.screen === "checklist")
     return renderChecklist(main, checklistView(base), { onOpen: open, onCheck: check });
   if (app.screen === "reference") return renderReference(main, referenceView(base), { onOpen: open });
-  if (app.screen === "timeline")
-    return renderTimelinePage(main, recoveryTimelineView(base), { onOpen: open });
+  if (app.screen === "timeline") {
+    renderTimelinePage(main, recoveryTimelineView(base), {
+      onOpen: open,
+      onHub: () => push("home"),
+    });
+    // D-015 1층 — **결과에 처음 닿았을 때 한 번.** 도착 화면이 타임라인으로
+    // 바뀌면서 이 자리도 함께 옮겼다. 조건은 그대로다 — 한 번만, 그리고
+    // 주소를 이미 만져 본 사람에게는 띄우지 않는다.
+    if (!app.savedShown && !app.addrTouched) {
+      app.savedShown = true;
+      showSaveNotice("result_first");
+    }
+    return;
+  }
   // 구 덱에서 자리를 잃었던 둘이 돌아왔다(사용자 결정). 핵심 셋의
   // 위계를 건드리지 않는 조용한 자리다.
   if (app.screen === "sources") return renderSourceList(main, sourcesView(base), { onOpen: open });
@@ -754,9 +791,11 @@ function showSaveNotice(stage) {
   clear(box);
   if (!sn.show) {
     box.hidden = true;
+    app.noticeAt = null;
     return;
   }
   box.hidden = false;
+  app.noticeAt = app.screen;
   // 1층은 조용한 블록, 예외(저장 막힘)는 원래 크기 그대로다.
   box.className = sn.variant === "saved" ? "savebox savebox--lite" : "savebox";
 

@@ -313,6 +313,9 @@ export function recoveryTimelineView(base) {
   return {
     title: COPY.recovery.title,
     desc: COPY.recovery.desc,
+    // 제목 바로 아래. **헤더에 숨기지 않는다** — 여기가 도착 화면이고
+    // 맞춤 안내로 가는 문이 눈에 보여야 한다(사용자·Cowork 합의).
+    toHub: COPY.recovery.toHub,
     nodes,
     footer: COPY.recovery.footer,
   };

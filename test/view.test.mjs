@@ -553,14 +553,22 @@ t(
   "랜딩 통과가 once로 한 번만 살아 있지 않다",
   !/once:\s*true/.test(코드만("src/ui/screens.js"))
 );
-// 전환이 먼저다 — route/render 뒤에 persist가 온다.
+// 전환이 먼저다 — 화면을 옮긴(move) 뒤에 persist가 온다. **랜딩을
+// 떠나는 문이 둘**(CTA · 저장 기록 바로가기)이라 절차를 한 함수에 모았고,
+// 검사도 그 함수를 본다.
 {
   const src = 코드만("src/ui/app.js");
-  const body = src.slice(src.indexOf("async function passLanding"));
-  const 본문 = body.slice(0, body.indexOf("function", 30));
+  const body = src.slice(src.indexOf("function leaveLanding"));
+  const 끝 = String.fromCharCode(10) + "}";
+  const 본문 = body.slice(0, body.indexOf(끝));
   t(
-    "랜딩 통과는 저장을 기다리지 않는다 (render 뒤에 persist)",
-    본문.indexOf("render()") < 본문.indexOf("persist()")
+    "랜딩 통과는 저장을 기다리지 않는다 (화면 이동 뒤에 persist)",
+    본문.indexOf("move()") >= 0 && 본문.indexOf("move()") < 본문.indexOf("persist()")
+  );
+  t(
+    "랜딩을 떠나는 두 문이 같은 절차를 지난다",
+    /async function passLanding\(\)\s*\{\s*await leaveLanding\(routeGo\)/.test(src) &&
+      /async function resumeSaved\(\)[\s\S]{0,200}leaveLanding\(\(\) => go\(\{ screen: "timeline" \}\)\)/.test(src)
   );
 }
 
@@ -774,13 +782,29 @@ t(
     "[hidden]을 어떤 display보다 위에 두는 규칙이 있다",
     /\[hidden\]\s*\{[^}]*display:\s*none\s*!important/.test(css)
   );
+  // ★ **레이아웃 점프 금지**(사용자 결정). `.intro__actions`는 바닥 기준으로
+  //   위로 자라는 블록이라, 랜딩 보조 버튼이 흐름 안에 있으면 있고 없음에
+  //   따라 [회복 시작하기]가 위아래로 밀린다. 흐름 밖에 세우는 것이
+  //   그 약속을 지키는 방법이고, 눈으로는 한쪽 상태만 보게 되니 검사로 박는다.
+  {
+    const 규칙 = (css.match(/\.intro__resume\s*\{[^}]*\}/) || [""])[0];
+    t(
+      "랜딩 보조 버튼이 흐름 밖에 선다 (CTA 자리가 안 튄다)",
+      /position:\s*absolute/.test(규칙) && /bottom:\s*100%/.test(규칙),
+      규칙.replace(/\s+/g, " ")
+    );
+    t(
+      "보조 버튼도 탭 목표를 지킨다",
+      /min-height:\s*var\(--tap/.test(규칙)
+    );
+  }
 }
 {
   const html = readFileSync(join(D, "index.html"), "utf8");
   const refs = html.match(/(?:href|src)="src\/ui\/[^"]+"/g) || [];
   // ★ 값까지 본다. 존재만 보면 "올리는 것을 잊은 배포"를 못 잡는다 —
   //   화면 파일을 고치면서 v를 올리면 **이 줄의 숫자도 함께 올린다.**
-  const V = "?v=16";
+  const V = "?v=17";
   t(
     `화면 파일 참조가 전부 ${V}다 (${refs.length}개)`,
     refs.length >= 3 && refs.every((r) => r.includes(V)),
@@ -804,6 +828,20 @@ t(
 );
 t("두 줄로 나뉘어 온다 (화면이 줄바꿈을 만들지 않는다)", lv.lead.length === 2);
 t("CTA가 확정 문구다", lv.cta === "회복 시작하기");
+// ★ 저장된 기록이 있는 사람에게만 뜨는 보조 문(사용자 결정). **판정은
+//   재방문 브릿지 것 그대로**라, 브릿지가 뜨는 조건과 한 글자도 다르지 않다.
+{
+  const 있 = landingView({ fire_at: FIRE }, { saved: { token: "t" } });
+  t("저장 기록이 있으면 바로가기가 뜬다", 있.resume === "저장된 내 회복 경로 바로가기", 있.resume);
+  t("없으면 없다 (없는 것은 없다)", landingView({ fire_at: FIRE }).resume === null);
+  t("기본 확인을 지나지 않았으면 없다",
+    landingView({}, { saved: { token: "t" } }).resume === null);
+  t("브릿지가 뜨는 조건과 같다",
+    [[{ fire_at: FIRE }, { token: "t" }], [{ fire_at: FIRE }, null], [{}, { token: "t" }]].every(
+      ([st, sv]) =>
+        (landingView(st, { saved: sv }).resume !== null) === revisitView({ state: st, saved: sv }).show
+    ));
+}
 t(
   "푸터가 확정 문구다",
   lv.footer === "흩어진 제도와 정보를, 당신의 상황과 시간에 맞게 잇습니다.",
@@ -946,15 +984,17 @@ section("8. 내 회복 경로 — HOME과 다섯 화면");
 
 const r1 = 결과(전.state);
 
-// HOME — 카드 셋과 보조 둘. 개수는 동적이다.
-t("HOME 제목이 '내 회복 경로'다", r1.home.title === "내 회복 경로");
+// 허브 — 카드 셋과 보조 둘. 개수는 동적이다.
+// ★ **이름이 갈렸다**(사용자 결정): 도착 화면(타임라인)이 `내 회복 경로`,
+//   이 허브가 `나를 위한 안내`다.
+t("허브 제목이 '나를 위한 안내'다", r1.home.title === "나를 위한 안내", r1.home.title);
 // **HOME은 제목 하나다**(사용자 실기기 검수 결정). 기준 줄과 리드를
 // 걷었다 — 바로 앞 전환 화면이 같은 말을 하고, 도착지의 일은 갈 곳을
 // 보여 주는 것이다.
 t("경과시간 칩이 없다", !("chip" in r1.home));
 t("기준 줄이 없다", !("basis" in r1.home), Object.keys(r1.home).join(","));
 t("리드가 없다", !("lead" in r1.home));
-t("제목은 그대로다", r1.home.title === "내 회복 경로");
+t("제목은 그대로다", r1.home.title === "나를 위한 안내");
 t(
   "핵심 카드가 셋이고 확정 제목·설명이다",
   r1.home.cards.map((c) => `${c.title}/${c.desc}`).join(" | ") ===
@@ -964,7 +1004,7 @@ t(
 // 화면 이름 그대로다 — 눌러서 가는 곳의 이름과 라벨이 같아야 한다.
 t(
   "보조 탐색이 둘이고 화면 이름 그대로다",
-  r1.home.more.map((m) => m.label).join(",") === "회복 타임라인,주제별 보기",
+  r1.home.more.map((m) => m.label).join(",") === "내 회복 경로,주제별 보기",
   r1.home.more.map((m) => m.label).join(",")
 );
 t("'다른 방식으로 보기' 같은 중간 heading이 없다", !("moreHeading" in r1.home));
@@ -1110,6 +1150,12 @@ t(
 
 // 회복 타임라인 — 노드 다섯. 날짜를 만들어내지 않는다.
 const tlv = r1.timeline;
+// ★ **결과의 도착 화면이다**(사용자 결정). 전환 CTA가 `내 회복 경로 보기`라고
+//   약속하므로 도착지 이름이 그것과 같고, 허브로 가는 문이 제목 바로 아래에
+//   **보이는 자리로** 선다 — 헤더에 숨기지 않는다.
+t("타임라인 제목이 '내 회복 경로'다", tlv.title === "내 회복 경로", tlv.title);
+t("허브로 가는 문이 있고 라벨이 허브 이름이다",
+  tlv.toHub === "나를 위한 안내 보기" && tlv.toHub.startsWith(r1.home.title), tlv.toHub);
 t("타임라인 desc가 확정 문구다",
   tlv.desc === "회복 과정에서 언제 무엇을 확인하면 되는지 살펴보세요.", tlv.desc);
 t(

@@ -33,7 +33,7 @@ import { el, clear } from "./render.js";
 //
 // ★ `{ once: true }`를 걸지 않는다. 첫 탭이 저장을 기다리다 소진되면
 //   사람이 첫 화면에 갇힌다.
-export function renderLanding(host, lv, onPass) {
+export function renderLanding(host, lv, onPass, onResume) {
   clear(host);
   host.hidden = false;
 
@@ -62,6 +62,18 @@ export function renderLanding(host, lv, onPass) {
   host.appendChild(content);
 
   const actions = el("div", "intro__actions");
+  // 저장된 기록이 있는 사람에게만. **[회복 시작하기] 위**에 서고 면 색이
+  // 없어서(윤곽뿐) 주·보조가 크기가 아니라 무게로 갈린다.
+  // 없으면 줄 자체가 없다 — 아래 CTA는 바닥에 고정이라 자리가 안 튄다.
+  if (lv.resume && onResume) {
+    const r = el("button", "intro__resume", lv.resume);
+    r.type = "button";
+    r.addEventListener("click", (e) => {
+      if (e && e.stopPropagation) e.stopPropagation();
+      onResume();
+    });
+    actions.appendChild(r);
+  }
   const cta = el("button", "intro__cta", lv.cta);
   cta.type = "button";
   cta.addEventListener("click", (e) => {
