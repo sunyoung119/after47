@@ -166,7 +166,12 @@ t("HOME이 나온다", has(main(), "내 회복 경로") && has(main(), "지금 �
 t("핵심 카드가 셋이다", all(main(), (n) => hasClass(n, "hcard")).length === 3);
 t("카드 제목이 확정 문구다",
   has(main(), "먼저 볼 내용") && has(main(), "체크리스트") && has(main(), "알아둘 내용"));
-t("보조 탐색이 둘이다", all(main(), (n) => hasClass(n, "mcard")).length === 2);
+// 보조 탐색 둘 + 참고 자료 둘(근거 법령 · 연락처). 뒤 줄은 결과를 보는
+// 방식이 아니라 근거와 창구라 줄을 나눴다.
+t("보조 탐색과 참고 자료가 각 둘이다",
+  all(main(), (n) => hasClass(n, "mcard")).length === 4 &&
+    has(main(), "근거 법령") && has(main(), "연락처"),
+  texts(main()).join(" | "));
 // 확정 화면이 칩을 걷고 문장 한 줄로 바꿨다. 현재 시각이 아니라 거리다.
 t("기준 줄에 자치구와 경과가 있다",
   texts(main()).some((s) => /^강남구 · 화재 발생 후 .+ · 당신의 상황을 기준으로$/.test(s)),
@@ -191,6 +196,9 @@ for (const [이름, 표시] of [
   ["알아둘 내용", "당장 행동할 필요는 없지만, 이후를 위해 확인해둘 정보입니다."],
   ["회복 타임라인", "회복 과정에서 언제 무엇을 확인하면 되는지 살펴보세요."],
   ["주제별 보기", "지금 내 상황에 해당하는 안내를 주제별로 모았습니다."],
+  // 구 덱에서 자리를 잃었던 둘이 돌아왔다(사용자 결정).
+  ["근거 법령", "이 안내가 어떤 법령과 자료를 근거로 하는지 모았습니다."],
+  ["연락처", "자주 필요한 기관 연락처입니다. 누르면 전화로 연결됩니다."],
 ]) {
   카드(이름).click();
   await tick(10);
@@ -239,6 +247,67 @@ await tick(10);
       순서().join() === 전순서.join());
   box.click();
   await tick(40);
+}
+
+// ── 근거 법령 — 펼치고, 안내로 갔다가, 돌아온다 ────
+{
+  // 앞 블록이 체크리스트에서 끝났다. HOME으로 올라가서 시작한다.
+  $("top-right").children[0].click();
+  await tick(10);
+  카드("근거 법령").click();
+  await tick(10);
+  const 접힘 = all(main(), (n) => hasClass(n, "fold--src"));
+  t("근거가 접힌 채로 나온다", 접힘.length > 0, String(접힘.length));
+  t("접힌 상태에서는 조문 줄이 안 보인다",
+    접힘.every((d) => d.open !== true));
+  // ★ 이 페르소나는 보험을 '잘 모르겠어요'로 답해 **조례 안내가 미판정**이다.
+  //   확정되지 않은 근거는 이 화면에 오지 않는다 — 근거 페이지는 "지금 내
+  //   안내가 무엇에 서 있나"를 보는 자리이지 후보 목록이 아니다.
+  //   (조례가 확정된 사람의 화면은 view.test가 본다)
+  t("미판정 조례는 근거 화면에 없다", !has(main(), "화재피해주민 지원 조례"),
+    texts(main()).join(" | "));
+
+  // 법령 하나를 펼친다.
+  const 법령 = 접힘.find((d) => !has(d, "조례"));
+  법령.open = true;
+  const 줄 = all(법령, (n) => hasClass(n, "srcrow"));
+  t("펼치면 조문 줄이 있다", 줄.length > 0, String(줄.length));
+  t("각 줄이 그 근거를 쓰는 안내를 센다",
+    줄.every((r) => texts(r).some((x) => /^안내 \d+건$/.test(x))),
+    texts(줄[0]).join(" | "));
+
+  // 역링크 — 그 안내로 갔다가 [이전]으로 돌아온다.
+  const 링크 = all(법령, (n) => hasClass(n, "srcrow__link"))[0];
+  const 안내제목 = 링크.textContent;
+  링크.click();
+  await tick(10);
+  t("근거에서 그 안내로 간다", has(main(), 안내제목), texts(main()).slice(0, 4).join(" | "));
+  $("top-right").children[0].click();
+  await tick(10);
+  t("[이전]이 근거 화면으로 되돌린다", has(main(), "이 안내가 어떤 법령과 자료를 근거로 하는지 모았습니다."));
+  $("top-right").children[0].click();
+  await tick(10);
+  t("한 번 더 [이전]이면 HOME이다", has(main(), "지금 필요한 안내를 정리했습니다."));
+}
+
+// ── 연락처 — 번호가 tel: 링크다 ────────────────────
+{
+  카드("연락처").click();
+  await tick(10);
+  t("네 그룹이 다 그려진다",
+    ["긴급", "복지·긴급지원", "법률·분쟁", "심리"].every((g) => has(main(), g)),
+    texts(main()).join(" | "));
+  const tel = all(main(), (n) => n.tagName === "A" && /^tel:/.test(n.href || ""));
+  t("번호가 tel: 링크다", tel.length === 8, String(tel.length));
+  t("119와 1670-9512가 있다",
+    tel.some((a) => a.href === "tel:119") && tel.some((a) => a.href === "tel:1670-9512"),
+    tel.map((a) => a.href).join(" "));
+  // 자치구 줄 — 번호 없이 대표번호 안내만.
+  t("구청 줄에는 번호가 없다", has(main(), "구청 대표번호로 문의하세요."));
+  t("'검증됨' 같은 과장이 없다", !texts(main()).some((x) => /검증됨|공식 인증/.test(x)));
+  $("top-right").children[0].click();
+  await tick(10);
+  t("[이전]이 HOME으로 되돌린다", has(main(), "지금 필요한 안내를 정리했습니다."));
 }
 
 // 주제별 → 주제 상세 → Action 상세 → 뒤로 두 번

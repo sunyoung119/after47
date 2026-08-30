@@ -15,9 +15,8 @@ import { openSession, anchorSession } from "../src/session.js";
 import { evaluate } from "../src/engine.js";
 import { applyDefaults } from "../src/questions.js";
 import { entryView, surveyView, saveNoticeView } from "../src/ui/view.js";
-import { contactsView } from "../src/ui/contacts.js";
-import { contactOf } from "../src/ui/result.js";
-import { COPY, STATUS_LABEL, CONTACT_BY_ACTION } from "../src/ui/copy.js";
+import { contactOf, sourcesView, directoryView } from "../src/ui/result.js";
+import { COPY, STATUS_LABEL } from "../src/ui/copy.js";
 import { TOPIC_LABEL, TOPIC_ORDER, NODE_LABEL, topicLabel } from "../src/ui/copy.js";
 import {
   landingView, basicCheckView, masterView, scopeNoticeView, transitionView, revisitView,
@@ -32,7 +31,12 @@ const D = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (f) => JSON.parse(readFileSync(join(D, f), "utf8"));
 const readJson = async (path) => JSON.parse(readFileSync(join(D, path), "utf8"));
 const questions = read("data/questions.json");
-const data = { actions: read("data/actions.json"), districts: read("data/districts.json") };
+const data = {
+  actions: read("data/actions.json"),
+  districts: read("data/districts.json"),
+  // 연락처 화면이 읽는 전역 목록. 판정에는 들어가지 않는다.
+  directory: read("data/directory.json"),
+};
 
 let failed = 0;
 const t = (name, ok, detail) => {
@@ -457,32 +461,58 @@ const 결과 = (state, now = NOW) =>
 // ── 6. 연락처 — 보류 중인 모듈 ─────────────────────
 section("6. 연락처 — 라우팅에서 분리했고 판단은 살아 있다");
 
-// 확정 결과 IA에 연락처 화면은 없다. **지우지 않은 이유**는 이 판단이
-// 이미 한 번 내려진 것이라서다 — 어떤 Action에 어떤 창구가 붙는지,
-// 부서를 모르는 구를 어떻게 degrade하는지. 후속 패스가 화면을 정하면
-// 이 함수가 그 자리에 붙는다. 그때까지 이 검사만 그것을 밟는다.
+// 연락처 화면 — **보류가 풀렸다**(사용자 결정). 목록은 data/directory.json이고
+// 화면은 그것을 그룹 순서대로 그린다. 옛 `contacts.js`(하드코딩 번호 셋)는
+// 이 커밋에서 걷혔다.
 {
-  const 마포 = 바탕(전.state);
-  const cont = contactsView(마포, { state: 전.state, data });
-  t("전역 번호 둘이 있다", cont.global.length === 2 && cont.global.every((c) => c.tel));
-  t("129와 120이다", cont.global.map((c) => c.tel).join(",") === "129,120");
-  t("조례가 없는 구에는 구청 줄이 없다", cont.district === null);
-  t("화면에 나온 안내의 창구만 뜬다", cont.orgs.every((o) => typeof o.tel === "string"));
+  const dv = directoryView(바탕(전.state));
+  t("연락처가 8건이다", dv.count === 8, String(dv.count));
+  t(
+    "그룹 순서가 긴급 → 복지 → 법률 → 심리다",
+    dv.groups.map((g) => g.group).join(" → ") === "긴급 → 복지·긴급지원 → 법률·분쟁 → 심리",
+    dv.groups.map((g) => g.group).join(" → ")
+  );
+  t("네 그룹이 다 있다", dv.groups.length === 4);
+  t("전부 tel: 링크를 만든다", dv.groups.every((g) => g.items.every((c) => c.telHref === `tel:${c.tel}`)));
+  t("'검증됨'·'공식 인증' 같은 과장이 없다", !/검증됨|공식 인증/.test(JSON.stringify(dv)));
 
+  // 자치구 줄 — 조례 안내가 화면에 있을 때만, **번호 없이.**
+  t("조례가 없는 구에는 구청 줄이 없다", dv.district === null);
   const 강남state = { ...전.state, district: "gangnam" };
-  const contG = contactsView(바탕(강남state), { state: 강남state, data });
-  t("조례가 있는 구는 담당 부서를 안내한다", contG.district?.dept === "안전교통국 재난안전과");
-  t("구별 번호 자리는 비어 있다 (다음 패스)", contG.district?.tel === null);
+  const dvG = directoryView(바탕(강남state));
+  t("조례가 있는 구는 담당 부서를 안내한다", dvG.district?.dept === "안전교통국 재난안전과");
+  t("구별 번호 자리는 비어 있다 (보류 유지)", dvG.district?.tel === null);
   t("부서를 모르면 '구청 재난안전 담당 부서'로 degrade한다",
     /재난안전 담당 부서/.test(COPY.contacts.deptUnknown("도봉구")));
 }
-// 이 패스에서 연락처를 확정하지 않는다 — placeholder 번호도, 120/129/132를
-// Action에 임의로 매핑하는 것도 금지다.
-t(
-  "번호가 붙은 Action은 본문에 이미 그 번호가 있는 하나뿐이다",
-  Object.keys(CONTACT_BY_ACTION).length === 1 &&
-    Object.keys(CONTACT_BY_ACTION)[0] === "legal-aid-klac"
-);
+
+// 근거 법령 화면 — 그 사람 안내들의 sources를 묶는다. **재판정하지 않는다.**
+{
+  const 물 = 바탕({ ...전.state, district: "gangnam", water_damage_home: true, residence_possible: false });
+  const sv = sourcesView(물);
+  t("근거가 하나 이상 있다", sv.count > 0, String(sv.count));
+  t("그룹 키가 어휘 안에 있다",
+    sv.groups.every((g) => ["law", "public_guidance", "case", "academic"].includes(g.key)),
+    sv.groups.map((g) => g.key).join(","));
+  const law = sv.groups.find((g) => g.key === "law");
+  t("법령 그룹이 있다", Boolean(law));
+  t("법령은 제목별로 묶인다 (같은 법이 두 줄로 안 선다)",
+    law.items.length === new Set(law.items.map((i) => i.title)).size);
+  // **조문이 없는 법령은 조문 없이 그린다** — 없는 조문을 만들지 않는다.
+  const 무조문 = law.items.flatMap((i) => i.entries).filter((e) => e.article === null);
+  t("조문 없는 줄이 있어도 죽지 않는다", 무조문.every((e) => e.url !== undefined));
+  t("모든 줄이 그 근거를 쓰는 안내를 싣는다",
+    sv.groups.every((g) => g.items.every((i) => i.entries.every((e) => e.actions.length > 0))));
+  // 자치구 조례 — 맨 위. **원문 링크를 걸지 않는다.**
+  t("자치구 조례 그룹이 있다", sv.ordinance !== null && sv.ordinance.title.includes("강남구"));
+  t("조례에는 원문 링크가 없다", sv.ordinance.entries.every((e) => e.url === null && e.link === null));
+  t("조례 조문이 '제N조'로 시작한다", sv.ordinance.entries.every((e) => /^제\d+조/.test(e.article)));
+  // sources가 빈 안내는 여기 안 나온다 — "없는 것은 없다".
+  const 실린 = new Set(sv.groups.flatMap((g) => g.items.flatMap((i) => i.entries.flatMap((e) => e.actions.map((a) => a.id)))));
+  t("sources가 빈 안내는 이 화면에 없다",
+    [...실린].every((id) => (물.byId.get(id)?.sources || []).length > 0));
+  t("빠진 것을 세어 보여주지 않는다", !/못 채운|미확인|없음 \d/.test(JSON.stringify(sv)));
+}
 
 // ── 화면 코드의 위생 ───────────────────────────────
 // 누수 탐지와 같은 방식으로 본다 — 주석에 낱말이 나오는 것까지 막을
@@ -729,7 +759,7 @@ t(
   const refs = html.match(/(?:href|src)="src\/ui\/[^"]+"/g) || [];
   // ★ 값까지 본다. 존재만 보면 "올리는 것을 잊은 배포"를 못 잡는다 —
   //   화면 파일을 고치면서 v를 올리면 **이 줄의 숫자도 함께 올린다.**
-  const V = "?v=12";
+  const V = "?v=13";
   t(
     `화면 파일 참조가 전부 ${V}다 (${refs.length}개)`,
     refs.length >= 3 && refs.every((r) => r.includes(V)),
@@ -929,7 +959,13 @@ t(
   r1.home.cards[2].desc !== r1.reference.desc,
   `${r1.home.cards[2].desc} vs ${r1.reference.desc}`
 );
-t("HOME에서 갈 수 있는 화면이 다섯이다", RESULT_PAGES.length === 5);
+// 구 덱에서 자리를 잃었던 근거·연락처가 돌아와 일곱이 됐다(사용자 결정).
+t("HOME에서 갈 수 있는 화면이 일곱이다", RESULT_PAGES.length === 7, RESULT_PAGES.join(","));
+t("근거와 연락처가 그 안에 있다",
+  RESULT_PAGES.includes("sources") && RESULT_PAGES.includes("directory"));
+t("HOME 참고 자료 줄이 둘이다",
+  r1.home.extra.map((m) => m.label).join(",") === "근거 법령,연락처",
+  r1.home.extra.map((m) => m.label).join(","));
 // 개수가 0인 카드도 그대로 그린다(확정) — 0이면 0이라고 말한다.
 t("0개 카드를 숨기지 않는다", r1.home.cards.length === 3);
 t("빈 상세의 문구가 확정 한 줄이다", COPY.emptyPage === "지금 단계에서는 해당하는 안내가 없습니다.");

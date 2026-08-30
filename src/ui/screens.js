@@ -3,21 +3,15 @@
 // 진입 흐름(랜딩 · 기본 확인 · 질문 MASTER · 안내 범위 · 전환 · 재방문
 // 게이트)이 여기 있고, 결과 화면은 recovery.js가 그린다.
 //
-// 아래 **연락처 그리기는 보류 중이다** — 라우팅에 연결돼 있지 않다.
-// 판단 쪽(contacts.js)과 함께 남겨 둔 이유는 그 파일 머리에 적어 두었다.
+// ★ 연락처 그리기는 여기 없다. 보류가 풀리면서 `recovery.js`의
+//   `renderDirectory`가 그 자리를 맡았고(data/directory.json을 읽는다),
+//   옛 `contacts.js`·`renderContacts`는 이 커밋에서 걷었다.
 //
 // ★ 저장소를 직접 만지지 않는다(D-002). 누수 탐지가 src/ 아래를 재귀로 훑는다.
 // ★ 색값을 쓰지 않는다. 시각은 전부 tokens.css의 변수다.
 
 import { COPY } from "./copy.js";
 import { el, clear } from "./render.js";
-
-const btn = (cls, label, fn) => {
-  const b = el("button", cls, label);
-  b.type = "button";
-  b.addEventListener("click", fn);
-  return b;
-};
 
 // ═══ 확정 프론트 UX — 진입 흐름 ═══════════════════
 //
@@ -240,58 +234,4 @@ export function renderRevisit(main, rv, onGo) {
   go.addEventListener("click", onGo);
   box.appendChild(go);
   main.appendChild(box);
-}
-
-// ── ⑧ 연락처 페이지 ────────────────────────────────
-// 번호는 tel: 링크로 — 탭하면 전화 앱이 열린다. 옆에 복사 버튼.
-export function renderContacts(page, cv, { onCopy }) {
-  clear(page);
-  page.appendChild(el("h2", "h2", COPY.contacts.title));
-  page.appendChild(el("p", "hint", COPY.contacts.lead));
-
-  const box = el("div", "contacts");
-
-  box.appendChild(group(COPY.contacts.global, cv.global.map((c) => card(c, onCopy))));
-
-  // 구별 번호는 다음 패스. **없는 줄은 안 그린다** — "준비 중"을 쓰지 않는다.
-  if (cv.district) {
-    const c = el("div", "contact");
-    const name = el("p", "contact__name", cv.district.note);
-    name.appendChild(el("span", "contact__note", COPY.contacts.viaMain));
-    c.appendChild(name);
-    if (cv.district.tel) c.appendChild(tel(cv.district.tel, onCopy));
-    box.appendChild(group(COPY.contacts.mine, [c]));
-  }
-
-  if (cv.orgs.length)
-    box.appendChild(group(COPY.contacts.matched, cv.orgs.map((c) => card(c, onCopy))));
-
-  page.appendChild(box);
-}
-
-function group(title, nodes) {
-  const sec = el("section");
-  sec.appendChild(el("h3", "h3", title));
-  for (const n of nodes) sec.appendChild(n);
-  return sec;
-}
-
-function card(c, onCopy) {
-  const box = el("div", "contact");
-  const name = el("p", "contact__name", c.name);
-  if (c.note) name.appendChild(el("span", "contact__note", c.note));
-  box.appendChild(name);
-  if (c.tel) box.appendChild(tel(c.tel, onCopy));
-  return box;
-}
-
-function tel(number, onCopy) {
-  const wrap = el("span", "actions");
-  const a = el("a", "contact__tel", number);
-  a.href = `tel:${number}`;
-  wrap.appendChild(a);
-  wrap.appendChild(
-    btn("btn btn--quiet", COPY.contacts.copy, (e) => onCopy(number, e?.target ?? null))
-  );
-  return wrap;
 }

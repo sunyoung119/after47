@@ -18,7 +18,11 @@ import { formatDate } from "./view.js";
 import { dotDate, clockTime, shortDate, elapsedText } from "./format.js";
 
 // HOME에서 갈 수 있는 다섯 화면.
-export const RESULT_PAGES = ["priority", "checklist", "reference", "timeline", "topics"];
+export const RESULT_PAGES = [
+  "priority", "checklist", "reference", "timeline", "topics",
+  // 구 덱에 있다가 새 IA에서 자리를 잃었던 둘이 사용자 결정으로 돌아왔다.
+  "sources", "directory",
+];
 
 // 타임라인 노드에 놓이는 섹션. **`missed`와 `standing`은 없다** —
 // 지나간 것과 금지는 `먼저 볼 내용`이 따로 맡는 IA이고, 여기 다시 넣으면
@@ -132,6 +136,11 @@ export function homeView(base) {
     more: [
       { key: "timeline", label: COPY.home.more.timeline },
       { key: "topics", label: COPY.home.more.topics },
+    ],
+    // 참고 자료 — 한 줄 더. 결과를 보는 방식이 아니라 근거와 창구다.
+    extra: [
+      { key: "sources", label: COPY.home.extra.sources },
+      { key: "directory", label: COPY.home.extra.directory },
     ],
   };
 }
@@ -436,6 +445,155 @@ export function contactOf(r) {
     telHref: c.tel ? `tel:${c.tel}` : null,
     url: c.url ?? null,
     note: c.note ?? null,
+  };
+}
+
+// ── 근거 법령 ──────────────────────────────────────
+//
+// 그 사람에게 해당하는 안내들이 **무엇을 근거로 서 있는지**를 모아 보여
+// 준다. 판정을 다시 하지 않는다 — 엔진이 준 행에서 `sources`를 꺼내
+// 묶기만 한다.
+//
+// **`sources`가 빈 안내는 여기 나오지 않는다.** 빠진 것을 세어 보여 주면
+// 그것이 곧 "우리가 못 채운 목록"이 되고 읽는 사람에게는 쓸모가 없다.
+// 없는 것은 없다.
+//
+// 자치구 조례는 맨 위에 따로 선다. **원문 링크를 걸지 않는다** — 지금
+// 가진 것은 elis 홈페이지 주소뿐이고, 홈페이지를 '원문 보기'로 걸면
+// 정확한 원문을 보여준다는 거짓말이 된다(sourceOf와 같은 규칙).
+const SOURCE_GROUPS = ["law", "public_guidance", "case", "academic"];
+
+export function sourcesView(base) {
+  // 그 사람에게 해당하는 것만. 제외·조건부·미판정의 근거는 싣지 않는다 —
+  // 이 화면은 "내 안내가 무엇에 서 있나"를 보는 자리다.
+  const live = [...base.sections, ...base.waiting, ...base.blocked, ...base.done];
+
+  // type → title → article 순으로 접는다. 같은 법의 다른 조문이 한 줄에
+  // 섞이면 "무엇을 근거로 하는가"가 안 보인다.
+  const byType = new Map();
+  for (const r of live) {
+    for (const s of r.sources || []) {
+      if (!SOURCE_GROUPS.includes(s.type)) continue;
+      if (!byType.has(s.type)) byType.set(s.type, new Map());
+      const byTitle = byType.get(s.type);
+      const key = s.title || "";
+      if (!byTitle.has(key)) byTitle.set(key, new Map());
+      const byArticle = byTitle.get(key);
+      // 조문이 없는 것은 하나의 줄로 모인다(없는 조문을 만들지 않는다).
+      const ak = s.article || "";
+      if (!byArticle.has(ak)) {
+        byArticle.set(ak, {
+          article: s.article ?? null,
+          url: s.url ?? null,
+          publisher: s.publisher ?? null,
+          checkedAt: dotDate(s.checked_at),
+          year: s.year ?? null,
+          actions: [],
+        });
+      }
+      const entry = byArticle.get(ak);
+      if (!entry.actions.some((a) => a.id === r.id)) entry.actions.push({ id: r.id, title: r.title });
+    }
+  }
+
+  const groups = SOURCE_GROUPS.filter((t) => byType.has(t)).map((type) => ({
+    key: type,
+    label: COPY.sourceList.groups[type],
+    items: [...byType.get(type).entries()].map(([title, byArticle]) => ({
+      title,
+      entries: [...byArticle.values()].map((e) => ({
+        ...e,
+        link: e.url ? COPY.actionDetail.link : null,
+        uses: COPY.sourceList.uses(e.actions.length),
+      })),
+    })),
+  }));
+
+  // 자치구 조례 — 그 구의 조문과 그것을 쓰는 안내.
+  const 구 = (base.data?.districts || []).find((d) => d.id === base.state?.district) || null;
+  const ordinanceRows = live.filter((r) => r.ordinanceBased && r.ordinanceArticle);
+  const ordinance =
+    구 && 구.ordinance_name && ordinanceRows.length
+      ? {
+          label: COPY.sourceList.ordinance,
+          title: 구.ordinance_name,
+          checkedAt: dotDate(구.checked_at),
+          // 같은 조문을 여러 안내가 쓸 수 있다.
+          entries: [...new Map(ordinanceRows.map((r) => [r.ordinanceArticle, r])).keys()].map(
+            (article) => {
+              const rows = ordinanceRows.filter((r) => r.ordinanceArticle === article);
+              return {
+                article,
+                url: null, // elis 홈페이지를 원문으로 걸지 않는다
+                link: null,
+                actions: rows.map((r) => ({ id: r.id, title: r.title })),
+                uses: COPY.sourceList.uses(rows.length),
+              };
+            }
+          ),
+        }
+      : null;
+
+  const count =
+    groups.reduce((n, g) => n + g.items.reduce((m, i) => m + i.entries.length, 0), 0) +
+    (ordinance ? ordinance.entries.length : 0);
+
+  return {
+    title: COPY.sourceList.title,
+    desc: COPY.sourceList.desc,
+    footer: COPY.sourceList.footer,
+    ordinance,
+    groups,
+    count,
+  };
+}
+
+// ── 연락처 ─────────────────────────────────────────
+//
+// `data/directory.json`을 그룹 순서대로 그린다. **목록에 없는 번호를
+// 만들지 않는다** — 그 파일에 있는 것은 전부 공식 페이지에서 확인하고
+// `verified_at_url`을 남긴 값이다.
+//
+// 자치구 줄에는 **번호가 없다**(보류). 25개 구의 부서 직통을 확인할 경로가
+// 아직 없고 9개 구는 부서명조차 모른다 — 그때는 이름 없이 대표번호 안내만
+// 남는다(D-003의 degrade와 같은 규칙).
+const DIRECTORY_ORDER = ["긴급", "복지·긴급지원", "법률·분쟁", "심리"];
+
+export function directoryView(base) {
+  const list = base.data?.directory || [];
+  const groups = DIRECTORY_ORDER.filter((g) => list.some((c) => c.group === g)).map((group) => ({
+    group,
+    items: list
+      .filter((c) => c.group === group)
+      .map((c) => ({
+        org: c.org,
+        tel: c.tel ?? null,
+        telHref: c.tel ? `tel:${c.tel}` : null,
+        url: c.url ?? null,
+        note: c.note ?? null,
+      })),
+  }));
+
+  // 조례 안내가 그 사람 화면에 있을 때만 구청 줄을 그린다 — 설문 맞춤이다.
+  const 구 = (base.data?.districts || []).find((d) => d.id === base.state?.district) || null;
+  const hasOrdinanceRow = [...base.all].some((r) => r && r.ordinanceBased);
+  const district =
+    구 && hasOrdinanceRow
+      ? {
+          name: 구.name,
+          dept: 구.dept ?? null,
+          label: 구.dept ? COPY.contacts.deptNote(구.name, 구.dept) : COPY.contacts.deptUnknown(구.name),
+          note: COPY.contacts.viaMain,
+          tel: null,
+        }
+      : null;
+
+  return {
+    title: COPY.contacts.title,
+    desc: COPY.contacts.desc,
+    groups,
+    district,
+    count: groups.reduce((n, g) => n + g.items.length, 0),
   };
 }
 

@@ -39,6 +39,9 @@ import {
   recoveryTimelineView,
   topicsView,
   topicDetailView,
+  RESULT_PAGES,
+  sourcesView,
+  directoryView,
   actionDetailView,
   undeterminedView,
 } from "./result.js";
@@ -59,13 +62,17 @@ import {
   renderTimelinePage,
   renderTopics,
   renderTopicDetail,
+  renderSourceList,
+  renderDirectory,
   renderActionDetail,
   renderUndetermined,
 } from "./recovery.js";
 import { COPY } from "./copy.js";
 
 // 결과 화면의 이름 — HOME이 보내는 곳과 같은 키다.
-const RESULT = ["priority", "checklist", "reference", "timeline", "topics"];
+// HOME에서 갈 수 있는 화면들. **`RESULT_PAGES`와 같은 목록이어야 한다** —
+// 여기 빠지면 그 화면에 [이전]이 안 그려지고 뒤로가기도 HOME으로 안 간다.
+const RESULT = [...RESULT_PAGES];
 
 // ── 상태 ───────────────────────────────────────────
 const app = {
@@ -661,6 +668,10 @@ function renderResult(main) {
   if (app.screen === "reference") return renderReference(main, referenceView(base), { onOpen: open });
   if (app.screen === "timeline")
     return renderTimelinePage(main, recoveryTimelineView(base), { onOpen: open });
+  // 구 덱에서 자리를 잃었던 둘이 돌아왔다(사용자 결정). 핵심 셋의
+  // 위계를 건드리지 않는 조용한 자리다.
+  if (app.screen === "sources") return renderSourceList(main, sourcesView(base), { onOpen: open });
+  if (app.screen === "directory") return renderDirectory(main, directoryView(base), {});
   if (app.screen === "topics")
     return renderTopics(main, topicsView(base), { onOpen: (g) => push("topic", { topic: g }) });
   if (app.screen === "topic")

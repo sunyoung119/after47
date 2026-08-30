@@ -73,6 +73,18 @@ export function renderHome(main, hv, { onGo, onSave, saved }) {
   }
   main.appendChild(more);
 
+  // 참고 자료 한 줄 — 같은 스타일, 보조 탐색 아래.
+  if (hv.extra?.length) {
+    const extra = el("div", "home__more home__more--extra");
+    for (const m of hv.extra) {
+      const b = btn("mcard", null, () => onGo(m.key));
+      b.appendChild(el("span", null, m.label));
+      b.appendChild(el("span", "chev", "›"));
+      extra.appendChild(b);
+    }
+    main.appendChild(extra);
+  }
+
   // D-015 2층 — 결과에 닿은 뒤로는 작게 상시. 헤더가 확정 화면에서
   // `일상으로`/`이전`로 차 있어 이 자리로 왔다.
   if (onSave) {
@@ -209,6 +221,129 @@ export function renderTopics(main, tv, { onOpen }) {
   });
   main.appendChild(grid);
   main.appendChild(el("p", "pg__foot", tv.footer));
+}
+
+// ── 근거 법령 ──────────────────────────────────────
+//
+// **기본은 전부 접혀 있다.** 펼치면 조문 줄이 나오고, 각 줄에 원문 링크와
+// 그 근거를 쓰는 안내가 붙는다. 한 번에 다 펼쳐 놓으면 목록이 아니라 벽이
+// 된다 — 여기 오는 사람은 "무엇이 근거인가"를 훑으러 온다.
+//
+// 자치구 조례가 맨 위에 선다. **원문 링크는 없다**(elis 홈페이지를 원문으로
+// 걸지 않는다).
+export function renderSourceList(main, sv, { onOpen }) {
+  head(main, sv.title, sv.desc);
+  if (!sv.count) return empty(main);
+
+  if (sv.ordinance) {
+    const det = el("details", "fold fold--src");
+    const sum = el("summary", "fold__sum");
+    const left = el("span", "fold__left");
+    left.appendChild(el("span", "fold__label", sv.ordinance.label));
+    left.appendChild(el("span", "fold__title", sv.ordinance.title));
+    sum.appendChild(left);
+    sum.appendChild(el("span", "chev", "›"));
+    det.appendChild(sum);
+    for (const e of sv.ordinance.entries) det.appendChild(sourceRow(e, onOpen));
+    main.appendChild(det);
+  }
+
+  for (const g of sv.groups) {
+    const sec = el("section", "pg__sec");
+    sec.appendChild(el("h3", "pg__sechead", g.label));
+    for (const item of g.items) {
+      const det = el("details", "fold fold--src");
+      const sum = el("summary", "fold__sum");
+      const left = el("span", "fold__left");
+      left.appendChild(el("span", "fold__title", item.title));
+      sum.appendChild(left);
+      sum.appendChild(el("span", "chev", "›"));
+      det.appendChild(sum);
+      for (const e of item.entries) det.appendChild(sourceRow(e, onOpen));
+      sec.appendChild(det);
+    }
+    main.appendChild(sec);
+  }
+
+  main.appendChild(el("p", "pg__foot", sv.footer));
+}
+
+// 근거 한 줄 — 조문(있으면) · 원문 링크 · 이 근거를 쓰는 안내들.
+function sourceRow(e, onOpen) {
+  const box = el("div", "srcrow");
+  const top = el("div", "srcrow__top");
+  // **조문이 없으면 그 자리를 비운다** — 없는 조문을 만들어 붙이지 않는다.
+  if (e.article) top.appendChild(el("span", "srcrow__article", e.article));
+  if (e.url) top.appendChild(extLink(e.url, e.link));
+  box.appendChild(top);
+
+  const meta = [e.publisher, e.checkedAt ? COPY.actionDetail.checked(e.checkedAt) : null]
+    .filter(Boolean)
+    .join(" · ");
+  if (meta) box.appendChild(el("p", "srcrow__meta", meta));
+
+  // 이 근거를 쓰는 안내로 간다. 근거만 보고 끝나면 여기 온 이유가 없다.
+  const uses = el("div", "srcrow__uses");
+  uses.appendChild(el("span", "srcrow__count", e.uses));
+  for (const a of e.actions) {
+    const b = btn("srcrow__link", a.title, () => onOpen(a.id));
+    uses.appendChild(b);
+  }
+  box.appendChild(uses);
+  return box;
+}
+
+// ── 연락처 ─────────────────────────────────────────
+//
+// 그룹 순서대로 그린다(긴급 → 복지·긴급지원 → 법률·분쟁 → 심리).
+// 번호는 `tel:` 링크라 탭하면 전화 앱이 열린다.
+// **`검증됨`류 과장 문구는 없다.**
+export function renderDirectory(main, dv, {}) {
+  head(main, dv.title, dv.desc);
+  if (!dv.count) return empty(main);
+
+  for (const g of dv.groups) {
+    const sec = el("section", "pg__sec");
+    sec.appendChild(el("h3", "pg__sechead", g.group));
+    const ul = el("ul", "cards");
+    for (const c of g.items) {
+      const li = el("li", "card card--tel");
+      const box = el("div", "tel__box");
+      if (c.url) {
+        const p = el("p", "tel__org");
+        const a = el("a", "src__org", c.org);
+        a.href = c.url;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        p.appendChild(a);
+        box.appendChild(p);
+      } else {
+        box.appendChild(el("p", "tel__org", c.org));
+      }
+      if (c.tel) {
+        const a = el("a", "tel__num", c.tel);
+        a.href = c.telHref;
+        box.appendChild(a);
+      }
+      if (c.note) box.appendChild(el("p", "tel__note", c.note));
+      li.appendChild(box);
+      ul.appendChild(li);
+    }
+    sec.appendChild(ul);
+    main.appendChild(sec);
+  }
+
+  // 자치구 줄 — **번호가 없다**(보류). 부서를 모르는 구는 이름도 없다.
+  if (dv.district) {
+    const sec = el("section", "pg__sec");
+    const li = el("div", "card card--tel");
+    const box = el("div", "tel__box");
+    box.appendChild(el("p", "tel__org", dv.district.label));
+    box.appendChild(el("p", "tel__note", dv.district.note));
+    li.appendChild(box);
+    sec.appendChild(li);
+    main.appendChild(sec);
+  }
 }
 
 // ── 주제 상세 (7주제 공통 템플릿) ──────────────────

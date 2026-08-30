@@ -202,12 +202,14 @@ export async function saveState(token, state, { now = new Date() } = {}) {
 export async function loadData({ base = "data", reload = false } = {}) {
   if (dataCache && !reload) return dataCache;
   const b = current();
-  const [actions, districts, questions] = await Promise.all([
+  const [actions, districts, questions, directory] = await Promise.all([
     b.readJson(`${base}/actions.json`),
     b.readJson(`${base}/districts.json`),
     b.readJson(`${base}/questions.json`),
+    // 전역 연락처 목록. 판정에 안 들어가고 연락처 화면만 읽는다.
+    b.readJson(`${base}/directory.json`),
   ]);
-  dataCache = { actions, districts, questions };
+  dataCache = { actions, districts, questions, directory };
   return dataCache;
 }
 

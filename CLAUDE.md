@@ -238,7 +238,8 @@ npm run serve                  정적 서버(http://localhost:5173)
 재방문:   경과시간 게이트 → (남은 질문이 있으면 설문 →) HOME
 
 HOME ⇄ { 먼저 볼 내용 · 체크리스트 · 알아둘 내용 ·
-         회복 타임라인 · 주제별로 보기 } ⇄ 상세(주제 · Action · 아직 확인 못 함)
+         회복 타임라인 · 주제별 보기 ·
+         근거 법령 · 연락처 } ⇄ 상세(주제 · Action · 아직 확인 못 함)
 ```
 
 확정 화면 패킷이 기준이다(`ilsanguro_CLAUDE_FRONTEND_FINAL_2026-08-30`,
@@ -310,5 +311,9 @@ HTML이 우선이다(요약에 없는 값이 15개 있었다).
   있지만 주제 상세에서 각각 다른 자리다(D-023 §작은 결정 3)
 - **UI에서도 `localStorage`를 직접 부르지 마라.** 인트로 플래그처럼 새 상태가
   필요하면 state 필드로 넣고 `saveState` 경유로 저장한다
-- **연락처는 보류 모듈이다**(`contacts.js` · `screens.js`의 `renderContacts`).
-  라우팅에 없고 지우지도 않는다. 임의로 번호를 넣거나 되살리지 마라
+- **연락처 보류는 풀렸다.** `contacts.js`·`renderContacts`·`CONTACTS`·
+  `CONTACT_BY_ACTION`은 걷혔고, 전역 목록은 `data/directory.json`,
+  Action별 문의처는 `contacts[]`다. **코드에 번호를 적지 마라** —
+  공식 페이지에서 확인하고 `verified_at_url`을 남긴 값만 데이터에 넣는다
+- **`RESULT_PAGES`와 `app.js`의 `RESULT`는 같은 목록이어야 한다.** 어긋나면
+  그 화면에 [이전]이 안 그려지고 뒤로가기가 HOME으로 안 간다

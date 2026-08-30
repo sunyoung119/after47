@@ -102,8 +102,9 @@ export async function runContract({ name, makeBackend, t }) {
   // ── 11. 데이터 로딩 ──────────────────────────────
   const data = await loadData();
   t(
-    label("loadData가 셋을 다 준다"),
-    Array.isArray(data.actions) && Array.isArray(data.districts) && Array.isArray(data.questions),
+    label("loadData가 넷을 다 준다"),
+    Array.isArray(data.actions) && Array.isArray(data.districts) &&
+      Array.isArray(data.questions) && Array.isArray(data.directory),
     Object.keys(data).join(",")
   );
   t(label("loadData는 같은 객체를 캐시한다"), (await loadData()) === data);

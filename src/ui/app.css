@@ -1153,6 +1153,119 @@ a {
   font-variant-numeric: tabular-nums;
 }
 
+/* ── 근거 법령 ─────────────────────────────────── */
+/* 기본은 전부 접힘이다. 펼쳐야 조문 줄이 나온다 — 한 번에 다 펼쳐 놓으면
+   목록이 아니라 벽이 된다. */
+.fold--src {
+  margin-top: var(--s3);
+  border-top: 0;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--r2);
+  background: var(--c-surface);
+  box-shadow: var(--shadow-card);
+  padding: 0 var(--s4);
+}
+.fold--src .fold__sum {
+  padding-block: var(--s3);
+}
+.fold__left {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s0);
+  min-width: 0;
+}
+.fold__title {
+  color: var(--c-ink);
+  font-size: var(--f-md);
+  font-weight: var(--w-bold);
+}
+/* 근거 한 줄 — 조문 · 원문 링크 · 이 근거를 쓰는 안내들. */
+.srcrow {
+  padding: var(--s3) 0;
+  border-top: 1px solid var(--c-rule);
+}
+.srcrow__top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s3);
+}
+.srcrow__article {
+  font-size: var(--f-sm);
+  font-weight: var(--w-bold);
+  color: var(--c-ink);
+}
+.srcrow__meta {
+  margin: var(--s1) 0 0;
+  color: var(--c-ink-faint);
+  font-size: var(--f-xs);
+}
+.srcrow__uses {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s2);
+  margin-top: var(--s2);
+}
+.srcrow__count {
+  color: var(--c-accent);
+  font-size: var(--f-xs);
+  font-weight: var(--w-bold);
+}
+/* 근거만 보고 끝나면 여기 온 이유가 없다 — 그 안내로 가는 문이다. */
+.srcrow__link {
+  min-height: var(--tap);
+  padding: var(--s1) 0;
+  border: 0;
+  background: transparent;
+  color: var(--c-cta);
+  font: inherit;
+  font-size: var(--f-sm);
+  text-align: left;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+/* ── 연락처 ─────────────────────────────────────── */
+.card--tel {
+  flex-direction: column;
+  align-items: stretch;
+  padding: var(--s4);
+}
+.tel__box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s1);
+}
+.tel__org {
+  margin: 0;
+  font-size: var(--f-md);
+  font-weight: var(--w-bold);
+}
+/* 번호가 이 카드의 주인공이다 — 누르면 전화 앱이 열린다. */
+.tel__num {
+  font-size: var(--f-xl);
+  font-weight: var(--w-heavy);
+  color: var(--c-cta);
+  letter-spacing: var(--ls-tight, -0.03em);
+  font-variant-numeric: tabular-nums;
+  text-decoration: none;
+  min-height: var(--tap);
+  display: flex;
+  align-items: center;
+}
+.tel__note {
+  margin: 0;
+  color: var(--c-ink-soft);
+  font-size: var(--f-sm);
+  line-height: var(--lh-tight);
+}
+/* 참고 자료 줄 — 보조 탐색과 같은 스타일, 한 줄 아래. */
+.home__more--extra {
+  margin-top: var(--s3);
+}
+
 /* ── 상세 ──────────────────────────────────────── */
 .detail__summary {
   margin: var(--s4) 0 0;
