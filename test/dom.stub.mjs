@@ -112,6 +112,11 @@ class Node {
 
 export function installDom() {
   const byId = new Map();
+  // 이벤트(지금은 popstate 하나)와 히스토리 스택. **진짜 브라우저가
+  // 아니지만 앞뒤 관계는 진짜와 같아야 한다** — 기기 뒤로가기가 앱 이전과
+  // 맞는지를 보는 검사가 여기 얹힌다.
+  const listeners = {};
+  const hist = { entries: [{ state: null }], i: 0 };
   const doc = {
     createElement: (tag) => new Node(tag),
     getElementById: (id) => byId.get(id) ?? null,
@@ -128,9 +133,43 @@ export function installDom() {
   }
   globalThis.document = doc;
   globalThis.location = { origin: "https://example.test", pathname: "/", href: "https://example.test/" };
-  globalThis.history = { replaceState() {} };
+  globalThis.history = {
+    get state() {
+      return hist.entries[hist.i].state;
+    },
+    get length() {
+      return hist.entries.length;
+    },
+    // 앞으로 가지 않는다 — 새 칸을 쌓으면 뒤쪽은 버린다(브라우저와 같다).
+    pushState(state) {
+      hist.entries.splice(hist.i + 1);
+      hist.entries.push({ state });
+      hist.i += 1;
+    },
+    replaceState(state) {
+      hist.entries[hist.i] = { state };
+    },
+  };
+  globalThis.addEventListener = (ev, fn) => {
+    (listeners[ev] ||= []).push(fn);
+  };
   globalThis.getSelection = () => ({ removeAllRanges() {}, addRange() {} });
-  return { doc, byId, reset: () => installDom() };
+
+  // 기기 뒤로가기. 맨 앞 칸에서 누르면 **앱 밖으로 나간다** — 그것을
+  // 막지 않는 것이 규칙이라, 여기서도 막지 않고 나갔다고 알려준다.
+  const back = () => {
+    if (hist.i === 0) return { left: true, state: null };
+    hist.i -= 1;
+    const state = hist.entries[hist.i].state;
+    for (const fn of listeners.popstate || []) fn({ state });
+    return { left: false, state };
+  };
+  // 스택을 건드리지 않고 핸들러만 때린다(최초 엔트리 바깥을 흉내 낸다).
+  const popstate = (state) => {
+    for (const fn of listeners.popstate || []) fn({ state });
+  };
+
+  return { doc, byId, hist, back, popstate, depth: () => hist.entries.length, reset: () => installDom() };
 }
 
 // ── 훑기 도구 ──────────────────────────────────────

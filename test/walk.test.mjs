@@ -14,6 +14,7 @@
 //   ② 재방문 — 경과시간 게이트 → HOME
 //   ③ 아직 확인 못 함 → 해당 질문 직행 → 답 변경 → 원래 자리 복귀
 //   ④ 건물 종류 '그 외' → 안내 범위 화면의 두 갈래
+//   ⑤ 기기 뒤로가기 — 히스토리가 앱의 화면 순서와 같은가
 
 import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
@@ -310,6 +311,146 @@ t("'그 외'로도 끝까지 도달한다", has(main(), "확인했습니다"));
 button(main(), "내 회복 경로 보기").click();
 await tick(30);
 t("'그 외'도 내 회복 경로에 닿는다", has(main(), "지금 필요한 안내를 정리했습니다."));
+
+// ── ⑤ 기기 뒤로가기 ────────────────────────────────
+section("⑤ 기기 뒤로가기 — [이전] 버튼과 같은 자리로 가는가");
+
+// 화면 전환이 내부 상태로만 일어나면 폰의 뒤로가기가 앱 밖으로 나간다.
+// 여기서 보는 것은 **히스토리에 남은 자리가 앱의 화면 순서와 같은가**다.
+configureStorage({ ...memoryBackend(), readJson }); // 새 사람
+await 열기();
+button($("intro"), "회복 시작하기").click();
+await tick(30);
+{
+  const sel = all(main(), (n) => n.tagName === "SELECT")[0];
+  sel.change("gangnam");
+  await tick(20);
+  button(main(), "다음").click();
+  await tick(20);
+}
+
+// ① 설문 3문항 진행 → 기기 뒤로 2번 = 두 질문 전, 답 보존
+const 밟은질문 = [질문중().own];
+for (let i = 0; i < 3; i++) {
+  await 한문항({ "본인 명의로 든 화재보험이 있나요?": "잘 모르겠어요" });
+  밟은질문.push(질문중().own);
+}
+t("① 설문 3문항을 진행했다", 밟은질문.length === 4, 밟은질문.join(" → "));
+{
+  const r1 = dom.back();
+  await tick(20);
+  t("① 기기 뒤로 1번 = 한 질문 전", !r1.left && 질문중()?.own === 밟은질문[2],
+    `${밟은질문[3]} → ${질문중()?.own}`);
+  const r2 = dom.back();
+  await tick(20);
+  t("① 기기 뒤로 2번 = 두 질문 전", !r2.left && 질문중()?.own === 밟은질문[1],
+    `기대 ${밟은질문[1]} / 실제 ${질문중()?.own}`);
+  // 답이 지워지지 않았다 — 고른 것이 글자로 표시된다(색만으로 말하지 않는다).
+  t("① 뒤로 가도 답은 보존된다",
+    all(main(), (n) => hasClass(n, "q__choice--on")).length === 1,
+    texts(main()).join(" | "));
+  t("① 앱 밖으로 나가지 않았다", 질문중() !== null);
+}
+
+// 다시 앞으로 — 답이 있는 질문을 다시 답해도 흐름이 이어진다.
+await 설문끝까지({ "본인 명의로 든 화재보험이 있나요?": "잘 모르겠어요" });
+t("① 되돌아왔다가 진행해도 전환에 닿는다", has(main(), "확인했습니다"));
+button(main(), "내 회복 경로 보기").click();
+await tick(30);
+t("① 전환을 지나면 HOME이다", has(main(), "지금 필요한 안내를 정리했습니다."));
+
+// ② HOME → 체크리스트 → 상세 → 기기 뒤로 2번 = HOME
+{
+  카드("체크리스트").click();
+  await tick(10);
+  all(main(), (n) => hasClass(n, "card__hit"))[0].click();
+  await tick(10);
+  t("② 상세까지 들어갔다",
+    has(main(), "안내 내용은 확인된 근거를 바탕으로 정리하며, 원문이 있는 경우 직접 확인할 수 있습니다."));
+  dom.back();
+  await tick(20);
+  t("② 기기 뒤로 1번 = 체크리스트", has(main(), "하나씩 해나가야 하는 일입니다."),
+    texts(main()).slice(0, 4).join(" | "));
+  dom.back();
+  await tick(20);
+  t("② 기기 뒤로 2번 = HOME", has(main(), "지금 필요한 안내를 정리했습니다."),
+    texts(main()).slice(0, 4).join(" | "));
+}
+
+// [이전] 버튼과 기기 뒤로가기가 같은 자리로 간다
+{
+  카드("먼저 볼 내용").click();
+  await tick(10);
+  const 버튼결과 = (() => {
+    $("top-right").children[0].click();
+    return texts(main()).slice(0, 4).join(" | ");
+  })();
+  await tick(10);
+  카드("먼저 볼 내용").click();
+  await tick(10);
+  dom.back();
+  await tick(20);
+  t("[이전] 버튼과 기기 뒤로가기가 같은 화면을 낸다",
+    버튼결과 === texts(main()).slice(0, 4).join(" | "),
+    `${버튼결과} ||| ${texts(main()).slice(0, 4).join(" | ")}`);
+}
+
+// ③ 미판정 → 질문 직행 → 답 변경 → 복귀 후 기기 뒤로 = 어긋남 없음
+{
+  카드("필요한 주제별로 보기").click();
+  await tick(10);
+  all(main(), (n) => hasClass(n, "tcard")).find((n) => n.textContent.includes("건강")).click();
+  await tick(10);
+  const 미판정 = all(main(), (n) => hasClass(n, "card__hit")).find((n) =>
+    n.textContent.includes("아직 확인 못 함")
+  );
+  t("③ 미판정 카드가 있다", Boolean(미판정), texts(main()).join(" | "));
+  미판정.click();
+  await tick(10);
+  t("③ 전용 화면이 열렸다", has(main(), "왜 아직 확인할 수 없나요?"));
+
+  button(main(), "보험 답변 다시 확인하기").click();
+  await tick(30);
+  t("③ 그 질문으로 직행했다", 질문중()?.own === "본인 명의로 든 화재보험이 있나요?");
+
+  await 한문항({ "본인 명의로 든 화재보험이 있나요?": "없어요" });
+  t("③ 답을 고치면 보던 자리로 돌아온다", !has(main(), "왜 아직 확인할 수 없나요?") && 질문중() === null,
+    texts(main()).slice(0, 4).join(" | "));
+
+  // 복귀는 **자리를 새로 쌓는다**(history.back()으로 흉내 내지 않는다).
+  // 그래서 여기서 뒤로 가면 방금 답한 그 질문이다 — 화면과 히스토리가 갈리지 않는다.
+  dom.back();
+  await tick(20);
+  t("③ 복귀 후 기기 뒤로 = 방금 답한 질문 (어긋남 없음)",
+    질문중()?.own === "본인 명의로 든 화재보험이 있나요?",
+    `실제: ${질문중()?.own ?? texts(main()).slice(0, 3).join(" | ")}`);
+  t("③ 고친 답이 그대로 보인다",
+    all(main(), (n) => hasClass(n, "q__choice--on"))[0]?.textContent.includes("없어요"),
+    all(main(), (n) => hasClass(n, "q__choice--on"))[0]?.textContent);
+}
+
+// ④ 진입 직후 기기 뒤로 = 핸들러가 개입하지 않는다
+{
+  const 전 = texts(main()).slice(0, 6).join(" | ");
+  const 깊이 = dom.depth();
+  dom.popstate(null); // 최초 엔트리 바깥 — 다른 사이트의 칸이다
+  await tick(20);
+  t("④ state가 없으면 화면을 건드리지 않는다", texts(main()).slice(0, 6).join(" | ") === 전);
+  t("④ 붙잡으려고 칸을 쌓지도 않는다", dom.depth() === 깊이, `${깊이} → ${dom.depth()}`);
+}
+
+// 재방문에서 HOME은 뿌리다 — 게이트를 소비하므로 뒤로가기가 앱을 나간다.
+{
+  await 열기(); // 같은 저장소로 다시 진입 = 재방문
+  t("재방문은 경과시간 게이트다", has(main(), "화재 발생 후"));
+  const 깊이 = dom.depth();
+  button(main(), "지금 안내 보기").click();
+  await tick(30);
+  t("게이트를 지나면 HOME이다", has(main(), "지금 필요한 안내를 정리했습니다."));
+  t("게이트는 칸을 쌓지 않고 덮는다 (소비되는 화면)", dom.depth() === 깊이,
+    `${깊이} → ${dom.depth()}`);
+  t("HOME에서 기기 뒤로가기는 앱을 나간다 (트랩 없음)", dom.back().left === true);
+}
 
 // ── 결과 ───────────────────────────────────────────
 console.log(`\n${"=".repeat(62)}`);

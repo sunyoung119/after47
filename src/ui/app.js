@@ -78,7 +78,8 @@ const app = {
   cursor: null, // 지금 보고 있는 질문 id. 인덱스가 아니다
   topic: null, // 주제 상세가 보고 있는 domain_group
   actionId: null, // Action 상세가 보고 있는 행
-  stack: [], // 결과 화면의 뒤로가기
+  from: null, // 이 상세를 어디서 열었나(결과 화면의 뒤를 여기서 안다)
+  restoring: false, // 기기 뒤로가기로 복원하는 중이다
   returnTo: null, // 답을 고치러 갔다가 돌아올 자리
   base: null, // 마지막 결과 바탕. 상세가 이것에 묻는다
   savedShown: false, // D-015 1층을 이번 방문에서 이미 띄웠다
@@ -133,9 +134,130 @@ function route() {
   app.screen = "home";
 }
 
+// ── 기기 뒤로가기 ──────────────────────────────────
+//
+// 화면 전환이 내부 상태로만 일어나면 폰의 뒤로가기가 이전 화면이 아니라
+// **앱 밖으로** 나간다. 우상단 [이전]과 기기 뒤로가기가 다르면 안 된다 —
+// 사용자는 둘을 구분하지 않는다.
+//
+// 그래서 화면을 옮길 때마다 히스토리에 그 자리를 남기고, `popstate`는
+// 그 자리를 **기존 이전 경로로 다시 그리기만 한다.** 새 판정을 만들지
+// 않는다 — 어댑터일 뿐이다.
+//
+// **URL은 바꾸지 않는다.** `?d=`·`?t=` 토큰 체계는 그대로이고 히스토리에
+// 얹는 것은 state 페이로드뿐이다. **저장이 아니라 세션 내비게이션**이라
+// D-002의 저장 계층과도 무관하다.
+//
+// 지나가면 돌아올 자리가 아닌 화면(랜딩·재방문 게이트·전환)을 **떠날 때는**
+// 쌓지 않고 앞 칸을 덮는다. 그래서 재방문에서 HOME의 뒤로가기는 앱을
+// 나간다 — 이탈을 막으려고 히스토리를 인위로 쌓는 짓은 하지 않는다.
+const CONSUMED = new Set(["landing", "revisit", "transition"]);
+
+// 히스토리 한 칸이 가리키는 화면 좌표.
+const spot = () => ({
+  screen: app.screen,
+  cursor: app.cursor,
+  topic: app.topic,
+  actionId: app.actionId,
+  from: app.from,
+});
+const SPOT_KEYS = ["screen", "cursor", "topic", "actionId", "from"];
+const sameSpot = (a, b) =>
+  Boolean(a && b) && SPOT_KEYS.every((k) => (a[k] ?? null) === (b[k] ?? null));
+
+// 지금 자리를 히스토리에 남긴다. `leaving`은 방금 떠난 화면이다.
+function mark(leaving, replace = false) {
+  try {
+    // **복원 중에는 절대 쌓지 않는다** — 뒤로가기가 앞으로 가는 것처럼 보인다.
+    const over = replace || app.restoring || CONSUMED.has(leaving);
+    history[over ? "replaceState" : "pushState"](spot(), "", location.href);
+  } catch {
+    /* 파일에서 열었거나 히스토리를 막은 브라우저. 화면은 그대로 돈다 */
+  }
+}
+
+// 화면을 옮긴다. **모든 전환이 이 문을 지난다** — 여기를 지나지 않으면
+// 히스토리에 자리가 안 남아 기기 뒤로가기가 앱을 나가버린다.
+function go(next) {
+  const leaving = app.screen;
+  const before = spot();
+  app.screen = next.screen;
+  app.cursor = next.cursor ?? null;
+  app.topic = next.topic ?? null;
+  app.actionId = next.actionId ?? null;
+  app.from = next.from ?? null;
+  if (!sameSpot(before, spot())) mark(leaving);
+  render();
+}
+
+// route()가 정한 자리로 옮긴다. 앞의 답을 지우고 다시 계산하는 전환들이 쓴다.
+function routeGo(replace = false) {
+  const leaving = app.screen;
+  app.cursor = null;
+  app.topic = null;
+  app.actionId = null;
+  app.from = null;
+  route();
+  // 설문으로 갈 때는 **어느 질문인지까지** 자리에 적는다. 커서가 비면
+  // 기기 뒤로가기로 돌아왔을 때 "첫 미답변"으로 계산돼 앞 질문이 아니라
+  // 지금 질문이 다시 나온다.
+  if (app.screen === "survey") app.cursor = survey(null).current?.id ?? null;
+  mark(leaving, replace);
+  render();
+}
+
+// 결과 화면의 뒤. **어디서 왔는지는 자리에 실려 있다**(`from`) — 별도
+// 스택을 두면 기기 뒤로가기로 돌아왔을 때 그 스택만 어긋난다.
+function parentOf(s) {
+  if (s.screen === "action" || s.screen === "undetermined") {
+    if (s.from === "topic" && s.topic) return { screen: "topic", topic: s.topic };
+    return { screen: RESULT.includes(s.from) ? s.from : "home" };
+  }
+  if (s.screen === "topic") return { screen: "topics" };
+  return { screen: "home" };
+}
+
+// 그릴 수 없는 자리면 가장 가까운 유효 화면으로. **앞으로가기는 지원
+// 범위 밖**이고, 답이 바뀌어 사라진 질문으로 돌아오는 경우가 여기 걸린다.
+function nearest(s) {
+  if (s.screen === "survey") {
+    const mv = survey(s.cursor ?? null);
+    return mv.current ? { ...s, cursor: mv.current.id } : { screen: "home" };
+  }
+  if (s.screen === "scope" && !scopeNoticeView(app.state).show) return { screen: "home" };
+  return s;
+}
+
+// 기기 뒤로가기. [이전] 버튼과 **같은 내부 경로**로 그 화면을 다시 그린다.
+function restore(s) {
+  app.restoring = true;
+  try {
+    const at = nearest(s);
+    app.screen = at.screen;
+    app.cursor = at.cursor ?? null;
+    app.topic = at.topic ?? null;
+    app.actionId = at.actionId ?? null;
+    app.from = at.from ?? null;
+    render(); // 못 그리는 자리는 render 안에서도 가장 가까운 화면으로 넘어간다
+    if (!sameSpot(spot(), s)) mark(s.screen, true); // 정정한다
+  } finally {
+    app.restoring = false;
+  }
+}
+
+// **event.state가 없으면 개입하지 않는다.** 최초 엔트리 바깥이고, 앱을
+// 나가는 것을 막지 않는다.
+addEventListener("popstate", (e) => {
+  const s = e && e.state;
+  if (!s || typeof s.screen !== "string") return;
+  restore(s);
+});
+
 function syncAddressBar() {
   try {
-    history.replaceState(null, "", myUrl());
+    // **지금 자리를 함께 실어 둔다.** null로 덮으면 최초 엔트리가 좌표를
+    // 잃어 기기 뒤로가기가 그 자리를 못 그린다.
+    history.replaceState(spot(), "", myUrl());
   } catch {
     /* 파일에서 열었거나 히스토리를 막은 브라우저. 화면은 그대로 돈다 */
   }
@@ -188,37 +310,21 @@ function render() {
   if (app.screen === "survey") return renderSurvey(main);
   if (app.screen === "scope") return renderScope(main);
   if (app.screen === "transition")
-    return renderTransition(main, transitionView(), () => setScreen("home"));
+    return renderTransition(main, transitionView(), () => go({ screen: "home" }));
   if (app.screen === "revisit")
     return renderRevisit(main, revisitView({ state: app.state, saved: true }), passGate);
 
   renderResult(main);
 }
 
-function setScreen(screen) {
-  app.screen = screen;
-  render();
-}
-
-// 결과 화면 사이의 이동. 뒤로가기가 정확하려면 어디서 왔는지를 쌓아야 한다.
+// 결과 화면 사이의 이동. **어디서 왔는지를 자리에 싣는다** — 기기
+// 뒤로가기로 돌아와도 어긋나지 않는 유일한 방법이다.
 function push(screen, extra = {}) {
-  app.stack.push({ screen: app.screen, topic: app.topic, actionId: app.actionId });
-  app.screen = screen;
-  app.topic = extra.topic ?? null;
-  app.actionId = extra.actionId ?? null;
-  render();
+  go({ screen, ...extra, from: app.screen, topic: extra.topic ?? app.topic });
 }
 
 function goBack() {
-  const prev = app.stack.pop();
-  if (prev) {
-    app.screen = prev.screen;
-    app.topic = prev.topic;
-    app.actionId = prev.actionId;
-  } else {
-    app.screen = "home";
-  }
-  render();
+  go(parentOf(spot()));
 }
 
 // 좌상단 서비스명 · 우상단 [이전]. 확정 화면의 머리 문법이다.
@@ -240,18 +346,12 @@ function backTarget() {
   if (app.screen === "survey") {
     const mv = survey();
     // 첫 질문의 뒤는 설문 안이 아니라 기본 확인이다.
-    if (mv.atStart) return () => setScreen("basic");
-    return () => {
-      app.cursor = mv.back.id;
-      render();
-    };
+    if (mv.atStart) return () => go({ screen: "basic" });
+    return () => go({ screen: "survey", cursor: mv.back.id });
   }
   if (app.screen === "transition")
-    return () => {
-      const answered = survey(null).current ? null : lastAnswered();
-      app.cursor = answered;
-      setScreen("survey");
-    };
+    return () =>
+      go({ screen: "survey", cursor: survey(null).current ? null : lastAnswered() });
   if (RESULT.includes(app.screen) || app.screen === "topic" || app.screen === "action" || app.screen === "undetermined")
     return goBack;
   return null;
@@ -304,26 +404,27 @@ async function onBannerAction(a) {
     app.returning = Boolean(opened.saved);
     app.session = await anchorSession(opened);
     app.state = { completed: [] };
-    app.cursor = null;
     app.gate = false;
-    app.stack = [];
+    app.returnTo = null;
     app.addrTouched = false;
-    route();
     syncAddressBar();
-    render();
+    routeGo(true);
   }
 }
 
 // ── 랜딩 · 게이트 ──────────────────────────────────
 async function passLanding() {
-  // 버튼과 화면 탭이 같이 들어와도 한 번만 통과한다.
-  if (app.state.intro_seen === true) return;
+  // 버튼과 화면 탭이 같이 들어와도 한 번만 통과한다. **플래그가 아니라
+  // 화면으로 잡는다** — 기기 뒤로가기로 랜딩에 되돌아온 사람은 플래그가
+  // 이미 서 있는데, 플래그로 막으면 그 사람이 문 앞에 갇힌다.
+  if (app.screen !== "landing") return;
+  const 처음 = app.state.intro_seen !== true;
   // 플래그는 **state 필드**다. 저장은 saveState 경유이고 storage는 무변이다.
-  app.state = { ...app.state, intro_seen: true };
+  if (처음) app.state = { ...app.state, intro_seen: true };
   // **전환이 먼저다.** 저장이 느리거나 막혀도 첫 화면에 갇히면 안 된다 —
   // 랜딩은 정보가 아니라 문이고, 문이 저장을 기다릴 이유가 없다.
-  route();
-  render();
+  routeGo();
+  if (!처음) return;
   try {
     await persist();
   } catch {
@@ -335,8 +436,7 @@ async function passLanding() {
 // 다시 거쳐야 한다.
 function passGate() {
   app.gate = true;
-  route();
-  render();
+  routeGo();
 }
 
 // ── 기본 확인 ──────────────────────────────────────
@@ -374,16 +474,14 @@ async function confirmBasic(inputValue) {
     await persist();
     app.session = { ...app.session, state: app.state };
   }
-  app.cursor = null;
-  route();
-  render();
+  routeGo();
 }
 
 // ── 설문 — 한 화면 한 질문 ─────────────────────────
 function renderSurvey(main) {
   const mv = survey();
   if (!mv.current) {
-    setScreen("transition");
+    go({ screen: "transition" });
     return;
   }
   renderQuestion(main, mv, { onAnswer: answer, feedbackMs: SELECT_FEEDBACK_MS });
@@ -409,19 +507,20 @@ async function answer(key, value) {
 
   // 건물 종류가 '그 외'면 안내 범위를 먼저 말한다(6단계의 경계 배너를
   // 이 화면이 대체한다).
-  if (scopeNoticeView(app.state).show) return setScreen("scope");
+  if (scopeNoticeView(app.state).show) return go({ screen: "scope" });
 
   // 답을 고치러 왔던 사람은 남은 질문이 없으면 보던 자리로 돌아간다.
+  // **history.back()으로 흉내 내지 않는다** — 답이 바뀐 뒤라 히스토리와
+  // 화면이 갈린다. 코드가 화면을 바꾸는 것이므로 자리를 새로 쌓는다.
   if (app.returnTo && !survey(null).current) {
     const back = app.returnTo;
     app.returnTo = null;
-    app.screen = back.screen;
-    app.topic = back.topic;
-    app.actionId = back.actionId;
-    return render();
+    return go(back);
   }
-  if (!survey(null).current) return setScreen("transition");
-  render();
+  const next = survey(null);
+  if (!next.current) return go({ screen: "transition" });
+  // 질문 이동도 한 칸씩 쌓는다 — 기기 뒤로가기가 앞 질문으로 가야 한다.
+  go({ screen: "survey", cursor: next.current.id });
 }
 
 // ── 안내 범위 ──────────────────────────────────────
@@ -432,8 +531,7 @@ function renderScope(main) {
       // 같은 벽을 만난다.
       app.state = { ...app.state, scope_ack: true };
       await persist();
-      route();
-      render();
+      routeGo();
     },
     onBack: async () => {
       // 건물 종류를 다시 고른다. 되돌린 답에 매달린 확인 플래그도 함께 지운다.
@@ -442,8 +540,7 @@ function renderScope(main) {
       delete next.scope_ack;
       app.state = pruneStale(app.session.data.questions, next, app.session.data);
       await persist();
-      app.cursor = "q-housing-type";
-      setScreen("survey");
+      go({ screen: "survey", cursor: "q-housing-type" });
     },
   });
 }
@@ -489,9 +586,10 @@ function renderResult(main) {
     // 자리를 새로 쌓지 않는다 — 뒤로가기가 같은 화면을 두 번 지나면 안 된다.
     if (uv) return renderUndetermined(main, uv, { onAnswer: goAnswer });
     app.screen = "action";
+    mark("undetermined", true); // 자리를 새로 쌓지 않고 그 칸을 정정한다
   }
   const ad = actionDetailView(base, app.actionId);
-  if (!ad) return setScreen("home");
+  if (!ad) return go({ screen: "home" });
   renderActionDetail(main, ad, { onGoTo: (id) => openDetail(id) });
 }
 
@@ -504,16 +602,15 @@ function openDetail(id, forceAction = false) {
     return push("undetermined", { actionId: id });
   // 자치구를 안 골라서 미판정인 건은 기본 확인으로 보낸다(V1에서는
   // 여기까지 오지 않는다 — 지역이 이미 선택되어 있다는 전제다).
-  if (!forceAction && row.needsDistrict) return setScreen("basic");
+  if (!forceAction && row.needsDistrict) return go({ screen: "basic" });
   push("action", { actionId: id });
 }
 
 // '아직 확인 못 함'에서 그 답으로 직행하고, 고치면 보던 자리로 돌아온다.
 function goAnswer(targets) {
   if (!targets || !targets.length) return;
-  app.returnTo = { screen: app.screen, topic: app.topic, actionId: app.actionId };
-  app.cursor = targets[0].id;
-  setScreen("survey");
+  app.returnTo = spot();
+  go({ screen: "survey", cursor: targets[0].id });
 }
 
 // 체크 → completed + completed_at 기록 → saveState → 재평가.
