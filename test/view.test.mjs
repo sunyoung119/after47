@@ -780,7 +780,7 @@ t(
   const refs = html.match(/(?:href|src)="src\/ui\/[^"]+"/g) || [];
   // ★ 값까지 본다. 존재만 보면 "올리는 것을 잊은 배포"를 못 잡는다 —
   //   화면 파일을 고치면서 v를 올리면 **이 줄의 숫자도 함께 올린다.**
-  const V = "?v=15";
+  const V = "?v=16";
   t(
     `화면 파일 참조가 전부 ${V}다 (${refs.length}개)`,
     refs.length >= 3 && refs.every((r) => r.includes(V)),
@@ -899,7 +899,7 @@ t(
 // **꼬리말을 걷었다** — 세 조각이 세로 목록이 됐고, 목록에 꼬리말이
 // 붙으면 마지막 줄만 다른 문장이 된다.
 t("이음말이 없다", !("basisTail" in tr), Object.keys(tr).join(","));
-t("전환 문구가 확정 한 줄이다", tr.message === "당신의 회복에 필요한 내용을 안내합니다.", tr.message);
+t("전환 문구가 확정 한 줄이다", tr.message === "당신의 회복에 필요한 내용을 안내하겠습니다.", tr.message);
 t("전환 CTA가 '내 회복 경로 보기'다", tr.cta === "내 회복 경로 보기");
 // 자치구를 못 고른 사람에게 빈 조각을 그리지 않는다.
 const tr구없이 = transitionView({ state: { fire_at: FIRE }, data, now: Date.parse(FIRE) + 27 * 36e5 });

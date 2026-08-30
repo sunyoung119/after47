@@ -516,8 +516,8 @@ a {
 
 /* ── 전환 · 재방문 게이트 ──────────────────────── */
 /* 카운트다운처럼 위협적으로 만들지 않는다. 현재 시각 시계도 아니다.
-   **상·중·하 구조다**(사용자 결정) — 확인 표시가 위, 기준과 안내가
-   가운데, CTA가 바닥. 실기기에서 셋이 화면 위쪽에 몰려 있었다. */
+   위에서부터 체크 → 세 줄 → 제목 → 안내, CTA는 바닥이다. 앞의 넷이
+   위쪽에 모이고 그 아래가 비는 것이 의도다 — 읽을 것이 한 덩어리다. */
 .gate {
   display: flex;
   flex-direction: column;
@@ -526,17 +526,18 @@ a {
   min-height: 68vh;
   padding-top: var(--s6);
 }
-/* 제목이 체크 표시 쪽으로 올라간다 — 둘이 한 덩어리로 읽히고,
-   그만큼 아래 기준 목록이 숨 쉴 자리를 얻는다. */
+/* **순서가 바뀌었다**(사용자 실기기 검수 결정) —
+   체크 → 세 줄 → `확인했습니다` → 안내 문장.
+   제목과 안내가 아래쪽에서 한 덩어리로 서고, 위의 체크·세 줄이 그
+   덩어리가 무엇을 근거로 하는지를 먼저 말한다. */
 .gate__title {
-  margin-top: calc(var(--s5) * -1);
-  margin-bottom: auto;
+  margin: var(--s7) 0 0;
 }
 .gate .pg__cta {
   margin-top: auto;
 }
 .gate__mark {
-  margin: 0 0 var(--s5);
+  margin: 0 0 var(--s3);
   font-size: var(--f-hero);
   color: var(--c-accent);
 }
@@ -546,39 +547,39 @@ a {
   font-weight: var(--w-heavy);
   letter-spacing: var(--ls-tight, -0.03em);
 }
+/* 안내 문장 — **제목 바로 아래 본문 크기.** 둘이 한 덩어리로 읽힌다. */
 .gate__lines {
-  margin: var(--s3) 0 0;
-  color: var(--c-ink);
-  font-size: var(--f-lg);
-  font-weight: var(--w-bold);
-  line-height: var(--lh-tight);
+  margin: var(--s3) 0 auto;
+  color: var(--c-ink-soft);
+  font-size: var(--f-md);
+  line-height: var(--lh);
+  max-width: 20rem;
+  word-break: keep-all;
 }
 /* 기준 줄 — 그 사람의 자치구와 경과시간이다. 값만 진하고 이음말은 흐리다. */
-/* 기준 세 줄 — **목록이다.**
+/* 기준 세 줄 — 체크 표시 **바로 아래** 한 덩어리다.
  *
- *   ① 블록은 화면 가운데, **글자는 왼쪽 정렬.** 세 조각이 같은 x에서
- *      시작해야 목록으로 읽힌다. 각 줄을 가운데 정렬하면 길이가 달라
- *      들쭉날쭉해지고 "세 개가 나란한 사실"이라는 것이 사라진다
- *   ② 줄 간격을 본문보다 넉넉히(2.0) — 노안에서 줄을 놓치지 않게
- *   ③ `keep-all` — `화재 발생 후 1일 3시간`이 어절 안에서 안 끊긴다
- *   ④ 글자는 본문색이다(12.56:1). 흐린 회색으로 두면 "부가 정보"로
- *      읽히는데, 이 셋은 화면이 하는 말의 근거 전부다
- *   ⑤ 불릿·아이콘 없음. 장식이 정보를 넘지 않는다
+ *   ① **가로 가운데 정렬**(사용자 결정). 체크·제목·안내가 모두 가운데
+ *      축이라 이 셋만 왼쪽으로 두면 축이 둘로 갈린다
+ *   ② 줄 간격 **1.45** — 앞서 2.0이었다. 목록이 화면 가운데 문단으로
+ *      옮겨 오면서 줄끼리 붙어 **하나의 덩어리**로 읽혀야 한다.
+ *      1.0은 답답하고 2.0은 세 줄이 따로 놀아, 그 사이에서 한글 본문의
+ *      통상값(1.4~1.6) 하단을 잡았다
+ *   ③ **뮤트 색**(4.72 : 1 · AA). 근거이지 주인공이 아니다 — 주인공은
+ *      아래 `확인했습니다`와 안내 문장이다
+ *   ④ `keep-all` — `화재 발생 후 1일 3시간`이 어절 안에서 안 끊긴다
+ *   ⑤ 불릿·아이콘 없음
  */
 .gate__basis {
   list-style: none;
-  margin: 0 auto;
+  margin: var(--s4) 0 0;
   padding: 0;
   max-width: 20rem;
-  text-align: left;
-  color: var(--c-ink);
-  font-size: var(--f-lg);
-  font-weight: var(--w-bold);
-  line-height: 2;
+  text-align: center;
+  color: var(--c-ink-soft);
+  font-size: var(--f-md);
+  line-height: 1.45;
   word-break: keep-all;
-}
-.gate__basisitem + .gate__basisitem {
-  margin-top: var(--s1);
 }
 /* 라벨은 작고 값은 크다. **정보 사이 간격을 촘촘히 묶는다**(패킷 D-030) —
    날짜와 경과가 한 덩어리로 읽혀야 "지금 어디쯤인가"가 한눈에 온다. */
@@ -690,7 +691,20 @@ a {
   position: fixed;
   inset: 0;
   z-index: -1;
-  background: var(--home-veil, rgba(255, 255, 255, 0.92));
+  /* 전면 베일 + **국소 보정 둘.** 글자가 앉는 위아래만 한 겹 더 밝히고
+     가운데는 사진을 살린다(합성 0.92 → 헤더·고지 AA). */
+  background:
+    linear-gradient(
+      180deg,
+      var(--home-veil-edge, rgba(255, 255, 255, 0.6)) 0,
+      transparent 18%
+    ),
+    linear-gradient(
+      0deg,
+      var(--home-veil-edge, rgba(255, 255, 255, 0.6)) 0,
+      transparent 14%
+    ),
+    var(--home-veil, rgba(255, 255, 255, 0.8));
   pointer-events: none;
 }
 /* 사진 위에서는 만료 고지를 한 단계 진하게 — 보조 뮤트(4.70)가 베일 위에서
@@ -725,7 +739,7 @@ a {
   min-height: calc(var(--tap) + var(--s5));
   padding: var(--s4);
   text-align: left;
-  border: 0;
+  border: 1px solid var(--c-entry-line);
   border-radius: var(--r2);
   background: var(--c-entry);
   box-shadow: var(--shadow-card);
@@ -780,7 +794,7 @@ a {
   min-height: calc(var(--tap) + var(--s2));
   padding: var(--s4) var(--s3);
   text-align: left;
-  border: 0;
+  border: 1px solid var(--c-entry-line);
   border-radius: var(--r2);
   background: var(--c-entry);
   box-shadow: var(--shadow-card);

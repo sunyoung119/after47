@@ -184,16 +184,20 @@ export function renderTransition(main, tv, onGo) {
   const mark = el("p", "gate__mark", "✓");
   mark.setAttribute("aria-hidden", "true");
   box.appendChild(mark);
-  box.appendChild(el("h2", "gate__title", tv.title));
+  // ★ **순서가 바뀌었다**(사용자 실기기 검수 결정) —
+  //   체크 → 세 줄 → `확인했습니다` → 안내 문장.
+  //
+  //   앞의 둘이 "무엇을 보고"이고 뒤의 둘이 "그래서 이제 무엇을 한다"다.
+  //   제목이 맨 위에 있을 때는 확인의 대상이 뒤늦게 나와, 읽는 순서와
+  //   말의 순서가 어긋났다.
 
-  // 기준 줄 — 그 사람의 실제 값이다. **세로 목록으로 읽힌다**(사용자
-  // 실기기 검수 결정). 가운뎃점 한 줄이던 것을 줄바꿈으로 나눴다:
-  // 세 조각이 각각 다른 종류의 사실(장소·시간·상황)이라 한 줄에 이으면
-  // 하나의 긴 문장으로 읽히고, 노안에서는 어디서 끊어 읽을지가 안 보인다.
+  // 기준 줄 — 그 사람의 실제 값이다. 세 조각이 각각 다른 종류의 사실
+  // (장소·시간·상황)이라 한 줄에 이으면 긴 문장 하나로 읽힌다.
   const basis = el("ul", "gate__basis");
   for (const part of tv.basis) basis.appendChild(el("li", "gate__basisitem", part));
   box.appendChild(basis);
 
+  box.appendChild(el("h2", "gate__title", tv.title));
   box.appendChild(el("p", "gate__lines", tv.message));
   const go = el("button", "btn btn--primary pg__cta", tv.cta);
   go.type = "button";
