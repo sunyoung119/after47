@@ -93,6 +93,7 @@ Action은 사라지거나 나타나는 게 아니라 **상태를 갖는다.**
 | `fallback` | string\|null | 미보유 구의 대체 근거 |
 | `support_items` | [string] | 이 구가 지원하는 항목. `psych`·`waste`·`housing`·`supplies`·`meal`. Action의 `support_item`과 맞춘다. 여기 없으면 그 Action은 결과에서 아예 빠진다 |
 | `exclusion_exempt_items` | [string] | 보험 제외를 **적용하지 않는** 항목 (양천: psych · housing) |
+| `support_articles` | object | `{ support_item: "제5조제1항제3호" }`. 그 항목의 근거 조문. 키는 `support_items`의 부분집합이다 |
 | `source_url` | string | 원문 주소 |
 | `checked_at` | date | 마지막 확인일 |
 | `exclusion_note` | string\|null | **판정에 쓰지 않는 기록용.** 원문이 enum에 정확히 안 맞을 때 그 사실을 남긴다. 현재 관악 1건 |
@@ -157,7 +158,8 @@ Action을 고쳐야 해서 폐기했다 — 25개 전수를 채우는 동안 `ac
 | `blocks_reason` | string\|null | 선행 미완료 시 표시할 이유 |
 | `knowledge_level` | `상식`\|`전문` | |
 | `source_grade` | enum | `공적`\|`학술`\|`해외공적`\|`참고-업체`\|`출처필요` |
-| `source_url` | string\|null | |
+| `source_url` | string\|null | legacy. `sources`가 빌 때 '원문 보기'만 만든다 |
+| `sources` | [object] | 구조화된 출처. **현재 59건 전부 빈 배열이다**(아래) |
 | `checked_at` | date | |
 
 `depends_on`이 쌍 관계다. 전역 순서 배열이 아니다 — 조건이 바뀌어도
@@ -173,6 +175,53 @@ Action을 고쳐야 해서 폐기했다 — 25개 전수를 채우는 동안 `ac
 하위 규칙은 25개 구 전수조사에서 0건이다. 대피소 급식 체계에 얹힌 항목이라
 개별 주택화재에서 집행되는 그림이 없다 — **실행되는지 확인 안 된 제도는
 안내하지 않는다**(D-020).
+
+### 출처 — `sources[]`와 조례 조문
+
+화면이 출처 카드를 그리려면 문서명·조문·발행처·확인일이 필요한데
+`source_grade`/`source_url`/`checked_at` 셋으로는 만들 수 없다.
+그래서 항목 배열을 둔다.
+
+```json
+"sources": [
+  {
+    "type": "law | ordinance | public_guidance | case | academic",
+    "title": "제조물책임법",
+    "article": "제3조의2",
+    "publisher": null,
+    "year": null,
+    "url": "...",
+    "doi": null,
+    "checked_at": "2026-08-26"
+  }
+]
+```
+
+**지금은 59건 전부 빈 배열이다.** 채우는 것은 원문을 하나씩 확인하는 별도
+콘텐츠 패스다 — **URL이나 본문 문자열을 파싱해 법령명·조문을 만들어 내지
+않는다.** 없는 것을 지어내느니 출처 영역을 안 그리는 편이 낫다.
+키를 없는 항목에서도 빈 배열로 둔 것은 키 일관성 때문이다.
+
+기존 세 필드는 호환을 위해 그대로 두고, 화면은 이 순서로 읽는다.
+
+1. `sources`가 비어 있지 않으면 → 문서명·조문·발행처·확인일 + 정확한
+   URL이 있을 때만 '원문 보기'
+2. 비어 있고 `ordinance_based`면 → **자치구 조례**에서 조합한다
+   (`ordinance_name` + `support_articles[support_item]` + `checked_at`).
+   원문 URL은 붙이지 않는다 — 지금 가진 것은 elis 홈페이지 주소뿐이고,
+   홈페이지를 '원문 보기'로 걸면 정확한 원문이라는 거짓말이 된다
+3. 그것도 없고 legacy `source_url`만 있으면 → **문서명 없이** '원문 보기'만
+4. 아무것도 없으면 → 출처 영역을 통째로 그리지 않는다
+
+**조문은 Action이 아니라 자치구에 귀속된다.** 같은 `psych` 항목이라도
+구마다 조문 번호가 다르다(강남 제5조제1항제1호 / 구로 제5조제1호 / 관악
+제4조제1항제1호…). Action에 적으면 25구 중 하나에서만 맞는 값이 된다.
+그래서 `districts.json`의 `support_articles`에 둔다 — 조례 보유 13구
+47항목을 원문에서 직접 판독해 채웠고 추정은 없다. 특정하지 못한 항목은
+**키를 넣지 않는다.**
+
+`source_grade`는 **"검증됨"이라는 뜻이 아니다.** 화면에 `검증됨`·
+`공식 인증` 같은 말을 쓰지 않는다(D-005 · D-006).
 
 `support_items`의 `meal`은 **지우지 마라.** 그것은 조례가 무엇을 지원한다고
 써놨는지의 기록이고, 지우면 데이터가 조례를 틀리게 기술한다. 결손이 아니라
@@ -240,7 +289,8 @@ scene_preserved       true | false | "unknown"   현장보존 조치 중
 wet_appliances        bool  물에 젖은 가전 있음
 powder_present        bool  소화약제 분말 잔존
 other_units_affected  true | false | "unknown"   타 세대 피해
-water_damage_role     victim | causer | both | none | "unknown"   소화수 피해
+water_damage_home     true | false | "unknown"   우리 집 소화수 피해
+water_damage_neighbor true | false | "unknown"   이웃 세대 소화수 피해
 report_received       bool  화재현장조사서를 받았는가 (after_report를 여는 키)
 adjuster_present      bool  손해사정사 등장 여부
 product_maker_contacted bool  제조사 접촉 여부
@@ -250,10 +300,22 @@ product_maker_contacted bool  제조사 접촉 여부
 `elapsed_bucket`을 본다. 그 전에는 `default: false`로 채워진다. 조사서가
 나오기 전에 "받으셨나요"를 묻는 것은 답할 수 없는 질문이다.
 
-`water_damage_role`이 특히 중요하다. 물 피해를 **받은 쪽과 준 쪽은 지시가
-정반대**다("관리사무소에 알리세요" vs "책임을 인정하지 마세요"). 이것을
-`other_units_affected` 하나로 묶으면 반대 지시가 함께 노출된다.
-`both`는 엔진에서 배열로 펼쳐 양쪽 조건에 모두 걸리게 한다.
+**물 피해는 독립된 두 축이다.** 받은 쪽과 준 쪽은 지시가 정반대라서
+("관리사무소에 알리세요" vs "책임을 인정하지 마세요") 한 키로 묶으면 반대
+지시가 함께 노출된다. 그렇다고 역할 하나로 묶는 것도 안 된다 — 둘 다 겪은
+사람이 있고, 한쪽만 아는 사람도 있다.
+
+그래서 **사용자는 `both`를 고르지 않는다.** 우리 집이 젖었는지와 이웃이
+젖었는지를 따로 묻고, 둘 다 겪은 사람은 두 키가 각각 `true`가 된다.
+한쪽만 모르는 사람은 그 키만 `"unknown"`이다 — 옛 5지선다에서 표현할 수
+없던 상태이고, D-016의 미결이 바로 그 자리였다.
+
+`other_units_affected`(이웃 세대 피해)와 헷갈리지 마라. 그쪽은 **물 피해를
+제외한** 피해이고 질문 문구가 그렇게 못박는다.
+
+이 서비스의 V1 사용자는 **자기 집에서 화재가 발생한 세대**다. "위층 화재로
+우리 집이 젖은 남의집-화재 피해자"는 스코프 밖이고, 두 축의 조건과 본문이
+그 전제 위에 있다.
 
 ### 파생 키
 
@@ -268,9 +330,9 @@ district_residency             none | address | address_and_actual
 district_insurance_exclusion   none | enrolled_self | enrolled_dwelling | compensated
 ```
 
-`deriveState()`는 `water_damage_role: "both"`도 여기서 `["victim","causer"]`
-배열로 펼친다. `"unknown"`은 펼치지 않는다 — 모르는 사람에게 양쪽 지시를
-함께 주면 반대 지시가 섞인다(D-016).
+`deriveState()`에는 **배열로 펼치는 값이 없다.** 옛 `water_damage_role`의
+`both`를 `["victim","causer"]`로 펼치던 코드가 있었는데 두 축으로 쪼개면서
+사라졌다 — 둘 다 겪은 사람은 두 키가 각각 `true`라 펼칠 것이 없다.
 
 **`elapsed_bucket`의 소비자는 `ask_when` 하나다.** 재배치(`placement()`)는
 이 키를 쓰지 않고 항목마다 자기 시간 필드와 `elapsed_hours`를 직접 비교한다 —
@@ -291,11 +353,18 @@ scene_preserved  insurance_self  insurance_dwelling
 other_units_affected  origin_area  product_suspected
 ```
 
-**`true | false | "unknown"` 3상태 키는 위 여섯이고, "모름"을 값으로 갖는
-키는 일곱이다.** 일곱째가 `water_damage_role`인데 3상태가 아니다 —
-`victim | causer | both | none | "unknown"` 다섯 값이고, 여기서 `none`(물
-피해가 없다)과 `"unknown"`(젖었는지 모른다)은 다른 뜻이다. 둘을 합치면
-"모르겠다"가 "피해 없음"이 되어 수손 안내가 통째로 사라진다(D-016).
+여기에 물 피해 두 축이 더해져 **"모름"을 값으로 갖는 키는 여덟이다.**
+
+```
+water_damage_home  water_damage_neighbor
+```
+
+둘 다 `true | false | "unknown"` 3상태다. `false`(물 피해가 없다)와
+`"unknown"`(젖었는지 모른다)은 다른 뜻이고, 합치면 "모르겠다"가 "피해
+없음"이 되어 수손 안내가 통째로 사라진다(D-016).
+
+여덟 중 `origin_area`만 `true|false` 축이 아니다 —
+`"common" | "private" | "unknown"`이고 세 번째가 "모름"이다.
 
 **`null`을 "모름"으로 쓰지 마라.** 한때 보험 세 키가 `null`이었는데
 `matches()`에서 `null`은 `true` 조건에도 `false` 조건에도 안 걸려서,
@@ -469,8 +538,8 @@ evaluate(state, data, now = Date.now()) → {
 
 ## domain_group — 화면용 묶음 (v0.2)
 
-내부 분야 10개를 사용자 언어 6개로 묶는다. 분야 번호는 관리용이고 이것이
-화면에 나가는 이름이다.
+내부 분야 10개를 사용자 언어 **7개**로 묶는다. 분야 번호는 관리용이고
+이것이 데이터에 들어가는 값이다.
 
 | 그룹 | 분야 |
 |---|---|
@@ -484,3 +553,17 @@ evaluate(state, data, now = Date.now()) → {
 
 초기에는 4·5·6·7·9를 "돈과 책임" 하나로 묶었으나 3차 리서치 병합 후 그 그룹이
 38개가 되어 묶음의 의미가 사라졌다. 셋으로 분리했다.
+
+### 표시 라벨은 값과 다르다 (D-023)
+
+화면에서 부르는 이름이 둘 다르다. **데이터의 `domain_group`은 바꾸지
+않는다** — 엔진·계기판·테스트가 그 값을 본다.
+
+| 값 | 화면 표시 |
+|---|---|
+| `몸` | 건강 |
+| `서류` | 필요서류 |
+| 나머지 다섯 | 그대로 |
+
+`src/ui/copy.js`의 `TOPIC_LABEL`이 그 맵이고 `TOPIC_ORDER`가 주제별로 보기의
+배열 순서다. `STATUS_LABEL`이 엔진 status에 하는 일과 같은 계층이다.
