@@ -403,11 +403,13 @@ const 결과 = (state, now = NOW) => resultView({ result: 판정(state, now), st
     !b.byId.has("scene-release") && 전.state.scene_preserved === true);
 }
 
-// 출처 재료 — sources는 아직 비어 있고 조례는 자치구에서 온다(커밋 3).
+// 출처 재료 — sources는 콘텐츠 패스가 하나씩 채우고 조례는 자치구에서 온다(커밋 3).
 {
   const 양천 = 바탕({ ...전.state, district: "yangcheon" });
   t("모든 행이 sources 배열을 실어 나른다", 양천.all.every((r) => Array.isArray(r.sources)));
-  t("지금은 전부 비어 있다 (콘텐츠 패스 전)", 양천.all.every((r) => r.sources.length === 0));
+  // 레퍼런스 케이스는 물 피해가 없어 채워진 항목이 이 화면에 안 뜬다.
+  // "전부 비어 있다"가 아니라 "여기에는 없다"가 사실이다 — 채워진 쪽은 아래에서 본다.
+  t("이 사람의 화면에는 아직 채워진 출처가 없다", 양천.all.every((r) => r.sources.length === 0));
   const 조례행 = 양천.all.filter((r) => r.ordinanceBased);
   t("조례 행이 있다 (양천)", 조례행.length > 0, String(조례행.length));
   t(
@@ -967,13 +969,39 @@ t("주제 카드에는 출처가 없다 (출처는 Action 단위다)",
 {
   const 강남 = 바탕({ ...전.state, district: "gangnam" });
   const 모든행 = 강남.all;
-  t("sources는 아직 전부 비어 있다 (콘텐츠 패스 전)", 모든행.every((r) => r.sources.length === 0));
   t("sources가 비어도 화면이 죽지 않는다", 모든행.every((r) => sourceOf(r) !== undefined));
-  const legacy = 모든행.filter((r) => !r.ordinanceBased && r.sourceUrl);
+  const legacy = 모든행.filter((r) => !r.ordinanceBased && r.sourceUrl && !r.sources.length);
   t("URL이 있으면 원문 보기를 건다",
     legacy.length > 0 && legacy.every((r) => sourceOf(r).items[0].link === "원문 보기 ↗"));
   t("문서명은 지어내지 않는다 (sources가 빌 때)",
     legacy.every((r) => sourceOf(r).items[0].title === null));
+
+  // sources가 채워진 첫 항목 — 콘텐츠 패스가 여기서 시작됐다(커밋 A).
+  // legacy가 아니라 sources 경로로 읽히는지, 카드가 풀 형태로 서는지를 본다.
+  // 이 행은 물 피해를 입은 사람에게만 뜬다.
+  {
+    const 물 = 바탕({ ...전.state, district: "gangnam", water_damage_home: true });
+    const r = 물.byId.get("fire-loss-compensation-not-applicable");
+    t("물 피해 화면에 손실보상 안내가 있다", Boolean(r));
+    const s = sourceOf(r);
+    t("legacy가 아니라 sources로 읽는다", s.kind === "sources", String(s?.kind));
+    t("법령 둘을 함께 싣는다 (법률 · 시행령)", s.items.length === 2, String(s.items.length));
+    t("출처 카드가 풀 형태로 선다 (문서명 · 조문 · 발행처 · 확인일 · 원문 보기)",
+      s.items.every((i) =>
+        typeof i.title === "string" && /^제\d+조/.test(i.article || "") &&
+        i.publisher === "국가법령정보센터" && /^\d{4}\.\d{2}\.\d{2}$/.test(i.checkedAt || "") &&
+        i.link === "원문 보기 ↗" && typeof i.url === "string"),
+      JSON.stringify(s.items[0]));
+    t("메타 줄이 발행처와 확인일을 함께 읽는다",
+      s.items[0].meta === "국가법령정보센터 · 2026.08.30 확인", s.items[0].meta);
+    // 존재하지 않는 조문을 근거로 쓰지 않는다 — "원인에 대하여 책임이 있는 자"
+    // 제외는 경찰관 직무집행법의 문구이고 소방기본법에는 없다.
+    const ad = actionDetailView(물, "fire-loss-compensation-not-applicable");
+    t("없는 제외 조항을 본문에 쓰지 않는다",
+      !/원인에 대하여 책임|원인 책임자|책임이 있는 자/.test(ad.body));
+    t("화재 피해 보상 제도가 아니라고 먼저 말한다",
+      ad.title === "소방서 손실보상은 화재 피해를 보상하는 제도가 아닙니다", ad.title);
+  }
   const 없음 = 모든행.filter((r) => !r.ordinanceBased && !r.sourceUrl);
   t("URL이 없으면 출처 영역이 통째로 없다", 없음.length > 0 && 없음.every((r) => sourceOf(r) === null));
   const 조례 = 모든행.filter((r) => r.ordinanceBased);
