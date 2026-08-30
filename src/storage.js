@@ -148,7 +148,25 @@ export async function loadState(token, { now = new Date() } = {}) {
     await discard(b, token);
     return null;
   }
-  return { ...env, token };
+  return { ...env, token, state: migrate(env.state) };
+}
+
+// ── 옛 state 정리 ───────────────────────────────────
+//
+// 폐기된 키를 읽는 순간 떨어뜨린다. **옛 값을 새 키로 옮기지 않는다.**
+//
+// `water_damage_role`의 `victim`은 "위층 물에 우리 집이 젖었다"였고 새
+// `water_damage_home`은 "불을 끄는 과정에서 우리 집이 젖었다"라 **묻는 것이
+// 다르다.** 기계적으로 옮기면 답한 적 없는 것을 답한 것으로 만든다.
+// 지우면 두 질문이 미답으로 남아 다음 진입에서 다시 묻는다 — 그것이 맞다.
+const DROPPED_KEYS = ["water_damage_role"];
+
+function migrate(state) {
+  if (!state || typeof state !== "object") return state;
+  if (!DROPPED_KEYS.some((k) => k in state)) return state;
+  const out = { ...state };
+  for (const k of DROPPED_KEYS) delete out[k];
+  return out;
 }
 
 // 저장 못 해도 던지지 않는다. 사파리 프라이빗 모드나 용량 초과에서 던진다.

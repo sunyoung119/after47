@@ -224,7 +224,8 @@ const COMMON = {
   powder_present: true,
   wet_appliances: true,
   other_units_affected: false,
-  water_damage_role: "none",
+  water_damage_home: false,
+  water_damage_neighbor: false,
 };
 
 const SCENES = [

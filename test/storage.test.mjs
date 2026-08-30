@@ -116,6 +116,41 @@ try {
 }
 t("읽기도 던지지 않는다", !threw);
 
+// ── 2-b. 폐기된 키를 읽는 순간 떨어뜨리는가 ─────────
+//
+// `water_damage_role`은 물 피해 2축(home·neighbor)으로 대체됐다.
+// **옛 값을 새 키로 옮기지 않는다** — `victim`은 "위층 물에 우리 집이 젖었다"였고
+// 새 `water_damage_home`은 "불을 끄는 과정에서 우리 집이 젖었다"라 묻는 것이
+// 다르다. 옮기면 답한 적 없는 것을 답한 것으로 만든다. 지우면 두 질문이
+// 미답으로 남아 다음 진입에서 다시 묻는다 — 그것이 맞다.
+{
+  const mem = memoryBackend();
+  configureStorage(mem);
+  const T = "ab3k9m";
+  // 옛 스키마를 직접 심는다(saveState를 거치면 지금 코드가 만들어 낸 값이 된다).
+  await mem.set(
+    `after47:state:${T}`,
+    JSON.stringify({
+      v: 1,
+      created_at: "2026-08-01T00:00:00.000Z",
+      updated_at: "2026-08-01T00:00:00.000Z",
+      expires_at: "2099-01-01T00:00:00.000Z",
+      state: { district: "mapo", water_damage_role: "victim", tenure: "renter" },
+    })
+  );
+  const 옛것 = await loadState(T);
+  t("폐기된 water_damage_role은 읽을 때 사라진다", !("water_damage_role" in 옛것.state));
+  t(
+    "새 두 축은 미답으로 남는다 (자동 매핑하지 않는다)",
+    옛것.state.water_damage_home === undefined && 옛것.state.water_damage_neighbor === undefined
+  );
+  t("나머지 답은 그대로다", 옛것.state.district === "mapo" && 옛것.state.tenure === "renter");
+  // 폐기 키가 없는 state는 손대지 않는다 — 불필요한 사본을 만들지 않는다.
+  await saveState(T, { district: "mapo", water_damage_home: true });
+  const 새것 = await loadState(T);
+  t("새 스키마는 그대로 왕복한다", 새것.state.water_damage_home === true);
+}
+
 // ── 5. 누수 탐지 ───────────────────────────────────
 // D-002의 진짜 제약은 "저장 호출이 흩어지지 않는 것"이다.
 // 계약 테스트는 storage.js가 옳은지만 보고, 이건 다른 파일이 몰래

@@ -14,7 +14,7 @@ const ref = (district, over={}) => ({
   residence_possible:false, origin_area:"unknown", product_suspected:false,
   scene_preserved:false, wet_appliances:true, powder_present:true,
   other_units_affected:false,
-  water_damage_role:"none", adjuster_present:false, product_maker_contacted:false,
+  water_damage_home:false, water_damage_neighbor:false, adjuster_present:false, product_maker_contacted:false,
   report_received:false,
   completed:[], ...over,
 });
@@ -50,27 +50,48 @@ show("(3) 2주 뒤 — 조사서 수령, 제조물 의심 확인", ref("gangnam"
              "powder-removal","dry-water","scene-release","support-housing","support-supplies"],
 }), 6);
 
-// 수손 가해/피해 분기 검증 — 지시가 정반대라 섞이면 안 된다
-const vic = evaluate(ref("mapo",{water_damage_role:"victim"}), data);
-const cau = evaluate(ref("mapo",{water_damage_role:"causer"}), data);
+// 물 피해 2축 분기 검증 — 받은 쪽과 준 쪽은 지시가 정반대라 섞이면 안 된다.
+//
+// 구 `water_damage_role` 5지선다를 두 축으로 갈랐다. V1 사용자는 **항상
+// 자기 집에서 화재가 난 세대**라, "위층 화재로 우리 집이 젖은 남의집-화재
+// 피해자"라는 전제가 사라졌다. home은 우리 집이 젖은 것, neighbor는 우리 집
+// 화재를 끄는 과정에서 이웃이 젖은 것이다.
 const flat = r => r.sections.flatMap(s=>s.groups.flatMap(g=>g.items.map(x=>x.action.id)))
   .concat(r.blocked.map(x=>x.action.id));
+const W = (over) => flat(evaluate(ref("mapo", over), data));
 console.log("\n"+"=".repeat(62));
-console.log("수손 가해/피해 분기 검증");
+console.log("물 피해 2축 분기 검증");
 console.log("=".repeat(62));
-const V=flat(vic), C=flat(cau);
 let failed = 0;
 const t=(n,ok)=>{ if(!ok) failed++; console.log(`  ${ok?"PASS":"FAIL"}  ${n}`); };
-t("피해자에게 '관리사무소에 알리세요'가 뜬다", V.includes("water-damage-victim-notify"));
-t("피해자에게 '책임 인정하지 마세요'는 안 뜬다", !V.includes("water-damage-causer-caution"));
-t("가해자에게 '책임 인정하지 마세요'가 뜬다", C.includes("water-damage-causer-caution"));
-t("가해자에게 '관리사무소에 알리세요'는 안 뜬다", !C.includes("water-damage-victim-notify"));
-t("피해자에게 '소방 손실보상 아님' 안내가 뜬다", V.includes("fire-loss-compensation-not-applicable"));
-t("양쪽 다 '젖은 범위 기록' 안내를 받는다",
-  V.includes("water-damage-document-now") && C.includes("water-damage-document-now"));
-const bo=flat(evaluate(ref("mapo",{water_damage_role:"both"}), data));
-t("both면 양쪽 안내를 모두 받는다",
-  bo.includes("water-damage-victim-notify") && bo.includes("water-damage-causer-caution"));
+
+const H = W({water_damage_home:true, water_damage_neighbor:false});
+const N = W({water_damage_home:false, water_damage_neighbor:true});
+const B = W({water_damage_home:true, water_damage_neighbor:true});
+
+t("우리 집이 젖었으면 '관리사무소에 알리세요'가 뜬다", H.includes("water-damage-victim-notify"));
+t("그때 '책임 인정하지 마세요'는 안 뜬다 (이웃 피해 false)",
+  !H.includes("water-damage-causer-caution"));
+t("이웃이 젖었으면 '책임 인정하지 마세요'가 뜬다", N.includes("water-damage-causer-caution"));
+t("그때 '관리사무소에 알리세요'는 안 뜬다 (우리 집 false)",
+  !N.includes("water-damage-victim-notify"));
+t("둘 다 true면 양쪽 안내를 모두 받는다",
+  B.includes("water-damage-victim-notify") && B.includes("water-damage-causer-caution"));
+
+// ★ 새 의도(D-016 해소). 이웃 피해를 모를 때도 금지를 켜둔다 — V1 사용자는
+// 항상 화재 세대라 구 D-016이 걱정하던 혼동("피해자에게 가해자용 금지를 주면
+// 자책한다")이 생기지 않는다. 카피가 조건문형이라 unknown을 발생 확정으로
+// 읽히게 하지도 않는다.
+t("이웃 피해를 모를 때도 '책임 인정하지 마세요'가 뜬다 (unknown)",
+  W({water_damage_neighbor:"unknown"}).includes("water-damage-causer-caution"));
+t("우리 집 물 피해를 모를 때도 '젖은 범위 기록'이 뜬다 (unknown)",
+  W({water_damage_home:"unknown"}).includes("water-damage-document-now"));
+t("둘 다 false면 물 피해 안내가 하나도 안 뜬다",
+  ["water-damage-victim-notify","water-damage-causer-caution","water-damage-document-now",
+   "water-damage-appears-later","fire-loss-compensation-not-applicable",
+   "water-damage-liability-structure","sillhwa-act-water-damage"]
+    .every(id => !W({water_damage_home:false, water_damage_neighbor:false}).includes(id)));
+
 // 손해사정사 조건
 const noAdj=flat(evaluate(ref("mapo"), data));
 t("손해사정사 안 왔으면 '내 편 창구' 안 뜬다", !noAdj.includes("my-side-channels-overview"));
@@ -85,9 +106,9 @@ console.log("");
 console.log("=".repeat(62));
 console.log("done 버킷 — 체크 / 해제 / 왕복");
 console.log("=".repeat(62));
-// water_damage_role을 victim으로 두는 이유는 water-damage-document-now가
-// 그 조건에만 걸리기 때문이다. none이면 항목 자체가 없어 의존 검증이 안 된다.
-const base = ref("mapo", { water_damage_role: "victim" });
+// water_damage_home을 true로 두는 이유는 water-damage-document-now가
+// 그 축에만 걸리기 때문이다. false면 항목 자체가 없어 의존 검증이 안 된다.
+const base = ref("mapo", { water_damage_home: true });
 // 잠긴 행은 blocked 버킷이 아니라 placement 위치의 섹션에 있다(D-019 §5).
 // 그냥 s.key로 적으면 "풀렸다"와 "제자리에 잠겨 있다"가 구별되지 않아
 // 왕복 검증이 통과하면서도 잠금이 안 걸리는 구현이 가능해진다.

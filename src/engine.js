@@ -158,9 +158,9 @@ export function deriveState(state, data, now = Date.now()) {
     : 0;
   return {
     ...state,
-    // 수손 가해·피해를 동시에 겪는 경우가 있다. both는 양쪽 조건에 모두 걸리게 한다.
-    water_damage_role:
-      state.water_damage_role === "both" ? ["victim", "causer"] : state.water_damage_role,
+    // 물 피해는 이제 독립된 두 축이다(water_damage_home · water_damage_neighbor).
+    // 옛 `both`처럼 한 값을 두 조건으로 펼칠 일이 없어졌다 — 둘 다 겪은 사람은
+    // 두 키가 각각 true다.
     district_has_ordinance: district ? district.has_ordinance : null,
     district_residency: district ? district.residency : null,
     district_insurance_exclusion: district ? district.insurance_exclusion : null,

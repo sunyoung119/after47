@@ -37,7 +37,8 @@ export async function runContract({ name, makeBackend, t }) {
     tenure: "renter",
     product_suspected: "unknown",
     completed: ["photo-before-cleanup", "scene-release"],
-    water_damage_role: "both",
+    water_damage_home: true,
+    water_damage_neighbor: true,
   };
   const saved = await saveState(A, state, { now: T0 });
   t(label("저장에 성공한다"), saved.persisted === true, saved.reason);

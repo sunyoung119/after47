@@ -49,14 +49,15 @@ const BASE = {
   wet_appliances: true,
   powder_present: true,
   other_units_affected: false,
-  water_damage_role: "none",
+  water_damage_home: false,
+  water_damage_neighbor: false,
   adjuster_present: false,
   product_maker_contacted: false,
   report_received: false,
   completed: [],
 };
 
-// P6~P8은 다음 단계(water_damage_role의 none 분리)를 위한 것이다.
+// P6~P8은 물 피해 두 축을 각각·함께 밟는다.
 // 지금 전부 none이면 그때 무엇이 변했는지 측정할 수 없다.
 // engine.test.mjs에 "both면 양쪽 안내를 모두 받는다"가 이미 있지만,
 // 그 검증은 통과하면서도 잘못된 구현이 가능하다. 여기가 그 사각을 덮는다.
@@ -74,9 +75,10 @@ const PERSONAS = [
     origin_area: "unknown",
     product_suspected: "unknown",
   }],
-  ["P6", "강남 — 수손 피해자", { district: "gangnam", water_damage_role: "victim" }],
-  ["P7", "강남 — 수손 가해자", { district: "gangnam", water_damage_role: "causer" }],
-  ["P8", "강남 — 수손 가해·피해 양쪽", { district: "gangnam", water_damage_role: "both" }],
+  ["P6", "강남 — 우리 집만 물 피해", { district: "gangnam", water_damage_home: true }],
+  ["P7", "강남 — 이웃 세대만 물 피해", { district: "gangnam", water_damage_neighbor: true }],
+  ["P8", "강남 — 우리 집과 이웃 둘 다",
+    { district: "gangnam", water_damage_home: true, water_damage_neighbor: true }],
 
   // P9~P13은 excluded를 보기 위한 것이다.
   // P1~P8만으로는 D-011의 세 상태 중 `조건부`와 `제외`가 39조합 어디에도
@@ -100,11 +102,11 @@ const PERSONAS = [
   ["P13", "구로 — 주택이 아님 (housing_only → 제외. 보험보다 먼저 걸린다)",
     { district: "guro", housing_type: "other" }],
 
-  // P14는 D-016(water_damage_role의 "모르겠다" 분리)을 지키는 자리다.
-  // 역할 특정 3개(victim 2 / causer 1)가 여기 뜨면 반대 지시가 섞인 것이다.
-  // unknown을 both처럼 배열로 펼치는 실수가 정확히 그렇게 나타난다.
-  ["P14", "강남 — 수손 상황 미확인 (역할 중립 항목만 떠야 한다)",
-    { district: "gangnam", water_damage_role: "unknown" }],
+  // P14는 두 축이 모두 "모르겠다"인 자리다. **이웃 피해 unknown에서
+  // 금지(causer-caution)가 켜지는 것이 새 의도**다(D-016 해소) — V1 사용자는
+  // 항상 화재 세대라 구 D-016이 걱정하던 혼동이 생기지 않는다.
+  ["P14", "강남 — 물 피해 두 축 모두 미확인 (unknown에서 금지가 켜진다)",
+    { district: "gangnam", water_damage_home: "unknown", water_damage_neighbor: "unknown" }],
 
   // P15~P17은 D-013이 만든 게이트의 반대편을 밟는다.
   // 베이스가 product_suspected "unknown" / adjuster_present false /
@@ -192,6 +194,15 @@ const PERSONAS = [
   // 유일한 구) 엔진은 그 필드를 읽지 않는다 — P1과 출력이 같아야 맞다.
   ["P24", "도봉 — 신규 미보유 구 (마포와 같은 경로)",
     { district: "dobong" }],
+
+  // P25는 계기판이 한 번도 관측하지 못한 자리다 — **보존조치가 이미 된 사람.**
+  // scene-release의 applies_when이 scene_preserved:[false,"unknown"]이라 그 사람에게는
+  // 선행이 화면에 아예 안 뜨는데, 그것을 depends_on으로 둔 powder-removal·
+  // dry-water·soot-corrosion-progress는 그대로 잠긴다. 사용자가 스스로 푸는 길이
+  // 없는 경로(leadMissing)이고, 기존 24 페르소나는 전부 false/unknown이라
+  // 이 상태가 기준선에 없었다.
+  ["P25", "강남 — 보존조치 중 (scene-release가 안 떠 잠김을 못 푸는 사람)",
+    { district: "gangnam", scene_preserved: true }],
 ];
 
 // +1200d는 deadline 축의 양성 케이스를 만들기 위한 것이다.

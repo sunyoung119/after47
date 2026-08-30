@@ -852,9 +852,8 @@
     "irreversible": false,
     "guidance_type": "action",
     "applies_when": {
-      "water_damage_role": [
-        "victim",
-        "causer",
+      "water_damage_home": [
+        true,
         "unknown"
       ]
     },
@@ -885,9 +884,8 @@
     "irreversible": true,
     "guidance_type": "action",
     "applies_when": {
-      "water_damage_role": [
-        "victim",
-        "causer",
+      "water_damage_home": [
+        true,
         "unknown"
       ]
     },
@@ -906,8 +904,8 @@
   {
     "id": "water-damage-victim-notify",
     "title": "물 피해를 입었다면 관리사무소와 보험사에 먼저 알리세요",
-    "summary": "아래층·옆집으로서 물 피해를 입었다면 관리주체와 본인 보험사에 지체 없이 알리는 것이 순서입니다.",
-    "body": "공동주택에서 위층 화재의 소화수로 피해를 입었다면 순서가 있습니다.\n\n1. 관리사무소에 즉시 알려 공용배관·공용부 관련 여부를 확인받으세요.\n2. 본인 화재보험이 있으면 보험사에 사고를 접수하세요.\n3. 화재가 난 세대에도 피해 사실을 알리세요.\n\n이때 '누구 책임이다'를 따지기보다 젖은 상태와 날짜를 남기는 데 집중하세요. 나중에 '언제 알렸는지'가 중요해질 수 있으니 문자·이메일처럼 글로 남는 방법을 쓰세요.",
+    "summary": "소화수로 우리 집이 젖었다면 관리주체와 본인 보험사에 알리고, 젖은 상태를 남겨 두는 것이 순서입니다.",
+    "body": "불을 끄는 과정에서 우리 집이 젖었다면 순서가 있습니다.\n\n1. 공동주택이라면 관리사무소(관리주체)에 알려 공용배관·공용부와 관련된 피해인지 확인하세요. 공용부분의 유지·보수와 안전관리는 관리주체의 업무입니다.\n2. 본인 화재보험이 있으면 보험사에 사고를 접수하세요.\n3. 젖은 범위와 날짜를 사진과 함께 남기세요.\n\n지금은 누구 책임인지를 따지기보다 젖은 범위와 시점을 남기는 데 집중하세요. 나중에 언제 알렸는지가 중요해질 수 있으니 문자·이메일처럼 글로 남는 방법을 쓰세요.",
     "domain": 7,
     "domain_group": "책임과 분쟁",
     "category": "신청",
@@ -920,7 +918,7 @@
     "irreversible": false,
     "guidance_type": "action",
     "applies_when": {
-      "water_damage_role": "victim"
+      "water_damage_home": true
     },
     "excluded_when": null,
     "exception_available": false,
@@ -949,9 +947,8 @@
     "irreversible": false,
     "guidance_type": "action",
     "applies_when": {
-      "water_damage_role": [
-        "victim",
-        "causer",
+      "water_damage_neighbor": [
+        true,
         "unknown"
       ]
     },
@@ -984,7 +981,10 @@
     "irreversible": false,
     "guidance_type": "action",
     "applies_when": {
-      "water_damage_role": "victim"
+      "water_damage_home": [
+        true,
+        "unknown"
+      ]
     },
     "excluded_when": null,
     "exception_available": false,
@@ -1013,9 +1013,8 @@
     "irreversible": false,
     "guidance_type": "action",
     "applies_when": {
-      "water_damage_role": [
-        "victim",
-        "causer",
+      "water_damage_neighbor": [
+        true,
         "unknown"
       ]
     },
@@ -1031,9 +1030,9 @@
   },
   {
     "id": "water-damage-causer-caution",
-    "title": "아래층에 물 피해를 줬더라도 그 자리에서 책임을 인정하지 마세요",
-    "summary": "원인과 책임 비율이 확정되기 전에 각서를 쓰거나 현금을 건네면 되돌리기 어렵습니다.",
-    "body": "아래층·옆집이 찾아와 배상을 요구하더라도, 화재 원인(제조물 결함, 공용부 발화 등)과 책임 비율이 확정되기 전에 개별 합의서·각서를 쓰거나 현금을 건네지 마세요. 원인이 본인 과실이 아니거나 실화책임법으로 배상액이 줄 수 있는데도, 섣부른 인정은 나중에 돌이키기 어렵습니다.\n\n'피해가 있으신 건 확인했고, 원인 조사 결과와 보험사를 통해 정식으로 처리하겠다'고만 답하고, 상대의 요구와 피해 상태는 기록해 두세요.",
+    "title": "이웃 세대 물 피해에 대해 그 자리에서 책임을 인정하지 마세요",
+    "summary": "원인과 책임 비율이 확인되기 전에 각서를 쓰거나 현금을 건네면 되돌리기 어렵습니다.",
+    "body": "이웃 세대의 물 피해가 확인되더라도, 화재 원인(제조물 결함, 공용부 발화 등)과 책임 비율이 확인되기 전에는 개별 합의서·각서를 쓰거나 현금을 건네지 마세요. 원인이 본인 과실이 아니거나 실화책임법으로 배상액이 줄어들 수 있는데도, 섣부른 인정은 나중에 돌이키기 어렵습니다.\n\n찾아온 이웃에게는 피해가 있으신 것은 확인했고 원인 조사 결과와 보험사를 통해 정식으로 처리하겠다고만 답하고, 상대의 요구와 피해 상태는 기록해 두세요.",
     "domain": 7,
     "domain_group": "책임과 분쟁",
     "category": "판단",
@@ -1046,7 +1045,10 @@
     "irreversible": true,
     "guidance_type": "do_not",
     "applies_when": {
-      "water_damage_role": "causer"
+      "water_damage_neighbor": [
+        true,
+        "unknown"
+      ]
     },
     "excluded_when": null,
     "exception_available": false,

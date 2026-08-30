@@ -30,7 +30,8 @@
         "residence_possible": false,
         "scene_preserved": false,
         "tenure": "renter",
-        "water_damage_role": "none",
+        "water_damage_home": false,
+        "water_damage_neighbor": false,
         "wet_appliances": true
       },
       "+3h": {
@@ -2534,7 +2535,8 @@
         "residence_possible": false,
         "scene_preserved": false,
         "tenure": "renter",
-        "water_damage_role": "none",
+        "water_damage_home": false,
+        "water_damage_neighbor": false,
         "wet_appliances": true
       },
       "+3h": {
@@ -5278,7 +5280,8 @@
         "residence_possible": false,
         "scene_preserved": false,
         "tenure": "renter",
-        "water_damage_role": "none",
+        "water_damage_home": false,
+        "water_damage_neighbor": false,
         "wet_appliances": true
       },
       "+3h": {
@@ -8021,7 +8024,8 @@
         "residence_possible": false,
         "scene_preserved": false,
         "tenure": "renter",
-        "water_damage_role": "none",
+        "water_damage_home": false,
+        "water_damage_neighbor": false,
         "wet_appliances": true
       },
       "+3h": {
@@ -10790,7 +10794,8 @@
         "residence_possible": false,
         "scene_preserved": "unknown",
         "tenure": "renter",
-        "water_damage_role": "none",
+        "water_damage_home": false,
+        "water_damage_neighbor": false,
         "wet_appliances": true
       },
       "+3h": {
@@ -13644,7 +13649,7 @@
       }
     },
     "P6": {
-      "_desc": "강남 — 수손 피해자",
+      "_desc": "강남 — 우리 집만 물 피해",
       "_state": {
         "adjuster_present": false,
         "compensated": false,
@@ -13664,7 +13669,8 @@
         "residence_possible": false,
         "scene_preserved": false,
         "tenure": "renter",
-        "water_damage_role": "victim",
+        "water_damage_home": true,
+        "water_damage_neighbor": false,
         "wet_appliances": true
       },
       "+3h": {
@@ -14089,7 +14095,7 @@
           },
           {
             "key": "after_report",
-            "count": 3,
+            "count": 2,
             "unlocked": false,
             "items": [
               {
@@ -14106,26 +14112,13 @@
                 "amount_known": null
               },
               {
-                "id": "sillhwa-act-water-damage",
-                "group": "책임과 분쟁",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "rank": 28,
-                "locked": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
                 "id": "tenant-restoration-scope",
                 "group": "집주인과 계약",
                 "axis": "제도",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 29,
+                "rank": 28,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -14195,24 +14188,6 @@
             "amount_known": false,
             "group": "집 정리",
             "category": "신청",
-            "wait_days": null,
-            "irreversible": false
-          },
-          {
-            "id": "water-damage-liability-structure",
-            "blocked_by": [
-              {
-                "id": "investigation-report",
-                "title": "화재현장조사서를 정보공개청구로 신청하세요"
-              }
-            ],
-            "blocks_reason": null,
-            "status": "해당",
-            "deadline_days": null,
-            "dept": null,
-            "amount_known": null,
-            "group": "책임과 분쟁",
-            "category": "판단",
             "wait_days": null,
             "irreversible": false
           },
@@ -14720,7 +14695,7 @@
           },
           {
             "key": "after_report",
-            "count": 3,
+            "count": 2,
             "unlocked": false,
             "items": [
               {
@@ -14737,26 +14712,13 @@
                 "amount_known": null
               },
               {
-                "id": "sillhwa-act-water-damage",
-                "group": "책임과 분쟁",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "rank": 24,
-                "locked": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
                 "id": "tenant-restoration-scope",
                 "group": "집주인과 계약",
                 "axis": "제도",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 25,
+                "rank": 24,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -14826,24 +14788,6 @@
             "amount_known": false,
             "group": "집 정리",
             "category": "신청",
-            "wait_days": null,
-            "irreversible": false
-          },
-          {
-            "id": "water-damage-liability-structure",
-            "blocked_by": [
-              {
-                "id": "investigation-report",
-                "title": "화재현장조사서를 정보공개청구로 신청하세요"
-              }
-            ],
-            "blocks_reason": null,
-            "status": "해당",
-            "deadline_days": null,
-            "dept": null,
-            "amount_known": null,
-            "group": "책임과 분쟁",
-            "category": "판단",
             "wait_days": null,
             "irreversible": false
           },
@@ -15351,7 +15295,7 @@
           },
           {
             "key": "after_report",
-            "count": 3,
+            "count": 2,
             "unlocked": false,
             "items": [
               {
@@ -15368,26 +15312,13 @@
                 "amount_known": null
               },
               {
-                "id": "sillhwa-act-water-damage",
-                "group": "책임과 분쟁",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "rank": 24,
-                "locked": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
                 "id": "tenant-restoration-scope",
                 "group": "집주인과 계약",
                 "axis": "제도",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 25,
+                "rank": 24,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -15457,24 +15388,6 @@
             "amount_known": false,
             "group": "집 정리",
             "category": "신청",
-            "wait_days": null,
-            "irreversible": false
-          },
-          {
-            "id": "water-damage-liability-structure",
-            "blocked_by": [
-              {
-                "id": "investigation-report",
-                "title": "화재현장조사서를 정보공개청구로 신청하세요"
-              }
-            ],
-            "blocks_reason": null,
-            "status": "해당",
-            "deadline_days": null,
-            "dept": null,
-            "amount_known": null,
-            "group": "책임과 분쟁",
-            "category": "판단",
             "wait_days": null,
             "irreversible": false
           },
@@ -15975,7 +15888,7 @@
           },
           {
             "key": "after_report",
-            "count": 3,
+            "count": 2,
             "unlocked": false,
             "items": [
               {
@@ -15992,26 +15905,13 @@
                 "amount_known": null
               },
               {
-                "id": "sillhwa-act-water-damage",
-                "group": "책임과 분쟁",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "rank": 24,
-                "locked": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
                 "id": "tenant-restoration-scope",
                 "group": "집주인과 계약",
                 "axis": "제도",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 25,
+                "rank": 24,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -16081,24 +15981,6 @@
             "amount_known": false,
             "group": "집 정리",
             "category": "신청",
-            "wait_days": null,
-            "irreversible": false
-          },
-          {
-            "id": "water-damage-liability-structure",
-            "blocked_by": [
-              {
-                "id": "investigation-report",
-                "title": "화재현장조사서를 정보공개청구로 신청하세요"
-              }
-            ],
-            "blocks_reason": null,
-            "status": "해당",
-            "deadline_days": null,
-            "dept": null,
-            "amount_known": null,
-            "group": "책임과 분쟁",
-            "category": "판단",
             "wait_days": null,
             "irreversible": false
           },
@@ -16599,7 +16481,7 @@
           },
           {
             "key": "after_report",
-            "count": 3,
+            "count": 2,
             "unlocked": false,
             "items": [
               {
@@ -16616,26 +16498,13 @@
                 "amount_known": null
               },
               {
-                "id": "sillhwa-act-water-damage",
-                "group": "책임과 분쟁",
-                "axis": "제도",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "rank": 24,
-                "locked": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
                 "id": "tenant-restoration-scope",
                 "group": "집주인과 계약",
                 "axis": "제도",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 25,
+                "rank": 24,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -16705,24 +16574,6 @@
             "amount_known": false,
             "group": "집 정리",
             "category": "신청",
-            "wait_days": null,
-            "irreversible": false
-          },
-          {
-            "id": "water-damage-liability-structure",
-            "blocked_by": [
-              {
-                "id": "investigation-report",
-                "title": "화재현장조사서를 정보공개청구로 신청하세요"
-              }
-            ],
-            "blocks_reason": null,
-            "status": "해당",
-            "deadline_days": null,
-            "dept": null,
-            "amount_known": null,
-            "group": "책임과 분쟁",
-            "category": "판단",
             "wait_days": null,
             "irreversible": false
           },
@@ -16803,7 +16654,7 @@
       }
     },
     "P7": {
-      "_desc": "강남 — 수손 가해자",
+      "_desc": "강남 — 이웃 세대만 물 피해",
       "_state": {
         "adjuster_present": false,
         "compensated": false,
@@ -16823,14 +16674,15 @@
         "residence_possible": false,
         "scene_preserved": false,
         "tenure": "renter",
-        "water_damage_role": "causer",
+        "water_damage_home": false,
+        "water_damage_neighbor": true,
         "wet_appliances": true
       },
       "+3h": {
         "sections": [
           {
             "key": "today",
-            "count": 11,
+            "count": 10,
             "unlocked": true,
             "items": [
               {
@@ -16853,7 +16705,7 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 7,
+                "rank": 6,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -16899,19 +16751,6 @@
                 "amount_known": null
               },
               {
-                "id": "water-damage-document-now",
-                "group": "집 정리",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": true,
-                "rank": 6,
-                "locked": true,
-                "checkable": false,
-                "dept": null,
-                "amount_known": null
-              },
-              {
                 "id": "fridge-4h",
                 "group": "몸",
                 "axis": "사실",
@@ -16931,7 +16770,7 @@
                 "timing_hours": 6,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 8,
+                "rank": 7,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -16944,7 +16783,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 9,
+                "rank": 8,
                 "locked": false,
                 "checkable": true,
                 "dept": "안전교통국 재난안전과",
@@ -16957,7 +16796,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 10,
+                "rank": 9,
                 "locked": false,
                 "checkable": true,
                 "dept": "안전교통국 재난안전과",
@@ -16970,7 +16809,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 11,
+                "rank": 10,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -17052,7 +16891,7 @@
           },
           {
             "key": "this_week",
-            "count": 7,
+            "count": 6,
             "unlocked": true,
             "items": [
               {
@@ -17062,7 +16901,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 12,
+                "rank": 11,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -17075,7 +16914,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 13,
+                "rank": 12,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -17088,7 +16927,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 14,
+                "rank": 13,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -17101,7 +16940,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 17,
+                "rank": 15,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -17114,7 +16953,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 18,
+                "rank": 16,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -17127,24 +16966,11 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 15,
+                "rank": 14,
                 "locked": false,
                 "checkable": true,
                 "dept": "안전교통국 재난안전과",
                 "amount_known": false
-              },
-              {
-                "id": "water-damage-appears-later",
-                "group": "집 정리",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "rank": 16,
-                "locked": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
               }
             ]
           },
@@ -17160,7 +16986,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 19,
+                "rank": 17,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -17173,7 +16999,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 20,
+                "rank": 18,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -17186,7 +17012,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 21,
+                "rank": 19,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -17199,7 +17025,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 22,
+                "rank": 20,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -17212,7 +17038,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 23,
+                "rank": 21,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -17225,7 +17051,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 24,
+                "rank": 22,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -17245,7 +17071,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 25,
+                "rank": 23,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -17258,7 +17084,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 26,
+                "rank": 24,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -17271,7 +17097,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 27,
+                "rank": 25,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -17500,7 +17326,7 @@
           },
           {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "unlocked": true,
             "items": [
               {
@@ -17523,22 +17349,9 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 3,
+                "rank": 2,
                 "locked": false,
                 "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
-                "id": "water-damage-document-now",
-                "group": "집 정리",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": true,
-                "rank": 2,
-                "locked": true,
-                "checkable": false,
                 "dept": null,
                 "amount_known": null
               },
@@ -17549,7 +17362,7 @@
                 "timing_hours": 6,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 4,
+                "rank": 3,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -17562,7 +17375,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 5,
+                "rank": 4,
                 "locked": false,
                 "checkable": true,
                 "dept": "안전교통국 재난안전과",
@@ -17575,7 +17388,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 6,
+                "rank": 5,
                 "locked": false,
                 "checkable": true,
                 "dept": "안전교통국 재난안전과",
@@ -17588,7 +17401,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 7,
+                "rank": 6,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -17670,7 +17483,7 @@
           },
           {
             "key": "this_week",
-            "count": 7,
+            "count": 6,
             "unlocked": true,
             "items": [
               {
@@ -17680,7 +17493,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 8,
+                "rank": 7,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -17693,7 +17506,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 9,
+                "rank": 8,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -17706,7 +17519,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 10,
+                "rank": 9,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -17719,7 +17532,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 13,
+                "rank": 11,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -17732,7 +17545,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 14,
+                "rank": 12,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -17745,24 +17558,11 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 11,
+                "rank": 10,
                 "locked": false,
                 "checkable": true,
                 "dept": "안전교통국 재난안전과",
                 "amount_known": false
-              },
-              {
-                "id": "water-damage-appears-later",
-                "group": "집 정리",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "rank": 12,
-                "locked": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
               }
             ]
           },
@@ -17778,7 +17578,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 15,
+                "rank": 13,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -17791,7 +17591,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 16,
+                "rank": 14,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -17804,7 +17604,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 17,
+                "rank": 15,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -17817,7 +17617,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 18,
+                "rank": 16,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -17830,7 +17630,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 19,
+                "rank": 17,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -17843,7 +17643,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 20,
+                "rank": 18,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -17863,7 +17663,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 21,
+                "rank": 19,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -17876,7 +17676,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 22,
+                "rank": 20,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -17889,7 +17689,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 23,
+                "rank": 21,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -18118,7 +17918,7 @@
           },
           {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "unlocked": true,
             "items": [
               {
@@ -18141,22 +17941,9 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 3,
+                "rank": 2,
                 "locked": false,
                 "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
-                "id": "water-damage-document-now",
-                "group": "집 정리",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": true,
-                "rank": 2,
-                "locked": true,
-                "checkable": false,
                 "dept": null,
                 "amount_known": null
               },
@@ -18167,7 +17954,7 @@
                 "timing_hours": 6,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 4,
+                "rank": 3,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -18180,7 +17967,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 5,
+                "rank": 4,
                 "locked": false,
                 "checkable": true,
                 "dept": "안전교통국 재난안전과",
@@ -18193,7 +17980,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 6,
+                "rank": 5,
                 "locked": false,
                 "checkable": true,
                 "dept": "안전교통국 재난안전과",
@@ -18206,7 +17993,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 7,
+                "rank": 6,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -18298,7 +18085,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 8,
+                "rank": 7,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -18311,7 +18098,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 9,
+                "rank": 8,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -18324,7 +18111,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 10,
+                "rank": 9,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -18337,7 +18124,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 12,
+                "rank": 11,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -18350,7 +18137,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 13,
+                "rank": 12,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -18363,7 +18150,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 11,
+                "rank": 10,
                 "locked": false,
                 "checkable": true,
                 "dept": "안전교통국 재난안전과",
@@ -18373,7 +18160,7 @@
           },
           {
             "key": "anytime",
-            "count": 7,
+            "count": 6,
             "unlocked": true,
             "items": [
               {
@@ -18383,7 +18170,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 14,
+                "rank": 13,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -18396,7 +18183,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 15,
+                "rank": 14,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -18409,20 +18196,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 16,
-                "locked": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
-                "id": "water-damage-appears-later",
-                "group": "집 정리",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "rank": 17,
+                "rank": 15,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -18435,7 +18209,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 18,
+                "rank": 16,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -18448,7 +18222,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 19,
+                "rank": 17,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -18461,7 +18235,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 20,
+                "rank": 18,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -18481,7 +18255,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 21,
+                "rank": 19,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -18494,7 +18268,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 22,
+                "rank": 20,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -18507,7 +18281,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 23,
+                "rank": 21,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -18736,7 +18510,7 @@
           },
           {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "unlocked": true,
             "items": [
               {
@@ -18759,22 +18533,9 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 3,
+                "rank": 2,
                 "locked": false,
                 "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
-                "id": "water-damage-document-now",
-                "group": "집 정리",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": true,
-                "rank": 2,
-                "locked": true,
-                "checkable": false,
                 "dept": null,
                 "amount_known": null
               },
@@ -18785,7 +18546,7 @@
                 "timing_hours": 6,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 4,
+                "rank": 3,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -18798,7 +18559,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 5,
+                "rank": 4,
                 "locked": false,
                 "checkable": true,
                 "dept": "안전교통국 재난안전과",
@@ -18811,7 +18572,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 6,
+                "rank": 5,
                 "locked": false,
                 "checkable": true,
                 "dept": "안전교통국 재난안전과",
@@ -18824,7 +18585,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 7,
+                "rank": 6,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -18906,7 +18667,7 @@
           },
           {
             "key": "anytime",
-            "count": 13,
+            "count": 12,
             "unlocked": true,
             "items": [
               {
@@ -18916,7 +18677,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 8,
+                "rank": 7,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -18929,7 +18690,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 9,
+                "rank": 8,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -18942,7 +18703,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 13,
+                "rank": 12,
                 "locked": false,
                 "checkable": true,
                 "dept": "안전교통국 재난안전과",
@@ -18955,7 +18716,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 10,
+                "rank": 9,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -18968,7 +18729,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 11,
+                "rank": 10,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -18981,7 +18742,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 12,
+                "rank": 11,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -18994,7 +18755,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 16,
+                "rank": 14,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -19007,7 +18768,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 17,
+                "rank": 15,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -19020,20 +18781,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 14,
-                "locked": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
-                "id": "water-damage-appears-later",
-                "group": "집 정리",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "rank": 15,
+                "rank": 13,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -19046,7 +18794,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 18,
+                "rank": 16,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -19059,7 +18807,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 19,
+                "rank": 17,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -19072,7 +18820,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 20,
+                "rank": 18,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -19092,7 +18840,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 21,
+                "rank": 19,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -19105,7 +18853,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 22,
+                "rank": 20,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -19118,7 +18866,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 23,
+                "rank": 21,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -19347,7 +19095,7 @@
           },
           {
             "key": "today",
-            "count": 7,
+            "count": 6,
             "unlocked": true,
             "items": [
               {
@@ -19370,22 +19118,9 @@
                 "timing_hours": 0,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 3,
+                "rank": 2,
                 "locked": false,
                 "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
-                "id": "water-damage-document-now",
-                "group": "집 정리",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": true,
-                "rank": 2,
-                "locked": true,
-                "checkable": false,
                 "dept": null,
                 "amount_known": null
               },
@@ -19396,7 +19131,7 @@
                 "timing_hours": 6,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 4,
+                "rank": 3,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -19409,7 +19144,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 5,
+                "rank": 4,
                 "locked": false,
                 "checkable": true,
                 "dept": "안전교통국 재난안전과",
@@ -19422,7 +19157,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 6,
+                "rank": 5,
                 "locked": false,
                 "checkable": true,
                 "dept": "안전교통국 재난안전과",
@@ -19435,7 +19170,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 7,
+                "rank": 6,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -19517,7 +19252,7 @@
           },
           {
             "key": "anytime",
-            "count": 13,
+            "count": 12,
             "unlocked": true,
             "items": [
               {
@@ -19527,7 +19262,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 8,
+                "rank": 7,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -19540,7 +19275,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 9,
+                "rank": 8,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -19553,7 +19288,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 13,
+                "rank": 12,
                 "locked": false,
                 "checkable": true,
                 "dept": "안전교통국 재난안전과",
@@ -19566,7 +19301,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 10,
+                "rank": 9,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -19579,7 +19314,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 11,
+                "rank": 10,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -19592,7 +19327,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 12,
+                "rank": 11,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -19605,7 +19340,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 16,
+                "rank": 14,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -19618,7 +19353,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 17,
+                "rank": 15,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -19631,20 +19366,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 14,
-                "locked": false,
-                "checkable": true,
-                "dept": null,
-                "amount_known": null
-              },
-              {
-                "id": "water-damage-appears-later",
-                "group": "집 정리",
-                "axis": "사실",
-                "timing_hours": null,
-                "deadline_days": null,
-                "irreversible": false,
-                "rank": 15,
+                "rank": 13,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -19657,7 +19379,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 18,
+                "rank": 16,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -19670,7 +19392,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 19,
+                "rank": 17,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -19683,7 +19405,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 20,
+                "rank": 18,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -19703,7 +19425,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 21,
+                "rank": 19,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -19716,7 +19438,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 22,
+                "rank": 20,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -19729,7 +19451,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 23,
+                "rank": 21,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -19897,7 +19619,7 @@
       }
     },
     "P8": {
-      "_desc": "강남 — 수손 가해·피해 양쪽",
+      "_desc": "강남 — 우리 집과 이웃 둘 다",
       "_state": {
         "adjuster_present": false,
         "compensated": false,
@@ -19917,7 +19639,8 @@
         "residence_possible": false,
         "scene_preserved": false,
         "tenure": "renter",
-        "water_damage_role": "both",
+        "water_damage_home": true,
+        "water_damage_neighbor": true,
         "wet_appliances": true
       },
       "+3h": {
@@ -23141,7 +22864,8 @@
         "residence_possible": false,
         "scene_preserved": false,
         "tenure": "renter",
-        "water_damage_role": "none",
+        "water_damage_home": false,
+        "water_damage_neighbor": false,
         "wet_appliances": true
       },
       "+3h": {
@@ -25910,7 +25634,8 @@
         "residence_possible": false,
         "scene_preserved": false,
         "tenure": "renter",
-        "water_damage_role": "none",
+        "water_damage_home": false,
+        "water_damage_neighbor": false,
         "wet_appliances": true
       },
       "+3h": {
@@ -28564,7 +28289,8 @@
         "residence_possible": false,
         "scene_preserved": false,
         "tenure": "renter",
-        "water_damage_role": "none",
+        "water_damage_home": false,
+        "water_damage_neighbor": false,
         "wet_appliances": true
       },
       "+3h": {
@@ -31257,7 +30983,8 @@
         "residence_possible": false,
         "scene_preserved": false,
         "tenure": "renter",
-        "water_damage_role": "none",
+        "water_damage_home": false,
+        "water_damage_neighbor": false,
         "wet_appliances": true
       },
       "+3h": {
@@ -34156,7 +33883,8 @@
         "residence_possible": false,
         "scene_preserved": false,
         "tenure": "renter",
-        "water_damage_role": "none",
+        "water_damage_home": false,
+        "water_damage_neighbor": false,
         "wet_appliances": true
       },
       "+3h": {
@@ -36570,7 +36298,7 @@
       }
     },
     "P14": {
-      "_desc": "강남 — 수손 상황 미확인 (역할 중립 항목만 떠야 한다)",
+      "_desc": "강남 — 물 피해 두 축 모두 미확인 (unknown에서 금지가 켜진다)",
       "_state": {
         "adjuster_present": false,
         "compensated": false,
@@ -36590,7 +36318,8 @@
         "residence_possible": false,
         "scene_preserved": false,
         "tenure": "renter",
-        "water_damage_role": "unknown",
+        "water_damage_home": "unknown",
+        "water_damage_neighbor": "unknown",
         "wet_appliances": true
       },
       "+3h": {
@@ -36747,7 +36476,7 @@
           },
           {
             "key": "standing",
-            "count": 4,
+            "count": 5,
             "unlocked": true,
             "items": [
               {
@@ -36781,6 +36510,19 @@
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "water-damage-causer-caution",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": true,
                 "rank": null,
@@ -36904,7 +36646,7 @@
           },
           {
             "key": "anytime",
-            "count": 6,
+            "count": 7,
             "unlocked": true,
             "items": [
               {
@@ -36947,7 +36689,7 @@
                 "amount_known": null
               },
               {
-                "id": "legal-aid-klac",
+                "id": "fire-loss-compensation-not-applicable",
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": null,
@@ -36960,7 +36702,7 @@
                 "amount_known": null
               },
               {
-                "id": "small-claims",
+                "id": "legal-aid-klac",
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": null,
@@ -36973,13 +36715,26 @@
                 "amount_known": null
               },
               {
-                "id": "housing-mgmt-dispute-committee",
+                "id": "small-claims",
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
                 "rank": 24,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "housing-mgmt-dispute-committee",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 25,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -36999,7 +36754,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 25,
+                "rank": 26,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -37012,7 +36767,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 26,
+                "rank": 27,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -37025,7 +36780,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 27,
+                "rank": 28,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -37352,7 +37107,7 @@
           },
           {
             "key": "standing",
-            "count": 4,
+            "count": 5,
             "unlocked": true,
             "items": [
               {
@@ -37386,6 +37141,19 @@
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "water-damage-causer-caution",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": true,
                 "rank": null,
@@ -37509,7 +37277,7 @@
           },
           {
             "key": "anytime",
-            "count": 6,
+            "count": 7,
             "unlocked": true,
             "items": [
               {
@@ -37552,7 +37320,7 @@
                 "amount_known": null
               },
               {
-                "id": "legal-aid-klac",
+                "id": "fire-loss-compensation-not-applicable",
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": null,
@@ -37565,7 +37333,7 @@
                 "amount_known": null
               },
               {
-                "id": "small-claims",
+                "id": "legal-aid-klac",
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": null,
@@ -37578,13 +37346,26 @@
                 "amount_known": null
               },
               {
-                "id": "housing-mgmt-dispute-committee",
+                "id": "small-claims",
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
                 "rank": 20,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "housing-mgmt-dispute-committee",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 21,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -37604,7 +37385,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 21,
+                "rank": 22,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -37617,7 +37398,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 22,
+                "rank": 23,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -37630,7 +37411,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 23,
+                "rank": 24,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -37957,7 +37738,7 @@
           },
           {
             "key": "standing",
-            "count": 4,
+            "count": 5,
             "unlocked": true,
             "items": [
               {
@@ -37991,6 +37772,19 @@
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "water-damage-causer-caution",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": true,
                 "rank": null,
@@ -38101,7 +37895,7 @@
           },
           {
             "key": "anytime",
-            "count": 7,
+            "count": 8,
             "unlocked": true,
             "items": [
               {
@@ -38157,7 +37951,7 @@
                 "amount_known": null
               },
               {
-                "id": "legal-aid-klac",
+                "id": "fire-loss-compensation-not-applicable",
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": null,
@@ -38170,7 +37964,7 @@
                 "amount_known": null
               },
               {
-                "id": "small-claims",
+                "id": "legal-aid-klac",
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": null,
@@ -38183,13 +37977,26 @@
                 "amount_known": null
               },
               {
-                "id": "housing-mgmt-dispute-committee",
+                "id": "small-claims",
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
                 "rank": 20,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "housing-mgmt-dispute-committee",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 21,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -38209,7 +38016,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 21,
+                "rank": 22,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -38222,7 +38029,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 22,
+                "rank": 23,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -38235,7 +38042,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 23,
+                "rank": 24,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -38562,7 +38369,7 @@
           },
           {
             "key": "standing",
-            "count": 4,
+            "count": 5,
             "unlocked": true,
             "items": [
               {
@@ -38605,6 +38412,19 @@
                 "amount_known": null
               },
               {
+                "id": "water-damage-causer-caution",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
                 "id": "tenant-dont-do",
                 "group": "집주인과 계약",
                 "axis": "제도",
@@ -38621,7 +38441,7 @@
           },
           {
             "key": "anytime",
-            "count": 13,
+            "count": 14,
             "unlocked": true,
             "items": [
               {
@@ -38709,7 +38529,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 16,
+                "rank": 17,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -38722,7 +38542,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 17,
+                "rank": 18,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -38755,20 +38575,20 @@
                 "amount_known": null
               },
               {
-                "id": "legal-aid-klac",
+                "id": "fire-loss-compensation-not-applicable",
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 18,
+                "rank": 16,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
                 "amount_known": null
               },
               {
-                "id": "small-claims",
+                "id": "legal-aid-klac",
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": null,
@@ -38781,13 +38601,26 @@
                 "amount_known": null
               },
               {
-                "id": "housing-mgmt-dispute-committee",
+                "id": "small-claims",
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
                 "rank": 20,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "housing-mgmt-dispute-committee",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 21,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -38807,7 +38640,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 21,
+                "rank": 22,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -38820,7 +38653,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 22,
+                "rank": 23,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -38833,7 +38666,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 23,
+                "rank": 24,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -39160,7 +38993,7 @@
           },
           {
             "key": "standing",
-            "count": 4,
+            "count": 5,
             "unlocked": true,
             "items": [
               {
@@ -39203,6 +39036,19 @@
                 "amount_known": null
               },
               {
+                "id": "water-damage-causer-caution",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
                 "id": "tenant-dont-do",
                 "group": "집주인과 계약",
                 "axis": "제도",
@@ -39219,7 +39065,7 @@
           },
           {
             "key": "anytime",
-            "count": 13,
+            "count": 14,
             "unlocked": true,
             "items": [
               {
@@ -39307,7 +39153,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 16,
+                "rank": 17,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -39320,7 +39166,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 17,
+                "rank": 18,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -39353,20 +39199,20 @@
                 "amount_known": null
               },
               {
-                "id": "legal-aid-klac",
+                "id": "fire-loss-compensation-not-applicable",
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 18,
+                "rank": 16,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
                 "amount_known": null
               },
               {
-                "id": "small-claims",
+                "id": "legal-aid-klac",
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": null,
@@ -39379,13 +39225,26 @@
                 "amount_known": null
               },
               {
-                "id": "housing-mgmt-dispute-committee",
+                "id": "small-claims",
                 "group": "책임과 분쟁",
                 "axis": "제도",
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
                 "rank": 20,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "housing-mgmt-dispute-committee",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 21,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -39405,7 +39264,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 21,
+                "rank": 22,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -39418,7 +39277,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 22,
+                "rank": 23,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -39431,7 +39290,7 @@
                 "timing_hours": null,
                 "deadline_days": null,
                 "irreversible": false,
-                "rank": 23,
+                "rank": 24,
                 "locked": false,
                 "checkable": true,
                 "dept": null,
@@ -39619,7 +39478,8 @@
         "residence_possible": false,
         "scene_preserved": false,
         "tenure": "renter",
-        "water_damage_role": "none",
+        "water_damage_home": false,
+        "water_damage_neighbor": false,
         "wet_appliances": true
       },
       "+3h": {
@@ -42688,7 +42548,8 @@
         "residence_possible": false,
         "scene_preserved": false,
         "tenure": "renter",
-        "water_damage_role": "none",
+        "water_damage_home": false,
+        "water_damage_neighbor": false,
         "wet_appliances": true
       },
       "+3h": {
@@ -45677,7 +45538,8 @@
         "residence_possible": false,
         "scene_preserved": false,
         "tenure": "renter",
-        "water_damage_role": "none",
+        "water_damage_home": false,
+        "water_damage_neighbor": false,
         "wet_appliances": true
       },
       "+3h": {
@@ -48486,7 +48348,8 @@
         "residence_possible": false,
         "scene_preserved": false,
         "tenure": "renter",
-        "water_damage_role": "none",
+        "water_damage_home": false,
+        "water_damage_neighbor": false,
         "wet_appliances": true
       },
       "+3h": {
@@ -51012,7 +50875,8 @@
         "residence_possible": false,
         "scene_preserved": false,
         "tenure": "renter",
-        "water_damage_role": "none",
+        "water_damage_home": false,
+        "water_damage_neighbor": false,
         "wet_appliances": true
       },
       "+3h": {
@@ -53721,7 +53585,8 @@
         "residence_possible": false,
         "scene_preserved": false,
         "tenure": "renter",
-        "water_damage_role": "none",
+        "water_damage_home": false,
+        "water_damage_neighbor": false,
         "wet_appliances": true
       },
       "+3h": {
@@ -56436,7 +56301,8 @@
         "residence_possible": false,
         "scene_preserved": false,
         "tenure": "renter",
-        "water_damage_role": "none",
+        "water_damage_home": false,
+        "water_damage_neighbor": false,
         "wet_appliances": true
       },
       "+3h": {
@@ -59205,7 +59071,8 @@
         "residence_possible": false,
         "scene_preserved": false,
         "tenure": "renter",
-        "water_damage_role": "none",
+        "water_damage_home": false,
+        "water_damage_neighbor": false,
         "wet_appliances": true
       },
       "+3h": {
@@ -61709,7 +61576,8 @@
         "residence_possible": false,
         "scene_preserved": false,
         "tenure": "renter",
-        "water_damage_role": "none",
+        "water_damage_home": false,
+        "water_damage_neighbor": false,
         "wet_appliances": true
       },
       "+3h": {
@@ -64463,7 +64331,8 @@
         "residence_possible": false,
         "scene_preserved": false,
         "tenure": "renter",
-        "water_damage_role": "none",
+        "water_damage_home": false,
+        "water_damage_neighbor": false,
         "wet_appliances": true
       },
       "+3h": {
@@ -66868,6 +66737,2751 @@
               15,
               60
             ],
+            "irreversible": false
+          },
+          {
+            "id": "tenant-burden-of-proof",
+            "blocked_by": [
+              {
+                "id": "investigation-report",
+                "title": "화재현장조사서를 정보공개청구로 신청하세요"
+              }
+            ],
+            "blocks_reason": null,
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "집주인과 계약",
+            "category": "판단",
+            "wait_days": null,
+            "irreversible": false
+          },
+          {
+            "id": "tenant-contract-termination",
+            "blocked_by": [
+              {
+                "id": "tenant-burden-of-proof",
+                "title": "빌린 공간 밖으로 번진 손해는 임대인이 임차인 잘못을 증명해야 합니다"
+              }
+            ],
+            "blocks_reason": null,
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "집주인과 계약",
+            "category": "판단",
+            "wait_days": null,
+            "irreversible": false
+          },
+          {
+            "id": "evidence-court-referral",
+            "blocked_by": [
+              {
+                "id": "investigation-report",
+                "title": "화재현장조사서를 정보공개청구로 신청하세요"
+              }
+            ],
+            "blocks_reason": null,
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "책임과 분쟁",
+            "category": "신청",
+            "wait_days": null,
+            "irreversible": false
+          },
+          {
+            "id": "common-area-management-role",
+            "blocked_by": [
+              {
+                "id": "common-area-liability",
+                "title": "공용부에서 난 불이면 임차인 책임이 아닐 수 있습니다"
+              }
+            ],
+            "blocks_reason": null,
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "책임과 분쟁",
+            "category": "판단",
+            "wait_days": null,
+            "irreversible": false
+          }
+        ],
+        "excluded": []
+      }
+    },
+    "P25": {
+      "_desc": "강남 — 보존조치 중 (scene-release가 안 떠 잠김을 못 푸는 사람)",
+      "_state": {
+        "adjuster_present": false,
+        "compensated": false,
+        "completed": [],
+        "district": "gangnam",
+        "fire_at": "2026-03-01T12:00:00.000Z",
+        "housing_type": "officetel",
+        "insurance_dwelling": true,
+        "insurance_self": false,
+        "origin_area": "common",
+        "other_units_affected": false,
+        "powder_present": true,
+        "product_maker_contacted": false,
+        "product_suspected": "unknown",
+        "registered_resident": true,
+        "report_received": false,
+        "residence_possible": false,
+        "scene_preserved": true,
+        "tenure": "renter",
+        "water_damage_home": false,
+        "water_damage_neighbor": false,
+        "wet_appliances": true
+      },
+      "+3h": {
+        "sections": [
+          {
+            "key": "today",
+            "count": 9,
+            "unlocked": true,
+            "items": [
+              {
+                "id": "photo-before-cleanup",
+                "group": "보험과 돈",
+                "axis": "사실",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": 1,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": 2,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "ppe-powder",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 6,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 6,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "powder-removal",
+                "group": "집 정리",
+                "axis": "사실",
+                "timing_hours": 24,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": 3,
+                "locked": true,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "dry-water",
+                "group": "집 정리",
+                "axis": "사실",
+                "timing_hours": 48,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": 4,
+                "locked": true,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "soot-corrosion-progress",
+                "group": "집 정리",
+                "axis": "사실",
+                "timing_hours": 48,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": 5,
+                "locked": true,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "support-housing",
+                "group": "지낼 곳",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 7,
+                "locked": false,
+                "checkable": true,
+                "dept": "안전교통국 재난안전과",
+                "amount_known": false
+              },
+              {
+                "id": "support-supplies",
+                "group": "지낼 곳",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 8,
+                "locked": false,
+                "checkable": true,
+                "dept": "안전교통국 재난안전과",
+                "amount_known": false
+              },
+              {
+                "id": "tenant-notify-landlord",
+                "group": "집주인과 계약",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 9,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              }
+            ]
+          },
+          {
+            "key": "standing",
+            "count": 5,
+            "unlocked": true,
+            "items": [
+              {
+                "id": "wet-appliance-power",
+                "group": "집 정리",
+                "axis": "사실",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "scene-preserved-hold",
+                "group": "집 정리",
+                "axis": "제도",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "preserve-product",
+                "group": "책임과 분쟁",
+                "axis": "사실",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "product-handover-caution",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "tenant-dont-do",
+                "group": "집주인과 계약",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              }
+            ]
+          },
+          {
+            "key": "this_week",
+            "count": 6,
+            "unlocked": true,
+            "items": [
+              {
+                "id": "fire-cert",
+                "group": "서류",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 10,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "investigation-report",
+                "group": "서류",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 11,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "adjuster-position",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 12,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "building-group-fire-insurance",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 14,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "no-personal-insurance-building-path",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 15,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "support-psych",
+                "group": "몸",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 13,
+                "locked": false,
+                "checkable": true,
+                "dept": "안전교통국 재난안전과",
+                "amount_known": false
+              }
+            ]
+          },
+          {
+            "key": "anytime",
+            "count": 6,
+            "unlocked": true,
+            "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 16,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 17,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "emergency-welfare",
+                "group": "지낼 곳",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 18,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "legal-aid-klac",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 19,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "small-claims",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 20,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "housing-mgmt-dispute-committee",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 21,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              }
+            ]
+          },
+          {
+            "key": "after_report",
+            "count": 2,
+            "unlocked": false,
+            "items": [
+              {
+                "id": "common-area-liability",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 22,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "tenant-restoration-scope",
+                "group": "집주인과 계약",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 23,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              }
+            ]
+          }
+        ],
+        "done": [],
+        "waiting": [],
+        "blocked": [
+          {
+            "id": "textile-caution",
+            "blocked_by": [
+              {
+                "id": "photo-before-cleanup",
+                "title": "치우기 전에 방마다 사진·영상을 남기세요"
+              }
+            ],
+            "blocks_reason": "옮기기 전에 촬영이 먼저입니다",
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "집 정리",
+            "category": "판단",
+            "wait_days": null,
+            "irreversible": false
+          },
+          {
+            "id": "investigation-report-wait",
+            "blocked_by": [
+              {
+                "id": "investigation-report",
+                "title": "화재현장조사서를 정보공개청구로 신청하세요"
+              }
+            ],
+            "blocks_reason": "먼저 정보공개청구를 해야 합니다",
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "서류",
+            "category": "대기",
+            "wait_days": [
+              15,
+              60
+            ],
+            "irreversible": false
+          },
+          {
+            "id": "support-waste",
+            "blocked_by": [
+              {
+                "id": "scene-release",
+                "title": "현장 정리를 시작해도 되는지 확인하세요"
+              },
+              {
+                "id": "photo-before-cleanup",
+                "title": "치우기 전에 방마다 사진·영상을 남기세요"
+              }
+            ],
+            "blocks_reason": "현장보존 해제와 증거 촬영이 먼저입니다",
+            "status": "해당",
+            "deadline_days": null,
+            "dept": "안전교통국 재난안전과",
+            "amount_known": false,
+            "group": "집 정리",
+            "category": "신청",
+            "wait_days": null,
+            "irreversible": false
+          },
+          {
+            "id": "tenant-burden-of-proof",
+            "blocked_by": [
+              {
+                "id": "investigation-report",
+                "title": "화재현장조사서를 정보공개청구로 신청하세요"
+              }
+            ],
+            "blocks_reason": null,
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "집주인과 계약",
+            "category": "판단",
+            "wait_days": null,
+            "irreversible": false
+          },
+          {
+            "id": "tenant-contract-termination",
+            "blocked_by": [
+              {
+                "id": "tenant-burden-of-proof",
+                "title": "빌린 공간 밖으로 번진 손해는 임대인이 임차인 잘못을 증명해야 합니다"
+              }
+            ],
+            "blocks_reason": null,
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "집주인과 계약",
+            "category": "판단",
+            "wait_days": null,
+            "irreversible": false
+          },
+          {
+            "id": "evidence-court-referral",
+            "blocked_by": [
+              {
+                "id": "investigation-report",
+                "title": "화재현장조사서를 정보공개청구로 신청하세요"
+              }
+            ],
+            "blocks_reason": null,
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "책임과 분쟁",
+            "category": "신청",
+            "wait_days": null,
+            "irreversible": false
+          },
+          {
+            "id": "common-area-management-role",
+            "blocked_by": [
+              {
+                "id": "common-area-liability",
+                "title": "공용부에서 난 불이면 임차인 책임이 아닐 수 있습니다"
+              }
+            ],
+            "blocks_reason": null,
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "책임과 분쟁",
+            "category": "판단",
+            "wait_days": null,
+            "irreversible": false
+          }
+        ],
+        "excluded": []
+      },
+      "+5d": {
+        "sections": [
+          {
+            "key": "missed",
+            "count": 4,
+            "unlocked": true,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "powder-removal",
+                "group": "집 정리",
+                "axis": "사실",
+                "timing_hours": 24,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": true,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "dry-water",
+                "group": "집 정리",
+                "axis": "사실",
+                "timing_hours": 48,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": true,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "soot-corrosion-progress",
+                "group": "집 정리",
+                "axis": "사실",
+                "timing_hours": 48,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": true,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              }
+            ]
+          },
+          {
+            "key": "today",
+            "count": 5,
+            "unlocked": true,
+            "items": [
+              {
+                "id": "photo-before-cleanup",
+                "group": "보험과 돈",
+                "axis": "사실",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": 1,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "ppe-powder",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 6,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 2,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "support-housing",
+                "group": "지낼 곳",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 3,
+                "locked": false,
+                "checkable": true,
+                "dept": "안전교통국 재난안전과",
+                "amount_known": false
+              },
+              {
+                "id": "support-supplies",
+                "group": "지낼 곳",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 4,
+                "locked": false,
+                "checkable": true,
+                "dept": "안전교통국 재난안전과",
+                "amount_known": false
+              },
+              {
+                "id": "tenant-notify-landlord",
+                "group": "집주인과 계약",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 5,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              }
+            ]
+          },
+          {
+            "key": "standing",
+            "count": 5,
+            "unlocked": true,
+            "items": [
+              {
+                "id": "wet-appliance-power",
+                "group": "집 정리",
+                "axis": "사실",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "scene-preserved-hold",
+                "group": "집 정리",
+                "axis": "제도",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "preserve-product",
+                "group": "책임과 분쟁",
+                "axis": "사실",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "product-handover-caution",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "tenant-dont-do",
+                "group": "집주인과 계약",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              }
+            ]
+          },
+          {
+            "key": "this_week",
+            "count": 6,
+            "unlocked": true,
+            "items": [
+              {
+                "id": "fire-cert",
+                "group": "서류",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 6,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "investigation-report",
+                "group": "서류",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 7,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "adjuster-position",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 8,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "building-group-fire-insurance",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 10,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "no-personal-insurance-building-path",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 11,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "support-psych",
+                "group": "몸",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 9,
+                "locked": false,
+                "checkable": true,
+                "dept": "안전교통국 재난안전과",
+                "amount_known": false
+              }
+            ]
+          },
+          {
+            "key": "anytime",
+            "count": 6,
+            "unlocked": true,
+            "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 12,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 13,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "emergency-welfare",
+                "group": "지낼 곳",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 14,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "legal-aid-klac",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 15,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "small-claims",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 16,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "housing-mgmt-dispute-committee",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 17,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              }
+            ]
+          },
+          {
+            "key": "after_report",
+            "count": 2,
+            "unlocked": false,
+            "items": [
+              {
+                "id": "common-area-liability",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 18,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "tenant-restoration-scope",
+                "group": "집주인과 계약",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 19,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              }
+            ]
+          }
+        ],
+        "done": [],
+        "waiting": [],
+        "blocked": [
+          {
+            "id": "textile-caution",
+            "blocked_by": [
+              {
+                "id": "photo-before-cleanup",
+                "title": "치우기 전에 방마다 사진·영상을 남기세요"
+              }
+            ],
+            "blocks_reason": "옮기기 전에 촬영이 먼저입니다",
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "집 정리",
+            "category": "판단",
+            "wait_days": null,
+            "irreversible": false
+          },
+          {
+            "id": "investigation-report-wait",
+            "blocked_by": [
+              {
+                "id": "investigation-report",
+                "title": "화재현장조사서를 정보공개청구로 신청하세요"
+              }
+            ],
+            "blocks_reason": "먼저 정보공개청구를 해야 합니다",
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "서류",
+            "category": "대기",
+            "wait_days": [
+              15,
+              60
+            ],
+            "irreversible": false
+          },
+          {
+            "id": "support-waste",
+            "blocked_by": [
+              {
+                "id": "scene-release",
+                "title": "현장 정리를 시작해도 되는지 확인하세요"
+              },
+              {
+                "id": "photo-before-cleanup",
+                "title": "치우기 전에 방마다 사진·영상을 남기세요"
+              }
+            ],
+            "blocks_reason": "현장보존 해제와 증거 촬영이 먼저입니다",
+            "status": "해당",
+            "deadline_days": null,
+            "dept": "안전교통국 재난안전과",
+            "amount_known": false,
+            "group": "집 정리",
+            "category": "신청",
+            "wait_days": null,
+            "irreversible": false
+          },
+          {
+            "id": "tenant-burden-of-proof",
+            "blocked_by": [
+              {
+                "id": "investigation-report",
+                "title": "화재현장조사서를 정보공개청구로 신청하세요"
+              }
+            ],
+            "blocks_reason": null,
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "집주인과 계약",
+            "category": "판단",
+            "wait_days": null,
+            "irreversible": false
+          },
+          {
+            "id": "tenant-contract-termination",
+            "blocked_by": [
+              {
+                "id": "tenant-burden-of-proof",
+                "title": "빌린 공간 밖으로 번진 손해는 임대인이 임차인 잘못을 증명해야 합니다"
+              }
+            ],
+            "blocks_reason": null,
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "집주인과 계약",
+            "category": "판단",
+            "wait_days": null,
+            "irreversible": false
+          },
+          {
+            "id": "evidence-court-referral",
+            "blocked_by": [
+              {
+                "id": "investigation-report",
+                "title": "화재현장조사서를 정보공개청구로 신청하세요"
+              }
+            ],
+            "blocks_reason": null,
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "책임과 분쟁",
+            "category": "신청",
+            "wait_days": null,
+            "irreversible": false
+          },
+          {
+            "id": "common-area-management-role",
+            "blocked_by": [
+              {
+                "id": "common-area-liability",
+                "title": "공용부에서 난 불이면 임차인 책임이 아닐 수 있습니다"
+              }
+            ],
+            "blocks_reason": null,
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "책임과 분쟁",
+            "category": "판단",
+            "wait_days": null,
+            "irreversible": false
+          }
+        ],
+        "excluded": []
+      },
+      "+14d": {
+        "sections": [
+          {
+            "key": "missed",
+            "count": 4,
+            "unlocked": true,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "powder-removal",
+                "group": "집 정리",
+                "axis": "사실",
+                "timing_hours": 24,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": true,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "dry-water",
+                "group": "집 정리",
+                "axis": "사실",
+                "timing_hours": 48,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": true,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "soot-corrosion-progress",
+                "group": "집 정리",
+                "axis": "사실",
+                "timing_hours": 48,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": true,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              }
+            ]
+          },
+          {
+            "key": "today",
+            "count": 5,
+            "unlocked": true,
+            "items": [
+              {
+                "id": "photo-before-cleanup",
+                "group": "보험과 돈",
+                "axis": "사실",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": 1,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "ppe-powder",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 6,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 2,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "support-housing",
+                "group": "지낼 곳",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 3,
+                "locked": false,
+                "checkable": true,
+                "dept": "안전교통국 재난안전과",
+                "amount_known": false
+              },
+              {
+                "id": "support-supplies",
+                "group": "지낼 곳",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 4,
+                "locked": false,
+                "checkable": true,
+                "dept": "안전교통국 재난안전과",
+                "amount_known": false
+              },
+              {
+                "id": "tenant-notify-landlord",
+                "group": "집주인과 계약",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 5,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              }
+            ]
+          },
+          {
+            "key": "standing",
+            "count": 5,
+            "unlocked": true,
+            "items": [
+              {
+                "id": "wet-appliance-power",
+                "group": "집 정리",
+                "axis": "사실",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "scene-preserved-hold",
+                "group": "집 정리",
+                "axis": "제도",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "preserve-product",
+                "group": "책임과 분쟁",
+                "axis": "사실",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "product-handover-caution",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "tenant-dont-do",
+                "group": "집주인과 계약",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              }
+            ]
+          },
+          {
+            "key": "this_week",
+            "count": 6,
+            "unlocked": true,
+            "items": [
+              {
+                "id": "fire-cert",
+                "group": "서류",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 6,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "investigation-report",
+                "group": "서류",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 7,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "adjuster-position",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 8,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "building-group-fire-insurance",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 10,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "no-personal-insurance-building-path",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 11,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "support-psych",
+                "group": "몸",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 9,
+                "locked": false,
+                "checkable": true,
+                "dept": "안전교통국 재난안전과",
+                "amount_known": false
+              }
+            ]
+          },
+          {
+            "key": "anytime",
+            "count": 6,
+            "unlocked": true,
+            "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 12,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 13,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "emergency-welfare",
+                "group": "지낼 곳",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 14,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "legal-aid-klac",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 15,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "small-claims",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 16,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "housing-mgmt-dispute-committee",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 17,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              }
+            ]
+          },
+          {
+            "key": "after_report",
+            "count": 2,
+            "unlocked": false,
+            "items": [
+              {
+                "id": "common-area-liability",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 18,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "tenant-restoration-scope",
+                "group": "집주인과 계약",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 19,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              }
+            ]
+          }
+        ],
+        "done": [],
+        "waiting": [],
+        "blocked": [
+          {
+            "id": "textile-caution",
+            "blocked_by": [
+              {
+                "id": "photo-before-cleanup",
+                "title": "치우기 전에 방마다 사진·영상을 남기세요"
+              }
+            ],
+            "blocks_reason": "옮기기 전에 촬영이 먼저입니다",
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "집 정리",
+            "category": "판단",
+            "wait_days": null,
+            "irreversible": false
+          },
+          {
+            "id": "investigation-report-wait",
+            "blocked_by": [
+              {
+                "id": "investigation-report",
+                "title": "화재현장조사서를 정보공개청구로 신청하세요"
+              }
+            ],
+            "blocks_reason": "먼저 정보공개청구를 해야 합니다",
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "서류",
+            "category": "대기",
+            "wait_days": [
+              15,
+              60
+            ],
+            "irreversible": false
+          },
+          {
+            "id": "support-waste",
+            "blocked_by": [
+              {
+                "id": "scene-release",
+                "title": "현장 정리를 시작해도 되는지 확인하세요"
+              },
+              {
+                "id": "photo-before-cleanup",
+                "title": "치우기 전에 방마다 사진·영상을 남기세요"
+              }
+            ],
+            "blocks_reason": "현장보존 해제와 증거 촬영이 먼저입니다",
+            "status": "해당",
+            "deadline_days": null,
+            "dept": "안전교통국 재난안전과",
+            "amount_known": false,
+            "group": "집 정리",
+            "category": "신청",
+            "wait_days": null,
+            "irreversible": false
+          },
+          {
+            "id": "tenant-burden-of-proof",
+            "blocked_by": [
+              {
+                "id": "investigation-report",
+                "title": "화재현장조사서를 정보공개청구로 신청하세요"
+              }
+            ],
+            "blocks_reason": null,
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "집주인과 계약",
+            "category": "판단",
+            "wait_days": null,
+            "irreversible": false
+          },
+          {
+            "id": "tenant-contract-termination",
+            "blocked_by": [
+              {
+                "id": "tenant-burden-of-proof",
+                "title": "빌린 공간 밖으로 번진 손해는 임대인이 임차인 잘못을 증명해야 합니다"
+              }
+            ],
+            "blocks_reason": null,
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "집주인과 계약",
+            "category": "판단",
+            "wait_days": null,
+            "irreversible": false
+          },
+          {
+            "id": "evidence-court-referral",
+            "blocked_by": [
+              {
+                "id": "investigation-report",
+                "title": "화재현장조사서를 정보공개청구로 신청하세요"
+              }
+            ],
+            "blocks_reason": null,
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "책임과 분쟁",
+            "category": "신청",
+            "wait_days": null,
+            "irreversible": false
+          },
+          {
+            "id": "common-area-management-role",
+            "blocked_by": [
+              {
+                "id": "common-area-liability",
+                "title": "공용부에서 난 불이면 임차인 책임이 아닐 수 있습니다"
+              }
+            ],
+            "blocks_reason": null,
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "책임과 분쟁",
+            "category": "판단",
+            "wait_days": null,
+            "irreversible": false
+          }
+        ],
+        "excluded": []
+      },
+      "+90d": {
+        "sections": [
+          {
+            "key": "missed",
+            "count": 4,
+            "unlocked": true,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "powder-removal",
+                "group": "집 정리",
+                "axis": "사실",
+                "timing_hours": 24,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": true,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "dry-water",
+                "group": "집 정리",
+                "axis": "사실",
+                "timing_hours": 48,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": true,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "soot-corrosion-progress",
+                "group": "집 정리",
+                "axis": "사실",
+                "timing_hours": 48,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": true,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              }
+            ]
+          },
+          {
+            "key": "today",
+            "count": 5,
+            "unlocked": true,
+            "items": [
+              {
+                "id": "photo-before-cleanup",
+                "group": "보험과 돈",
+                "axis": "사실",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": 1,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "ppe-powder",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 6,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 2,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "support-housing",
+                "group": "지낼 곳",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 3,
+                "locked": false,
+                "checkable": true,
+                "dept": "안전교통국 재난안전과",
+                "amount_known": false
+              },
+              {
+                "id": "support-supplies",
+                "group": "지낼 곳",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 4,
+                "locked": false,
+                "checkable": true,
+                "dept": "안전교통국 재난안전과",
+                "amount_known": false
+              },
+              {
+                "id": "tenant-notify-landlord",
+                "group": "집주인과 계약",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 5,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              }
+            ]
+          },
+          {
+            "key": "standing",
+            "count": 5,
+            "unlocked": true,
+            "items": [
+              {
+                "id": "wet-appliance-power",
+                "group": "집 정리",
+                "axis": "사실",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "scene-preserved-hold",
+                "group": "집 정리",
+                "axis": "제도",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "preserve-product",
+                "group": "책임과 분쟁",
+                "axis": "사실",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "product-handover-caution",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "tenant-dont-do",
+                "group": "집주인과 계약",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              }
+            ]
+          },
+          {
+            "key": "anytime",
+            "count": 12,
+            "unlocked": true,
+            "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 6,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 7,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "support-psych",
+                "group": "몸",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 11,
+                "locked": false,
+                "checkable": true,
+                "dept": "안전교통국 재난안전과",
+                "amount_known": false
+              },
+              {
+                "id": "fire-cert",
+                "group": "서류",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 8,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "investigation-report",
+                "group": "서류",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 9,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "adjuster-position",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 10,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "building-group-fire-insurance",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 13,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "no-personal-insurance-building-path",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 14,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "emergency-welfare",
+                "group": "지낼 곳",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 12,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "legal-aid-klac",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 15,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "small-claims",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 16,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "housing-mgmt-dispute-committee",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 17,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              }
+            ]
+          },
+          {
+            "key": "after_report",
+            "count": 2,
+            "unlocked": false,
+            "items": [
+              {
+                "id": "common-area-liability",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 18,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "tenant-restoration-scope",
+                "group": "집주인과 계약",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 19,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              }
+            ]
+          }
+        ],
+        "done": [],
+        "waiting": [],
+        "blocked": [
+          {
+            "id": "textile-caution",
+            "blocked_by": [
+              {
+                "id": "photo-before-cleanup",
+                "title": "치우기 전에 방마다 사진·영상을 남기세요"
+              }
+            ],
+            "blocks_reason": "옮기기 전에 촬영이 먼저입니다",
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "집 정리",
+            "category": "판단",
+            "wait_days": null,
+            "irreversible": false
+          },
+          {
+            "id": "investigation-report-wait",
+            "blocked_by": [
+              {
+                "id": "investigation-report",
+                "title": "화재현장조사서를 정보공개청구로 신청하세요"
+              }
+            ],
+            "blocks_reason": "먼저 정보공개청구를 해야 합니다",
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "서류",
+            "category": "대기",
+            "wait_days": [
+              15,
+              60
+            ],
+            "irreversible": false
+          },
+          {
+            "id": "support-waste",
+            "blocked_by": [
+              {
+                "id": "scene-release",
+                "title": "현장 정리를 시작해도 되는지 확인하세요"
+              },
+              {
+                "id": "photo-before-cleanup",
+                "title": "치우기 전에 방마다 사진·영상을 남기세요"
+              }
+            ],
+            "blocks_reason": "현장보존 해제와 증거 촬영이 먼저입니다",
+            "status": "해당",
+            "deadline_days": null,
+            "dept": "안전교통국 재난안전과",
+            "amount_known": false,
+            "group": "집 정리",
+            "category": "신청",
+            "wait_days": null,
+            "irreversible": false
+          },
+          {
+            "id": "tenant-burden-of-proof",
+            "blocked_by": [
+              {
+                "id": "investigation-report",
+                "title": "화재현장조사서를 정보공개청구로 신청하세요"
+              }
+            ],
+            "blocks_reason": null,
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "집주인과 계약",
+            "category": "판단",
+            "wait_days": null,
+            "irreversible": false
+          },
+          {
+            "id": "tenant-contract-termination",
+            "blocked_by": [
+              {
+                "id": "tenant-burden-of-proof",
+                "title": "빌린 공간 밖으로 번진 손해는 임대인이 임차인 잘못을 증명해야 합니다"
+              }
+            ],
+            "blocks_reason": null,
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "집주인과 계약",
+            "category": "판단",
+            "wait_days": null,
+            "irreversible": false
+          },
+          {
+            "id": "evidence-court-referral",
+            "blocked_by": [
+              {
+                "id": "investigation-report",
+                "title": "화재현장조사서를 정보공개청구로 신청하세요"
+              }
+            ],
+            "blocks_reason": null,
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "책임과 분쟁",
+            "category": "신청",
+            "wait_days": null,
+            "irreversible": false
+          },
+          {
+            "id": "common-area-management-role",
+            "blocked_by": [
+              {
+                "id": "common-area-liability",
+                "title": "공용부에서 난 불이면 임차인 책임이 아닐 수 있습니다"
+              }
+            ],
+            "blocks_reason": null,
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "책임과 분쟁",
+            "category": "판단",
+            "wait_days": null,
+            "irreversible": false
+          }
+        ],
+        "excluded": []
+      },
+      "+1200d": {
+        "sections": [
+          {
+            "key": "missed",
+            "count": 4,
+            "unlocked": true,
+            "items": [
+              {
+                "id": "fridge-4h",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 4,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "powder-removal",
+                "group": "집 정리",
+                "axis": "사실",
+                "timing_hours": 24,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": true,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "dry-water",
+                "group": "집 정리",
+                "axis": "사실",
+                "timing_hours": 48,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": true,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "soot-corrosion-progress",
+                "group": "집 정리",
+                "axis": "사실",
+                "timing_hours": 48,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": true,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              }
+            ]
+          },
+          {
+            "key": "today",
+            "count": 5,
+            "unlocked": true,
+            "items": [
+              {
+                "id": "photo-before-cleanup",
+                "group": "보험과 돈",
+                "axis": "사실",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": 1,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "ppe-powder",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": 6,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 2,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "support-housing",
+                "group": "지낼 곳",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 3,
+                "locked": false,
+                "checkable": true,
+                "dept": "안전교통국 재난안전과",
+                "amount_known": false
+              },
+              {
+                "id": "support-supplies",
+                "group": "지낼 곳",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 4,
+                "locked": false,
+                "checkable": true,
+                "dept": "안전교통국 재난안전과",
+                "amount_known": false
+              },
+              {
+                "id": "tenant-notify-landlord",
+                "group": "집주인과 계약",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 5,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              }
+            ]
+          },
+          {
+            "key": "standing",
+            "count": 5,
+            "unlocked": true,
+            "items": [
+              {
+                "id": "wet-appliance-power",
+                "group": "집 정리",
+                "axis": "사실",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "scene-preserved-hold",
+                "group": "집 정리",
+                "axis": "제도",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "preserve-product",
+                "group": "책임과 분쟁",
+                "axis": "사실",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "product-handover-caution",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": 0,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "tenant-dont-do",
+                "group": "집주인과 계약",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": true,
+                "rank": null,
+                "locked": false,
+                "checkable": false,
+                "dept": null,
+                "amount_known": null
+              }
+            ]
+          },
+          {
+            "key": "anytime",
+            "count": 12,
+            "unlocked": true,
+            "items": [
+              {
+                "id": "smoke-inhalation-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 6,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "cleanup-exposure-watch",
+                "group": "몸",
+                "axis": "사실",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 7,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "support-psych",
+                "group": "몸",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 11,
+                "locked": false,
+                "checkable": true,
+                "dept": "안전교통국 재난안전과",
+                "amount_known": false
+              },
+              {
+                "id": "fire-cert",
+                "group": "서류",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 8,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "investigation-report",
+                "group": "서류",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 9,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "adjuster-position",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 10,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "building-group-fire-insurance",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 13,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "no-personal-insurance-building-path",
+                "group": "보험과 돈",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 14,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "emergency-welfare",
+                "group": "지낼 곳",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 12,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "legal-aid-klac",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 15,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "small-claims",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 16,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "housing-mgmt-dispute-committee",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 17,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              }
+            ]
+          },
+          {
+            "key": "after_report",
+            "count": 2,
+            "unlocked": false,
+            "items": [
+              {
+                "id": "common-area-liability",
+                "group": "책임과 분쟁",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 18,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              },
+              {
+                "id": "tenant-restoration-scope",
+                "group": "집주인과 계약",
+                "axis": "제도",
+                "timing_hours": null,
+                "deadline_days": null,
+                "irreversible": false,
+                "rank": 19,
+                "locked": false,
+                "checkable": true,
+                "dept": null,
+                "amount_known": null
+              }
+            ]
+          }
+        ],
+        "done": [],
+        "waiting": [],
+        "blocked": [
+          {
+            "id": "textile-caution",
+            "blocked_by": [
+              {
+                "id": "photo-before-cleanup",
+                "title": "치우기 전에 방마다 사진·영상을 남기세요"
+              }
+            ],
+            "blocks_reason": "옮기기 전에 촬영이 먼저입니다",
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "집 정리",
+            "category": "판단",
+            "wait_days": null,
+            "irreversible": false
+          },
+          {
+            "id": "investigation-report-wait",
+            "blocked_by": [
+              {
+                "id": "investigation-report",
+                "title": "화재현장조사서를 정보공개청구로 신청하세요"
+              }
+            ],
+            "blocks_reason": "먼저 정보공개청구를 해야 합니다",
+            "status": "해당",
+            "deadline_days": null,
+            "dept": null,
+            "amount_known": null,
+            "group": "서류",
+            "category": "대기",
+            "wait_days": [
+              15,
+              60
+            ],
+            "irreversible": false
+          },
+          {
+            "id": "support-waste",
+            "blocked_by": [
+              {
+                "id": "scene-release",
+                "title": "현장 정리를 시작해도 되는지 확인하세요"
+              },
+              {
+                "id": "photo-before-cleanup",
+                "title": "치우기 전에 방마다 사진·영상을 남기세요"
+              }
+            ],
+            "blocks_reason": "현장보존 해제와 증거 촬영이 먼저입니다",
+            "status": "해당",
+            "deadline_days": null,
+            "dept": "안전교통국 재난안전과",
+            "amount_known": false,
+            "group": "집 정리",
+            "category": "신청",
+            "wait_days": null,
             "irreversible": false
           },
           {
