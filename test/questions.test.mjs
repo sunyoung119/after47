@@ -251,16 +251,19 @@ const SCENES = [
     "화면2 - 손해사정사 등장, 제조사 접촉",
     {
       ...COMMON,
-      origin_area: "unknown",
-      // 위와 같은 이유로 제품·제조사 답이 없다. 제조사 접촉을 물으려면
-      // 먼저 원인을 들어야 한다 — 그것이 새 게이트의 실질 효과다.
+      // 현관등 발화를 문서가 공용부로 보고 있다(reference-case). 원인을 들은
+      // 상태여야 제품·제조사 질문이 등장한다 — 제조사 접촉은 제품 의심을
+      // 들은 뒤에 일어나는 사건이고, 그 순서를 게이트가 그대로 지킨다.
+      origin_area: "common",
+      product_suspected: "unknown",
       adjuster_present: true,
+      product_maker_contacted: true,
     },
     [
       "adjuster-position",
       "adjusters-may-all-be-opposing",
       "my-side-channels-overview",
-      "origin-unknown",
+      "product-maker-position-may-change",
       "preserve-product",
       // 본인 보험 없음 + 건물 보험 있음 = 레퍼런스 케이스의 조합.
       // 조건이 insurance_dwelling:false 를 요구하던 동안 이 안내가 안 떴다.
