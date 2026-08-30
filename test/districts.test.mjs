@@ -56,6 +56,7 @@ const FIELDS = [
   "amended", "dept", "tier", "insurance_exclusion", "deadline_days", "residency",
   "housing_only", "emergency_exception", "amount_source", "amount_known",
   "fallback", "source_url", "checked_at", "support_items", "support_articles",
+  "fire_investigation",
   "exclusion_exempt_items",
   "exclusion_note",
 ];
@@ -503,6 +504,59 @@ for (const d of districts.filter((x) => x.has_ordinance)) {
 t(
   "조문 표기가 '제·조'로 시작한다",
   districts.every((d) => Object.values(d.support_articles).every((v) => /^제\d+조/.test(v)))
+);
+
+section("5-b. 관할 소방서 화재조사 직통 — fire_investigation");
+
+// 화재증명원 발급과 조사 진행을 묻는 **유일한 직통**이다. 구청 대표번호는
+// 걸면 120으로 연결되므로 싣지 않았고(그쪽은 도달점이 같다), 이 번호는
+// 팀 단위라 그것으로 대체되지 않는다.
+//
+// **출처는 사용자 제공 자료다.** `fire.seoul.go.kr`의 소방서 조직 페이지는
+// 본문을 JS로 그려서 어떤 경로로도 번호를 읽지 못했다 — 그래서
+// `verified_at_url`이 전부 null이고, 그 사실을 여기서 박아 둔다.
+// **채워지면 이 검사가 먼저 알려 준다.**
+t(
+  "25개 구 전부 화재조사 직통을 갖는다",
+  districts.every((d) => d.fire_investigation && typeof d.fire_investigation === "object"),
+  districts.filter((d) => !d.fire_investigation).map((d) => d.id).join(", ")
+);
+for (const d of districts) {
+  const f = d.fire_investigation;
+  t(
+    `${d.name} 화재조사 항목이 계약을 지킨다`,
+    typeof f.station === "string" && /소방서$/.test(f.station) &&
+      /^\d{2}-\d{3,4}-\d{4}$/.test(f.tel || "") &&
+      /^\d{4}-\d{2}-\d{2}$/.test(f.checked_at || "") &&
+      "verified_at_url" in f,
+    JSON.stringify(f)
+  );
+}
+// 같은 번호가 두 구에 붙으면 이관에서 줄이 밀린 것이다.
+{
+  const tels = districts.map((d) => d.fire_investigation.tel);
+  t("직통이 구마다 다르다", tels.length === new Set(tels).size,
+    tels.filter((v, i, a) => a.indexOf(v) !== i).join(", "));
+}
+// **중구의 관할만 이름이 다르다.** 나머지 24구는 구 이름 = 소방서 이름이다.
+t(
+  "중구는 중부소방서다",
+  districts.find((d) => d.id === "jung").fire_investigation.station === "중부소방서"
+);
+t(
+  "나머지 24구는 구 이름과 소방서 이름이 같다",
+  districts
+    .filter((d) => d.id !== "jung")
+    .every((d) => d.fire_investigation.station === d.name.replace(/구$/, "") + "소방서"),
+  districts
+    .filter((d) => d.id !== "jung" && d.fire_investigation.station !== d.name.replace(/구$/, "") + "소방서")
+    .map((d) => `${d.name}=${d.fire_investigation.station}`).join(", ")
+);
+// 확인하지 못한 것을 확인한 것처럼 적지 않는다. 채워지면 여기가 먼저 깨진다.
+t(
+  "아직 공식 페이지로 검증하지 못했다 (verified_at_url 전부 null)",
+  districts.every((d) => d.fire_investigation.verified_at_url === null),
+  districts.filter((d) => d.fire_investigation.verified_at_url).map((d) => d.id).join(", ")
 );
 
 section("6. 연락처 — contacts[]");

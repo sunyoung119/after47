@@ -466,7 +466,10 @@ section("6. 연락처 — 라우팅에서 분리했고 판단은 살아 있다")
 // 이 커밋에서 걷혔다.
 {
   const dv = directoryView(바탕(전.state));
-  t("연락처가 8건이다", dv.count === 8, String(dv.count));
+  t("연락처가 9건이다", dv.count === 9, String(dv.count));
+  // 심리 그룹이 둘이다 — 재난 전용(1670-9512)과 급성 위기(1577-0199).
+  t("심리 그룹이 둘이다",
+    dv.groups.find((g) => g.group === "심리").items.length === 2);
   t(
     "그룹 순서가 긴급 → 복지 → 법률 → 심리다",
     dv.groups.map((g) => g.group).join(" → ") === "긴급 → 복지·긴급지원 → 법률·분쟁 → 심리",

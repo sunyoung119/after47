@@ -31,7 +31,7 @@
     "org": "다산콜재단(서울시 120)",
     "tel": "120",
     "url": "https://www.120dasan.or.kr/",
-    "note": "서울시 민원·행정 상담, 365일 24시간",
+    "note": "자치구 행정·서울형 긴급복지·동주민센터 안내 · 365일 24시간",
     "checked_at": "2026-08-30",
     "verified_at_url": "https://www.120dasan.or.kr/"
   },
@@ -70,5 +70,14 @@
     "note": "재난 경험 후 심리 상담, 전국 공통",
     "checked_at": "2026-08-30",
     "verified_at_url": "https://safekorea.go.kr/safekorea-kor/dspo/dpsy/prsy/psychologicalRecoverySupportYard.do?menuSn=80"
+  },
+  {
+    "group": "심리",
+    "org": "정신건강 위기상담전화",
+    "tel": "1577-0199",
+    "url": "https://www.mohw.go.kr/menu.es?mid=a10706040100",
+    "note": "정신건강 위기 상담 · 야간·공휴일은 광역정신건강복지센터 연결",
+    "checked_at": "2026-08-30",
+    "verified_at_url": "https://www.mohw.go.kr/menu.es?mid=a10706040100"
   }
 ]

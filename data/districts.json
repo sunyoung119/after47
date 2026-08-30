@@ -18,6 +18,12 @@
     "amount_known": false,
     "fallback": null,
     "source_url": "https://www.elis.go.kr/",
+    "fire_investigation": {
+      "station": "종로소방서",
+      "tel": "02-6981-5702",
+      "checked_at": "2026-08-30",
+      "verified_at_url": null
+    },
     "checked_at": "2026-08-26",
     "support_items": [],
     "support_articles": {},
@@ -43,6 +49,12 @@
     "amount_known": false,
     "fallback": null,
     "source_url": "https://www.elis.go.kr/",
+    "fire_investigation": {
+      "station": "중부소방서",
+      "tel": "02-6981-0112",
+      "checked_at": "2026-08-30",
+      "verified_at_url": null
+    },
     "checked_at": "2026-08-26",
     "support_items": [
       "housing",
@@ -74,6 +86,12 @@
     "amount_known": false,
     "fallback": null,
     "source_url": "https://www.elis.go.kr/",
+    "fire_investigation": {
+      "station": "용산소방서",
+      "tel": "02-6943-1506",
+      "checked_at": "2026-08-30",
+      "verified_at_url": null
+    },
     "checked_at": "2026-08-26",
     "support_items": [],
     "support_articles": {},
@@ -99,6 +117,12 @@
     "amount_known": false,
     "fallback": null,
     "source_url": "https://www.elis.go.kr/",
+    "fire_investigation": {
+      "station": "성동소방서",
+      "tel": "02-2622-1702",
+      "checked_at": "2026-08-30",
+      "verified_at_url": null
+    },
     "checked_at": "2026-08-26",
     "support_items": [
       "psych",
@@ -134,6 +158,12 @@
     "amount_known": false,
     "fallback": null,
     "source_url": "https://www.elis.go.kr/",
+    "fire_investigation": {
+      "station": "광진소방서",
+      "tel": "02-6981-6702",
+      "checked_at": "2026-08-30",
+      "verified_at_url": null
+    },
     "checked_at": "2026-08-26",
     "support_items": [
       "housing",
@@ -165,6 +195,12 @@
     "amount_known": false,
     "fallback": null,
     "source_url": "https://www.elis.go.kr/",
+    "fire_investigation": {
+      "station": "동대문소방서",
+      "tel": "02-6942-1304",
+      "checked_at": "2026-08-30",
+      "verified_at_url": null
+    },
     "checked_at": "2026-08-26",
     "support_items": [
       "psych",
@@ -200,6 +236,12 @@
     "amount_known": false,
     "fallback": null,
     "source_url": "https://www.elis.go.kr/",
+    "fire_investigation": {
+      "station": "중랑소방서",
+      "tel": "02-6981-8914",
+      "checked_at": "2026-08-30",
+      "verified_at_url": null
+    },
     "checked_at": "2026-08-26",
     "support_items": [],
     "support_articles": {},
@@ -225,6 +267,12 @@
     "amount_known": false,
     "fallback": null,
     "source_url": "https://www.elis.go.kr/",
+    "fire_investigation": {
+      "station": "성북소방서",
+      "tel": "02-6981-7304",
+      "checked_at": "2026-08-30",
+      "verified_at_url": null
+    },
     "checked_at": "2026-08-26",
     "support_items": [
       "housing",
@@ -262,6 +310,12 @@
     "amount_known": false,
     "fallback": null,
     "source_url": "https://www.elis.go.kr/",
+    "fire_investigation": {
+      "station": "강북소방서",
+      "tel": "02-6946-0164",
+      "checked_at": "2026-08-30",
+      "verified_at_url": null
+    },
     "checked_at": "2026-08-26",
     "support_items": [],
     "support_articles": {},
@@ -287,6 +341,12 @@
     "amount_known": false,
     "fallback": null,
     "source_url": "https://www.elis.go.kr/",
+    "fire_investigation": {
+      "station": "도봉소방서",
+      "tel": "02-6981-8062",
+      "checked_at": "2026-08-30",
+      "verified_at_url": null
+    },
     "checked_at": "2026-08-26",
     "support_items": [],
     "support_articles": {},
@@ -312,6 +372,12 @@
     "amount_known": false,
     "fallback": null,
     "source_url": "https://www.elis.go.kr/",
+    "fire_investigation": {
+      "station": "노원소방서",
+      "tel": "02-6981-6912",
+      "checked_at": "2026-08-30",
+      "verified_at_url": null
+    },
     "checked_at": "2026-08-26",
     "support_items": [],
     "support_articles": {},
@@ -337,6 +403,12 @@
     "amount_known": false,
     "fallback": null,
     "source_url": "https://www.elis.go.kr/",
+    "fire_investigation": {
+      "station": "은평소방서",
+      "tel": "02-6981-6105",
+      "checked_at": "2026-08-30",
+      "verified_at_url": null
+    },
     "checked_at": "2026-08-26",
     "support_items": [
       "housing",
@@ -372,6 +444,12 @@
     "amount_known": false,
     "fallback": null,
     "source_url": "https://www.elis.go.kr/",
+    "fire_investigation": {
+      "station": "서대문소방서",
+      "tel": "02-6981-5504",
+      "checked_at": "2026-08-30",
+      "verified_at_url": null
+    },
     "checked_at": "2026-08-26",
     "support_items": [],
     "support_articles": {},
@@ -397,6 +475,12 @@
     "amount_known": false,
     "fallback": "사회재난 구호 및 복구 지원에 관한 조례 — 재난안전대책본부 구성·심의 전제라 개별 주택화재에 자동 적용되지 않음. 긴급복지지원(소득·위기 심사) 별도 확인 필요.",
     "source_url": "https://www.elis.go.kr/",
+    "fire_investigation": {
+      "station": "마포소방서",
+      "tel": "02-6981-7904",
+      "checked_at": "2026-08-30",
+      "verified_at_url": null
+    },
     "checked_at": "2026-08-26",
     "support_items": [],
     "support_articles": {},
@@ -422,6 +506,12 @@
     "amount_known": false,
     "fallback": null,
     "source_url": "https://www.elis.go.kr/",
+    "fire_investigation": {
+      "station": "양천소방서",
+      "tel": "02-6981-8704",
+      "checked_at": "2026-08-30",
+      "verified_at_url": null
+    },
     "checked_at": "2026-08-26",
     "support_items": [
       "psych",
@@ -458,6 +548,12 @@
     "amount_known": false,
     "fallback": null,
     "source_url": "https://www.elis.go.kr/",
+    "fire_investigation": {
+      "station": "강서소방서",
+      "tel": "02-6981-5114",
+      "checked_at": "2026-08-30",
+      "verified_at_url": null
+    },
     "checked_at": "2026-08-26",
     "support_items": [],
     "support_articles": {},
@@ -483,6 +579,12 @@
     "amount_known": false,
     "fallback": null,
     "source_url": "https://www.elis.go.kr/",
+    "fire_investigation": {
+      "station": "구로소방서",
+      "tel": "02-6981-6314",
+      "checked_at": "2026-08-30",
+      "verified_at_url": null
+    },
     "checked_at": "2026-08-26",
     "support_items": [
       "psych",
@@ -518,6 +620,12 @@
     "amount_known": false,
     "fallback": null,
     "source_url": "https://www.elis.go.kr/",
+    "fire_investigation": {
+      "station": "금천소방서",
+      "tel": "02-6981-6512",
+      "checked_at": "2026-08-30",
+      "verified_at_url": null
+    },
     "checked_at": "2026-08-26",
     "support_items": [
       "housing",
@@ -553,6 +661,12 @@
     "amount_known": false,
     "fallback": null,
     "source_url": "https://www.elis.go.kr/",
+    "fire_investigation": {
+      "station": "영등포소방서",
+      "tel": "02-6981-7116",
+      "checked_at": "2026-08-30",
+      "verified_at_url": null
+    },
     "checked_at": "2026-08-26",
     "support_items": [
       "psych",
@@ -590,6 +704,12 @@
     "amount_known": false,
     "fallback": null,
     "source_url": "https://www.elis.go.kr/",
+    "fire_investigation": {
+      "station": "동작소방서",
+      "tel": "02-6913-7855",
+      "checked_at": "2026-08-30",
+      "verified_at_url": null
+    },
     "checked_at": "2026-08-26",
     "support_items": [],
     "support_articles": {},
@@ -615,6 +735,12 @@
     "amount_known": false,
     "fallback": null,
     "source_url": "https://www.elis.go.kr/",
+    "fire_investigation": {
+      "station": "관악소방서",
+      "tel": "02-6981-8310",
+      "checked_at": "2026-08-30",
+      "verified_at_url": null
+    },
     "checked_at": "2026-08-26",
     "support_items": [
       "psych",
@@ -650,6 +776,12 @@
     "amount_known": false,
     "fallback": null,
     "source_url": "https://www.elis.go.kr/",
+    "fire_investigation": {
+      "station": "서초소방서",
+      "tel": "02-6981-5916",
+      "checked_at": "2026-08-30",
+      "verified_at_url": null
+    },
     "checked_at": "2026-08-26",
     "support_items": [],
     "support_articles": {},
@@ -675,6 +807,12 @@
     "amount_known": false,
     "fallback": null,
     "source_url": "https://www.elis.go.kr/",
+    "fire_investigation": {
+      "station": "강남소방서",
+      "tel": "02-6981-7532",
+      "checked_at": "2026-08-30",
+      "verified_at_url": null
+    },
     "checked_at": "2026-08-26",
     "support_items": [
       "psych",
@@ -710,6 +848,12 @@
     "amount_known": false,
     "fallback": null,
     "source_url": "https://www.elis.go.kr/",
+    "fire_investigation": {
+      "station": "송파소방서",
+      "tel": "02-6981-5388",
+      "checked_at": "2026-08-30",
+      "verified_at_url": null
+    },
     "checked_at": "2026-08-26",
     "support_items": [
       "housing",
@@ -741,6 +885,12 @@
     "amount_known": false,
     "fallback": null,
     "source_url": "https://www.elis.go.kr/",
+    "fire_investigation": {
+      "station": "강동소방서",
+      "tel": "02-6981-7704",
+      "checked_at": "2026-08-30",
+      "verified_at_url": null
+    },
     "checked_at": "2026-08-26",
     "support_items": [],
     "support_articles": {},

@@ -303,7 +303,7 @@ await tick(10);
     ["긴급", "복지·긴급지원", "법률·분쟁", "심리"].every((g) => has(main(), g)),
     texts(main()).join(" | "));
   const tel = all(main(), (n) => n.tagName === "A" && /^tel:/.test(n.href || ""));
-  t("번호가 tel: 링크다", tel.length === 8, String(tel.length));
+  t("번호가 tel: 링크다", tel.length === 9, String(tel.length));
   t("119와 1670-9512가 있다",
     tel.some((a) => a.href === "tel:119") && tel.some((a) => a.href === "tel:1670-9512"),
     tel.map((a) => a.href).join(" "));
