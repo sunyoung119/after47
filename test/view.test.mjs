@@ -16,6 +16,7 @@ import { evaluate } from "../src/engine.js";
 import { applyDefaults } from "../src/questions.js";
 import { entryView, surveyView, saveNoticeView } from "../src/ui/view.js";
 import { contactsView } from "../src/ui/contacts.js";
+import { contactOf } from "../src/ui/result.js";
 import { COPY, STATUS_LABEL, CONTACT_BY_ACTION } from "../src/ui/copy.js";
 import { TOPIC_LABEL, TOPIC_ORDER, NODE_LABEL, topicLabel } from "../src/ui/copy.js";
 import {
@@ -375,8 +376,14 @@ t(
 section("5. 행 계약 — 결과 화면 여섯이 같은 행을 읽는다");
 
 const 판정 = (state, now = NOW) => evaluate(applyDefaults(questions, state, now), data, now);
-const 바탕 = (state, now = NOW) => resultBase({ result: 판정(state, now), state, data, now });
-const 결과 = (state, now = NOW) => resultView({ result: 판정(state, now), state, data, now });
+// 체크리스트 **자리표** — 완료를 지운 가정으로 엔진을 한 번 더 돌린다.
+// app.js가 하는 것과 같은 경로다(뷰모델이 아니라 부르는 쪽이 만든다).
+const 자리 = (state, now = NOW) =>
+  evaluate(applyDefaults(questions, { ...state, completed: [] }, now), data, now);
+const 바탕 = (state, now = NOW) =>
+  resultBase({ result: 판정(state, now), orderResult: 자리(state, now), state, data, now });
+const 결과 = (state, now = NOW) =>
+  resultView({ result: 판정(state, now), orderResult: 자리(state, now), state, data, now });
 
 {
   const b = 바탕(전.state);
@@ -621,6 +628,34 @@ t(
   // 폰트도 마찬가지다. font-family를 화면 코드에 적으면 폴백 체인이 갈라진다.
   const css = readFileSync(join(D, "src/ui/app.css"), "utf8");
   t("app.css가 font-family를 직접 적지 않는다", !/font-family\s*:/.test(css));
+}
+
+// ── 문의처 ─────────────────────────────────────────
+//
+// 15df99e에서 세운 `contacts[]`를 화면에 연결했다(보류 해제).
+// **Action 상세에만, 1차 문의처 하나.** 목록 카드에는 없다.
+{
+  const 물 = 바탕({ ...전.state, district: "gangnam", residence_possible: false });
+  const 있는것 = 물.all.filter((r) => (r.contacts || []).length);
+  t("행이 contacts를 실어 나른다", 물.all.every((r) => Array.isArray(r.contacts)));
+  t("연락처가 있는 행이 화면에 있다", 있는것.length > 0, String(있는것.length));
+
+  const c = contactOf(있는것[0]);
+  t("문의처 라벨이 '문의처'다", c.label === "문의처");
+  t("기관명이 있다", typeof c.org === "string" && c.org.length > 0, String(c.org));
+  t("tel: 링크를 만든다", c.tel === null || c.telHref === `tel:${c.tel}`, String(c.telHref));
+  // **없는 번호를 만들지 않는다.** 비면 줄 자체가 없다.
+  const 없는것 = 물.all.filter((r) => !(r.contacts || []).length);
+  t("연락처가 없으면 null이다 (줄을 안 그린다)",
+    없는것.length > 0 && 없는것.every((r) => contactOf(r) === null));
+  t("빈 배열에도 죽지 않는다", contactOf({ contacts: [] }) === null && contactOf({}) === null);
+  t("'검증됨'·'공식 인증' 같은 과장이 없다", !/검증됨|공식 인증/.test(JSON.stringify(c)));
+
+  // Action 상세가 그 줄을 싣는다. 다른 화면은 안 싣는다.
+  const ad = actionDetailView(물, 있는것[0].id);
+  t("Action 상세가 문의처를 싣는다", ad.contact !== null && ad.contact.org === c.org);
+  const 목록 = topicDetailView(물, 있는것[0].group);
+  t("목록 카드에는 문의처가 없다", 목록.items.every((i) => !("contact" in i)));
 }
 
 // ── 한국어가 한 글자씩 세로로 떨어지지 않는가 ───────
@@ -872,9 +907,11 @@ t(
     "먼저 볼 내용/제일 먼저 확인해야 할 정보 | 체크리스트/하나씩 해나가야 하는 일 | 알아둘 내용/당장은 하지 않아도 되는 정보",
   r1.home.cards.map((c) => `${c.title}/${c.desc}`).join(" | ")
 );
+// 화면 이름 그대로다 — 눌러서 가는 곳의 이름과 라벨이 같아야 한다.
 t(
-  "보조 탐색이 둘이다",
-  r1.home.more.map((m) => m.label).join(",") === "시간 순서로 보기,필요한 주제별로 보기"
+  "보조 탐색이 둘이고 화면 이름 그대로다",
+  r1.home.more.map((m) => m.label).join(",") === "회복 타임라인,주제별 보기",
+  r1.home.more.map((m) => m.label).join(",")
 );
 t("'다른 방식으로 보기' 같은 중간 heading이 없다", !("moreHeading" in r1.home));
 t(
@@ -974,11 +1011,21 @@ t(
   cl.items.every((i) => (i.warn === null) === !i.irreversible) &&
     cl.items.some((i) => i.warn === "놓치면 되돌리기 어려움")
 );
+// **완료해도 항목은 제자리다**(사용자 실기기 검수 결정). 아래로 내려가는
+// 블록이 없다 — 방금 체크한 것이 눈앞에서 사라지면 되돌릴 자리를 잃는다.
 {
+  const 전목록 = cl.items.map((i) => i.id);
   const 완료 = 결과({ ...전.state, completed: ["photo-before-cleanup"] });
-  t("완료한 것은 하단 완료 블록으로 내려간다",
-    완료.checklist.done.count === 1 && !완료.checklist.items.some((i) => i.id === "photo-before-cleanup"));
-  t("완료 라벨이 붙는다", 완료.checklist.done.items[0].statusLabel === "완료");
+  const 후목록 = 완료.checklist.items.map((i) => i.id);
+  t("완료해도 목록에 남는다", 후목록.includes("photo-before-cleanup"));
+  t("순서가 한 칸도 안 움직인다", 전목록.join() === 후목록.join(), 후목록.join(" > "));
+  const 그행 = 완료.checklist.items.find((i) => i.id === "photo-before-cleanup");
+  t("완료 표시가 행에 붙는다", 그행.completed === true && 그행.statusLabel === "완료");
+  t("하단 완료 블록이 없다", !("done" in 완료.checklist));
+  // 개수는 남은 일이다 — HOME 카드가 그것으로 읽힌다.
+  t("개수에서 완료가 빠진다", 완료.checklist.count === cl.count - 1,
+    `${cl.count} -> ${완료.checklist.count}`);
+  t("완료 개수는 따로 센다", 완료.checklist.doneCount === 1);
 }
 
 // 알아둘 내용 — awareness와 waiting을 한 목록에, waiting만 상태 라벨

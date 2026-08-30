@@ -10,6 +10,10 @@
 
 import { COPY, STATUS_LABEL, NODE_LABEL, TOPIC_ORDER, topicLabel } from "./copy.js";
 import { buildRows } from "./rows.js";
+// 체크리스트 자리표를 위해 엔진을 **재사용한다**(다시 판정하는 것이
+// 아니다 — 가정 답을 넣고 같은 엔진을 한 번 더 돌릴 뿐이다).
+import { evaluate } from "../engine.js";
+import { applyDefaults } from "../questions.js";
 import { formatDate } from "./view.js";
 import { dotDate, clockTime, shortDate, elapsedText } from "./format.js";
 
@@ -41,9 +45,55 @@ const CHIP_KIND = { 완료: "done", 미판정: "undetermined" };
 // ── 바탕 ───────────────────────────────────────────
 // 화면 여섯이 같은 행 묶음을 읽는다. 화면마다 다시 만들면 같은 사람의
 // 같은 시각에 대해 화면끼리 다른 답을 낼 수 있다.
-export function resultBase({ result, state = {}, data = {}, now = Date.now() } = {}) {
+export function resultBase({ result, orderResult = null, state = {}, data = {}, now = Date.now() } = {}) {
   const rows = buildRows({ result, state, data });
-  return { ...rows, now, fireAt: state.fire_at ?? null };
+  // 체크리스트 **자리표** — 완료를 지운 가정으로 엔진을 돌린 결과의 rank다.
+  // 체크해도 항목이 제자리에 남아야 하는데, 실제 결과에서는 완료가 done
+  // 버킷으로 빠져 rank를 잃기 때문이다.
+  //
+  // 부르는 쪽이 만들어 주면 그것을 쓰고(app.js가 `applyDefaults`를 거친
+  // state로 만든다), 없으면 여기서 한 번 돌린다. **UI가 rank를 계산하는
+  // 것이 아니라 엔진을 재사용하는 것이다.**
+  // 완료가 하나도 없으면 실제 결과가 곧 자리표다 — 굳이 한 번 더 돌리지
+  // 않는다(그 편이 빠르고, 두 계산이 미세하게 어긋날 여지도 없다).
+  const nothingDone = !(state.completed || []).length;
+  const src = orderResult ?? (nothingDone ? result : asIfNothingDone(state, data, now)) ?? result;
+  const order = seatMap(src);
+  return { ...rows, now, fireAt: state.fire_at ?? null, order };
+}
+
+// 자리 번호를 매긴다 — **rank가 아니라 자리다.**
+//
+// rank만 쓰면 선행이 풀린 항목이 목록 위로 뛰어오른다. 사용자 눈에는
+// "체크했더니 목록이 재배치됐다"이고, 그것이 바로 하지 않기로 한 일이다
+// (사용자 결정: 자동 재정렬 없음). 그래서 **잠긴 것에도 자리를 준다** —
+// 완료가 하나도 없던 시점의 rank 순서, 그 뒤에 잠긴 것들, 그 뒤에 나머지.
+// 이 번호는 답이 바뀌지 않는 한 고정이다.
+function seatMap(src) {
+  const order = new Map();
+  let seat = 0;
+  const put = (it) => {
+    const id = it?.action?.id ?? it?.id;
+    if (id && !order.has(id)) order.set(id, seat++);
+  };
+  const ranked = [];
+  for (const sec of src?.sections || [])
+    for (const g of sec.groups || []) for (const it of g.items || []) ranked.push(it);
+  ranked.sort((a, b) => (a.rank ?? Infinity) - (b.rank ?? Infinity));
+  for (const it of ranked) put(it);
+  for (const it of src?.blocked || []) put(it);
+  for (const it of src?.done || []) put(it);
+  return order;
+}
+
+// 완료를 지운 가정. 데이터가 없으면(단위 테스트) null을 돌려주고
+// 부르는 쪽이 실제 결과로 폴백한다.
+function asIfNothingDone(state, data, now) {
+  // questions가 없으면 실제 판정과 같은 defaults를 태울 수 없다 —
+  // 어긋난 자리표보다 없는 편이 낫다(부르는 쪽이 실제 결과로 폴백한다).
+  if (!data || !Array.isArray(data.actions) || !Array.isArray(data.questions)) return null;
+  const forEngine = applyDefaults(data.questions || [], { ...state, completed: [] });
+  return evaluate({ ...forEngine, completed: [] }, data, now);
 }
 
 export function resultView(args) {
@@ -114,24 +164,37 @@ export function priorityView(base) {
 // 두면 가장 급한 것이 화면에서 사라진다. 순위는 엔진의 rank 그대로이고
 // 다시 계산하지 않는다. 버킷 행(blocked)은 rank가 없어서 뒤에 붙는다.
 export function checklistView(base) {
-  const live = base.sections
-    .filter((r) => r.guidanceType === "action" && CHECK_SECTIONS.includes(r.section))
-    .sort((a, b) => (a.rank ?? Infinity) - (b.rank ?? Infinity));
-  const items = [...live, ...base.blocked].map(checkItem);
+  const live = base.sections.filter(
+    (r) => r.guidanceType === "action" && CHECK_SECTIONS.includes(r.section)
+  );
+  // 완료한 것도 **목록에 남는다**(사용자 결정). 아래로 내려가지도, 접힌
+  // 블록으로 옮겨가지도 않는다 — 체크한 순간에도, 나갔다 돌아와도 그
+  // 자리다. 체크 표시와 완료 스타일만 달라진다.
+  //
+  // 자리는 `base.order`가 정한다. 실제 결과에서 완료는 done 버킷으로
+  // 빠져 rank를 잃으므로, **완료를 지운 가정으로 돌린 엔진 결과**의
+  // rank를 자리표로 쓴다(app.js가 만든다). 상태·잠금·사유는 전부 실제
+  // 결과 그대로다 — 자리만 자리표에서 온다.
   const done = base.done.map((r) => ({
     ...r,
     statusLabel: STATUS_LABEL["완료"],
     statusKind: CHIP_KIND["완료"],
+    completed: true,
     // 기록이 없다고 완료가 아닌 것은 아니다.
     doneOn: r.completedAt ? formatDate(r.completedAt) : null,
   }));
+  const seat = (r) => base.order.get(r.id) ?? r.rank ?? Infinity;
+  const items = [...live, ...base.blocked, ...done]
+    .sort((a, b) => seat(a) - seat(b))
+    .map(checkItem);
   return {
     title: COPY.checklist.title,
     desc: COPY.checklist.desc,
     items,
-    done: { count: done.length, items: done },
+    // 개수는 **완료를 뺀 것**이다 — HOME 카드가 "남은 일"로 읽힌다.
+    count: items.filter((r) => !r.completed).length,
+    doneCount: done.length,
     footer: COPY.checklist.footer,
-    count: items.length,
   };
 }
 
@@ -349,7 +412,30 @@ export function actionDetailView(base, id) {
     // 금액은 25개 구 전부 미상이고 부서도 9개 구가 null이라 이 줄이 기본 경로다.
     ordinanceNote: r.ordinanceBased ? COPY.actionDetail.ordinanceNote(r.dept) : null,
     source: sourceOf(r),
+    contact: contactOf(r),
     footer: COPY.actionDetail.footer,
+  };
+}
+
+// ── 문의처 ─────────────────────────────────────────
+//
+// **한 Action에 1차 문의처 하나다.** 여럿을 늘어놓으면 사용자가 다시
+// "어디로 걸어야 하나"를 판단해야 한다 — 그 판단을 대신하는 것이 이
+// 서비스의 일이다. 지금 데이터도 항목마다 하나씩이다.
+//
+// 비어 있으면 `null`이고 화면은 줄 자체를 그리지 않는다. **없는 번호를
+// 만들지 않고 "준비 중"도 쓰지 않는다.** 59건 중 5건만 차 있다.
+export function contactOf(r) {
+  const c = (r?.contacts || [])[0];
+  if (!c || !(c.tel || c.url)) return null;
+  return {
+    label: COPY.actionDetail.contactTitle,
+    org: c.org ?? null,
+    tel: c.tel ?? null,
+    // `tel:` 링크에 그대로 들어간다. 데이터 계약이 숫자와 하이픈만 허용한다.
+    telHref: c.tel ? `tel:${c.tel}` : null,
+    url: c.url ?? null,
+    note: c.note ?? null,
   };
 }
 

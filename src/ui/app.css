@@ -945,6 +945,43 @@ a {
   border-style: dashed;
   opacity: 0.5;
 }
+/* 체크된 상태 — 네모가 차고 흰 갈매기가 앉는다. */
+.card__box--on::before {
+  background: var(--c-done);
+  border-color: var(--c-done);
+}
+.card__box--on::after {
+  content: "";
+  position: absolute;
+  width: 9px;
+  height: 5px;
+  border-left: 2px solid var(--c-cta-ink);
+  border-bottom: 2px solid var(--c-cta-ink);
+  transform: rotate(-45deg) translateY(-1px);
+}
+.card__box {
+  position: relative;
+}
+/* 완료한 카드 — **목록 안 제자리에 남는다.** 면과 띠 색만 달라진다. */
+.card--checked {
+  background: var(--c-done-card-bg);
+  border-color: var(--c-done-card-line);
+}
+.card--checked::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  background: var(--c-done);
+}
+.card--checked .card__title {
+  color: var(--c-done-ink);
+}
+.card--checked > .card__hit {
+  padding-left: calc(var(--s4) + var(--s1));
+}
 .card__box--off {
   cursor: default;
 }
@@ -1177,6 +1214,21 @@ a {
 .src__checked {
   color: var(--c-ink-faint);
   font-size: var(--f-xs);
+}
+/* 문의처 — 출처 카드와 같은 급이다. 위계를 넘지 않는다. */
+.contact-line {
+  margin-top: var(--s3);
+}
+.contact-line__tel {
+  margin: var(--s2) 0 0;
+}
+.contact-line__tel .src__link {
+  font-size: var(--f-md);
+}
+.src__org {
+  color: var(--c-cta);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 /* 목록 카드에서 첫 항목 뒤에 붙는다 — 근거가 하나뿐인 것처럼 보이지 않게. */
 .src__more {

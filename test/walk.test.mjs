@@ -172,7 +172,13 @@ t("기준 줄에 자치구와 경과가 있다",
   texts(main()).some((s) => /^강남구 · 화재 발생 후 .+ · 당신의 상황을 기준으로$/.test(s)),
   texts(main()).join(" | "));
 t("경과시간 칩은 없다", !texts(main()).some((s) => /^\d{2}일 \d{2}:\d{2}$/.test(s)));
-t("HOME에는 [이전]이 없다", $("top-right").children.length === 0);
+// HOME 우상단은 [이전]이 아니라 [처음으로]다(사용자 실기기 검수 결정) —
+// 결과에 닿은 뒤로는 브릿지를 다시 만날 일이 없어 답을 고치러 갈 길이
+// 상세 화면의 CTA 하나뿐이었다.
+t("HOME 우상단이 [처음으로]다",
+  $("top-right").children.length === 1 &&
+    $("top-right").children[0].textContent === "처음으로",
+  texts($("top-right")).join(" | "));
 t("D-015 1층이 결과 첫 도달에 뜬다", $("save-notice").hidden === false);
 
 // 다섯 화면을 하나씩 들어갔다 나온다.
@@ -183,8 +189,8 @@ for (const [이름, 표시] of [
   ["먼저 볼 내용", "제일 먼저 확인해야 할 정보입니다."],
   ["체크리스트", "하나씩 해나가야 하는 일입니다."],
   ["알아둘 내용", "당장 행동할 필요는 없지만, 이후를 위해 확인해둘 정보입니다."],
-  ["시간 순서로 보기", "회복 과정에서 언제 무엇을 확인하면 되는지 살펴보세요."],
-  ["필요한 주제별로 보기", "지금 내 상황에 해당하는 안내를 주제별로 모았습니다."],
+  ["회복 타임라인", "회복 과정에서 언제 무엇을 확인하면 되는지 살펴보세요."],
+  ["주제별 보기", "지금 내 상황에 해당하는 안내를 주제별로 모았습니다."],
 ]) {
   카드(이름).click();
   await tick(10);
@@ -209,18 +215,36 @@ await tick(10);
   t("되돌리기 어려운 것에 글자 신호가 붙는다", 신호.length > 0 && 신호[0].textContent === "놓치면 되돌리기 어려움");
   t("하단 문구가 확정 문구다", has(main(), "체크한 항목은 이 기기에 완료 상태로 기억됩니다."));
 
+  // ★ **체크해도 항목은 제자리다**(사용자 실기기 검수 결정).
+  //   아래로 내려가는 `완료한 것` 블록이 없다 — 방금 체크한 것이 눈앞에서
+  //   사라지면 되돌릴 자리를 잃는다.
+  const 순서 = () => all(main(), (n) => hasClass(n, "card")).map((n) => n.dataset.row);
   const box = all(main(), (n) => hasClass(n, "card__box") && !hasClass(n, "card__box--off"))[0];
-  const 전 = all(main(), (n) => hasClass(n, "card__box")).length;
+  const 전순서 = 순서();
+  const 전개수 = all(main(), (n) => hasClass(n, "card")).length;
   box.click();
   await tick(40);
-  t("체크하면 완료로 내려간다", has(main(), "완료한 것"), texts(main()).slice(-6).join(" | "));
-  t("목록에서 하나 줄었다", all(main(), (n) => hasClass(n, "card__box")).length === 전 - 1);
+  t("체크해도 목록 길이가 그대로다",
+    all(main(), (n) => hasClass(n, "card")).length === 전개수,
+    `${전개수} -> ${all(main(), (n) => hasClass(n, "card")).length}`);
+  t("순서가 한 칸도 안 움직인다", 순서().join() === 전순서.join(), 순서().join(" > "));
+  t("체크한 카드가 완료 표시를 입는다",
+    all(main(), (n) => hasClass(n, "card--checked")).length === 1);
+  t("'완료한 것' 접힘 블록이 없다", !has(main(), "완료한 것"));
+  // 같은 자리에서 해제된다.
+  all(main(), (n) => hasClass(n, "card__box--on"))[0].click();
+  await tick(40);
+  t("같은 자리에서 해제된다",
+    all(main(), (n) => hasClass(n, "card--checked")).length === 0 &&
+      순서().join() === 전순서.join());
+  box.click();
+  await tick(40);
 }
 
 // 주제별 → 주제 상세 → Action 상세 → 뒤로 두 번
 $("top-right").children[0].click();
 await tick(10);
-카드("필요한 주제별로 보기").click();
+카드("주제별 보기").click();
 await tick(10);
 {
   const 주제 = all(main(), (n) => hasClass(n, "tcard"));
@@ -288,7 +312,7 @@ t("답한 내용이 이어진다 (체크한 것이 남아 있다)",
 // ── ③ 아직 확인 못 함 → 답 고치기 → 복귀 ───────────
 section("③ 아직 확인 못 함 — 해당 질문으로 직행하고 돌아온다");
 
-카드("필요한 주제별로 보기").click();
+카드("주제별 보기").click();
 await tick(10);
 {
   const 건강 = all(main(), (n) => hasClass(n, "tcard")).find((n) => n.textContent.includes("건강"));
@@ -443,7 +467,7 @@ t("① 전환을 지나면 HOME이다", has(main(), "지금 필요한 안내를 
 
 // ③ 미판정 → 질문 직행 → 답 변경 → 복귀 후 기기 뒤로 = 어긋남 없음
 {
-  카드("필요한 주제별로 보기").click();
+  카드("주제별 보기").click();
   await tick(10);
   all(main(), (n) => hasClass(n, "tcard")).find((n) => n.textContent.includes("건강")).click();
   await tick(10);
@@ -526,7 +550,7 @@ const 처음먼저볼 = 먼저볼();
 await tick(10);
 all(main(), (n) => hasClass(n, "card__box") && !hasClass(n, "card__box--off"))[0].click();
 await tick(40);
-t("완료 체크를 하나 남겼다", has(main(), "완료한 것"));
+t("완료 체크를 하나 남겼다", all(main(), (n) => hasClass(n, "card--checked")).length === 1);
 $("top-right").children[0].click();
 await tick(10);
 
@@ -586,12 +610,19 @@ t("① 바꾼 답이 결과에 반영된다 (금지 하나가 빠진다)",
 {
   카드("체크리스트").click();
   await tick(10);
-  t("① 완료 체크는 그대로다 (답을 지우지 않는다)", has(main(), "완료한 것"),
+  // 재진입해도 완료는 제자리에 남아 있다.
+  t("① 완료 체크는 그대로다 (답을 지우지 않는다)",
+    all(main(), (n) => hasClass(n, "card--checked")).length === 1,
     texts(main()).slice(-6).join(" | "));
   $("top-right").children[0].click();
   await tick(10);
 }
-t("① HOME에는 [처음으로]가 없다 (브릿지 자리다)", $("top-right").children.length === 0);
+// HOME에도 [처음으로]가 있다 — 브릿지와 같은 문이고, 재설문을 마치고
+// 돌아온 뒤에도 다시 걸을 수 있다는 뜻이다.
+t("① 재설문을 마치면 HOME이고 우상단은 [처음으로]다",
+  has(main(), "지금 필요한 안내를 정리했습니다.") &&
+    $("top-right").children[0]?.textContent === "처음으로",
+  texts($("top-right")).join(" | "));
 
 // ② 재설문 중 upstream 답 변경 → pruneStale이 뒤 질문을 지운다
 await 열기();

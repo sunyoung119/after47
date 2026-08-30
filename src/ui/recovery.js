@@ -101,37 +101,15 @@ export function renderPriority(main, pv, { onOpen }) {
 // 별도 heading도 badge도 없고, 더보기 안에 숨기지 않는다.
 export function renderChecklist(main, cv, { onOpen, onCheck }) {
   head(main, cv.title, cv.desc);
-  if (!cv.count && !cv.done.count) return empty(main);
+  if (!cv.items.length) return empty(main);
 
+  // **완료한 것도 이 목록 안에 그대로 있다**(사용자 실기기 검수 결정).
+  // 아래로 내려가는 별도 블록이 없다 — 체크한 순간에도, 나갔다 돌아와도
+  // 같은 자리이고 체크 표시와 면 색만 달라진다. 자리는 뷰모델의 자리표가
+  // 정하고, 그 자리표는 답이 바뀌지 않는 한 고정이다.
   const ul = el("ul", "cards");
   for (const r of cv.items) ul.appendChild(checkCard(r, { onOpen, onCheck }));
   main.appendChild(ul);
-
-  // 완료 — 아래에 쌓인다. 배지도 축하도 없다.
-  if (cv.done.count) {
-    const det = el("details", "fold");
-    const sum = el("summary", "fold__sum");
-    sum.appendChild(el("span", "fold__label", COPY.checklist.doneTitle));
-    sum.appendChild(el("span", "fold__count", COPY.checklist.doneCount(cv.done.count)));
-    det.appendChild(sum);
-    const dl = el("ul", "cards");
-    for (const r of cv.done.items) {
-      const li = el("li", "card card--done");
-      li.dataset.row = r.id;
-      const line = el("p", "card__title", r.title);
-      li.appendChild(line);
-      const meta = el("p", "card__meta");
-      meta.appendChild(chip(r.statusLabel, r.statusKind));
-      // completed_at이 없다고 완료가 아닌 것은 아니다.
-      meta.appendChild(el("span", null, r.doneOn || COPY.checklist.doneNoDate));
-      li.appendChild(meta);
-      if (r.checkable && onCheck)
-        li.appendChild(btn("btn btn--quiet", COPY.checklist.uncheck, () => onCheck(r.id, false)));
-      dl.appendChild(li);
-    }
-    det.appendChild(dl);
-    main.appendChild(det);
-  }
 
   main.appendChild(el("p", "pg__foot", cv.footer));
 }
@@ -293,6 +271,8 @@ export function renderActionDetail(main, ad, { onGoTo }) {
 
   const src = sourceCard(ad.source);
   if (src) main.appendChild(src);
+  const con = contactLine(ad.contact);
+  if (con) main.appendChild(con);
   main.appendChild(el("p", "pg__foot", ad.footer));
 }
 
@@ -389,14 +369,23 @@ function topicCard(r, onOpen) {
 function checkCard(r, { onOpen, onCheck }) {
   const li = el(
     "li",
-    `card card--check${r.warn ? " card--irreversible" : ""}${r.lock ? " card--locked" : ""}`
+    `card card--check${r.completed ? " card--checked" : ""}` +
+      `${r.warn && !r.completed ? " card--irreversible" : ""}` +
+      `${r.lock && !r.completed ? " card--locked" : ""}`
   );
   li.dataset.row = r.id;
 
   if (r.checkable && onCheck) {
-    const box = btn("card__box", null, () => onCheck(r.id, true));
-    box.setAttribute("aria-pressed", "false");
-    box.setAttribute("aria-label", `${r.title} — ${COPY.checklist.check}`);
+    // 같은 버튼이 체크와 해제를 겸한다 — 완료가 제자리에 남으므로
+    // 해제도 그 자리에서 한다.
+    const box = btn(`card__box${r.completed ? " card__box--on" : ""}`, null, () =>
+      onCheck(r.id, !r.completed)
+    );
+    box.setAttribute("aria-pressed", String(Boolean(r.completed)));
+    box.setAttribute(
+      "aria-label",
+      `${r.title} — ${r.completed ? COPY.checklist.uncheck : COPY.checklist.check}`
+    );
     li.appendChild(box);
   } else {
     // 선행이 안 끝난 것은 체크할 수 없다. 자리를 비워 두면 줄이 어긋난다.
@@ -405,12 +394,13 @@ function checkCard(r, { onOpen, onCheck }) {
 
   const b = btn("card__hit", null, () => onOpen(r.id));
   b.appendChild(el("span", "card__title", r.title));
-  if (r.warn) {
-    const m = el("span", "card__meta");
-    m.appendChild(chip(r.warn, "warn"));
-    b.appendChild(m);
-  }
-  if (r.lock) b.appendChild(lockText(r.lock));
+  const m = el("span", "card__meta");
+  // 완료한 것에 `놓치면 되돌리기 어려움`을 다시 말하지 않는다 — 이미
+  // 지나온 문턱이고, 그 자리에 `완료`가 선다.
+  if (r.completed && r.statusLabel) m.appendChild(chip(r.statusLabel, r.statusKind));
+  else if (r.warn) m.appendChild(chip(r.warn, "warn"));
+  if (m.childNodes.length) b.appendChild(m);
+  if (r.lock && !r.completed) b.appendChild(lockText(r.lock));
   b.appendChild(el("span", "chev", "›"));
   li.appendChild(b);
   return li;
@@ -475,6 +465,39 @@ function sourceCard(src) {
     if (foot.childNodes.length) one.appendChild(foot);
     box.appendChild(one);
   }
+  return box;
+}
+
+// 문의처 한 줄 — 출처 카드와 같은 급이다. **비어 있으면 안 그린다.**
+//
+// 번호는 `tel:` 링크라 탭하면 전화 앱이 열린다. 기관 페이지가 있으면
+// 기관명에 건다 — `검증됨`·`공식 인증` 같은 말은 쓰지 않는다.
+function contactLine(c) {
+  if (!c) return null;
+  const box = el("section", "src src--card contact-line");
+  box.appendChild(el("p", "src__label", c.label));
+  if (c.org) {
+    if (c.url) {
+      const p = el("p", "src__title");
+      const a = el("a", "src__org", c.org);
+      a.href = c.url;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      p.appendChild(a);
+      box.appendChild(p);
+    } else {
+      box.appendChild(el("p", "src__title", c.org));
+    }
+  }
+  if (c.tel) {
+    const p = el("p", "contact-line__tel");
+    const a = el("a", "src__link", `☎ ${c.tel}`);
+    a.href = c.telHref;
+    p.appendChild(a);
+    box.appendChild(p);
+  }
+  // 운영시간·처리기간처럼 확인해 둔 한 줄. 없으면 안 그린다.
+  if (c.note) box.appendChild(el("p", "src__meta", c.note));
   return box;
 }
 

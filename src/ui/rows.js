@@ -41,6 +41,9 @@ export function toRow(x, ctx = {}) {
     // 확인하는 콘텐츠 패스의 일이고, URL이나 본문을 파싱해 문서명·조문을
     // 만들어 내지 않는다. 화면은 sources → legacy sourceUrl → 생략 순으로 읽는다.
     sources: a.sources ?? [],
+    // 문의처. **행은 나르기만 한다** — 어느 화면이 그릴지는 뷰모델이
+    // 정하고, 지금은 Action 상세 하나뿐이다(목록 카드에는 안 그린다).
+    contacts: a.contacts ?? [],
     // 조례 항목의 출처는 Action이 아니라 자치구 조례에 있다. 행이 조합에 필요한
     // 재료(조례 이름·해당 조문)를 싣는다 — 엔진이 아니라 여기서.
     ordinanceName: a.ordinance_based ? ctx.ordinanceName ?? null : null,

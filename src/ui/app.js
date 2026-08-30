@@ -372,6 +372,10 @@ function renderHeader() {
 // 없던 요소지만 백로그의 "결과 진입 이후 전역 답 수정 진입점"이 이것이다.
 function topRight() {
   if (app.screen === "revisit") return { label: COPY.revisit.home, on: startAgain };
+  // HOME에도 같은 문을 둔다(사용자 실기기 검수 결정) — 결과에 닿은 뒤로는
+  // 브릿지를 다시 만날 일이 없어서, 답을 고치러 갈 길이 상세 화면의
+  // CTA 하나뿐이었다. **자리·톤·동작이 브릿지의 것과 같다.**
+  if (app.screen === "home") return { label: COPY.revisit.home, on: startAgain };
   const back = backTarget();
   return back ? { label: COPY.master.back, on: back } : null;
 }
@@ -625,7 +629,12 @@ function renderScope(main) {
 function renderResult(main) {
   const forEngine = applyDefaults(app.session.data.questions, app.state);
   const result = evaluate(forEngine, app.session.data);
-  const base = resultBase({ result, state: app.state, data: app.session.data });
+  // 체크리스트의 **자리표**. 완료를 지운 가정으로 엔진을 한 번 더 돌린다 —
+  // 체크해도 항목이 제자리에 남아야 하는데(사용자 결정), 실제 결과에서는
+  // 완료가 done 버킷으로 빠져 rank를 잃기 때문이다.
+  // **UI가 rank를 다시 계산하는 것이 아니라 엔진을 재사용하는 것이다.**
+  const orderResult = evaluate({ ...forEngine, completed: [] }, app.session.data);
+  const base = resultBase({ result, orderResult, state: app.state, data: app.session.data });
   app.base = base;
 
   const open = (id) => openDetail(id);
