@@ -148,13 +148,18 @@ export function installDom() {
       return hist.entries.length;
     },
     // 앞으로 가지 않는다 — 새 칸을 쌓으면 뒤쪽은 버린다(브라우저와 같다).
-    pushState(state) {
+    // ★ **URL 인자를 버리지 않는다.** 앱이 주소창을 정리하는 것을
+    //   (`syncAddressBar`) 검사가 못 보면, 같은 세션이 다시 열리는 부류의
+    //   결함이 통째로 사각에 남는다 — 실제로 [새로 시작하기]가 그랬다.
+    pushState(state, _title, url) {
       hist.entries.splice(hist.i + 1);
       hist.entries.push({ state });
       hist.i += 1;
+      if (url) globalThis.location.href = url;
     },
-    replaceState(state) {
+    replaceState(state, _title, url) {
       hist.entries[hist.i] = { state };
+      if (url) globalThis.location.href = url;
     },
   };
   globalThis.addEventListener = (ev, fn) => {

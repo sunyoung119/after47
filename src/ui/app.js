@@ -538,7 +538,19 @@ async function onBannerAction(a) {
   } else if (a.id === "restart") {
     // 체험장에서 한 기기를 여러 사람이 쓴다. 앞사람 기록을 지우지 않고
     // 새 토큰으로 시작한다 — 지우면 앞사람이 돌아올 길이 없다.
-    const opened = await openSession({ resume: false });
+    //
+    // ★ **맨주소를 넘긴다**(2026-09-02 · 원인 확인 후 수선). 이 문은
+    //   **원래부터 죽어 있었다** — `openSession`의 url 기본값이
+    //   `location.href`이고 주소창은 늘 `?d&t`로 덮여 있다(개인 재접속
+    //   링크). `resume:false`는 분기 ②(이 기기의 마지막 토큰)만 막는데,
+    //   분기 ①(주소의 토큰)이 자기 토큰을 도로 집어서 **같은 세션이 다시
+    //   열렸다.** `t`도 `d`도 없는 주소를 주면 ①과 ②가 모두 비켜가고
+    //   ③(새 토큰 발급)으로 떨어진다.
+    //
+    //   **`resume`의 뜻을 넓히지 않는다** — `session.js`는 무변이다.
+    //   그 함수의 계약("주소의 토큰은 이 기기에 저장이 실재할 때만")은
+    //   타 기기 진입 수선의 핵심이라(v39) 여기서 흔들면 안 된다.
+    const opened = await openSession({ resume: false, url: baseHere() });
     app.returning = Boolean(opened.saved);
     app.session = await anchorSession(opened);
     app.state = { completed: [] };

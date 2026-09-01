@@ -1384,6 +1384,75 @@ section("⑧ 기본 확인 — 헤드라인 위에 서는 것");
     all($("banners"), (n) => hasClass(n, "banner")).length === 0, $("banners").textContent);
 }
 
+// - ⑨ 새로 시작하기 -------------------------------
+section("⑨ 새로 시작하기 — 새 토큰이고 앞사람 기록은 그대로다");
+
+// 체험장에서 한 기기를 여러 사람이 쓴다. 앞사람 기록을 보고 있는 사람에게
+// 빠져나갈 문이 있어야 하고, 그 문은 **앞사람 기록을 지우지 않는다.**
+//
+// ★ 이 문은 **원래부터 죽어 있었다.** `openSession`의 url 기본값이
+//   `location.href`인데 주소창은 `syncAddressBar`가 `?d&t`로 덮어 둔다 —
+//   `resume:false`는 분기 ②(마지막 토큰)만 막고 분기 ①(주소의 토큰)이
+//   자기 토큰을 도로 집어 **같은 세션이 다시 열렸다.**
+//   DOM 스텅이 `replaceState`의 URL 인자를 버려서 이 부류가 통째로
+//   사각에 있었다 — 스텅을 고치고 나서야 보인다.
+{
+  const 창고 = memoryBackend();
+  configureStorage({ ...창고, readJson });
+  const 토큰주소 = () => (String(globalThis.location.href).match(/[?&]t=([^&]+)/) || [])[1] ?? null;
+  const 저장키 = () => [...창고.keys()].filter((k) => k.includes("state"));
+
+  // 앞사람 — 끝까지 걷고 기록을 남긴다.
+  await 열기();
+  button($("intro"), "회복 시작하기").click();
+  await tick(30);
+  all(main(), (n) => n.id === "f-district")[0].change("gangnam");
+  await tick(20);
+  button(main(), "다음").click();
+  await tick(40);
+  await 설문끝까지();
+  결과로().click();
+  await tick(40);
+  const 옆토큰 = 토큰주소();
+  const 옆키 = 저장키();
+  t("⑨ 앞사람의 주소에 토큰이 심겼다", Boolean(옆토큰), String(globalThis.location.href));
+  t("⑨ 앞사람의 저장이 생겼다", 옆키.length >= 1, JSON.stringify(옆키));
+
+  // 뒷사람 — 같은 기기로 다시 열면 앞사람 기록을 이어본다.
+  await 열기();
+  const 새로 = buttonLike($("banners"), "새로 시작하기");
+  t("⑨ 이어보기 알림과 빠져나갈 문이 있다", Boolean(새로), texts($("banners")).join(" | "));
+  // 앞서 앜 앞사람의 토큰이 주소창에 다시 심혔는지 — 이것이 결함의 연료다.
+  t("⑨ 주소창이 앞사람 토큰으로 덮여 있다", 토큰주소() === 옆토큰,
+    `${토큰주소()} / ${옆토큰}`);
+
+  if (새로) {
+    새로.click();
+    await tick(80);
+    t("⑨ 토큰이 바뀐다 (같은 세션이 다시 열리지 않는다)",
+      토큰주소() !== null && 토큰주소() !== 옆토큰,
+      `${옆토큰} → ${토큰주소()}`);
+    t("⑨ 주소창이 새 토큰으로 정리된다", String(globalThis.location.href).includes(토큰주소() ?? "∅"),
+      String(globalThis.location.href));
+    t("⑨ 앞사람의 저장은 그대로다 (지우지 않는다)",
+      옆키.every((k) => 창고.keys().includes(k)), JSON.stringify(저장키()));
+    t("⑨ 첫 방문 흐름으로 떨어진다 (랜딩 또는 기본 확인)",
+      $("intro").hidden === false || has(main(), "화재가 있었던 날짜와 지역을 알려주세요"),
+      $("intro").hidden === false ? "럜딩" : texts(main()).slice(0, 3).join(" | "));
+    // 지역이 계승되면 새로 시작한 사람이 남의 구를 보게 된다.
+    if ($("intro").hidden === false) {
+      button($("intro"), "회복 시작하기").click();
+      await tick(40);
+    }
+    const 지역 = all(main(), (n) => n.id === "f-district")[0];
+    t("⑨ 지역이 계승되지 않는다", Boolean(지역) && 지역.value === "", 지역?.value);
+    // ★ 배너는 **랜딩을 통과한 뒤에** 본다 — 랜딩 동안에는 `#flow`가 통째로
+    //   숨어 있어(배너 슬롯도 그 안이다) 앞 화면의 내용이 남아 있다.
+    t("⑨ 이어보기 알림이 사라졌다", !texts($("banners")).some((x) => x.includes("이어서 보고 있습니다")),
+      texts($("banners")).join(" | "));
+  }
+}
+
 // ── 결과 ───────────────────────────────────────────
 console.log(`\n${"=".repeat(62)}`);
 console.log(failed ? `실패 ${failed}건` : "전부 통과");
