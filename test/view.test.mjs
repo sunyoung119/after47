@@ -1017,11 +1017,15 @@ t(
   // 달라진다.
   {
     const 규칙 = (css.match(/\.tline__sum,\s*\.tline__info\s*\{[^}]*\}/) || [""])[0];
-    t(
-      "타임라인 요약 행이 불투명 면을 갖는다",
-      /background:\s*var\(--c-surface\)/.test(규칙),
-      규칙.replace(/\s+/g, " ")
-    );
+    // 면의 **토큰 이름을 박지 않는다** — 흰색이었다가 푸른색이 됐고 또
+    // 바뀔 수 있다. 지켜야 하는 것은 "토큰으로 된 불투명한 면"이다.
+    const 면토큰 = (규칙.match(/background:\s*var\((--[a-z0-9-]+)\)/) || [])[1];
+    t("타임라인 요약 행이 토큰으로 된 면을 갖는다", Boolean(면토큰), 규칙.replace(/\s+/g, " "));
+    if (면토큰) {
+      const 토큰본문 = readFileSync(join(D, "src/ui/tokens.css"), "utf8");
+      const 값 = ((토큰본문.match(new RegExp(면토큰 + ":\s*([^;]+);")) || [])[1] || "").trim();
+      t("그 면이 불투명하다 (알파 없는 색이다)", /^#[0-9a-f]{6}$/i.test(값), `${면토큰}: ${값}`);
+    }
     t(
       "반투명(rgba·opacity)으로 면을 만들지 않는다",
       !/rgba|opacity/.test(규칙)
@@ -1064,7 +1068,7 @@ t(
   const refs = html.match(/(?:href|src)="src\/ui\/[^"]+"/g) || [];
   // ★ 값까지 본다. 존재만 보면 "올리는 것을 잊은 배포"를 못 잡는다 —
   //   화면 파일을 고치면서 v를 올리면 **이 줄의 숫자도 함께 올린다.**
-  const V = "?v=29";
+  const V = "?v=30";
   t(
     `화면 파일 참조가 전부 ${V}다 (${refs.length}개)`,
     refs.length >= 3 && refs.every((r) => r.includes(V)),

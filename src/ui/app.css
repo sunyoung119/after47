@@ -1249,6 +1249,9 @@ a {
 .tline__node:last-child {
   border-left-color: transparent;
 }
+/* 점도 축도 **파란 계열**이다 — 회색 점 하나만 계열 밖이면 그 자리가
+   비활성처럼 읽힌다. 두 톤을 두는 것은 `화재 발생일`(기준점)과 나머지
+   구간을 가르기 위해서다. */
 .tline__dot {
   position: absolute;
   left: -4px;
@@ -1256,7 +1259,7 @@ a {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--c-line-strong);
+  background: var(--c-node);
 }
 .tline__node--info .tline__dot {
   background: var(--c-accent);
@@ -1269,8 +1272,11 @@ a {
    면 안에 면이 겹치면 층이 하나 더 생긴다. */
 .tline__sum,
 .tline__info {
-  background: var(--c-surface);
-  border: 1px solid var(--c-line-strong);
+  /* ★ **구간의 면은 푸른색이고 안내 카드는 흰색이다**(사용자 결정).
+     둘 다 흰색이던 동안에는 펼친 안내가 구간의 일부인지 다음 구간인지
+     면으로는 안 갈렸다. 대비는 tokens.css의 `--c-band` 주석에 적었다. */
+  background: var(--c-band);
+  border: 1px solid var(--c-band-line);
   border-radius: var(--r2);
   box-shadow: var(--shadow-card);
   padding: var(--s3) var(--s4);
@@ -1295,10 +1301,9 @@ a {
 }
 /* 조사서가 나온 뒤 — 잠김은 **보조문구 한 줄로만** 말한다. 자물쇠 그림도
    경고색도 없다. 조사서를 받으면 열리는 자리이지 막힌 곳이 아니다.
-   면이 생긴 뒤로는 그 면의 색으로 말한다. */
-.tline__node--locked .tline__sum {
-  background: var(--c-bg-soft);
-}
+   ★ **면으로도 말하지 않는다**(2026-09-02) — 다섯 구간이 같은 면을 쓰게
+   통일하면서 이 자리만 달리 칠하던 선언을 걷었다. 잠김을 면으로 구분하면
+   "막힌 곳"으로 읽히고, 그것은 이 화면이 하지 않기로 한 말이다. */
 .tline__label {
   font-weight: var(--w-bold);
 }
@@ -1342,6 +1347,11 @@ a {
 .tline__count {
   color: var(--c-ink-soft);
   font-variant-numeric: tabular-nums;
+}
+/* 푸른 면 위에서는 보조뮤트(3.89)를 쓰지 않는다 — 한 단계 올린다.
+   사진 위에서 뮤트를 올리던 것과 같은 규칙이다(D-022의 층 셋). */
+.tline__sum .chev {
+  color: var(--c-ink-soft);
 }
 .tline__node--empty .tline__label {
   color: var(--c-ink-soft);

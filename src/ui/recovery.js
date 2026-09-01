@@ -143,16 +143,6 @@ export function renderReference(main, rv, { onOpen }) {
 export function renderTimelinePage(main, tv, { onOpen, onHub }) {
   head(main, tv.title, tv.desc);
 
-  // 맞춤 안내로 가는 문. **제목 바로 아래, 본문이 시작되기 전이다** —
-  // 헤더에 숨기면 도착한 사람이 다음 자리를 못 찾는다.
-  if (tv.toHub && onHub) {
-    // 탭 단서는 브릿지 CTA와 **같은 클래스·같은 글자**다(`btn--tap` + `chev`).
-    // 같은 약속을 하는 자리가 다른 모양이면 손가락이 매번 다시 배운다.
-    const go = btn("btn btn--primary hub__go btn--tap", tv.toHub, onHub);
-    go.appendChild(chev());
-    main.appendChild(go);
-  }
-
   const line = el("ol", "tline");
 
   for (const n of tv.nodes) {
@@ -202,6 +192,18 @@ export function renderTimelinePage(main, tv, { onOpen, onHub }) {
   }
 
   main.appendChild(line);
+
+  // 맞춤 안내로 가는 문. ★ **타임라인 아래다**(2026-09-02 · 사용자 결정).
+  // 앞서 제목 바로 아래에 있었다 — 도착한 사람이 다음 자리를 못 찾을까
+  // 봐서였는데, 그 자리에 있으면 **경로보다 먼저 읽혀 도착 화면이 경유지로
+  // 보인다.** 여기는 도착지이고, 먼저 보여야 하는 것은 자기 회복 경로다.
+  // 탭 단서는 브릿지 CTA와 같은 클래스·같은 글자다(`btn--tap` + `chev`).
+  if (tv.toHub && onHub) {
+    const go = btn("btn btn--primary hub__go btn--tap", tv.toHub, onHub);
+    go.appendChild(chev());
+    main.appendChild(go);
+  }
+
   main.appendChild(el("p", "pg__foot", tv.footer));
 }
 

@@ -283,13 +283,14 @@ t("타임라인에 사진 배경이 붙는다", document.body.classList.contains
 t("타임라인 우상단이 [처음으로] 하나다 (도착 화면에는 뒤가 없다)",
   texts($("top-right")).join(",") === "처음으로",
   texts($("top-right")).join(" | "));
-// 허브로 가는 문은 **제목 바로 아래, 본문(타임라인 축) 앞**이다.
+// ★ 허브로 가는 문은 **타임라인 아래**다(2026-09-02 · 사용자 결정).
+// 위에 있으면 경로보다 먼저 읽혀 도착 화면이 경유지로 보인다.
 {
   const 문 = buttonLike(main(), "나를 위한 안내 보기");
   const 순 = texts(main());
-  t("허브로 가는 문이 제목 아래·본문 앞에 있다",
-    Boolean(문) && 순.indexOf("나를 위한 안내 보기") < 순.indexOf("화재 발생일"),
-    순.slice(0, 5).join(" | "));
+  t("허브로 가는 문이 타임라인 아래에 있다",
+    Boolean(문) && 순.indexOf("나를 위한 안내 보기") > 순.indexOf("화재 발생일"),
+    순.slice(0, 6).join(" | "));
   문.click();
 }
 await tick(30);
