@@ -292,13 +292,67 @@ t("자치구를 물어야 한다고 알려준다", s.notices.some((n) => n.type 
 t("망가진 토큰은 버리고 새로 발급한다", isValidToken(s.token) && s.token !== "ab0k9m");
 t("토큰이 이상했다는 것도 알려준다", s.notices.some((n) => n.type === "token_invalid"));
 
-// 카톡으로 받은 링크를 다른 기기에서 연 경우 — v1의 한계를 명시한다
+// ── 다른 기기 분기 ─────────────────────────────────
+//
+// ★ **주소창은 늘 `?d=<자치구>&t=<토큰>`으로 덮여 있다**(개인 재접속 링크).
+//   그 주소가 남에게 건너가기 쉬운데, t의 유효성만 보고 채택하면 처음 온
+//   사람이 인트로도 랜딩도 없이 **남의 자치구가 선택된 채** 흐름 안쪽에
+//   떨어지고, 진입 직후 저장(D-015 0층)이 남의 토큰 아래에서 시작된다.
+//
+//   그래서 **저장이 실재할 때만** 그 토큰을 채택한다. 분기 셋을 못 박는다.
+section("5-b. 진입 — 남의 재접속 링크를 다른 기기에서 열었을 때");
+
+// ① t 유효 + 이 기기에 저장 없음 + lastToken 없음 → 새 토큰, 첫 방문
 새백엔드();
 s = await openSession({ url: `https://after47.kr/?d=mapo&t=${토큰}` });
-t(
-  "다른 기기에서 같은 주소를 열면 상태는 비어 있다 (v1 한계)",
-  s.token === 토큰 && !s.saved && s.state.district === "mapo"
-);
+t("① 남의 토큰을 채택하지 않는다", s.token !== 토큰, `${s.token} / ${토큰}`);
+t("① 새로 발급하고 첫 방문으로 친다", isValidToken(s.token) && s.isNew === true);
+t("① 남의 주소에 딸린 d도 함께 버린다", s.state.district === undefined, String(s.state.district));
+t("① 지역을 물어야 한다고 알려준다", s.notices.some((n) => n.type === "district_needed"));
+t("① 왜 아무것도 안 보이는지 알려준다", s.notices.some((n) => n.type === "no_saved_state"));
+t("① 이어보는 중이라고 말하지 않는다", !s.notices.some((n) => n.type === "resumed_on_device"));
+{
+  // **기각된 토큰 아래로는 저장이 일어나지 않는다.**
+  const 앞 = (await loadState(토큰)) ?? null;
+  await anchorSession(s);
+  const 뒤 = (await loadState(토큰)) ?? null;
+  t("① 기각한 토큰 아래로 저장하지 않는다", 앞 === null && 뒤 === null);
+  t("① 저장은 새 토큰 아래로 간다", Boolean(await loadState(s.token)));
+}
+
+// ② t 유효 + 이 기기에 저장 없음 + lastToken 있음 → 자기 기록 재개
+{
+  새백엔드();
+  const 내세션 = await openSession({ url: "https://after47.kr/?d=seongbuk" });
+  await anchorSession(내세션);
+  await saveState(내세션.token, { district: "seongbuk", fire_at: "2026-08-30T12:00:00.000Z" });
+  const 남의링크 = await openSession({ url: `https://after47.kr/?d=mapo&t=${토큰}` });
+  t("② 내 기록이 남의 주소 조각보다 먼저다", 남의링크.token === 내세션.token, 남의링크.token);
+  t("② 이어보는 중이라고 알려준다", 남의링크.notices.some((n) => n.type === "resumed_on_device"));
+  t("② 남의 d를 힌트로 쓰지 않는다", 남의링크.state.district === "seongbuk", 남의링크.state.district);
+  t("② 충돌 배너를 만들지 않는다", !남의링크.notices.some((n) => n.type === "district_conflict"));
+  t("② 그 사람에게는 no_saved_state가 거짓이다",
+    !남의링크.notices.some((n) => n.type === "no_saved_state"));
+}
+
+// ③ t 유효 + 이 기기에 저장 있음 → 현행 그대로 (재접속 링크 회귀 방지)
+{
+  새백엔드();
+  const 내것 = await openSession({ url: "https://after47.kr/?d=mapo" });
+  await anchorSession(내것);
+  const 다시 = await openSession({ url: `https://after47.kr/?d=mapo&t=${내것.token}` });
+  t("③ 내 재접속 링크는 그대로 열린다", 다시.token === 내것.token && Boolean(다시.saved));
+  t("③ 첫 방문이 아니다", 다시.isNew === false);
+  t("③ 이 경우 no_saved_state는 없다", !다시.notices.some((n) => n.type === "no_saved_state"));
+}
+
+// ④ d만 있고 t가 없는 주소(구별 QR·데모) → 프리필 유지
+{
+  새백엔드();
+  const qr = await openSession({ url: "https://after47.kr/?d=mapo" });
+  t("④ 구별 QR의 d는 그대로 프리필된다", qr.state.district === "mapo");
+  t("④ 그 경우 no_saved_state는 없다", !qr.notices.some((n) => n.type === "no_saved_state"));
+}
 
 // 만료 고지 (D-002 "보관 기간과 자동 삭제 정책, 그리고 고지")
 새백엔드();

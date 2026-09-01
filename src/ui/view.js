@@ -12,11 +12,10 @@ import { COPY } from "./copy.js";
 
 // ── 진입 ───────────────────────────────────────────
 //
-// openSession이 준 notices 다섯 종을 배너로 옮기고, **notice가 없는 여섯째**를
-// 여기서 판정한다 — 토큰은 유효한데 이 기기에 저장이 없는 경우다. 세션 계층은
-// 그것을 알림으로 만들지 않는다(정상 진입과 구분되지 않으므로). 카톡으로 받은
-// 링크를 다른 기기에서 연 사람이 여기 오고, 그 사람은 자기 기록이 안 보이는
-// 이유를 들어야 한다.
+// openSession이 준 notices를 배너로 옮긴다. **판정을 새로 하지 않는다** —
+// 여섯째(`no_saved_state`: 남의 재접속 링크로 왔는데 이 기기에 기록이 없는
+// 사람)도 세션 계층이 밀어 준다. 여기서 `!saved`로 판정하던 것이 앱에서
+// 한 번도 안 참이었던 이유는 아래 주석에 적었다.
 // `atEntry` — **답을 걷기 시작하기 전인가.** 진입 알림 중에는 그 앞에서만
 // 뜻이 있는 것이 있다(아래 `resumed_on_device`). 화면 이름을 여기서 알 필요는
 // 없으므로 판정은 app.js가 하고 여기는 결과만 받는다.
@@ -79,26 +78,35 @@ export function entryView(session, { atEntry = true } = {}) {
         actions: [{ id: "restart", value: null, label: COPY.banner.resumed_on_device_action }],
       });
     } else if (n.type === "token_invalid") {
+      // 진입 알림과 같은 규칙 — 들어서는 순간에 "이 주소가 잘못됐다"를
+      // 말하는 것이 일이고, 걷기 시작한 뒤에는 소음이다.
+      if (!atEntry) continue;
       banners.push({
         type: "token_invalid",
         text: COPY.banner.token_invalid,
         sub: COPY.banner.token_invalid_sub,
         actions: [],
       });
+    } else if (n.type === "no_saved_state") {
+      // 남의 재접속 링크로 왔는데 이 기기에 기록이 없는 사람. **자기
+      // 기록을 이어 보는 사람에게는 절대 안 뜬다** — 그 사람에게는
+      // 이 문장이 거짓이다(세션 계층이 분기 ③에서만 민다).
+      if (!atEntry) continue;
+      banners.push({
+        type: "no_saved_state",
+        text: COPY.banner.no_saved_state,
+        sub: COPY.banner.no_saved_state_sub,
+        actions: [],
+      });
     }
     // expires_at은 배너가 아니라 하단 고지 한 줄이다. 아래에서 따로 뽑는다.
   }
 
-  // 여섯째 — notice가 없다. `saved`가 비었는데 이 세션이 새로 발급된 것도
-  // 아니면, 주소는 멀쩡한데 이 기기에 기록이 없는 것이다.
-  if (!session?.saved && !session?.isNew) {
-    banners.push({
-      type: "no_saved_state",
-      text: COPY.banner.no_saved_state,
-      sub: COPY.banner.no_saved_state_sub,
-      actions: [],
-    });
-  }
+  // **여섯째는 이제 notice로 온다.** 앞서는 여기서 `!saved && !isNew`로
+  // 판정했는데 그 조건은 앱에서 한 번도 참이 되지 않았다 — D-015 0층의
+  // anchorSession이 진입 직후 저장해 `saved`를 채우기 때문이다(실측:
+  // anchor 전 `no_saved_state` 있음 → anchor 후 없음). 그래서 판정을
+  // **세션 계층으로 올렸고**, 그쪽은 저장 이전의 사실을 안다.
 
   // 일곱째였던 **책임 경계 배너는 사라졌다**(확정 UX). 건물 종류가
   // "그 외"인 사람에게 말해야 하는 것은 그대로지만, 배너 한 줄이 아니라

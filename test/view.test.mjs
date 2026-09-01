@@ -115,13 +115,17 @@ t(
     `${진입.join(",")} → ${걷는중.join(",")}`);
 }
 
-// (5) notice가 없는 여섯째 — 카톡 링크를 다른 기기에서 연 사람
+// (5) 여섯째 — **남의 재접속 링크를 다른 기기에서 연 사람.**
+// 판정이 뷰모델에서 세션 계층으로 올라갔다: 여기서 쓰던 `!saved && !isNew`는
+// D-015 0층이 진입 직후 저장해 버려서 앱에서 한 번도 참이 아니었다.
 새백엔드(); // 기기를 바꾼 것과 같다
 s = await openSession({ url: `https://after47.kr/?d=mapo&t=${토큰}` });
-t("⑤ 이 경우 openSession은 notice를 주지 않는다", !s.notices.some((n) => n.type === "no_saved_state"));
-t("⑤ 저장이 없고 새로 발급한 것도 아니다", !s.saved && !s.isNew);
+t("⑤ 세션 계층이 no_saved_state를 직접 민다", s.notices.some((n) => n.type === "no_saved_state"));
+t("⑤ 남의 토큰을 기각하고 새로 발급한다", s.token !== 토큰 && s.isNew, `${s.token} / isNew=${s.isNew}`);
 v = entryView(s);
-t("⑤ 뷰모델이 no_saved_state 배너를 직접 만든다", bannerTypes(v).includes("no_saved_state"));
+t("⑤ 진입 화면에 배너가 뜬다", bannerTypes(v).includes("no_saved_state"));
+t("⑤ 걷기 시작하면 접힌다",
+  !bannerTypes(entryView(s, { atEntry: false })).includes("no_saved_state"));
 
 // 정상 진입에서는 그 배너가 뜨면 안 된다
 새백엔드();
@@ -130,6 +134,22 @@ t("⑤ 새로 시작한 사람에게는 안 뜬다", !bannerTypes(entryView(s)).
 await anchorSession(s);
 s = await openSession({ url: `https://after47.kr/?t=${s.token}` });
 t("⑤ 저장이 살아 있는 사람에게도 안 뜬다", !bannerTypes(entryView(s)).includes("no_saved_state"));
+// 자기 기록을 이어 보는 사람에게도 안 뜬다 — 그 사람에겐 문장이 거짓이다.
+{
+  const 남의토큰 = 토큰;
+  const 내것 = await openSession({ url: `https://after47.kr/?d=mapo&t=${남의토큰}` });
+  t("⑤ 자기 기록을 재개하는 사람에게는 안 뜬다",
+    !내것.notices.some((n) => n.type === "no_saved_state") && 내것.notices.some((n) => n.type === "resumed_on_device"),
+    내것.notices.map((n) => n.type).join(","));
+}
+// token_invalid도 같은 규칙으로 접힌다.
+{
+  새백엔드();
+  const 무효 = await openSession({ url: "https://after47.kr/?t=!!!" });
+  t("⑤ token_invalid는 진입 화면에 뜬다", bannerTypes(entryView(무효)).includes("token_invalid"));
+  t("⑤ token_invalid도 걷기 시작하면 접힌다",
+    !bannerTypes(entryView(무효, { atEntry: false })).includes("token_invalid"));
+}
 
 // 만료 고지는 배너가 아니라 하단 한 줄이다 (D-002 · D-015)
 v = entryView(s);
@@ -878,7 +898,7 @@ t(
   const refs = html.match(/(?:href|src)="src\/ui\/[^"]+"/g) || [];
   // ★ 값까지 본다. 존재만 보면 "올리는 것을 잊은 배포"를 못 잡는다 —
   //   화면 파일을 고치면서 v를 올리면 **이 줄의 숫자도 함께 올린다.**
-  const V = "?v=20";
+  const V = "?v=21";
   t(
     `화면 파일 참조가 전부 ${V}다 (${refs.length}개)`,
     refs.length >= 3 && refs.every((r) => r.includes(V)),
