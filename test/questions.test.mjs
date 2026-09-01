@@ -409,6 +409,31 @@ t("origin_area가 unknown이면 product_suspected를 안 묻는다", !모름.inc
 t("그때 product_maker_contacted도 함께 사라진다", !모름.includes("product_maker_contacted"));
 t("원인을 들은 사람에게는 product_suspected를 묻는다", 집안.includes("product_suspected"));
 
+// ★ **판정용 사본(applyDefaults)으로 가시성을 계산해도 새면 안 된다.**
+//
+// `q-product-suspected`는 안 물어도 `default: "unknown"`이 판정 사본을 채운다
+// (D-013 — "안 물었다고 No가 아니다"). 그런데 `q-maker`의 게이트가
+// `product_suspected ∈ [true,"unknown"]` 하나뿐이면, **부모가 안 물어진
+// 사람에게 자식이 열린다** — 발화 위치를 모른다고 답한 사람에게 제조사를
+// 묻게 된다.
+//
+// 원시 state로 도는 지금의 설문 화면에서는 새지 않지만(위 검사), 판정 사본을
+// 넘기는 소비자가 하나만 생겨도 샌다. **게이트를 데이터에서 결합해 막는다** —
+// `origin_area ∈ [private, common]`을 함께 본다(D-010의 키 간 AND).
+{
+  const 사본 = (st) => applyDefaults(questions, { district: "mapo", fire_at: FIRE, ...st });
+  t("★ 판정 사본에서도 origin unknown이면 제조사를 안 묻는다",
+    !보이는(사본({ origin_area: "unknown" })).includes("product_maker_contacted"),
+    보이는(사본({ origin_area: "unknown" })).join(","));
+  // 반대쪽 — **의도는 그대로다.** 위치는 알고 제품 여부만 모르는 사람에게는 뜬다.
+  t("★ 위치를 알고 제품 여부만 모르면 그대로 묻는다",
+    보이는(사본({ origin_area: "private", product_suspected: "unknown" }))
+      .includes("product_maker_contacted"));
+  t("★ 공용부에서도 그대로 묻는다",
+    보이는(사본({ origin_area: "common", product_suspected: true }))
+      .includes("product_maker_contacted"));
+}
+
 // ★ D-013. 안 물었다고 No가 아니다 — default unknown이 판정 사본을 채워
 // 제품 보존 금지가 그대로 켜진다. 이것이 깨지면 모르는 사람이 증거를 버린다.
 {

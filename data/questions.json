@@ -396,6 +396,10 @@
       "product_suspected": [
         true,
         "unknown"
+      ],
+      "origin_area": [
+        "private",
+        "common"
       ]
     },
     "help": "제조사와 연락이 시작되면 발화 의심 제품의 보관과 조사 대응에 관한 안내가 달라집니다."
