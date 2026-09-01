@@ -460,6 +460,9 @@ a {
   background: transparent;
   color: var(--c-ink-soft);
   font: inherit;
+  /* 라벨이 길어졌다(`상황 다시 알리기`). **접히면 헤더 높이가 흔들리고**
+     그 아래 화면 전체가 밀린다 — 320px에서도 한 줄로 선다(실측 여유 ~22px). */
+  white-space: nowrap;
   cursor: pointer;
 }
 
