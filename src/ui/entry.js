@@ -66,15 +66,49 @@ export function landingView(state = {}, { saved = null, again = false } = {}) {
 // 하루의 24시간. 화면이 매번 만들지 않도록 한 번만 편다.
 const HOURS = Array.from({ length: 24 }, (_, h) => ({ value: h, label: COPY.basic.hour(h) }));
 
-// 날짜(YYYY-MM-DD)와 **고른 시**로 fire_at을 만든다.
+// 오늘인가. 근사 규칙과 선택지 제한이 둘 다 이 판정을 쓴다.
+const isToday = (day, now) => day === isoDay(new Date(now).toISOString());
+
+// 이 날짜에 고를 수 있는 **마지막 시.** 오늘이면 지금 시, 과거면 23이다.
+// 화재는 아직 오지 않은 시각에 날 수 없다.
+export function maxHourOn(day, now = Date.now()) {
+  return isToday(day, now) ? new Date(now).getHours() : 23;
+}
+
+// 날짜가 바뀌었을 때 **고른 시각을 그대로 둘 수 있는가.**
 //
-// 시각을 안 골랐으면 그 날의 **정오**로 둔다 — 자정이면 하루가 통째로 더
-// 지난 것처럼 계산된다. 정오는 그 하루의 가운데라 어느 쪽으로도 반나절만
-// 틀린다. **시각을 받았으면 그 값이 우선이고, 근사는 쓰지 않는다.**
-export function fireAtOf(day, hour = null) {
+// 과거 날짜에서 오후 10시를 고른 뒤 날짜를 오늘로 되돌리면 그 시각은
+// 아직 오지 않았다. 그때는 **`선택 안 함`으로 되돌린다** — 지금 시로
+// 조용히 당겨 붙이면 사용자가 고르지 않은 시각이 답이 된다.
+export function keepHour(day, hour, now = Date.now()) {
+  if (!Number.isInteger(hour)) return null;
+  return hour <= maxHourOn(day, now) ? hour : null;
+}
+
+// 날짜(YYYY-MM-DD)와 **고른 시**로 fire_at을 만든다.
+// **시각을 받았으면 그 값이 우선이고, 근사는 쓰지 않는다.**
+//
+// 시각을 안 골랐을 때의 근사는 날짜에 따라 갈린다.
+//
+//   오늘   **확인하는 그 시각.** 기본 진입점이 화재 당일이라 오차가
+//          유계이고(몇 분~몇 시간), 정오로 밀면 아침에 들어온 사람의
+//          경과가 **음수**가 된다. 더 나쁜 것은 반대쪽이다 — 저녁에
+//          들어온 사람의 경과가 과대추정되어 **골든타임 항목이 성급히
+//          `missed`로 내려간다.** 그 항목들이 `irreversible`이라 놓치면
+//          되돌릴 수 없다(불가역 거짓음성). 근사가 틀리는 방향을 고른다.
+//   과거   **그 날의 정오.** 몇 시였는지 알 길이 없고, 자정으로 두면
+//          하루가 통째로 더 지난 것처럼 계산된다. 정오는 그 하루의
+//          가운데라 어느 쪽으로도 반나절만 틀린다.
+//
+// **이미 저장된 정오 근사는 옮기지 않는다** — 당일 안에 자연히 해소되고,
+// 마이그레이션은 사용자가 확인한 적 없는 값을 손대는 일이다.
+export function fireAtOf(day, hour = null, now = Date.now()) {
   if (!day) return null;
-  const hh = Number.isInteger(hour) ? String(hour).padStart(2, "0") : "12";
-  return new Date(`${day}T${hh}:00:00`).toISOString();
+  if (Number.isInteger(hour)) {
+    return new Date(`${day}T${String(hour).padStart(2, "0")}:00:00`).toISOString();
+  }
+  if (isToday(day, now)) return new Date(now).toISOString();
+  return new Date(`${day}T12:00:00`).toISOString();
 }
 
 export function basicCheckView({ state = {}, data = {}, now = Date.now() } = {}) {
@@ -106,7 +140,10 @@ export function basicCheckView({ state = {}, data = {}, now = Date.now() } = {})
       //   `answered`와 같은 규칙이고, 재방문·QR 진입이 그 자리다.
       value: Number.isInteger(state.fire_hour) ? state.fire_hour : null,
       answered: state.fire_hour !== undefined,
-      options: HOURS,
+      // **아직 오지 않은 시각은 고를 수 없다.** 오늘이면 지금 시까지,
+      // 과거 날짜면 전부 열린다. 지우지 않고 잠그는 것은 D-011과 같은
+      // 이유다 — 있는 것이 없어지면 "왜 없지"가 남는다.
+      options: HOURS.map((o) => ({ ...o, disabled: o.value > maxHourOn(isoDay(value), now) })),
     },
     district: {
       label: COPY.basic.district,

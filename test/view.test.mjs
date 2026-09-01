@@ -19,7 +19,7 @@ import { contactOf, sourcesView, directoryView } from "../src/ui/result.js";
 import { COPY, STATUS_LABEL } from "../src/ui/copy.js";
 import { TOPIC_LABEL, TOPIC_ORDER, NODE_LABEL, topicLabel } from "../src/ui/copy.js";
 import {
-  landingView, basicCheckView, masterView, scopeNoticeView, transitionView, revisitView, fireAtOf,
+  landingView, basicCheckView, masterView, scopeNoticeView, transitionView, revisitView, fireAtOf, maxHourOn, keepHour,
   SELECT_FEEDBACK_MS, BASIC_KEYS,
 } from "../src/ui/entry.js";
 import {
@@ -625,6 +625,18 @@ t(
     "되돌아가기가 도착 화면으로 직행하지 않는다 (남은 질문을 건너뛰지 않는다)",
     !/resumeSaved\(\)[\s\S]{0,300}go\(\{ screen: "timeline" \}\)/.test(src)
   );
+  // ★ 날짜를 안 만진 사람의 fire_at은 [다음]을 누른 순간 정해진다.
+  //   그 근사도 **같은 함수**를 지나야 규칙이 한 곳에 남는다 — 여기서
+  //   `T12:00:00`을 다시 조립하면 오늘도 정오가 되어 규칙이 갈린다.
+  t(
+    "확인 시점의 근사도 fireAtOf를 지난다",
+    /fireAtOf\(inputValue, null\)/.test(src) && !/inputValue\}T12:00:00/.test(src)
+  );
+  // 날짜와 시각을 쓰는 길이 하나여야 미래 저장을 한 곳에서 막을 수 있다.
+  t(
+    "날짜·시각은 setDay 한 문으로만 쓴다",
+    /function setDay\(day, hour\)[\s\S]{0,200}keepHour\(day, hour\)/.test(src)
+  );
 }
 
 
@@ -898,7 +910,7 @@ t(
   const refs = html.match(/(?:href|src)="src\/ui\/[^"]+"/g) || [];
   // ★ 값까지 본다. 존재만 보면 "올리는 것을 잊은 배포"를 못 잡는다 —
   //   화면 파일을 고치면서 v를 올리면 **이 줄의 숫자도 함께 올린다.**
-  const V = "?v=22";
+  const V = "?v=23";
   t(
     `화면 파일 참조가 전부 ${V}다 (${refs.length}개)`,
     refs.length >= 3 && refs.every((r) => r.includes(V)),
@@ -1017,9 +1029,44 @@ t("시각을 비워도 [다음]은 열린다 (선택이다)", bc.ready === true 
       new Date(정각).getHours() === 15,
     정각);
   t("① 분·초는 0이다", new Date(정각).getMinutes() === 0 && new Date(정각).getSeconds() === 0);
-  // ② 비우면 근사 — 그 날의 정오다. 자정이면 하루가 통째로 더 지난 것처럼 계산된다.
-  t("② 비우면 그 날 정오로 근사한다", new Date(fireAtOf("2026-08-30", null)).getHours() === 12);
-  t("② 오늘도 과거도 같은 근사다", new Date(fireAtOf(bc빈.date.inputValue, null)).getHours() === 12);
+  // ② 비우면 근사 — **날짜에 따라 갈린다**(사용자 결정).
+  //   과거는 그 날의 정오(자정이면 하루가 통째로 더 지난 것처럼 계산된다).
+  //   오늘은 **확인하는 그 시각** — 정오로 밀면 아침 진입자의 경과가 음수가
+  //   되고, 저녁 진입자는 경과가 과대추정되어 골든타임 항목이 성급히
+  //   `missed`로 내려간다(그 항목들이 `irreversible`이라 불가역 거짓음성).
+  // 로컬 날짜 문자열. `fireAtOf`가 로컬 시각으로 파싱하므로 여기도 로컬이다.
+  const 날 = (ms) => {
+    const d = new Date(ms);
+    const p2 = (n) => String(n).padStart(2, "0");
+    return `${d.getFullYear()}-${p2(d.getMonth() + 1)}-${p2(d.getDate())}`;
+  };
+  {
+    const 어제 = 날(NOW - 864e5);
+    const 오늘 = 날(NOW);
+    t("② 과거 날짜는 그 날 정오다", new Date(fireAtOf(어제, null, NOW)).getHours() === 12);
+    t("② 오늘은 확인하는 그 시각이다", Date.parse(fireAtOf(오늘, null, NOW)) === NOW,
+      fireAtOf(오늘, null, NOW));
+    t("② 오늘 근사가 미래로 가지 않는다", Date.parse(fireAtOf(오늘, null, NOW)) <= NOW);
+  }
+  // ⑤ 아직 오지 않은 시각은 못 고른다.
+  {
+    const 오늘 = 날(NOW);
+    const 지금시 = new Date(NOW).getHours();
+    t("⑤ 오늘의 마지막 선택지는 지금 시다", maxHourOn(오늘, NOW) === 지금시);
+    t("⑤ 과거 날짜는 23시까지 열린다", maxHourOn("2026-08-25", NOW) === 23);
+    t("⑤ 오늘로 되돌리면 아직 안 온 시각은 선택 안 함이 된다",
+      keepHour(오늘, 23, NOW) === (지금시 === 23 ? 23 : null), String(keepHour(오늘, 23, NOW)));
+    t("⑤ 지금 시는 그대로 남는다", keepHour(오늘, 지금시, NOW) === 지금시);
+    t("⑤ 과거 날짜에서는 늦은 시각도 남는다", keepHour("2026-08-25", 23, NOW) === 23);
+    // 뷰모델도 같은 판정을 싣는다.
+    const bcT = basicCheckView({ state: { district: "mapo" }, data, now: NOW });
+    t("⑤ 뷰모델이 잠긴 선택지를 표시한다",
+      bcT.time.options.filter((o) => o.disabled).length === 23 - 지금시,
+      String(bcT.time.options.filter((o) => o.disabled).length));
+    t("⑤ 과거 날짜면 잠긴 것이 없다",
+      basicCheckView({ state: { fire_at: "2026-08-25T12:00:00.000Z" }, data, now: NOW })
+        .time.options.every((o) => !o.disabled));
+  }
   // ③ 날짜를 바꿔도 고른 시각은 유지된다 — 조용히 정오로 되돌리지 않는다.
   t("③ 날짜를 바꿔도 고른 시각이 유지된다",
     new Date(fireAtOf("2026-08-25", 15)).getHours() === 15 &&

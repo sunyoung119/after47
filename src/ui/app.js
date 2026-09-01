@@ -28,6 +28,7 @@ import {
   transitionView,
   revisitView,
   fireAtOf,
+  keepHour,
   SELECT_FEEDBACK_MS,
   BASIC_KEYS,
 } from "./entry.js";
@@ -594,23 +595,28 @@ function renderBasic(main) {
   renderBasicCheck(main, bv, {
     onDate: (value) => {
       if (!value) return;
-      // ★ **고른 시각은 유지한 채 날짜만 갈아끼운다.** 조용히 정오로
+      // ★ **고른 시각은 유지한 채 날짜만 갈아끼운다.** 조용히 근사로
       //   되돌리면 사용자가 답한 것이 지워진다. 안 골랐으면 근사가 온다.
-      setBasic({ fire_at: fireAtOf(value, app.state.fire_hour ?? null) });
+      //   단 오늘로 되돌아왔는데 그 시각이 아직 안 왔으면 `선택 안 함`이다.
+      setDay(value, app.state.fire_hour ?? null);
     },
     // 시각 — 고르면 그 날 그 시 정각, `선택 안 함`이면 근사로 복귀한다.
-    onTime: (hour) => {
-      const day = isoDay(app.state.fire_at ?? new Date().toISOString());
-      setBasic({
-        // `undefined`를 **명시적으로** 넘긴다 — setBasic이 그때만 키를 지운다.
-        fire_hour: hour === null ? undefined : hour,
-        fire_at: fireAtOf(day, hour),
-      });
-    },
+    onTime: (hour) => setDay(isoDay(app.state.fire_at ?? new Date().toISOString()), hour),
     onDistrict: (id) => setBasic({ district: id || undefined }),
     // [다음]을 누르는 것이 "채워 둔 오늘이 맞다"는 확인이다. 그 순간
     // fire_at은 답한 값으로 확정된다(확정 결정).
     onNext: (value) => confirmBasic(value),
+  });
+}
+
+// 날짜와 시각을 **한 문으로** 쓴다. 미래가 되는 조합이 저장되지 않는 것을
+// 여기 하나에서 보증한다 — 두 갈래로 두면 한쪽만 고치게 된다.
+function setDay(day, hour) {
+  const h = keepHour(day, hour);
+  return setBasic({
+    // `undefined`를 **명시적으로** 넘긴다 — setBasic이 그때만 키를 지운다.
+    fire_hour: h === null ? undefined : h,
+    fire_at: fireAtOf(day, h),
   });
 }
 
@@ -634,9 +640,9 @@ async function setBasic(patch) {
 
 async function confirmBasic(inputValue) {
   if (app.state.fire_at === undefined) {
-    const v = inputValue
-      ? new Date(`${inputValue}T12:00:00`).toISOString()
-      : new Date().toISOString();
+    // **[다음]을 누른 이 순간이 "확인"이다.** 날짜를 안 만진 사람의
+    // fire_at이 여기서 정해지고, 오늘이면 지금 시각이 된다(fireAtOf).
+    const v = inputValue ? fireAtOf(inputValue, null) : new Date().toISOString();
     app.state = { ...app.state, fire_at: v };
     await persist();
     app.session = { ...app.session, state: app.state };

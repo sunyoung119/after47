@@ -136,6 +136,9 @@ export function renderBasicCheck(main, bv, { onDate, onTime, onDistrict, onNext 
   for (const o of bv.time.options) {
     const op = el("option", null, o.label);
     op.value = String(o.value);
+    // 아직 오지 않은 시각은 잠근다(오늘을 고른 경우). 지우지 않는 이유는
+    // 목록 길이가 시간에 따라 들쭉날쭉하면 자리를 못 외우기 때문이다.
+    if (o.disabled) op.disabled = true;
     if (o.value === bv.time.value) op.selected = true;
     time.appendChild(op);
   }

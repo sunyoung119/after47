@@ -188,7 +188,39 @@ t("지역을 고르면 [다음]이 열린다", button(main(), "다음").disabled
   // 오늘로 되돌려 나머지 여정을 원래대로 걷는다.
   날짜().change(new Date().toISOString().slice(0, 10));
   await tick(40);
-  t("② 비운 채 오늘이면 그날 정오다", new Date(지금()).getHours() === 12);
+  // ★ **오늘의 근사는 정오가 아니라 지금이다**(사용자 결정). 정오로 밀면
+  //   아침에 들어온 사람은 경과가 음수가 되고, 저녁에 들어온 사람은 경과가
+  //   과대추정되어 골든타임 항목이 성급히 `missed`로 내려간다.
+  t("② 비운 채 오늘이면 지금 시각이다",
+    Math.abs(Date.now() - 지금()) < 6e4, new Date(지금()).toString());
+  t("② 경과가 음수가 되지 않는다", 지금() <= Date.now());
+
+  // ── 아직 오지 않은 시각은 고를 수 없다 ──
+  {
+    const 지금시 = new Date().getHours();
+    const 잠긴 = [...시각().children].filter((o) => o.disabled);
+    t("오늘이면 현재 시 이후가 잠긴다",
+      잠긴.length === 23 - 지금시 &&
+        잠긴.every((o) => Number(o.value) > 지금시),
+      `지금 ${지금시}시 · 잠김 ${잠긴.length}개`);
+    // 과거 날짜로 가면 전부 열린다.
+    const 어제2 = new Date(Date.now() - 864e5).toISOString().slice(0, 10);
+    날짜().change(어제2);
+    await tick(40);
+    t("과거 날짜에서는 24개가 전부 열린다",
+      [...시각().children].every((o) => !o.disabled));
+    // 과거에서 늦은 시각을 고른 뒤 오늘로 되돌리면 `선택 안 함`이 된다.
+    시각().change("23");
+    await tick(40);
+    t("과거 날짜에서 오후 11시를 골랐다", new Date(지금()).getHours() === 23);
+    날짜().change(new Date().toISOString().slice(0, 10));
+    await tick(40);
+    t("★ 오늘로 되돌리면 아직 안 온 시각은 선택 안 함이 된다",
+      시각().value === "" && 저장된().fire_hour === undefined,
+      `${시각().value} / ${저장된().fire_hour}`);
+    t("★ 어떤 경로로도 fire_at이 미래가 되지 않는다", 지금() <= Date.now(),
+      new Date(지금()).toString());
+  }
 }
 
 button(main(), "다음").click();
