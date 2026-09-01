@@ -499,10 +499,16 @@ function lastAnswered() {
   return sv.answered.length ? sv.answered[sv.answered.length - 1].id : null;
 }
 
+// 슬롯 둘에 그린다. **어느 배너가 어디 서는지는 뷰모델이 정한다** —
+// 화면이 자리를 고르면 규칙이 두 곳에 생긴다(view.js의 TOP_BANNER).
 function renderBanners(entry) {
-  const box = $("banners");
+  paintBanners($("banners"), entry.banners);
+  paintBanners($("banners-foot"), entry.notes || []);
+}
+
+function paintBanners(box, list) {
   clear(box);
-  for (const b of entry.banners) {
+  for (const b of list) {
     const n = el("div", `banner banner--${b.type}`);
     n.appendChild(el("p", "banner__text", b.text));
     if (b.sub) n.appendChild(el("p", "banner__sub", b.sub));

@@ -12,6 +12,18 @@ import { COPY } from "./copy.js";
 
 // ── 진입 ───────────────────────────────────────────
 //
+// **배너가 서는 자리.** 헤드라인 위(`#banners`)에 설 수 있는 것은
+// **진입 알림 한 장**이다.
+// 첫 화면(기본 확인)에서 배너가 쌓이면 메인 질문이 밀려 내려가고, 정신없는
+// 사람이 제일 먼저 읽어야 할 것이 세 번째가 된다(사용자 실기기).
+//
+// ★ **화이트리스트다.** 여기 없는 타입은 새로 생겨도 자동으로 하단으로
+//   간다 — 자리를 화면마다 정하면 notice가 늘 때마다 위가 다시 쌓인다.
+//   순서는 곧 **우선순위**이고, 겹칠 때 남는 것은 앞엣것 하나다.
+//   `token_invalid`가 맨 뒤인 이유 — 이어보기(`resumed_on_device`)와 함께
+//   뜨면 "새로 시작합니다"가 거짓이 된다(실제로는 이 기기 기록을 잇는다).
+export const TOP_BANNER = ["resumed_on_device", "no_saved_state", "token_invalid"];
+
 // openSession이 준 notices를 배너로 옮긴다. **판정을 새로 하지 않는다** —
 // 여섯째(`no_saved_state`: 남의 재접속 링크로 왔는데 이 기기에 기록이 없는
 // 사람)도 세션 계층이 밀어 준다. 여기서 `!saved`로 판정하던 것이 앱에서
@@ -26,7 +38,7 @@ export function entryView(session, { atEntry = true } = {}) {
   const nameOf = (id) => byId(id)?.name || id;
 
   const selected = session?.state?.district || null;
-  const banners = [];
+  const made = [];
 
   // notices는 **진입 시점의 사실**이고 화면은 **지금 state**를 본다. 둘이
   // 어긋나면 화면 쪽이 맞다 — 자치구를 고른 뒤에도 "어느 구인지 알려주세요"가
@@ -35,7 +47,7 @@ export function entryView(session, { atEntry = true } = {}) {
     if (n.type === "district_conflict") {
       // 그 구로 바꾸고 나면 충돌은 지난 일이다.
       if (n.fromUrl === selected) continue;
-      banners.push({
+      made.push({
         type: "district_conflict",
         text: COPY.banner.district_conflict(nameOf(n.fromUrl), nameOf(n.saved)),
         sub: null,
@@ -48,16 +60,15 @@ export function entryView(session, { atEntry = true } = {}) {
         ],
       });
     } else if (n.type === "district_needed") {
-      if (selected) continue; // 이미 골랐다
-      banners.push({
-        type: "district_needed",
-        text:
-          n.reason === "unknown"
-            ? COPY.banner.district_needed_unknown
-            : COPY.banner.district_needed_missing,
-        sub: null,
-        actions: [],
-      });
+      // ★ **그리지 않는다.** 지역을 받는 자리가 확정 화면 `기본 확인`
+      //   하나뿐이라, 이 배너는 그 화면 자체와 늘 같은 말을 한다 —
+      //   셀렉트가 비어 있고 [다음]이 잠긴 것이 이미 같은 요구다.
+      //   자치구 선택 자리(picker)가 따로 있던 시절의 잔재다.
+      //
+      //   notice 자체는 세션 계층에 그대로 둔다(`storage.test.mjs`가 본다).
+      //   "지역을 물어야 한다"는 사실은 화면 밖에서도 쓸 수 있고,
+      //   여기서 없애면 그 사실을 아는 곳이 사라진다.
+      continue;
     } else if (n.type === "resumed_on_device") {
       // 체험장에서 한 기기를 여러 사람이 쓴다. 빠져나갈 길이 반드시 있어야 한다.
       //
@@ -71,7 +82,7 @@ export function entryView(session, { atEntry = true } = {}) {
       // 자치구 배너들이 "사실이 지나가면 접는" 것과 같은 규칙이고
       // (이 파일 위 주석), 여기서는 그 사실이 **화면의 위치**다.
       if (!atEntry) continue;
-      banners.push({
+      made.push({
         type: "resumed_on_device",
         text: COPY.banner.resumed_on_device,
         sub: null,
@@ -81,7 +92,7 @@ export function entryView(session, { atEntry = true } = {}) {
       // 진입 알림과 같은 규칙 — 들어서는 순간에 "이 주소가 잘못됐다"를
       // 말하는 것이 일이고, 걷기 시작한 뒤에는 소음이다.
       if (!atEntry) continue;
-      banners.push({
+      made.push({
         type: "token_invalid",
         text: COPY.banner.token_invalid,
         sub: COPY.banner.token_invalid_sub,
@@ -92,10 +103,13 @@ export function entryView(session, { atEntry = true } = {}) {
       // 기록을 이어 보는 사람에게는 절대 안 뜬다** — 그 사람에게는
       // 이 문장이 거짓이다(세션 계층이 분기 ③에서만 민다).
       if (!atEntry) continue;
-      banners.push({
+      made.push({
         type: "no_saved_state",
         text: COPY.banner.no_saved_state,
-        sub: COPY.banner.no_saved_state_sub,
+        // ★ **저장 고지(`no_saved_state_sub`)는 여기 붙지 않는다.** 배너
+        //   한 장이 두 문단이 되면 헤드라인이 그만큼 더 밀린다. 문구를
+        //   바꾸지 않고 자리만 화면 하단으로 옮겼다(아래 `notes`).
+        sub: null,
         actions: [],
       });
     }
@@ -114,6 +128,28 @@ export function entryView(session, { atEntry = true } = {}) {
   // 검증됐고 무엇이 범위 밖인지 말하고, 계속할지 건물 종류를 다시 고를지
   // 묻는다. 판단은 entry.js의 scopeNoticeView에 있다.
 
+  // ── 자리 나누기 ─────────────────────────────────
+  //
+  // 위는 한 장, 나머지는 전부 하단이다. **판단은 여기 한 곳에 있다** —
+  // 화면 코드는 두 목록을 받아 두 슬롯에 그리기만 한다.
+  const top = [];
+  const notes = [];
+  for (const b of made) {
+    const rank = TOP_BANNER.indexOf(b.type);
+    if (rank < 0) notes.push(b); // 화이트리스트 밖 — 새 타입도 여기로 온다
+    else top.push({ ...b, rank });
+  }
+  top.sort((a, b) => a.rank - b.rank);
+  const 남길것 = top.slice(0, 1).map(({ rank: _r, ...b }) => b);
+  // 밀려난 알림은 **버리지 않는다.** 하단에서 계속 말한다 — 알릴 값이
+  // 없다면 애초에 만들지 않았을 것이다.
+  for (const { rank: _r, ...b } of top.slice(1)) notes.push(b);
+
+  // D-015 0층의 저장 고지. 배너의 두 번째 문단이던 것을 그대로 옮겼다.
+  if (made.some((b) => b.type === "no_saved_state")) {
+    notes.push({ type: "storage_note", text: COPY.banner.no_saved_state_sub, sub: null, actions: [] });
+  }
+
   const expiresNotice = notices.find((n) => n.type === "expires_at");
 
   // **자치구 선택 자리(picker)는 사라졌다.** 지역은 확정 화면 `기본 확인`의
@@ -121,7 +157,9 @@ export function entryView(session, { atEntry = true } = {}) {
   // 알림과 보관 기간 고지다.
   return {
     district: selected ? { id: selected, name: nameOf(selected) } : null,
-    banners,
+    banners: 남길것,
+    // 화면 하단 보조 자리. 저장 고지와, 위 한 장에 밀린 알림이 여기 선다.
+    notes,
     expires: expiresNotice
       ? { at: expiresNotice.at, text: COPY.expires(formatDate(expiresNotice.at)) }
       : null,

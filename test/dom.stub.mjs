@@ -132,7 +132,7 @@ export function installDom() {
     body: new Node("body"),
   };
   // index.html의 뼈대. 여기 없는 id를 app.js가 찾으면 그 자리에서 터진다.
-  for (const id of ["intro", "flow", "brand", "top-right", "banners", "main", "save-notice", "expires"]) {
+  for (const id of ["intro", "flow", "brand", "top-right", "banners", "main", "banners-foot", "save-notice", "expires"]) {
     const n = new Node(id === "main" ? "main" : "div");
     n.id = id;
     n.hidden = id === "intro" || id === "flow" || id === "save-notice";

@@ -9,7 +9,7 @@
 // 그것은 배포 뒤 실기기 확인의 몫이고, 보고서의 "실기기 확인 대기" 목록이
 // 무엇을 봐야 하는지 적는다.
 //
-// 밟는 여정 넷
+// 밟는 여정 여덟
 //   ① 첫 방문 — 랜딩 → 기본 확인 → 설문 전량 → 전환 → HOME → 다섯 화면 → 상세
 //   ② 재방문 — 경과시간 게이트 → HOME
 //   ③ 아직 확인 못 함 → 해당 질문 직행 → 답 변경 → 원래 자리 복귀
@@ -17,11 +17,12 @@
 //   ⑤ 기기 뒤로가기 — 히스토리가 앱의 화면 순서와 같은가
 //   ⑥ 상황 다시 알리기 — 브릿지에서 답을 다시 걷고, 지우지 않는가
 //   ⑦ 두 문의 등가 — 브릿지 CTA와 [저장된 회복 경로 보기]가 늘 같은 곳에 닿는가
+//   ⑧ 첫 화면의 머리 — 기본 확인에서 헤드라인 위에 무엇이 쌓이는가
 
 import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
-import { configureStorage, memoryBackend } from "../src/storage.js";
+import { configureStorage, memoryBackend, newToken } from "../src/storage.js";
 import { installDom, all, button, buttonLike, has, hasClass, texts, tick } from "./dom.stub.mjs";
 
 const D = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -1084,6 +1085,55 @@ section("⑦ 브릿지 CTA와 [저장된 회복 경로 보기] — 도착지가 
       `브릿지: ${브}  ||  보조: ${보}`);
     t("ⓑ 보조 버튼이 질문을 건너뛰지 않는다", 질문중() !== null, 자리());
   }
+}
+
+// - ⑧ 첫 화면의 머리 -------------------------------
+section("⑧ 기본 확인 — 헤드라인 위에 서는 것");
+
+// 뷰모델이 자리를 옳게 갈라도 화면이 두 슬롯에 안 그리면 아무 일도
+// 일어나지 않는다. **여기서는 실제로 그려진 자리를 센다.**
+//
+// 진입 알림이 가장 많이 겹치는 사람으로 밟는다 — 남의 재접속 링크(?t)를
+// 자기 기기에서 연 사람. 앞서는 이 화면에서 배너가 헤드라인 위에 쌓였다.
+{
+  configureStorage({ ...memoryBackend(), readJson }); // 새 사람 · 이 기기에 기록 없음
+
+  // 열기()와 같되 주소를 남의 재접속 링크로 준다.
+  dom = installDom();
+  globalThis.location.href = `https://example.test/?d=mapo&t=${newToken()}`;
+  회차 += 1;
+  await import(`../src/ui/app.js?walk=${회차}`);
+  await tick(30);
+
+  button($("intro"), "회복 시작하기").click();
+  await tick(30);
+
+  const 위 = all($("banners"), (n) => hasClass(n, "banner"));
+  const 아래 = all($("banners-foot"), (n) => hasClass(n, "banner"));
+  t("기본 확인에 닿는다", has(main(), "화재가 있었던 날짜와 지역을 알려주세요"),
+    texts(main()).slice(0, 3).join(" | "));
+  t("헤드라인 위는 한 장뿐이다", 위.length <= 1,
+    `${위.length}장: ${texts($("banners")).join(" | ")}`);
+  t("그 한 장은 진입 알림이다",
+    위.length === 0 || $("banners").textContent.includes("저장된 내용이 없어 처음부터"),
+    $("banners").textContent);
+  t("지역을 물어보는 배너는 없다 — 화면이 이미 묻는다",
+    !$("banners").textContent.includes("어느 구에서 불이 났는지") &&
+      !$("banners-foot").textContent.includes("어느 구에서 불이 났는지"));
+  t("저장 고지는 화면 하단으로 내려갔다",
+    $("banners-foot").textContent.includes("답하신 내용은 답한 기기에 저장됩니다."),
+    `아래 ${아래.length}장: ${texts($("banners-foot")).join(" | ")}`);
+  t("같은 말을 위아래로 두 번 하지 않는다",
+    !$("banners").textContent.includes("답하신 내용은 답한 기기에 저장됩니다."));
+
+  // 걷기 시작하면 위가 빈다(진입 알림은 진입 화면 전용 · 8f1a6ba).
+  const sel = all(main(), (n) => n.id === "f-district")[0];
+  sel.change("gangnam");
+  await tick(30);
+  button(main(), "다음").click();
+  await tick(60);
+  t("설문으로 넘어가면 위가 빈다",
+    all($("banners"), (n) => hasClass(n, "banner")).length === 0, $("banners").textContent);
 }
 
 // ── 결과 ───────────────────────────────────────────

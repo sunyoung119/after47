@@ -22,8 +22,8 @@
       동작을 하면 그 자리를 의심하라.
     -->
     <!-- 색·글꼴·간격은 tokens.css에만 있다. 시안이 바뀌면 이 파일만 갈아끼운다. -->
-    <link rel="stylesheet" href="src/ui/tokens.css?v=26" />
-    <link rel="stylesheet" href="src/ui/app.css?v=26" />
+    <link rel="stylesheet" href="src/ui/tokens.css?v=27" />
+    <link rel="stylesheet" href="src/ui/app.css?v=27" />
   </head>
   <body>
     <!--
@@ -53,6 +53,10 @@
       <!-- 기본 확인·설문·전환·게이트·내 회복 경로가 여기 그려진다 -->
       <main id="main" class="main"></main>
 
+      <!-- 보조 고지 — 저장 고지와, 위 한 장에 밀린 진입 알림이 여기 선다.
+           위 슬롯을 한 장으로 묶는 규칙은 view.js의 TOP_BANNER에 있다. -->
+      <div id="banners-foot" class="banners banners--foot" role="status" aria-live="polite"></div>
+
       <!-- D-015 저장 안내 — 예외(저장 막힘)와 HOME의 2층 버튼이 여는 패널 -->
       <div id="save-notice" class="savebox" hidden></div>
 
@@ -61,6 +65,6 @@
       </footer>
     </div>
 
-    <script type="module" src="src/ui/app.js?v=26"></script>
+    <script type="module" src="src/ui/app.js?v=27"></script>
   </body>
 </html>

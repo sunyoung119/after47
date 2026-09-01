@@ -322,6 +322,15 @@ a {
 .banner__actions {
   margin-top: var(--s2);
 }
+/* 하단 보조 자리 — 본문을 다 읽은 뒤에 오는 고지라 한 단계 조용하다.
+   위(`#banners`)와 같은 골격을 쓰되 여백만 본문에서 떨어뜨린다. */
+.banners--foot {
+  margin-top: var(--s4);
+}
+.banners--foot .banner__text {
+  color: var(--c-ink-soft);
+  font-size: var(--f-sm);
+}
 
 /* ── 공통 ──────────────────────────────────────── */
 .h2 {

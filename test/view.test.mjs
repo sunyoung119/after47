@@ -10,11 +10,11 @@
 import { readFileSync, existsSync } from "fs";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
-import { configureStorage, memoryBackend, saveState } from "../src/storage.js";
+import { configureStorage, memoryBackend, saveState, newToken } from "../src/storage.js";
 import { openSession, anchorSession } from "../src/session.js";
 import { evaluate } from "../src/engine.js";
 import { applyDefaults } from "../src/questions.js";
-import { entryView, surveyView, saveNoticeView } from "../src/ui/view.js";
+import { entryView, surveyView, saveNoticeView, TOP_BANNER } from "../src/ui/view.js";
 import { contactOf, sourcesView, directoryView } from "../src/ui/result.js";
 import { COPY, STATUS_LABEL } from "../src/ui/copy.js";
 import { TOPIC_LABEL, TOPIC_ORDER, NODE_LABEL, topicLabel } from "../src/ui/copy.js";
@@ -48,6 +48,9 @@ const section = (s) => console.log(`\n${"=".repeat(62)}\n${s}\n${"=".repeat(62)}
 
 const 새백엔드 = () => configureStorage({ ...memoryBackend(), readJson });
 const bannerTypes = (v) => v.banners.map((b) => b.type);
+const noteTypes = (v) => (v.notes || []).map((b) => b.type);
+// 위아래를 합쳐 "그려지긴 하는가"를 볼 때 쓴다.
+const 그려진타입 = (v) => [...bannerTypes(v), ...noteTypes(v)];
 
 // ── 1. 진입 ────────────────────────────────────────
 section("1. 진입 — notice 다섯 종과 notice가 없는 여섯째");
@@ -59,18 +62,31 @@ let v = entryView(s);
 t("① ?d=mapo → district_needed 배너가 없다", !bannerTypes(v).includes("district_needed"));
 t("① 보이는 구가 마포다", v.district?.id === "mapo" && v.district.name === "마포구");
 
-// (2) 자치구를 모르는 두 경우 — 이유가 다르면 문구도 달라야 한다
+// (2) 자치구를 모르는 두 경우 — **배너로는 그리지 않는다.**
+// 지역을 받는 자리가 확정 화면 `기본 확인` 하나뿐이라, 이 배너는 그 화면과
+// 늘 같은 말을 했다(셀렉트가 비어 있고 [다음]이 잠긴 것이 이미 같은 요구다).
+// notice 자체는 세션 계층에 남는다 — 화면 밖에서 쓸 수 있는 사실이다.
 새백엔드();
-v = entryView(await openSession({ url: "https://after47.kr/" }));
-t("② ?d= 없음 → 자치구를 알려 달라는 배너가 뜬다", bannerTypes(v).includes("district_needed"));
-const missingText = v.banners.find((b) => b.type === "district_needed")?.text;
+let s2 = await openSession({ url: "https://after47.kr/" });
+v = entryView(s2);
+t("② ?d= 없음 → notice는 온다", s2.notices.some((n) => n.type === "district_needed"));
+t("② 그러나 배너로는 어디에도 안 그린다", !그려진타입(v).includes("district_needed"), JSON.stringify(그려진타입(v)));
+t("② 이유는 'missing'이다", s2.notices.find((n) => n.type === "district_needed")?.reason === "missing");
 
 새백엔드();
-v = entryView(await openSession({ url: "https://after47.kr/?d=bucheon" }));
-t("② 서울 밖 값(bucheon)도 같은 배너를 낸다", bannerTypes(v).includes("district_needed"));
+s2 = await openSession({ url: "https://after47.kr/?d=bucheon" });
+v = entryView(s2);
+t("② 서울 밖 값(bucheon)도 마찬가지다", !그려진타입(v).includes("district_needed"));
 t(
-  "② 두 경우의 문구가 다르다 (모르는 값은 '다시 골라 주세요')",
-  v.banners.find((b) => b.type === "district_needed")?.text !== missingText
+  "② 두 경우의 이유는 여전히 갈린다 (모르는 값은 'unknown')",
+  s2.notices.find((n) => n.type === "district_needed")?.reason === "unknown",
+  JSON.stringify(s2.notices)
+);
+// 문구 둘은 COPY에 남아 있다 — 되살릴 때 다시 쓰라고 지우지 않았다.
+t(
+  "② 문구 둘은 COPY에 남아 있고 서로 다르다",
+  Boolean(COPY.banner.district_needed_missing) &&
+    COPY.banner.district_needed_missing !== COPY.banner.district_needed_unknown
 );
 // 지역 목록은 이제 확정 화면 `기본 확인`의 필드가 갖는다 — 절 7이 본다.
 
@@ -81,11 +97,16 @@ await anchorSession(s);
 const 토큰 = s.token;
 v = entryView(await openSession({ url: `https://after47.kr/?d=mapo&t=${토큰}` }));
 t(
-  "③ 저장값 성북 + ?d=mapo → district_conflict 배너 1건",
-  v.banners.filter((b) => b.type === "district_conflict").length === 1
+  "③ 저장값 성북 + ?d=mapo → district_conflict 1건",
+  v.notes.filter((b) => b.type === "district_conflict").length === 1,
+  JSON.stringify(그려진타입(v))
+);
+t(
+  "③ 그 자리는 헤드라인 위가 아니라 하단이다",
+  !bannerTypes(v).includes("district_conflict")
 );
 t("③ 보이는 구는 성북이다", v.district?.id === "seongbuk");
-const conflict = v.banners.find((b) => b.type === "district_conflict");
+const conflict = v.notes.find((b) => b.type === "district_conflict");
 t(
   "③ 배너에 [마포구로 바꾸기] 액션이 있다",
   conflict.actions[0]?.id === "switch_district" && conflict.actions[0].value === "mapo",
@@ -177,7 +198,7 @@ await anchorSession(s);
 s = await openSession({ url: `https://after47.kr/?d=mapo&t=${s.token}` });
 t(
   "충돌한 구로 바꾸고 나면 그 배너도 사라진다",
-  !bannerTypes(entryView({ ...s, state: { ...s.state, district: "mapo" } })).includes(
+  !그려진타입(entryView({ ...s, state: { ...s.state, district: "mapo" } })).includes(
     "district_conflict"
   )
 );
@@ -201,6 +222,114 @@ t("⑦ 경계 배너는 사라졌다 (안내 범위 화면이 대체한다)",
   scopeBanners({ housing_type: "other" }).length === 0);
 t("⑦ 어떤 답에도 배너로는 안 뜬다",
   scopeBanners({ housing_type: "apartment" }).length === 0 && scopeBanners({}).length === 0);
+
+// ── 1-b. 배너가 서는 자리 ──────────────────────────
+section("1-b. 헤드라인 위는 진입 알림 한 장 — 규칙으로 고정한다");
+
+// **화면이 아니라 규칙을 본다.** 첫 화면(기본 확인)에서 배너가 쌓이면
+// 메인 질문이 밀려 내려가고, 정신없는 사람이 제일 먼저 읽어야 할 것이
+// 세 번째가 된다. 그래서 자리를 화이트리스트로 정하고 — 여기 없는 타입은
+// 새로 생겨도 자동으로 하단이다 — 진입 조합을 **전수로 돌려** 못 박는다.
+//
+// 개별 화면에 검사를 다는 대신 이렇게 두는 이유: notice가 하나 늘 때마다
+// 화면마다 다시 세는 대신, 늘어난 그 순간에 여기가 먼저 걸린다.
+
+t(
+  "위에 설 수 있는 것은 셋뿐이다",
+  TOP_BANNER.length === 3 &&
+    ["resumed_on_device", "no_saved_state", "token_invalid"].every((x) => TOP_BANNER.includes(x)),
+  JSON.stringify(TOP_BANNER)
+);
+
+const 유효토큰 = newToken();
+const 진입경우 = [
+  { 이름: "완전 첫 방문", url: "https://after47.kr/" },
+  { 이름: "구별 QR ?d=mapo", url: "https://after47.kr/?d=mapo" },
+  { 이름: "서울 밖 ?d=bucheon", url: "https://after47.kr/?d=bucheon" },
+  { 이름: "깨진 토큰", url: "https://after47.kr/?t=ab0k9m" },
+  { 이름: "깨진 토큰 + d", url: "https://after47.kr/?d=mapo&t=ab0k9m" },
+  { 이름: "남의 재접속 링크", url: `https://after47.kr/?d=mapo&t=${유효토큰}` },
+  { 이름: "이 기기 저장(구 없음)", 심기: {}, url: "https://after47.kr/" },
+  { 이름: "이 기기 저장(구 없음) + 남의 링크", 심기: {}, url: `https://after47.kr/?d=mapo&t=${유효토큰}` },
+  { 이름: "이 기기 저장(구 종로) + ?d=mapo", 심기: { district: "jongno" }, url: "https://after47.kr/?d=mapo" },
+  { 이름: "이 기기 저장(구 없음) + 깨진 토큰", 심기: {}, url: "https://after47.kr/?t=ab0k9m" },
+  {
+    이름: "이 기기 저장(구 종로) + 깨진 토큰 + d",
+    심기: { district: "jongno" },
+    url: "https://after47.kr/?d=mapo&t=ab0k9m",
+  },
+];
+
+let 위최대 = 0;
+let 위반 = [];
+let 그린적있는위 = new Set();
+for (const c of 진입경우) {
+  새백엔드();
+  if (c.심기) await saveState(newToken(), c.심기);
+  const 세션 = await openSession({ url: c.url });
+  const 진입 = entryView(세션, { atEntry: true });
+  const 걷는중 = entryView(세션, { atEntry: false });
+  위최대 = Math.max(위최대, 진입.banners.length);
+  for (const b of 진입.banners) 그린적있는위.add(b.type);
+  if (진입.banners.length > 1) 위반.push(`${c.이름}: ${bannerTypes(진입).join("+")}`);
+  if (진입.banners.some((b) => !TOP_BANNER.includes(b.type)))
+    위반.push(`${c.이름}: 화이트리스트 밖이 위에 섰다 — ${bannerTypes(진입).join("+")}`);
+  if (그려진타입(진입).includes("district_needed"))
+    위반.push(`${c.이름}: district_needed가 그려졌다`);
+  // 걷기 시작한 뒤에는 진입 알림이 위에 남지 않는다(8f1a6ba의 규칙).
+  if (걷는중.banners.length > 0) 위반.push(`${c.이름}: 걷는 중인데 위에 배너가 있다`);
+}
+
+t(`진입 ${진입경우.length}가지 전수 — 헤드라인 위는 늘 1장 이하다 (최대 ${위최대})`, 위반.length === 0, 위반.join(" / "));
+t(
+  "그 한 장은 늘 진입 알림이다",
+  [...그린적있는위].every((x) => TOP_BANNER.includes(x)),
+  JSON.stringify([...그린적있는위])
+);
+// 계기판이 눈을 잃지 않게 — 조합을 전수로 돌렸는데 위가 한 번도 안 서면
+// 위 규칙은 아무것도 지키지 않은 것이다.
+t("전수 중에 위 한 장이 실제로 서는 경우가 있다", 그린적있는위.size >= 2, JSON.stringify([...그린적있는위]));
+
+// **자동 방어** — 모르는 타입이 늘어도 위로 올라오지 않는다.
+새백엔드();
+const 미래 = entryView(
+  { ...(await openSession({ url: "https://after47.kr/?d=mapo" })), notices: [{ type: "brand_new_notice" }] },
+  { atEntry: true }
+);
+t("모르는 notice가 생겨도 헤드라인 위에 서지 않는다", 미래.banners.length === 0, JSON.stringify(미래.banners));
+
+// 밀려난 알림은 버리지 않는다 — 하단에서 계속 말한다.
+새백엔드();
+await saveState(newToken(), {});
+const 밀림 = entryView(await openSession({ url: "https://after47.kr/?t=ab0k9m" }), { atEntry: true });
+t("겹치면 실제로 일어난 일이 위에 선다 (이어보기)", bannerTypes(밀림)[0] === "resumed_on_device", JSON.stringify(bannerTypes(밀림)));
+t("밀린 알림은 하단에 남는다", noteTypes(밀림).includes("token_invalid"), JSON.stringify(noteTypes(밀림)));
+
+// 저장 고지(D-015 0층) — 자리만 옮겼고 문구는 그대로다.
+새백엔드();
+const 남의링크 = entryView(await openSession({ url: `https://after47.kr/?d=mapo&t=${newToken()}` }), {
+  atEntry: true,
+});
+t("저장 고지는 하단에 있다", noteTypes(남의링크).includes("storage_note"), JSON.stringify(noteTypes(남의링크)));
+t(
+  "저장 고지 문구가 그대로다",
+  남의링크.notes.find((b) => b.type === "storage_note")?.text === COPY.banner.no_saved_state_sub &&
+    COPY.banner.no_saved_state_sub === "답하신 내용은 답한 기기에 저장됩니다."
+);
+t(
+  "그 배너의 두 번째 문단은 비었다 (같은 말을 두 번 하지 않는다)",
+  남의링크.banners.find((b) => b.type === "no_saved_state")?.sub === null
+);
+
+// 마크업에서도 자리가 갈려 있다 — 위는 main 앞, 아래는 main 뒤다.
+{
+  const html = readFileSync(join(D, "index.html"), "utf8");
+  const 위 = html.indexOf('id="banners"');
+  const 본문 = html.indexOf('id="main"');
+  const 아래 = html.indexOf('id="banners-foot"');
+  t("마크업에서 위 슬롯은 헤드라인(main)보다 앞이다", 위 > 0 && 위 < 본문);
+  t("마크업에서 하단 슬롯은 main보다 뒤다", 아래 > 본문);
+}
 
 // ── 2. 설문 ────────────────────────────────────────
 section("2. 설문 — 커서와 남은 수");
@@ -935,7 +1064,7 @@ t(
   const refs = html.match(/(?:href|src)="src\/ui\/[^"]+"/g) || [];
   // ★ 값까지 본다. 존재만 보면 "올리는 것을 잊은 배포"를 못 잡는다 —
   //   화면 파일을 고치면서 v를 올리면 **이 줄의 숫자도 함께 올린다.**
-  const V = "?v=26";
+  const V = "?v=27";
   t(
     `화면 파일 참조가 전부 ${V}다 (${refs.length}개)`,
     refs.length >= 3 && refs.every((r) => r.includes(V)),
