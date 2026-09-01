@@ -144,17 +144,30 @@ s = await openSession({ url: `https://after47.kr/?d=mapo&t=${토큰}` });
 t("⑤ 세션 계층이 no_saved_state를 직접 민다", s.notices.some((n) => n.type === "no_saved_state"));
 t("⑤ 남의 토큰을 기각하고 새로 발급한다", s.token !== 토큰 && s.isNew, `${s.token} / isNew=${s.isNew}`);
 v = entryView(s);
-t("⑤ 진입 화면에 배너가 뜬다", bannerTypes(v).includes("no_saved_state"));
-t("⑤ 걷기 시작하면 접힌다",
-  !bannerTypes(entryView(s, { atEntry: false })).includes("no_saved_state"));
+// ★ **그리지 않는다**(2026-09-02 · 사용자 결정). 그 사람이 지금 하려는
+// 일은 처음부터 시작하는 것이고, 첫 방문자에게 첫 방문이라고 알리는 말은
+// 정보가 아니다 — 없어진 무언가가 있었다는 인상만 남긴다.
+// **타 기기 진입은 조용히 첫 방문으로 시작한다.**
+t("⑤ 상단에 안 뜬다", !bannerTypes(v).includes("no_saved_state"), JSON.stringify(bannerTypes(v)));
+t("⑤ 하단에도 안 뜬다", !noteTypes(v).includes("no_saved_state"), JSON.stringify(noteTypes(v)));
+t("⑤ 저장 고지도 함께 걷혔다 (이 분기에서만 서던 줄이다)",
+  !noteTypes(v).includes("storage_note"), JSON.stringify(noteTypes(v)));
+t("⑤ 그 문구가 화면 어디에도 없다",
+  ![...v.banners, ...v.notes].some((b) => `${b.text} ${b.sub || ""}`.includes("저장된 내용이 없어")),
+  JSON.stringify([...v.banners, ...v.notes].map((b) => b.text))
+);
+// 문구 둘은 COPY에 남는다 — 되살릴 때 다시 쓰라고 지우지 않았다.
+t("⑤ 문구는 COPY에 남아 있다",
+  COPY.banner.no_saved_state === "이 기기에는 저장된 내용이 없어 처음부터 시작합니다." &&
+    COPY.banner.no_saved_state_sub === "답하신 내용은 답한 기기에 저장됩니다.");
 
-// 정상 진입에서는 그 배너가 뜨면 안 된다
+// 정상 진입에서는 notice 자체가 없다
 새백엔드();
 s = await openSession({ url: "https://after47.kr/?d=mapo" });
-t("⑤ 새로 시작한 사람에게는 안 뜬다", !bannerTypes(entryView(s)).includes("no_saved_state"));
+t("⑤ 새로 시작한 사람에게는 notice가 없다", !s.notices.some((n) => n.type === "no_saved_state"));
 await anchorSession(s);
 s = await openSession({ url: `https://after47.kr/?t=${s.token}` });
-t("⑤ 저장이 살아 있는 사람에게도 안 뜬다", !bannerTypes(entryView(s)).includes("no_saved_state"));
+t("⑤ 저장이 살아 있는 사람에게도 없다", !s.notices.some((n) => n.type === "no_saved_state"));
 // 자기 기록을 이어 보는 사람에게도 안 뜬다 — 그 사람에겐 문장이 거짓이다.
 {
   const 남의토큰 = 토큰;
@@ -235,11 +248,13 @@ section("1-b. 헤드라인 위는 진입 알림 한 장 — 규칙으로 고정�
 // 화면마다 다시 세는 대신, 늘어난 그 순간에 여기가 먼저 걸린다.
 
 t(
-  "위에 설 수 있는 것은 셋뿐이다",
-  TOP_BANNER.length === 3 &&
-    ["resumed_on_device", "no_saved_state", "token_invalid"].every((x) => TOP_BANNER.includes(x)),
+  "위에 설 수 있는 것은 둘뿐이다",
+  TOP_BANNER.length === 2 &&
+    ["resumed_on_device", "token_invalid"].every((x) => TOP_BANNER.includes(x)),
   JSON.stringify(TOP_BANNER)
 );
+// 그리지 않기로 한 타입이 자리 목록에 남아 있으면 규칙이 거짓말을 한다.
+t("그리지 않는 타입은 목록에도 없다", !TOP_BANNER.includes("no_saved_state"));
 
 const 유효토큰 = newToken();
 const 진입경우 = [
@@ -305,20 +320,18 @@ const 밀림 = entryView(await openSession({ url: "https://after47.kr/?t=ab0k9m"
 t("겹치면 실제로 일어난 일이 위에 선다 (이어보기)", bannerTypes(밀림)[0] === "resumed_on_device", JSON.stringify(bannerTypes(밀림)));
 t("밀린 알림은 하단에 남는다", noteTypes(밀림).includes("token_invalid"), JSON.stringify(noteTypes(밀림)));
 
-// 저장 고지(D-015 0층) — 자리만 옮겼고 문구는 그대로다.
+// 남의 재접속 링크(strangerLink) 분기 — **상·하단 어디에도 아무 말이 없다.**
 새백엔드();
-const 남의링크 = entryView(await openSession({ url: `https://after47.kr/?d=mapo&t=${newToken()}` }), {
-  atEntry: true,
-});
-t("저장 고지는 하단에 있다", noteTypes(남의링크).includes("storage_note"), JSON.stringify(noteTypes(남의링크)));
+const 남의링크세션 = await openSession({ url: `https://after47.kr/?d=mapo&t=${newToken()}` });
+const 남의링크 = entryView(남의링크세션, { atEntry: true });
+t("strangerLink 분기에서 notice는 온다", 남의링크세션.notices.some((n) => n.type === "no_saved_state"));
+t("그러나 상단이 비어 있다", 남의링크.banners.length === 0, JSON.stringify(bannerTypes(남의링크)));
+t("하단도 비어 있다", 남의링크.notes.length === 0, JSON.stringify(noteTypes(남의링크)));
 t(
-  "저장 고지 문구가 그대로다",
-  남의링크.notes.find((b) => b.type === "storage_note")?.text === COPY.banner.no_saved_state_sub &&
-    COPY.banner.no_saved_state_sub === "답하신 내용은 답한 기기에 저장됩니다."
-);
-t(
-  "그 배너의 두 번째 문단은 비었다 (같은 말을 두 번 하지 않는다)",
-  남의링크.banners.find((b) => b.type === "no_saved_state")?.sub === null
+  "두 문구 어느 쪽도 화면에 없다",
+  ![...남의링크.banners, ...남의링크.notes].some((b) =>
+    `${b.text} ${b.sub || ""}`.includes("저장") || `${b.text}`.includes("처음부터")
+  )
 );
 
 // 마크업에서도 자리가 갈려 있다 — 위는 main 앞, 아래는 main 뒤다.

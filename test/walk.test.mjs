@@ -1174,11 +1174,17 @@ t("③ 브릿지 CTA는 그대로 타임라인이다 (재설문 플래그가 안
     $("intro").hidden === false, texts(main()).slice(0, 3).join(" | "));
   보조.click();
   await tick(30);
-  t("④ 답을 다시 걷지 않고 보던 자리로 돌아온다",
-    질문중() === null && all(main(), (n) => hasClass(n, "tline__node")).length === 5,
+  // ★ **브릿지를 지난다**(2026-09-02 · 사용자 결정). 곧장 결과로 보내면
+  //   얼마나 지났는지 모른 채 도착한다 — 재방문 진입과 같은 화면이다.
+  t("④ 보조 버튼은 브릿지로 간다", has(main(), "화재 발생 후"),
     texts(main()).slice(0, 3).join(" | "));
   t("④ 기본 확인으로 되돌아가지 않는다 (재설문 플래그가 걷혔다)",
     !has(main(), "화재가 있었던 날짜와 지역을 알려주세요"));
+  결과로().click();
+  await tick(30);
+  t("④ 그 CTA를 지나면 답을 다시 걷지 않고 보던 자리다",
+    질문중() === null && all(main(), (n) => hasClass(n, "tline__node")).length === 5,
+    texts(main()).slice(0, 3).join(" | "));
 }
 
 // 재방문의 첫 화면에는 이 문이 없다 — 브릿지가 이미 도착 화면으로 데려간다.
@@ -1322,17 +1328,23 @@ section("⑧ 기본 확인 — 헤드라인 위에 서는 것");
     texts(main()).slice(0, 3).join(" | "));
   t("헤드라인 위는 한 장뿐이다", 위.length <= 1,
     `${위.length}장: ${texts($("banners")).join(" | ")}`);
-  t("그 한 장은 진입 알림이다",
-    위.length === 0 || $("banners").textContent.includes("저장된 내용이 없어 처음부터"),
-    $("banners").textContent);
-  t("지역을 물어보는 배너는 없다 — 화면이 이미 묻는다",
+  // ★ **타 기기 진입은 조용히 첫 방문으로 시작한다**(2026-09-02 · 사용자
+  //   결정). 그 사람이 지금 하려는 일이 처음부터 시작하는 것인데, 첫
+  //   방문자에게 첫 방문이라고 알리는 말은 정보가 아니다.
+  t("헤드라인 위가 비어 있다", 위.length === 0, $("banners").textContent);
+  t("하단도 비어 있다", 아래.length === 0, texts($("banners-foot")).join(" | "));
+  t("지역을 물어보는 배너는 없다",
     !$("banners").textContent.includes("어느 구에서 불이 났는지") &&
       !$("banners-foot").textContent.includes("어느 구에서 불이 났는지"));
-  t("저장 고지는 화면 하단으로 내려갔다",
-    $("banners-foot").textContent.includes("답하신 내용은 답한 기기에 저장됩니다."),
-    `아래 ${아래.length}장: ${texts($("banners-foot")).join(" | ")}`);
-  t("같은 말을 위아래로 두 번 하지 않는다",
-    !$("banners").textContent.includes("답하신 내용은 답한 기기에 저장됩니다."));
+  t("'저장된 내용이 없어' 문구가 상·하단 어디에도 없다",
+    !$("banners").textContent.includes("저장된 내용이 없어") &&
+      !$("banners-foot").textContent.includes("저장된 내용이 없어"));
+  t("저장 고지 문구도 상·하단 어디에도 없다",
+    !$("banners").textContent.includes("답하신 내용은 답한 기기에 저장됩니다.") &&
+      !$("banners-foot").textContent.includes("답하신 내용은 답한 기기에 저장됩니다."));
+  t("첫 화면이 헤드라인부터 시작한다",
+    has(main(), "화재가 있었던 날짜와 지역을 알려주세요"),
+    texts(main()).slice(0, 3).join(" | "));
 
   // 걷기 시작하면 위가 빈다(진입 알림은 진입 화면 전용 · 8f1a6ba).
   const sel = all(main(), (n) => n.id === "f-district")[0];

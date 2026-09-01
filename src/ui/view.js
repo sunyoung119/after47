@@ -22,7 +22,7 @@ import { COPY } from "./copy.js";
 //   순서는 곧 **우선순위**이고, 겹칠 때 남는 것은 앞엣것 하나다.
 //   `token_invalid`가 맨 뒤인 이유 — 이어보기(`resumed_on_device`)와 함께
 //   뜨면 "새로 시작합니다"가 거짓이 된다(실제로는 이 기기 기록을 잇는다).
-export const TOP_BANNER = ["resumed_on_device", "no_saved_state", "token_invalid"];
+export const TOP_BANNER = ["resumed_on_device", "token_invalid"];
 
 // openSession이 준 notices를 배너로 옮긴다. **판정을 새로 하지 않는다** —
 // 여섯째(`no_saved_state`: 남의 재접속 링크로 왔는데 이 기기에 기록이 없는
@@ -99,19 +99,18 @@ export function entryView(session, { atEntry = true } = {}) {
         actions: [],
       });
     } else if (n.type === "no_saved_state") {
-      // 남의 재접속 링크로 왔는데 이 기기에 기록이 없는 사람. **자기
-      // 기록을 이어 보는 사람에게는 절대 안 뜬다** — 그 사람에게는
-      // 이 문장이 거짓이다(세션 계층이 분기 ③에서만 민다).
-      if (!atEntry) continue;
-      made.push({
-        type: "no_saved_state",
-        text: COPY.banner.no_saved_state,
-        // ★ **저장 고지(`no_saved_state_sub`)는 여기 붙지 않는다.** 배너
-        //   한 장이 두 문단이 되면 헤드라인이 그만큼 더 밀린다. 문구를
-        //   바꾸지 않고 자리만 화면 하단으로 옮겼다(아래 `notes`).
-        sub: null,
-        actions: [],
-      });
+      // ★ **그리지 않는다**(2026-09-02 · 사용자 결정). 남의 재접속 링크로
+      //   왔는데 이 기기에 기록이 없는 사람에게 "저장된 내용이 없어
+      //   처음부터 시작합니다"를 말하던 자리다. 그 사람이 지금 하려는 일은
+      //   **처음부터 시작하는 것**이고, 첫 방문자에게 첫 방문이라고 알리는
+      //   말은 정보가 아니다 — 없어진 무언가가 있었다는 인상만 남긴다.
+      //   **타 기기 진입은 조용히 첫 방문으로 시작한다.**
+      //
+      //   하단의 저장 고지(`no_saved_state_sub`)도 이 분기에서만 서던
+      //   것이라 함께 걷혔다. notice 자체는 세션 계층에 그대로 둔다
+      //   (`storage.test.mjs`가 본다) — 왜 새로 시작하는지는 화면 밖에서도
+      //   쓸 수 있는 사실이고, 여기서 없애면 아는 곳이 사라진다.
+      continue;
     }
     // expires_at은 배너가 아니라 하단 고지 한 줄이다. 아래에서 따로 뽑는다.
   }
@@ -144,11 +143,6 @@ export function entryView(session, { atEntry = true } = {}) {
   // 밀려난 알림은 **버리지 않는다.** 하단에서 계속 말한다 — 알릴 값이
   // 없다면 애초에 만들지 않았을 것이다.
   for (const { rank: _r, ...b } of top.slice(1)) notes.push(b);
-
-  // D-015 0층의 저장 고지. 배너의 두 번째 문단이던 것을 그대로 옮겼다.
-  if (made.some((b) => b.type === "no_saved_state")) {
-    notes.push({ type: "storage_note", text: COPY.banner.no_saved_state_sub, sub: null, actions: [] });
-  }
 
   const expiresNotice = notices.find((n) => n.type === "expires_at");
 
