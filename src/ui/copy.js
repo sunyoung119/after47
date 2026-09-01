@@ -83,7 +83,10 @@ export const COPY = {
     footer: "원문이 확인된 근거만 표시합니다.",
     groups: {
       law: "법령",
-      public_guidance: "공공기관 안내",
+      // ★ **해외를 밝힌다**(사용자 결정). 12건 중 5건이 US EPA·American
+      // Red Cross다 — `공공기관 안내`라고만 하면 읽는 사람이 국내 기관의
+      // 안내로 받아들이고, 그것은 근거의 출처를 잘못 말하는 것이다.
+      public_guidance: "공공기관의 안내(해외포함)",
       case: "판례",
       academic: "학술",
     },

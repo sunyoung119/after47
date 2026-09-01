@@ -78,6 +78,12 @@ const RESULT = [...RESULT_PAGES];
 // 유일한 근거다 — 화면 코드가 제 배경을 따로 정하면 농도가 갈린다.
 const PHOTO_BG = new Set(["timeline", "home"]);
 
+// 진입 알림(`이 기기에 저장된 이전 기록을…`)이 설 자리. **답을 걷기
+// 시작하기 전 화면**이다 — 그 뒤로는 빠져나갈 문이 아니라 소음이고,
+// 재설문 중에는 문장 자체가 거짓이다. 랜딩은 목록에 없어도 된다:
+// 배너 슬롯이 `#flow` 안이라 랜딩에서는 화면째 숨어 있다.
+const ENTRY_NOTICE = new Set(["revisit", "basic"]);
+
 // ── 상태 ───────────────────────────────────────────
 const app = {
   session: null,
@@ -349,7 +355,12 @@ function render() {
   intro.hidden = true;
   flow.hidden = false;
 
-  const entry = entryView({ ...app.session, state: app.state });
+  const entry = entryView(
+    { ...app.session, state: app.state },
+    // 진입 알림이 설 자리인가. **답을 걷기 시작하기 전 화면**이고,
+    // 재설문 중이면 이미 걷는 중이라 아니다.
+    { atEntry: ENTRY_NOTICE.has(app.screen) && !app.again }
+  );
   renderBanners(entry);
   $("expires").textContent = entry.expires ? entry.expires.text : "";
   renderHeader();

@@ -17,7 +17,10 @@ import { COPY } from "./copy.js";
 // 그것을 알림으로 만들지 않는다(정상 진입과 구분되지 않으므로). 카톡으로 받은
 // 링크를 다른 기기에서 연 사람이 여기 오고, 그 사람은 자기 기록이 안 보이는
 // 이유를 들어야 한다.
-export function entryView(session) {
+// `atEntry` — **답을 걷기 시작하기 전인가.** 진입 알림 중에는 그 앞에서만
+// 뜻이 있는 것이 있다(아래 `resumed_on_device`). 화면 이름을 여기서 알 필요는
+// 없으므로 판정은 app.js가 하고 여기는 결과만 받는다.
+export function entryView(session, { atEntry = true } = {}) {
   const districts = session?.data?.districts || [];
   const notices = session?.notices || [];
   const byId = (id) => districts.find((d) => d.id === id) || null;
@@ -58,6 +61,17 @@ export function entryView(session) {
       });
     } else if (n.type === "resumed_on_device") {
       // 체험장에서 한 기기를 여러 사람이 쓴다. 빠져나갈 길이 반드시 있어야 한다.
+      //
+      // ★ **그 길은 진입 화면에서만 필요하다**(사용자 실기기 관찰).
+      // 이 배너의 일은 "지금 보는 것이 앞사람 기록일 수 있다"를 들어서는
+      // 순간에 알리고 빠져나갈 문을 주는 것이다. 한 걸음 걷고 나면 그 일이
+      // 끝났는데도 세션 내내 모든 화면에 따라붙었다 — 설문·전환·결과·상세
+      // 전부. 게다가 **답을 다시 걷는 중에는 문장이 거짓이다**: 이어서 보는
+      // 것이 아니라 새로 걷는 중이다.
+      //
+      // 자치구 배너들이 "사실이 지나가면 접는" 것과 같은 규칙이고
+      // (이 파일 위 주석), 여기서는 그 사실이 **화면의 위치**다.
+      if (!atEntry) continue;
       banners.push({
         type: "resumed_on_device",
         text: COPY.banner.resumed_on_device,

@@ -99,6 +99,21 @@ t(
   "④ 그 배너에 [새로 시작하기] 액션이 있다",
   v.banners.find((b) => b.type === "resumed_on_device")?.actions.some((a) => a.id === "restart")
 );
+// ★ **그 길은 진입 화면에서만 필요하다**(사용자 실기기 관찰). 한 걸음
+//   걷고 나면 빠져나갈 문이 아니라 소음이고, 답을 다시 걷는 중에는
+//   `이어서 보고 있습니다`가 아예 거짓이다.
+{
+  const 세션 = await openSession({ url: "https://after47.kr/" });
+  const 진입 = bannerTypes(entryView(세션, { atEntry: true }));
+  const 걷는중 = bannerTypes(entryView(세션, { atEntry: false }));
+  t("④ 걷기 시작하면 그 배너는 사라진다",
+    !걷는중.includes("resumed_on_device"), 걷는중.join(","));
+  // **사라지는 것이 그 하나뿐이다** — 자치구 알림처럼 눌러서 고칠 수 있는
+  // 것까지 걷어내면 고칠 길이 없어진다.
+  t("④ 걷어내는 것은 그 배너 하나뿐이다",
+    진입.filter((x) => x !== "resumed_on_device").join(",") === 걷는중.join(","),
+    `${진입.join(",")} → ${걷는중.join(",")}`);
+}
 
 // (5) notice가 없는 여섯째 — 카톡 링크를 다른 기기에서 연 사람
 새백엔드(); // 기기를 바꾼 것과 같다
@@ -515,6 +530,19 @@ section("6. 연락처 — 라우팅에서 분리했고 판단은 살아 있다")
   t("그룹 키가 어휘 안에 있다",
     sv.groups.every((g) => ["law", "public_guidance", "case", "academic"].includes(g.key)),
     sv.groups.map((g) => g.key).join(","));
+  // ★ **해외를 라벨에 밝힌다**(사용자 결정). 이 그룹의 12건 중 5건이
+  //   US EPA·American Red Cross다 — `공공기관 안내`라고만 하면 국내 기관의
+  //   안내로 읽히고, 그것은 근거의 출처를 잘못 말하는 것이다.
+  t("공공기관 그룹이 해외를 밝힌다",
+    COPY.sourceList.groups.public_guidance === "공공기관의 안내(해외포함)",
+    COPY.sourceList.groups.public_guidance);
+  {
+    const 공공 = sv.groups.find((g) => g.key === "public_guidance");
+    const 발행처 = (공공?.items ?? []).flatMap((i) => i.entries.map((e) => e.publisher));
+    t("실제로 해외 출처가 그 그룹에 있다 (라벨이 사실이다)",
+      발행처.some((p) => /EPA|Red Cross/.test(p ?? "")), 발행처.join(" | "));
+    t("그룹 라벨이 뷰모델에도 실린다", 공공?.label === "공공기관의 안내(해외포함)", 공공?.label);
+  }
   const law = sv.groups.find((g) => g.key === "law");
   t("법령 그룹이 있다", Boolean(law));
   t("법령은 제목별로 묶인다 (같은 법이 두 줄로 안 선다)",
@@ -850,7 +878,7 @@ t(
   const refs = html.match(/(?:href|src)="src\/ui\/[^"]+"/g) || [];
   // ★ 값까지 본다. 존재만 보면 "올리는 것을 잊은 배포"를 못 잡는다 —
   //   화면 파일을 고치면서 v를 올리면 **이 줄의 숫자도 함께 올린다.**
-  const V = "?v=19";
+  const V = "?v=20";
   t(
     `화면 파일 참조가 전부 ${V}다 (${refs.length}개)`,
     refs.length >= 3 && refs.every((r) => r.includes(V)),
