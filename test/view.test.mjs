@@ -313,12 +313,29 @@ const 미래 = entryView(
 );
 t("모르는 notice가 생겨도 헤드라인 위에 서지 않는다", 미래.banners.length === 0, JSON.stringify(미래.banners));
 
-// 밀려난 알림은 버리지 않는다 — 하단에서 계속 말한다.
+// ★ **이어보는 중에는 깨진 주소 얘기를 하지 않는다**(2026-09-02 · 사용자
+// 결정). `token_invalid`의 카피는 `이 주소로는 저장된 기록을 찾지 못해
+// **새로 시작합니다**`인데, 이 기기 기록이 이어졌으면 그 문장이 거짓이다.
+// 앞서 우선순위로 밀어 하단에 뒀지만 자리를 옮겨도 거짓인 것은 그대로였다.
 새백엔드();
 await saveState(newToken(), {});
-const 밀림 = entryView(await openSession({ url: "https://after47.kr/?t=ab0k9m" }), { atEntry: true });
-t("겹치면 실제로 일어난 일이 위에 선다 (이어보기)", bannerTypes(밀림)[0] === "resumed_on_device", JSON.stringify(bannerTypes(밀림)));
-t("밀린 알림은 하단에 남는다", noteTypes(밀림).includes("token_invalid"), JSON.stringify(noteTypes(밀림)));
+const 이어보기세션 = await openSession({ url: "https://after47.kr/?t=ab0k9m" });
+const 밀림 = entryView(이어보기세션, { atEntry: true });
+t("두 알림이 함께 온다 (세션 계층은 둘 다 안다)",
+  ["token_invalid", "resumed_on_device"].every((x) => 이어보기세션.notices.some((n) => n.type === x)),
+  JSON.stringify(이어보기세션.notices.map((n) => n.type)));
+t("실제로 일어난 일만 위에 선다 (이어보기)", bannerTypes(밀림)[0] === "resumed_on_device", JSON.stringify(bannerTypes(밀림)));
+t("깨진 주소 알림은 상·하단 어디에도 없다",
+  !그려진타입(밀림).includes("token_invalid"), JSON.stringify(그려진타입(밀림)));
+// 그 카피가 참인 자리에는 그대로 선다 — 저장이 없어 정말로 새로 시작하는 사람.
+{
+  새백엔드();
+  const 저장없음 = entryView(await openSession({ url: "https://after47.kr/?t=ab0k9m" }), { atEntry: true });
+  t("저장이 없어 정말로 새로 시작하는 사람에게는 뜬다",
+    bannerTypes(저장없음).includes("token_invalid"), JSON.stringify(bannerTypes(저장없음)));
+  t("카피는 한 글자도 안 바뀌었다",
+    COPY.banner.token_invalid === "이 주소로는 저장된 기록을 찾지 못해 새로 시작합니다.");
+}
 
 // 남의 재접속 링크(strangerLink) 분기 — **상·하단 어디에도 아무 말이 없다.**
 새백엔드();
@@ -1229,6 +1246,21 @@ t("시각을 비워도 [다음]은 열린다 (선택이다)", bc.ready === true 
       keepHour(오늘, 23, NOW) === (지금시 === 23 ? 23 : null), String(keepHour(오늘, 23, NOW)));
     t("⑤ 지금 시는 그대로 남는다", keepHour(오늘, 지금시, NOW) === 지금시);
     t("⑤ 과거 날짜에서는 늦은 시각도 남는다", keepHour("2026-08-25", 23, NOW) === 23);
+    // ★ **23시대에는 "아직 안 온 시각"이 없다.** walk는 앱을 실제로 돌려서
+    //   그 시간대에 다른 갈래를 밟는데(`안온시 === null`), 그 갈래가 참인지는
+    //   여기 순수함수 층에서 못 박는다 — 검사를 밤 11시에 다시 돌려 보지
+    //   않아도 되게.
+    {
+      const 밤 = Date.parse("2026-03-01T23:30:00+09:00");
+      const 그날 = 날(밤);
+      t("⑤ 23시대에는 24개가 전부 열린다", maxHourOn(그날, 밤) === 23, String(maxHourOn(그날, 밤)));
+      t("⑤ 23시대에는 23시가 살아남는다 (미래가 아니다)", keepHour(그날, 23, 밤) === 23,
+        String(keepHour(그날, 23, 밤)));
+      const 자정 = Date.parse("2026-03-01T00:20:00+09:00");
+      t("⑤ 자정 직후에는 0시만 열린다", maxHourOn(날(자정), 자정) === 0, String(maxHourOn(날(자정), 자정)));
+      t("⑤ 자정 직후에 23시를 들고 오면 지워진다", keepHour(날(자정), 23, 자정) === null,
+        String(keepHour(날(자정), 23, 자정)));
+    }
     // 뷰모델도 같은 판정을 싣는다.
     const bcT = basicCheckView({ state: { district: "mapo" }, data, now: NOW });
     t("⑤ 뷰모델이 잠긴 선택지를 표시한다",

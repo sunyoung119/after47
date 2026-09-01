@@ -38,6 +38,8 @@ export function entryView(session, { atEntry = true } = {}) {
   const nameOf = (id) => byId(id)?.name || id;
 
   const selected = session?.state?.district || null;
+  // 이 기기의 기록이 이어졌나. `token_invalid`가 이 사실을 보고 입을 닫는다.
+  const 이어보는중 = notices.some((n) => n.type === "resumed_on_device");
   const made = [];
 
   // notices는 **진입 시점의 사실**이고 화면은 **지금 state**를 본다. 둘이
@@ -92,6 +94,15 @@ export function entryView(session, { atEntry = true } = {}) {
       // 진입 알림과 같은 규칙 — 들어서는 순간에 "이 주소가 잘못됐다"를
       // 말하는 것이 일이고, 걷기 시작한 뒤에는 소음이다.
       if (!atEntry) continue;
+      // ★ **이어보는 중이면 말하지 않는다**(2026-09-02 · 사용자 결정).
+      //   자기 기록이 이어졌는데 깨진 주소 얘기를 하는 것은 소음이고,
+      //   무엇보다 이 카피가 **거짓이 된다** — `이 주소로는 저장된 기록을
+      //   찾지 못해 새로 시작합니다`라고 말하지만 실제로는 이 기기의
+      //   기록을 잇고 있다. 앞서 우선순위로 밀어 하단에 두던 조합인데,
+      //   자리를 옮겨도 거짓인 것은 그대로였다. **카피는 안 바꾼다** —
+      //   그 문장이 참인 자리(저장이 없어 정말로 새로 시작하는 사람)에는
+      //   그대로 선다.
+      if (이어보는중) continue;
       made.push({
         type: "token_invalid",
         text: COPY.banner.token_invalid,

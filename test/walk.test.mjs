@@ -79,6 +79,16 @@ const 답 = {
   "본인 명의로 든 화재보험이 있나요?": "잘 모르겠어요",
 };
 
+// 로컬 날짜 문자열. ★ **`toISOString()`을 쓰지 마라** — UTC 기준이라
+// KST 0~9시에 하루가 밀린다. `<input type="date">`의 값도 `fireAtOf`도
+// 로컬 기준이어서, 자정 직후에 돌리면 "어제로 바꿨다"가 그저께가 되고
+// 그 뒤 절이 통째로 어긋났다(실측으로 잡았다).
+const 날짜문자열 = (ms = Date.now()) => {
+  const d = new Date(ms);
+  const p2 = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${p2(d.getMonth() + 1)}-${p2(d.getDate())}`;
+};
+
 const 질문중 = () => all(main(), (n) => hasClass(n, "q__title"))[0] ?? null;
 
 // 결과로 가는 문. **라벨이 갈렸다**(2026-09-01) — 첫 방문의 전환은
@@ -169,31 +179,38 @@ t("지역을 고르면 [다음]이 열린다", button(main(), "다음").disabled
   t("모르면 비워두라는 한 줄이 있다", has(main(), "모르면 비워두셔도 됩니다."));
 
   // ① 시각을 고르면 fire_at이 그 시 정각이 된다.
-  시각().change("15");
+  //
+  // ★ **고르는 시각을 현재에서 계산한다.** 앞서 `15`로 박아 뒀는데
+  //   오늘 날짜에서는 **아직 안 온 시각이 잠기므로**(사용자 결정) 자정
+  //   직후에 돌리면 15시를 고를 수 없어 이 절이 통째로 어긋났다 —
+  //   그리고 그 상시 FAIL 사이에 진짜 FAIL이 숨었다(a50a7b6).
+  //   `지금 시`는 어느 시각에 돌려도 항상 고를 수 있는 값이다.
+  const 고를시 = new Date().getHours();
+  시각().change(String(고를시));
   await tick(40);
   t("① 시각을 고르면 fire_at이 그 시 정각이다",
-    new Date(지금()).getHours() === 15 && new Date(지금()).getMinutes() === 0,
-    new Date(지금()).toString());
+    new Date(지금()).getHours() === 고를시 && new Date(지금()).getMinutes() === 0,
+    `${고를시}시 → ${new Date(지금()).toString()}`);
   t("① 지역이 지워지지 않는다", 지역().value === "gangnam", 지역().value);
   t("① [다음]도 잠기지 않는다", button(main(), "다음").disabled === false);
 
   // ③ 날짜를 바꿔도 고른 시각은 유지된다.
-  const 어제 = new Date(Date.now() - 864e5).toISOString().slice(0, 10);
+  const 어제 = 날짜문자열(Date.now() - 864e5);
   날짜().change(어제);
   await tick(40);
-  t("③ 날짜를 바꿔도 시각은 유지된다", new Date(지금()).getHours() === 15, new Date(지금()).toString());
-  t("③ 날짜는 실제로 바뀌었다", new Date(지금()).toISOString().slice(0, 10) === 어제);
+  t("③ 날짜를 바꿔도 시각은 유지된다", new Date(지금()).getHours() === 고를시, new Date(지금()).toString());
+  t("③ 날짜는 실제로 바뀌었다", 날짜문자열(지금()) === 어제, `${날짜문자열(지금())} / ${어제}`);
   t("③ 여기서도 지역이 살아 있다", 지역().value === "gangnam");
-  t("③ 고른 시각이 화면에도 남아 있다", 시각().value === "15", 시각().value);
+  t("③ 고른 시각이 화면에도 남아 있다", 시각().value === String(고를시), 시각().value);
 
   // ④ '선택 안 함'으로 되돌리면 근사(정오)로 복귀한다.
   시각().change("");
   await tick(40);
   t("④ 선택 안 함으로 되돌리면 정오 근사다", new Date(지금()).getHours() === 12, new Date(지금()).toString());
-  t("④ 되돌려도 날짜는 그대로다", new Date(지금()).toISOString().slice(0, 10) === 어제);
+  t("④ 되돌려도 날짜는 그대로다", 날짜문자열(지금()) === 어제, `${날짜문자열(지금())} / ${어제}`);
 
   // 오늘로 되돌려 나머지 여정을 원래대로 걷는다.
-  날짜().change(new Date().toISOString().slice(0, 10));
+  날짜().change(날짜문자열());
   await tick(40);
   // ★ **오늘의 근사는 정오가 아니라 지금이다**(사용자 결정). 정오로 밀면
   //   아침에 들어온 사람은 경과가 음수가 되고, 저녁에 들어온 사람은 경과가
@@ -211,20 +228,31 @@ t("지역을 고르면 [다음]이 열린다", button(main(), "다음").disabled
         잠긴.every((o) => Number(o.value) > 지금시),
       `지금 ${지금시}시 · 잠김 ${잠긴.length}개`);
     // 과거 날짜로 가면 전부 열린다.
-    const 어제2 = new Date(Date.now() - 864e5).toISOString().slice(0, 10);
+    const 어제2 = 날짜문자열(Date.now() - 864e5);
     날짜().change(어제2);
     await tick(40);
     t("과거 날짜에서는 24개가 전부 열린다",
       [...시각().children].every((o) => !o.disabled));
-    // 과거에서 늦은 시각을 고른 뒤 오늘로 되돌리면 `선택 안 함`이 된다.
-    시각().change("23");
+    // 과거에서 **아직 안 온 시각**을 고른 뒤 오늘로 되돌리면 `선택 안 함`이
+    // 된다. ★ 그런 시각은 23시대에는 존재하지 않는다 — 그때는 같은 규칙의
+    // 다른 얼굴("이미 지난 시각은 살아남는다")을 본다. 어느 쪽이든 지키는
+    // 것은 하나다: **fire_at이 미래가 되는 조합은 남지 않는다.**
+    const 안온시 = 지금시 < 23 ? 지금시 + 1 : null;
+    시각().change(String(안온시 ?? 23));
     await tick(40);
-    t("과거 날짜에서 오후 11시를 골랐다", new Date(지금()).getHours() === 23);
-    날짜().change(new Date().toISOString().slice(0, 10));
+    t("과거 날짜에서 늦은 시각을 골랐다", new Date(지금()).getHours() === (안온시 ?? 23),
+      `${안온시 ?? 23}시 → ${new Date(지금()).getHours()}시`);
+    날짜().change(날짜문자열());
     await tick(40);
-    t("★ 오늘로 되돌리면 아직 안 온 시각은 선택 안 함이 된다",
-      시각().value === "" && 저장된().fire_hour === undefined,
-      `${시각().value} / ${저장된().fire_hour}`);
+    if (안온시 !== null) {
+      t("★ 오늘로 되돌리면 아직 안 온 시각은 선택 안 함이 된다",
+        시각().value === "" && 저장된().fire_hour === undefined,
+        `${안온시}시 · ${시각().value} / ${저장된().fire_hour}`);
+    } else {
+      t("★ 자정 직전이라 안 온 시각이 없다 — 이미 지난 시각은 살아남는다",
+        시각().value === "23" && 저장된().fire_hour === 23,
+        `${시각().value} / ${저장된().fire_hour}`);
+    }
     t("★ 어떤 경로로도 fire_at이 미래가 되지 않는다", 지금() <= Date.now(),
       new Date(지금()).toString());
   }
