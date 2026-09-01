@@ -84,7 +84,14 @@ export function renderLanding(host, lv, onPass, onResume) {
   actions.appendChild(el("p", "intro__footer", lv.footer));
   host.appendChild(actions);
 
-  host.addEventListener("click", onPass);
+  // ★ **버튼이 하나일 때만 화면 전체가 문이다.**
+  //
+  // 첫 방문의 랜딩은 정보가 아니라 문이라, 아무 데나 눌러도 통과하는 것이
+  // 친절이었다. 그런데 보조 버튼이 서면 화면에 **목적지가 둘**이 되고,
+  // 그때의 전체 탭은 친절이 아니라 함정이다 — 윤곽뿐인 보조 버튼을 살짝
+  // 빗나간 탭이 조용히 다른 곳으로 데려간다(실측: 기본 확인 화면).
+  // 목적지가 둘이면 어느 쪽인지 손가락이 말해야 한다.
+  if (!lv.resume) host.addEventListener("click", onPass);
 }
 
 // ── 기본 확인 ──────────────────────────────────────

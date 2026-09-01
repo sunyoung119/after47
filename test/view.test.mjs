@@ -568,7 +568,14 @@ t(
   t(
     "랜딩을 떠나는 두 문이 같은 절차를 지난다",
     /async function passLanding\(\)\s*\{\s*await leaveLanding\(routeGo\)/.test(src) &&
-      /async function resumeSaved\(\)[\s\S]{0,200}leaveLanding\(\(\) => go\(\{ screen: "timeline" \}\)\)/.test(src)
+      /async function resumeSaved\(\)[\s\S]{0,200}await leaveLanding\(routeGo\)/.test(src)
+  );
+  // ★ **되돌아가기도 `route()`를 지난다.** 곧장 타임라인으로 보내면 화재
+  //   7일이 지나 새로 생긴 조사서 질문을 건너뛰고, 그 답으로 열리는
+  //   `조사서가 나온 뒤` 블록이 잠긴 채인 화면에 도착한다(D-023 §5).
+  t(
+    "되돌아가기가 도착 화면으로 직행하지 않는다 (남은 질문을 건너뛰지 않는다)",
+    !/resumeSaved\(\)[\s\S]{0,300}go\(\{ screen: "timeline" \}\)/.test(src)
   );
 }
 
@@ -843,7 +850,7 @@ t(
   const refs = html.match(/(?:href|src)="src\/ui\/[^"]+"/g) || [];
   // ★ 값까지 본다. 존재만 보면 "올리는 것을 잊은 배포"를 못 잡는다 —
   //   화면 파일을 고치면서 v를 올리면 **이 줄의 숫자도 함께 올린다.**
-  const V = "?v=18";
+  const V = "?v=19";
   t(
     `화면 파일 참조가 전부 ${V}다 (${refs.length}개)`,
     refs.length >= 3 && refs.every((r) => r.includes(V)),
@@ -867,18 +874,26 @@ t(
 );
 t("두 줄로 나뉘어 온다 (화면이 줄바꿈을 만들지 않는다)", lv.lead.length === 2);
 t("CTA가 확정 문구다", lv.cta === "회복 시작하기");
-// ★ 저장된 기록이 있는 사람에게만 뜨는 보조 문(사용자 결정). **판정은
-//   재방문 브릿지 것 그대로**라, 브릿지가 뜨는 조건과 한 글자도 다르지 않다.
+// ★ **[처음으로]로 온 랜딩에서만 서는 되돌아가기 문**(역할 축소 · 사용자
+//   결정). 앞서는 저장 기록만 보고 그렸는데 그 자리 — 재방문자의 첫 화면 —
+//   에는 랜딩이 아예 뜨지 않는다(`route()`가 브릿지로 보낸다). 남은 역할은
+//   답을 다시 걸으려다 마음이 바뀐 사람을 돌려보내는 것 하나다.
 {
-  const 있 = landingView({ fire_at: FIRE }, { saved: { token: "t" } });
-  t("저장 기록이 있으면 바로가기가 뜬다", 있.resume === "저장된 내 회복 경로 바로가기", 있.resume);
-  t("없으면 없다 (없는 것은 없다)", landingView({ fire_at: FIRE }).resume === null);
+  const 있 = landingView({ fire_at: FIRE }, { saved: { token: "t" }, again: "basic" });
+  t("[처음으로]로 왔고 저장 기록이 있으면 되돌아가기가 뜬다",
+    있.resume === "그대로 두고 돌아가기", 있.resume);
+  t("★그냥 랜딩에는 뜨지 않는다 (재설문 중이 아니다)",
+    landingView({ fire_at: FIRE }, { saved: { token: "t" } }).resume === null);
+  t("저장 기록이 없으면 없다 (없는 것은 없다)",
+    landingView({ fire_at: FIRE }, { again: "basic" }).resume === null);
   t("기본 확인을 지나지 않았으면 없다",
-    landingView({}, { saved: { token: "t" } }).resume === null);
-  t("브릿지가 뜨는 조건과 같다",
+    landingView({}, { saved: { token: "t" }, again: "basic" }).resume === null);
+  // 저장 판정만큼은 브릿지 것을 그대로 쓴다 — 두 화면이 다른 답을 내면 안 된다.
+  t("저장 판정은 브릿지 것과 같다",
     [[{ fire_at: FIRE }, { token: "t" }], [{ fire_at: FIRE }, null], [{}, { token: "t" }]].every(
       ([st, sv]) =>
-        (landingView(st, { saved: sv }).resume !== null) === revisitView({ state: st, saved: sv }).show
+        (landingView(st, { saved: sv, again: "basic" }).resume !== null) ===
+        revisitView({ state: st, saved: sv }).show
     ));
 }
 t(

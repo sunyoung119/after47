@@ -256,13 +256,11 @@ function parentOf(s) {
   // ★ **결과의 도착 화면이 타임라인이다**(사용자 결정). 사슬이 한 칸씩
   //   밀렸다 — 타임라인의 뒤는 온 길(재방문이면 게이트, 첫 방문이면
   //   전환)이고, 허브(나를 위한 안내)의 뒤는 타임라인이다.
-  if (s.screen === "timeline") {
-    // 허브에서 눌러 들어왔으면 **온 길이 허브다**. 기기 뒤로가기도 그리
-    // 가므로(허브에서 밀어 넣은 자리라 히스토리에 남아 있다) 둘이 갈리면
-    // 안 된다.
-    if (s.from === "home") return { screen: "home" };
-    return { screen: app.returning ? "revisit" : "transition" };
-  }
+  // 도착 화면의 뒤는 **허브에서 눌러 들어왔을 때만** 있다. 그 자리는
+  // 히스토리에 남아 있어 기기 뒤로가기와 같은 곳으로 간다. 그 밖의
+  // 타임라인은 결과의 도착점이라 뒤가 없고, `topRight`가 [이전]을 아예
+  // 그리지 않는다 — 여기 값은 쓰이지 않지만 뜻을 맞춰 둔다.
+  if (s.screen === "timeline") return { screen: "home" };
   if (s.screen === "home") return { screen: "timeline" };
   return { screen: "home" };
 }
@@ -339,7 +337,12 @@ function render() {
     flow.hidden = true;
     // 뒤 화면이 비치거나 스크롤되면 안 된다. 복원은 바로 아래에서 한다.
     setIntroLock(true);
-    renderLanding(intro, landingView(app.state, { saved: app.returning }), passLanding, resumeSaved);
+    renderLanding(
+      intro,
+      landingView(app.state, { saved: app.returning, again: Boolean(app.again) }),
+      passLanding,
+      resumeSaved
+    );
     return;
   }
   setIntroLock(false);
@@ -415,10 +418,25 @@ function topRight() {
   // HOME에도 같은 문을 둔다(사용자 실기기 검수 결정) — 결과에 닿은 뒤로는
   // 브릿지를 다시 만날 일이 없어서, 답을 고치러 갈 길이 상세 화면의
   // CTA 하나뿐이었다. **자리·톤·동작이 브릿지의 것과 같다.**
-  // ★ **결과 도착 화면은 타임라인이다**(사용자 결정). 그 화면의 [이전]이
-  //   온 길(재방문이면 게이트, 첫 방문이면 전환)로 가고, 허브(나를 위한
-  //   안내)의 [이전]은 타임라인으로 간다 — 사슬이 한 칸씩 밀렸다.
-  if (app.screen === "timeline" || app.screen === "home")
+  // ★ **결과 도착 화면에는 뒤가 없다.**
+  //
+  // 앞서는 [이전]이 온 길(재방문이면 게이트, 첫 방문이면 전환)로 갔다.
+  // 그런데 그 둘은 **지나가면 덮이는 화면**(CONSUMED)이라 히스토리에 자리가
+  // 없다 — 그리로 보내는 [이전]은 기기 뒤로가기와 **다른 곳으로 간다.**
+  // 실측: 첫 방문은 [이전]→전환 / 기기뒤로→설문 마지막 질문, 재방문은
+  // [이전]→브릿지 / 기기뒤로→앱 밖. 둘이 갈리면 안 된다는 것이 이 파일
+  // 맨 위의 규칙이고, 그 규칙이 이긴다. 덮인 자리를 [이전]이 되살리지 않는다.
+  //
+  // 허브에서 눌러 들어왔을 때만 뒤가 있다 — 그 자리는 히스토리에 실제로
+  // 남아 있어서 둘이 같은 곳으로 간다.
+  if (app.screen === "timeline")
+    return [
+      app.from === "home" ? { label: COPY.home.back, on: goBack } : null,
+      { label: COPY.revisit.home, on: startAgain },
+    ];
+  // 허브의 뒤는 타임라인이다. 타임라인은 덮이는 화면이 아니라 히스토리에
+  // 남아 있으므로 [이전]과 기기 뒤로가기가 같은 자리로 간다.
+  if (app.screen === "home")
     return [
       { label: COPY.home.back, on: goBack },
       { label: COPY.revisit.home, on: startAgain },
@@ -518,15 +536,19 @@ async function passLanding() {
   await leaveLanding(routeGo);
 }
 
-// 랜딩의 보조 버튼 — **설문을 다시 걷지 않고** 결과 도착 화면으로 간다.
-// 게이트도 지난 것으로 친다: 브릿지는 "이 기기에 기록이 있다"를 알려 주는
-// 화면인데, 이 버튼을 눌렀다는 것이 이미 그것을 안다는 뜻이다.
+// 랜딩의 보조 버튼 — 답을 다시 걸으려다 **마음이 바뀐 사람의 출구**다.
+// 재설문 플래그를 걷고 온 자리로 돌려보낸다.
+//
+// ★ **`route()`를 지난다.** 앞서는 `go({screen:"timeline"})`로 곧장 갔는데,
+//   그러면 **남은 질문을 건너뛴다** — 화재 7일이 지나 조사서 수령을 묻는
+//   질문이 새로 생긴 사람이 그 답 없이 도착해, `조사서가 나온 뒤` 블록이
+//   잠긴 채인 타임라인을 본다(실측). D-023 §5가 "질문을 건너뛰면 답할 길이
+//   없는 사람이 생긴다"고 못박은 자리다. 건너뛰는 것은 **게이트뿐**이고,
+//   그것은 이 사람이 이번 방문에서 이미 지났다.
 async function resumeSaved() {
   app.gate = true;
-  // [처음으로]로 랜딩에 온 사람이 여기서 마음을 바꿀 수 있다. **재설문
-  // 플래그를 걷는다** — 남겨 두면 다음 routeGo가 기본 확인으로 되돌린다.
   app.again = false;
-  await leaveLanding(() => go({ screen: "timeline" }));
+  await leaveLanding(routeGo);
 }
 
 // 랜딩을 떠나는 절차. 문이 둘이 됐어도 **인트로 플래그를 세우고 저장하는

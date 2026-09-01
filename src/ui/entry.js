@@ -29,12 +29,21 @@ export const BASIC_KEYS = ["fire_at"];
 //
 // 플래그는 **state에 넣어 saveState로 저장한다** — localStorage 직접
 // 호출 금지는 UI에서도 그대로다(누수 탐지가 잡는다).
-export function landingView(state = {}, { saved = null } = {}) {
+export function landingView(state = {}, { saved = null, again = false } = {}) {
   return {
     show: state.intro_seen !== true,
-    // 저장된 기록이 있는 사람에게만. **판정은 재방문 브릿지 것을 그대로
-    // 쓴다** — 새 로직을 만들면 두 화면이 다른 답을 낼 수 있다.
-    resume: revisitView({ state, saved }).show ? COPY.landing.resume : null,
+    // ★ **[처음으로]로 온 랜딩에서만 선다**(역할 축소 · 사용자 결정).
+    //
+    // 앞서는 저장 기록만 보고 그렸는데, 그 조건이 노린 자리 — 재방문자의
+    // 첫 화면 — 에는 **랜딩이 아예 뜨지 않는다.** `route()`가 저장 기록이
+    // 있는 사람을 곧장 재방문 브릿지로 보내기 때문이다. 그래서 그 이름의
+    // 지름길은 한 번도 보이지 않았고, 보이는 유일한 자리가 여기였다.
+    //
+    // 조건에 `again`을 더한 것은 안전장치이기도 하다. 이번 방문에서
+    // 브릿지를 지나지 않은 사람(플래그가 없는 옛 기록)이 이 문으로 들어오면
+    // **새로 생긴 질문을 건너뛴다** — 화재 7일이 지나 조사서 수령을 묻는
+    // 사람이 정확히 그 경우다.
+    resume: again && revisitView({ state, saved }).show ? COPY.landing.resume : null,
     eyebrow: COPY.landing.eyebrow,
     brand: COPY.landing.brand,
     // 두 줄이다. 화면 코드가 줄바꿈을 만들지 않도록 여기서 나눠 준다.
