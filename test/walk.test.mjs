@@ -16,6 +16,7 @@
 //   ④ 건물 종류 '그 외' → 안내 범위 화면의 두 갈래
 //   ⑤ 기기 뒤로가기 — 히스토리가 앱의 화면 순서와 같은가
 //   ⑥ 상황 다시 알리기 — 브릿지에서 답을 다시 걷고, 지우지 않는가
+//   ⑦ 두 문의 등가 — 브릿지 CTA와 [저장된 회복 경로 보기]가 늘 같은 곳에 닿는가
 
 import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
@@ -997,6 +998,92 @@ t("③ 브릿지 CTA는 그대로 타임라인이다 (재설문 플래그가 안
   t("④ 저장이 없으면 되돌아가기가 없다",
     !button($("intro"), "저장된 회복 경로 보기") && Boolean(button($("intro"), "회복 시작하기")),
     texts($("intro")).join(" | "));
+}
+
+// ── ⑦ 두 문이 같은 재계산을 지나는가 ──────────────
+section("⑦ 브릿지 CTA와 [저장된 회복 경로 보기] — 도착지가 늘 같은가");
+
+// 보조 버튼은 **브릿지 화면을 거치지 않는다.** 그래도 `routeGo()`를 지나므로
+// 경과시간 게이트와 "남은 질문" 검사는 브릿지 CTA와 똑같이 돈다 —
+// 앞서 이 문이 `go({screen:"timeline"})`로 직행해 **화재 7일 뒤에 새로 생기는
+// 조사서 질문을 건너뛰던** 자리다. 그 등가성을 여기서 못 박는다.
+//
+// 각 문이 타임라인에 닿는 것은 여정 ①·②가 이미 본다. 여기서 보는 것은
+// **둘이 서로 같은가**이고, 특히 새 질문이 생긴 시점이다.
+{
+  const 창고 = memoryBackend();
+  configureStorage({ ...창고, readJson });
+  const 자리 = () => (질문중() ? `설문: ${질문중().own}` : texts(main()).slice(0, 3).join(" | "));
+  const 되감기 = (일) => {
+    for (const k of 창고.keys()) {
+      if (!k.includes("state")) continue;
+      try {
+        const o = JSON.parse(창고.get(k));
+        const st = (o && o.state) || o;
+        if (!st || !st.fire_at) continue;
+        st.fire_at = new Date(Date.now() - 일 * 864e5).toISOString();
+        창고.set(k, JSON.stringify(o));
+      } catch {
+        /* 다음 키 */
+      }
+    }
+  };
+
+  // 기록을 만든다 — 화재 당일에 설문을 끝까지 걸은 사람.
+  await 열기();
+  button($("intro"), "회복 시작하기").click();
+  await tick(30);
+  {
+    const sel = all(main(), (n) => n.id === "f-district")[0];
+    sel.change("gangnam");
+    await tick(20);
+    button(main(), "다음").click();
+    await tick(20);
+  }
+  await 설문끝까지();
+  button(main(), "내 회복 경로 보기").click();
+  await tick(30);
+
+  // 두 문을 나란히 밟는다.
+  const 밟기 = {
+    async 브릿지() {
+      await 열기();
+      button(main(), "내 회복 경로 보기").click();
+      await tick(40);
+      return 자리();
+    },
+    async 보조() {
+      await 열기();
+      $("top-right").children[0].click(); // [상황 다시 알리기] → 랜딩
+      await tick(30);
+      const b = button($("intro"), "저장된 회복 경로 보기");
+      if (!b) return "(버튼 없음)";
+      b.click();
+      await tick(40);
+      return 자리();
+    },
+  };
+
+  // ⓐ 남은 질문이 없을 때
+  {
+    const 브 = await 밟기.브릿지();
+    const 보 = await 밟기.보조();
+    t("ⓐ 남은 질문이 없으면 둘 다 도착 화면이다",
+      브 === 보 && all(main(), (n) => hasClass(n, "tline__node")).length === 5,
+      `브릿지: ${브}  ||  보조: ${보}`);
+  }
+
+  // ⓑ 화재 7일이 지나 조사서 질문이 새로 생겼을 때
+  {
+    되감기(8);
+    const 브 = await 밟기.브릿지();
+    되감기(8); // 앞 왕복에서 intro_seen만 다시 저장됐다. 날짜는 다시 맞춰 준다
+    const 보 = await 밟기.보조();
+    t("ⓑ 새 질문이 생기면 둘 다 그 질문으로 간다",
+      브 === 보 && /설문: 화재현장조사서/.test(브),
+      `브릿지: ${브}  ||  보조: ${보}`);
+    t("ⓑ 보조 버튼이 질문을 건너뛰지 않는다", 질문중() !== null, 자리());
+  }
 }
 
 // ── 결과 ───────────────────────────────────────────
