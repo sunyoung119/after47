@@ -81,6 +81,11 @@ const 답 = {
 
 const 질문중 = () => all(main(), (n) => hasClass(n, "q__title"))[0] ?? null;
 
+// 결과로 가는 문. **라벨이 갈렸다**(2026-09-01) — 첫 방문의 전환은
+// `내 회복 경로 보기`, 재방문 브릿지는 `내 회복 경로 다시 계산하기`다.
+// 닿는 자리는 같으므로(여정 ⑦) 밟는 쪽은 문을 하나로 본다.
+const 결과로 = () => buttonLike(main(), "내 회복 경로");
+
 async function 한문항(override = {}) {
   const q = 질문중();
   if (!q) return false;
@@ -261,7 +266,7 @@ t("전환 문구가 확정 문구다",
 }
 t("'AI 분석 중'류 표현이 없다", !texts(main()).some((s) => /AI|분석 중|생성 중/.test(s)));
 
-button(main(), "내 회복 경로 보기").click();
+결과로().click();
 await tick(30);
 
 // ★ **도착 화면이 타임라인이다**(사용자 결정). 전환 CTA가 약속한 이름과
@@ -522,7 +527,7 @@ t("게이트 문구가 확정 문구다",
 t("경과 뒤에 '경과'가 붙는다", has(main(), "경과"));
 t("현재 시각 시계가 아니다", !texts(main()).some((s) => /일째/.test(s)));
 
-button(main(), "내 회복 경로 보기").click();
+결과로().click();
 await tick(30);
 // ★ 브릿지 CTA도 **타임라인 도착**이고 라벨도 도착지 이름이다 — 결과로
 //   들어오는 문 셋이 같은 자리에 닿는다.
@@ -603,7 +608,7 @@ t("[이 범위로 계속하기]는 설문을 이어간다", 질문중() !== null
 
 await 설문끝까지();
 t("'그 외'로도 끝까지 도달한다", has(main(), "확인했습니다"));
-button(main(), "내 회복 경로 보기").click();
+결과로().click();
 await tick(30);
 t("'그 외'도 내 회복 경로에 닿는다", has(main(), "내 회복 경로"));
 
@@ -733,7 +738,7 @@ t("① 설문 3문항을 진행했다", 밟은질문.length === 4, 밟은질문.
 // 다시 앞으로 — 답이 있는 질문을 다시 답해도 흐름이 이어진다.
 await 설문끝까지({ "본인 명의로 든 화재보험이 있나요?": "잘 모르겠어요" });
 t("① 되돌아왔다가 진행해도 전환에 닿는다", has(main(), "확인했습니다"));
-button(main(), "내 회복 경로 보기").click();
+결과로().click();
 await tick(30);
 t("① 전환을 지나면 타임라인이다",
   all(main(), (n) => hasClass(n, "tline__node")).length === 5, texts(main()).slice(0, 3).join(" | "));
@@ -857,7 +862,7 @@ t("① 타임라인의 문이 허브로 잇는다", has(main(), "나를 위한 �
   await 열기(); // 같은 저장소로 다시 진입 = 재방문
   t("재방문은 경과시간 게이트다", has(main(), "화재 발생 후"));
   const 깊이 = dom.depth();
-  button(main(), "내 회복 경로 보기").click();
+  결과로().click();
   await tick(30);
   // ★ 결과로 들어오는 문이 **전부 타임라인 도착으로 통일**됐다(사용자 결정).
   t("게이트를 지나면 타임라인이다",
@@ -1003,7 +1008,7 @@ await tick(30);
 }
 const 첫질문 = 질문중().own;
 await 설문끝까지();
-button(main(), "내 회복 경로 보기").click();
+결과로().click();
 await tick(30);
 button(main(), "나를 위한 안내 보기").click();
 await tick(20);
@@ -1072,7 +1077,7 @@ t("① 재설문은 보이는 질문을 전부 걷는다",
 t("① 발화 위치를 그대로 두면 제품 질문을 지나간다",
   재설문질문.includes("불이 사용하던 제품에서 시작됐다고 들으셨나요?"),
   재설문질문.join(" → "));
-button(main(), "내 회복 경로 보기").click();
+결과로().click();
 await tick(30);
 t("① 전환을 지나면 타임라인이다",
   all(main(), (n) => hasClass(n, "tline__node")).length === 5, texts(main()).slice(0, 3).join(" | "));
@@ -1137,7 +1142,7 @@ await 한문항();
 t("③ 재설문 도중이다", 질문중() !== null, texts(main()).slice(0, 3).join(" | "));
 await 열기(); // 이탈 후 재진입
 t("③ 재진입은 평소처럼 브릿지다", has(main(), "화재 발생 후"), texts(main()).slice(0, 4).join(" | "));
-button(main(), "내 회복 경로 보기").click();
+결과로().click();
 await tick(30);
 t("③ 브릿지 CTA는 그대로 타임라인이다 (재설문 플래그가 안 남는다)",
   all(main(), (n) => hasClass(n, "tline__node")).length === 5,
@@ -1233,14 +1238,14 @@ section("⑦ 브릿지 CTA와 [저장된 회복 경로 보기] — 도착지가 
     await tick(20);
   }
   await 설문끝까지();
-  button(main(), "내 회복 경로 보기").click();
+  결과로().click();
   await tick(30);
 
   // 두 문을 나란히 밟는다.
   const 밟기 = {
     async 브릿지() {
       await 열기();
-      button(main(), "내 회복 경로 보기").click();
+      결과로().click();
       await tick(40);
       return 자리();
     },

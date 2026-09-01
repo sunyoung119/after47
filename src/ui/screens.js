@@ -11,7 +11,7 @@
 // ★ 색값을 쓰지 않는다. 시각은 전부 tokens.css의 변수다.
 
 import { COPY } from "./copy.js";
-import { el, clear } from "./render.js";
+import { el, clear, chev } from "./render.js";
 
 // ═══ 확정 프론트 UX — 진입 흐름 ═══════════════════
 //
@@ -289,8 +289,10 @@ export function renderRevisit(main, rv, onGo) {
   });
   box.appendChild(lines);
 
-  const go = el("button", "btn btn--primary pg__cta", rv.cta);
+  // 탭 단서 — 누르면 다음으로 간다는 것을 형태로 말한다(허브 진입 버튼과 같다).
+  const go = el("button", "btn btn--primary pg__cta pg__cta--tap", rv.cta);
   go.type = "button";
+  go.appendChild(chev());
   go.addEventListener("click", onGo);
   box.appendChild(go);
   main.appendChild(box);

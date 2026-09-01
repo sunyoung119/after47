@@ -14,6 +14,18 @@ export const el = (tag, cls, text) => {
   return n;
 };
 
+// 탭 단서 — **"이 면은 눌린다"를 색이 아니라 형태로 말한다.**
+//
+// 타임라인 구간 요약이 쓰던 것과 **같은 글자·같은 클래스**다(`chev`).
+// 눌러서 다음으로 가는 자리는 앱 전체에서 이 모양 하나로 통일한다.
+// `aria-hidden` — 보조기술에는 라벨만 간다. 화살표는 장식이고, 읽히면
+// "내 회복 경로 다시 계산하기 오른쪽 홑화살괄호"가 된다.
+export const chev = () => {
+  const n = el("span", "chev", "›");
+  n.setAttribute("aria-hidden", "true");
+  return n;
+};
+
 export const clear = (n) => {
   while (n.firstChild) n.removeChild(n.firstChild);
 };
