@@ -1222,11 +1222,6 @@ a {
 .tline__node--info .tline__dot {
   background: var(--c-accent);
 }
-/* 단계 카드의 높이를 맞춘다 — 개수가 다르다고 칸이 들쭉날쭉하면
-   "지금 어디쯤인가"를 읽는 눈금이 흔들린다(확정 화면 10). */
-.tline__sum {
-  min-height: 56px;
-}
 /* ★ **행이 스스로 면을 갖는다.** 타임라인은 사진 배경 위에만 서는데
    전면 베일 0.50 위에서는 뮤트가 1.56이고, 화면 가운데는 국소 보정이
    닿지 않는다. **불투명 흰 면**이라야 AA가 나온다(뮤트 6.16) —
@@ -1240,6 +1235,17 @@ a {
   border-radius: var(--r2);
   box-shadow: var(--shadow-card);
   padding: var(--s3) var(--s4);
+  /* ★ **네 구간의 높이를 맞춘다** — 개수가 다르다고 칸이 들쭉날쭉하면
+     "지금 어디쯤인가"를 읽는 눈금이 흔들린다(확정 화면 10).
+     그 뜻으로 `min-height: 56px`가 있었지만 **아래 flex 규칙의
+     `min-height: var(--tap)`가 뒤에서 덮어** 죽어 있었다. 그래서
+     `오늘`·`화재 발생일`(보조 줄이 있어 두 줄)과 `가까운 시일에`·
+     `계속 확인`(한 줄)의 높이가 갈렸다.
+
+     기준은 **두 줄 쪽**이고, 값을 숫자로 박지 않고 토큰에서 계산한다 —
+     글꼴이나 행간이 바뀌면 따라온다. 두 줄 + 상하 패딩 + 테두리다.
+     `--tap`(44px)보다 크므로 탭 목표도 그대로 지킨다. */
+  min-height: calc(2 * 1rem * var(--lh, 1.7) + 2 * var(--s3, 12px) + 2px);
 }
 /* 빈 노드의 한 줄도 사진 위에 직접 놓이지 않는다. */
 .tline__body .pg__empty {
@@ -1277,7 +1283,8 @@ a {
   justify-content: space-between;
   align-items: center;
   gap: var(--s3);
-  min-height: var(--tap);
+  /* min-height는 위 공유 규칙이 정한다. 여기서 다시 쓰면 **뒤에서 덮어**
+     네 구간의 높이가 다시 갈린다 — 실제로 그렇게 죽어 있었다. */
   cursor: pointer;
 }
 .tline__left {
