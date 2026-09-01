@@ -474,6 +474,73 @@ t("원인을 들은 사람에게는 product_suspected를 묻는다", 집안.incl
     !보이는({ ...명시false }).includes("product_maker_contacted"));
 }
 
+// ── 8. 게이트 사슬 불변식 ───────────────────────────
+//
+// ★ **부모가 안 물어진 상태에서 자식이 뜨면 안 된다.**
+//
+// 조건부 질문 P의 키를 자식 C의 `ask_when`이 참조하면, C의 게이트는 P의
+// 게이트를 **내포해야 한다.** 안 그러면 P를 건너뛴 사람에게 P의 `default`가
+// 사본을 채우고, 그 값이 C를 연다 — `q-maker`가 정확히 그랬다.
+//
+// 규칙을 한 쌍에 못 박지 않고 **전 질문 순회로** 둔다. 질문이 늘어도
+// 자동으로 방어된다. 원시 state와 **판정 사본** 양쪽에서 본다 —
+// 새던 자리가 사본 쪽이었다.
+section("8. 게이트 사슬 - 부모가 안 물어지면 자식도 안 뜬다");
+
+{
+  const byKey = new Map(questions.map((q) => [q.key, q]));
+  const 보임 = (q, st) => visibleQuestions(questions, st, data, NOW).some((v) => v.id === q.id);
+  // 그 질문이 가질 수 있는 값 — 선택지 + default + **안 물음(undefined)**.
+  const 후보 = (q) => {
+    const vs = (q.options || []).map((o) => o.value);
+    if ("default" in q && !vs.includes(q.default)) vs.push(q.default);
+    return [undefined, ...vs];
+  };
+
+  const 쌍 = [];
+  for (const c of questions) {
+    if (!c.ask_when) continue;
+    for (const k of Object.keys(c.ask_when)) {
+      const p = byKey.get(k);
+      // 파생 키(`elapsed_bucket`·`district_insurance_exclusion`)는 질문이
+      // 아니라 부모가 없다. 조건 없이 늘 물어지는 부모도 대상이 아니다.
+      if (p && p.ask_when) 쌍.push([c, p]);
+    }
+  }
+  t("조건부 부모를 참조하는 자식이 있다 (검사가 헛돌지 않는다)", 쌍.length > 0, String(쌍.length));
+
+  const 샌곳 = [];
+  let 조합수 = 0;
+  for (const [c, p] of 쌍) {
+    // 이 쌍의 판정에 관여하는 질문 키만 돈다 — 전 조합을 돌면 폭발한다.
+    const keys = [...new Set([...Object.keys(p.ask_when), ...Object.keys(c.ask_when)])]
+      .filter((k) => byKey.has(k));
+    let 상태들 = [{ district: "mapo", fire_at: FIRE }];
+    for (const k of keys) {
+      const 다음 = [];
+      for (const st of 상태들)
+        for (const v of 후보(byKey.get(k)))
+          다음.push(v === undefined ? { ...st } : { ...st, [k]: v });
+      상태들 = 다음;
+    }
+    조합수 += 상태들.length;
+    for (const st of 상태들) {
+      // 원시 state와 판정 사본 **둘 다** 본다.
+      for (const [이름, 보는것] of [["원시", st], ["사본", applyDefaults(questions, st)]]) {
+        if (!보임(p, 보는것) && 보임(c, 보는것)) {
+          샌곳.push(`${c.id} ← ${p.id} (${이름}) ${JSON.stringify(keys.map((k) => [k, st[k]]))}`);
+        }
+      }
+    }
+  }
+  t("조합이 실제로 돌았다", 조합수 > 0, `${조합수}조합`);
+  t(
+    "★ 부모가 안 보이는데 자식이 보이는 조합이 없다",
+    샌곳.length === 0,
+    샌곳.slice(0, 3).join(" | ")
+  );
+}
+
 // ── 결과 ───────────────────────────────────────────
 console.log(`\n${"=".repeat(62)}`);
 console.log(failed ? `실패 ${failed}건` : "전부 통과");
