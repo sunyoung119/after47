@@ -63,6 +63,20 @@ export function landingView(state = {}, { saved = null, again = false } = {}) {
 // 날짜는 오늘로 채워 둔다. 기본 진입점이 **화재 당일**이라 대부분은
 // 그대로 넘어가고, 아닌 사람은 고치면 된다. 채운 값과 사용자가 실제로
 // 확인한 값은 `answered`로 갈린다 — 안 물어본 것을 답한 것으로 세지 않는다.
+// 하루의 24시간. 화면이 매번 만들지 않도록 한 번만 편다.
+const HOURS = Array.from({ length: 24 }, (_, h) => ({ value: h, label: COPY.basic.hour(h) }));
+
+// 날짜(YYYY-MM-DD)와 **고른 시**로 fire_at을 만든다.
+//
+// 시각을 안 골랐으면 그 날의 **정오**로 둔다 — 자정이면 하루가 통째로 더
+// 지난 것처럼 계산된다. 정오는 그 하루의 가운데라 어느 쪽으로도 반나절만
+// 틀린다. **시각을 받았으면 그 값이 우선이고, 근사는 쓰지 않는다.**
+export function fireAtOf(day, hour = null) {
+  if (!day) return null;
+  const hh = Number.isInteger(hour) ? String(hour).padStart(2, "0") : "12";
+  return new Date(`${day}T${hh}:00:00`).toISOString();
+}
+
 export function basicCheckView({ state = {}, data = {}, now = Date.now() } = {}) {
   const districts = data.districts || [];
   const selected = state.district || null;
@@ -81,6 +95,18 @@ export function basicCheckView({ state = {}, data = {}, now = Date.now() } = {})
       inputValue: isoDay(value),
       text: formatDate(value),
       answered: state.fire_at !== undefined,
+    },
+    // 시각은 선택이다. **비워 둔 채로도 [다음]을 누를 수 있다.**
+    time: {
+      label: COPY.basic.time,
+      help: COPY.basic.timeHelp,
+      empty: COPY.basic.timeEmpty,
+      // ★ **사용자가 고른 것만 선택 상태다.** 근사로 채워진 시각을 고른
+      //   것처럼 보여주면 "채운 값"이 "확인한 값"으로 읽힌다 — 날짜의
+      //   `answered`와 같은 규칙이고, 재방문·QR 진입이 그 자리다.
+      value: Number.isInteger(state.fire_hour) ? state.fire_hour : null,
+      answered: state.fire_hour !== undefined,
+      options: HOURS,
     },
     district: {
       label: COPY.basic.district,

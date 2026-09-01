@@ -45,6 +45,22 @@ const main = () => $("main");
 const backend = memoryBackend();
 configureStorage({ ...backend, readJson });
 
+// 저장 계층에 **실제로 들어간 값**을 읽는다. 화면이 옳아도 저장이 안 되면
+// 다음 방문에 사라지므로, 값 계약은 여기서 본다.
+// (여정 ⑥은 저장소를 갈아끼우므로 그 앞에서만 쓴다)
+const 저장된 = () => {
+  for (const k of backend.keys()) {
+    if (!k.includes("state")) continue;
+    try {
+      const o = JSON.parse(backend.get(k));
+      return (o && o.state) || o;
+    } catch {
+      /* 다음 키 */
+    }
+  }
+  return {};
+};
+
 // app.js는 최상위에서 boot()을 부른다. 다시 밟으려면 새로 평가해야 하므로
 // 쿼리를 붙여 재수입한다(하위 모듈은 같은 인스턴스라 저장소가 유지된다).
 let 회차 = 0;
@@ -122,7 +138,7 @@ t("기본 확인에는 [이전]이 없다", $("top-right").children.length === 0
 
 {
   const date = all(main(), (n) => n.type === "date")[0];
-  const sel = all(main(), (n) => n.tagName === "SELECT")[0];
+  const sel = all(main(), (n) => n.id === "f-district")[0];
   t("날짜가 오늘로 채워져 있다", /^\d{4}-\d{2}-\d{2}$/.test(date.value), date.value);
   t("지역 선택지가 25개 + 빈 항목이다", sel.children.length === 26, String(sel.children.length));
   t("지역을 고르기 전에는 [다음]이 잠겨 있다", button(main(), "다음").disabled === true);
@@ -130,6 +146,50 @@ t("기본 확인에는 [이전]이 없다", $("top-right").children.length === 0
   await tick(30);
 }
 t("지역을 고르면 [다음]이 열린다", button(main(), "다음").disabled === false);
+
+// ── 화재 발생 시각 — 실제로 눌러서 돈다 ─────────────
+//
+// ★ **지역을 고른 뒤에 시각·날짜를 만진다.** 앞서 `setBasic`이 patch에 없는
+//   키까지 지워서, 지역을 고른 뒤 날짜를 바꾸면 **지역이 사라지고 [다음]이
+//   다시 잠겼다.** 실측으로 잡은 것이라 여기서 함께 지킨다.
+{
+  const 시각 = () => all(main(), (n) => n.id === "f-time")[0];
+  const 날짜 = () => all(main(), (n) => n.type === "date")[0];
+  const 지역 = () => all(main(), (n) => n.id === "f-district")[0];
+  const 지금 = () => Date.parse(저장된().fire_at ?? "");
+  t("시각 필드가 있고 비어 있다", Boolean(시각()) && 시각().value === "", 시각()?.value);
+  t("시각 선택지가 24개 + 선택 안 함", 시각().children.length === 25, String(시각().children.length));
+  t("모르면 비워두라는 한 줄이 있다", has(main(), "모르면 비워두셔도 됩니다."));
+
+  // ① 시각을 고르면 fire_at이 그 시 정각이 된다.
+  시각().change("15");
+  await tick(40);
+  t("① 시각을 고르면 fire_at이 그 시 정각이다",
+    new Date(지금()).getHours() === 15 && new Date(지금()).getMinutes() === 0,
+    new Date(지금()).toString());
+  t("① 지역이 지워지지 않는다", 지역().value === "gangnam", 지역().value);
+  t("① [다음]도 잠기지 않는다", button(main(), "다음").disabled === false);
+
+  // ③ 날짜를 바꿔도 고른 시각은 유지된다.
+  const 어제 = new Date(Date.now() - 864e5).toISOString().slice(0, 10);
+  날짜().change(어제);
+  await tick(40);
+  t("③ 날짜를 바꿔도 시각은 유지된다", new Date(지금()).getHours() === 15, new Date(지금()).toString());
+  t("③ 날짜는 실제로 바뀌었다", new Date(지금()).toISOString().slice(0, 10) === 어제);
+  t("③ 여기서도 지역이 살아 있다", 지역().value === "gangnam");
+  t("③ 고른 시각이 화면에도 남아 있다", 시각().value === "15", 시각().value);
+
+  // ④ '선택 안 함'으로 되돌리면 근사(정오)로 복귀한다.
+  시각().change("");
+  await tick(40);
+  t("④ 선택 안 함으로 되돌리면 정오 근사다", new Date(지금()).getHours() === 12, new Date(지금()).toString());
+  t("④ 되돌려도 날짜는 그대로다", new Date(지금()).toISOString().slice(0, 10) === 어제);
+
+  // 오늘로 되돌려 나머지 여정을 원래대로 걷는다.
+  날짜().change(new Date().toISOString().slice(0, 10));
+  await tick(40);
+  t("② 비운 채 오늘이면 그날 정오다", new Date(지금()).getHours() === 12);
+}
 
 button(main(), "다음").click();
 await tick(30);
@@ -480,7 +540,7 @@ await 열기();
 button($("intro"), "회복 시작하기").click();
 await tick(30);
 {
-  const sel = all(main(), (n) => n.tagName === "SELECT")[0];
+  const sel = all(main(), (n) => n.id === "f-district")[0];
   sel.change("gangnam");
   await tick(20);
   button(main(), "다음").click();
@@ -523,7 +583,7 @@ await 열기();
 button($("intro"), "회복 시작하기").click();
 await tick(30);
 {
-  const sel = all(main(), (n) => n.tagName === "SELECT")[0];
+  const sel = all(main(), (n) => n.id === "f-district")[0];
   sel.change("gangnam");
   await tick(20);
   button(main(), "다음").click();
@@ -710,7 +770,7 @@ await 열기();
 button($("intro"), "회복 시작하기").click();
 await tick(30);
 {
-  const sel = all(main(), (n) => n.tagName === "SELECT")[0];
+  const sel = all(main(), (n) => n.id === "f-district")[0];
   sel.change("gangnam");
   await tick(20);
   button(main(), "다음").click();
@@ -762,7 +822,7 @@ await tick(30);
 t("① 랜딩 CTA는 기본 확인으로 간다", has(main(), "화재가 있었던 날짜와 지역을 알려주세요"));
 {
   const date = all(main(), (n) => n.type === "date")[0];
-  const sel = all(main(), (n) => n.tagName === "SELECT")[0];
+  const sel = all(main(), (n) => n.id === "f-district")[0];
   t("① 기본 확인의 날짜가 유지된다", /^\d{4}-\d{2}-\d{2}$/.test(date.value), date.value);
   t("① 기본 확인의 지역이 유지된다", sel.value === "gangnam", sel.value);
   button(main(), "다음").click();

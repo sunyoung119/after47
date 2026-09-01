@@ -98,25 +98,60 @@ export function renderLanding(host, lv, onPass, onResume) {
 //
 // QR로 값이 미리 들어와도 두 필드 다 확인·수정할 수 있다.
 // 날짜는 오늘로 채워져 있고, [다음]을 누르는 것이 "오늘이 맞다"는 확인이다.
-export function renderBasicCheck(main, bv, { onDate, onDistrict, onNext }) {
+export function renderBasicCheck(main, bv, { onDate, onTime, onDistrict, onNext }) {
   main.appendChild(el("p", "pg__eyebrow", bv.label));
   main.appendChild(el("h2", "pg__title", bv.title));
   const help = el("p", "pg__desc");
   for (const part of bv.helpParts) help.appendChild(el(part.strong ? "strong" : "span", null, part.text));
   main.appendChild(help);
 
-  const f1 = el("div", "field");
-  f1.appendChild(el("label", "field__label", bv.date.label));
+  // 날짜와 시각은 **한 줄에 선다.** 필드가 하나 늘어도 [다음]이 크게
+  // 밀리면 안 된다(사용자 결정). 좁은 화면에서는 접혀 세로로 쌓인다.
+  const f1 = el("div", "field field--row");
+
+  const c1 = el("div", "field__cell field__cell--wide");
+  const l1 = el("label", "field__label", bv.date.label);
+  l1.setAttribute("for", "f-date");
+  c1.appendChild(l1);
   const date = el("input", "field__input");
   date.type = "date";
   date.value = bv.date.inputValue || "";
   date.id = "f-date";
-  f1.appendChild(date);
+  c1.appendChild(date);
   date.addEventListener("change", () => onDate(date.value));
+  f1.appendChild(c1);
+
+  // 시각 — **시간 단위 드롭다운 24개.** `<input type="time" step="3600">`을
+  // 쓰지 않는 이유는 iOS가 step을 무시하고 분까지 굴리기 때문이다.
+  // 비워 둘 수 있고, 비우면 근사(정오)로 돌아간다.
+  const c2 = el("div", "field__cell");
+  const l2 = el("label", "field__label", bv.time.label);
+  l2.setAttribute("for", "f-time");
+  c2.appendChild(l2);
+  const time = el("select", "field__input");
+  time.id = "f-time";
+  const noHour = el("option", null, bv.time.empty);
+  noHour.value = "";
+  time.appendChild(noHour);
+  for (const o of bv.time.options) {
+    const op = el("option", null, o.label);
+    op.value = String(o.value);
+    if (o.value === bv.time.value) op.selected = true;
+    time.appendChild(op);
+  }
+  time.value = bv.time.value === null ? "" : String(bv.time.value);
+  time.addEventListener("change", () => onTime(time.value === "" ? null : Number(time.value)));
+  c2.appendChild(time);
+  f1.appendChild(c2);
+
   main.appendChild(f1);
+  // 모르면 비워 두라는 한 줄. 두 필드 아래에 한 번만 선다.
+  main.appendChild(el("p", "field__help", bv.time.help));
 
   const f2 = el("div", "field");
-  f2.appendChild(el("label", "field__label", bv.district.label));
+  const l3 = el("label", "field__label", bv.district.label);
+  l3.setAttribute("for", "f-district");
+  f2.appendChild(l3);
   const sel = el("select", "field__input");
   sel.id = "f-district";
   const none = el("option", null, bv.district.empty);

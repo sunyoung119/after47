@@ -467,11 +467,40 @@ a {
 .field {
   margin-top: var(--s5);
 }
+/* 날짜와 시각이 한 줄에 선다 — 필드가 하나 늘어도 [다음]이 크게 밀리면
+   안 된다(사용자 결정). **좁은 화면에서는 접혀 세로로 쌓인다** — 두 칸에
+   최소 폭을 줘서 눌러 담지 않는다. 시니어가 읽고 누르는 화면이다. */
+.field--row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s3);
+}
+.field__cell {
+  flex: 1 1 128px;
+  min-width: 128px;
+}
+/* 날짜가 더 넓다 — `2026-08-30`이 잘리면 안 된다. */
+.field__cell--wide {
+  flex: 2 1 150px;
+}
+/* 비워 둘 수 있다는 한 줄. 두 필드 아래에 한 번만 선다. */
+.field__help {
+  margin: var(--s2) 0 0;
+  color: var(--c-ink-soft);
+  font-size: var(--f-sm);
+  line-height: var(--lh);
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
 .field__label {
   display: block;
   margin-bottom: var(--s2);
   color: var(--c-ink-soft);
   font-size: var(--f-sm);
+  /* 한국어를 글자 단위로 끊지 않는다 — `대략 몇 시쯤이었나요?`가 좁은
+     칸에서 세로로 짜부라지면 안 된다. */
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 .field__input {
   width: 100%;

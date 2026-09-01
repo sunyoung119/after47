@@ -27,9 +27,11 @@ import {
   scopeNoticeView,
   transitionView,
   revisitView,
+  fireAtOf,
   SELECT_FEEDBACK_MS,
   BASIC_KEYS,
 } from "./entry.js";
+import { isoDay } from "./format.js";
 import {
   resultBase,
   homeView,
@@ -592,9 +594,18 @@ function renderBasic(main) {
   renderBasicCheck(main, bv, {
     onDate: (value) => {
       if (!value) return;
-      // 시각은 모른다. 그 날의 정오로 둔다 — 자정이면 하루가 통째로 더
-      // 지난 것처럼 계산된다.
-      setBasic({ fire_at: new Date(`${value}T12:00:00`).toISOString() });
+      // ★ **고른 시각은 유지한 채 날짜만 갈아끼운다.** 조용히 정오로
+      //   되돌리면 사용자가 답한 것이 지워진다. 안 골랐으면 근사가 온다.
+      setBasic({ fire_at: fireAtOf(value, app.state.fire_hour ?? null) });
+    },
+    // 시각 — 고르면 그 날 그 시 정각, `선택 안 함`이면 근사로 복귀한다.
+    onTime: (hour) => {
+      const day = isoDay(app.state.fire_at ?? new Date().toISOString());
+      setBasic({
+        // `undefined`를 **명시적으로** 넘긴다 — setBasic이 그때만 키를 지운다.
+        fire_hour: hour === null ? undefined : hour,
+        fire_at: fireAtOf(day, hour),
+      });
     },
     onDistrict: (id) => setBasic({ district: id || undefined }),
     // [다음]을 누르는 것이 "채워 둔 오늘이 맞다"는 확인이다. 그 순간
@@ -603,9 +614,18 @@ function renderBasic(main) {
   });
 }
 
+// 지우는 것은 **키를 넘겼는데 값이 undefined인 것**뿐이다.
+//
+// 앞서는 `patch.district === undefined`로 봤는데, 그 조건은 district를 아예
+// 안 넘긴 호출에서도 참이다 — 실측: **지역을 고른 뒤 날짜를 바꾸면 지역이
+// 지워지고 [다음]이 다시 잠겼다.** 시각 필드가 같은 경로를 더 자주 밟으므로
+// 함께 고친다.
+const 지울수있는키 = ["district", "fire_hour"];
 async function setBasic(patch) {
   app.state = { ...app.state, ...patch };
-  if (patch.district === undefined) delete app.state.district;
+  for (const k of 지울수있는키) {
+    if (k in patch && patch[k] === undefined) delete app.state[k];
+  }
   await persist();
   app.session = { ...app.session, state: app.state };
   syncAddressBar();

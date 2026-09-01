@@ -19,7 +19,7 @@ import { contactOf, sourcesView, directoryView } from "../src/ui/result.js";
 import { COPY, STATUS_LABEL } from "../src/ui/copy.js";
 import { TOPIC_LABEL, TOPIC_ORDER, NODE_LABEL, topicLabel } from "../src/ui/copy.js";
 import {
-  landingView, basicCheckView, masterView, scopeNoticeView, transitionView, revisitView,
+  landingView, basicCheckView, masterView, scopeNoticeView, transitionView, revisitView, fireAtOf,
   SELECT_FEEDBACK_MS, BASIC_KEYS,
 } from "../src/ui/entry.js";
 import {
@@ -898,7 +898,7 @@ t(
   const refs = html.match(/(?:href|src)="src\/ui\/[^"]+"/g) || [];
   // ★ 값까지 본다. 존재만 보면 "올리는 것을 잊은 배포"를 못 잡는다 —
   //   화면 파일을 고치면서 v를 올리면 **이 줄의 숫자도 함께 올린다.**
-  const V = "?v=21";
+  const V = "?v=22";
   t(
     `화면 파일 참조가 전부 ${V}다 (${refs.length}개)`,
     refs.length >= 3 && refs.every((r) => r.includes(V)),
@@ -985,6 +985,50 @@ t("지역을 안 골랐으면 못 넘어간다", bc빈.ready === false);
 // 기본 진입점이 화재 당일이라 날짜는 채워 둔다. 채운 것과 답한 것은 갈린다.
 t("날짜는 오늘로 채워져 있다", typeof bc빈.date.value === "string" && bc빈.date.inputValue !== null);
 t("채운 날짜를 '답했다'고 세지 않는다", bc빈.date.answered === false && bc.date.answered === true);
+
+// ── 화재 발생 시각 (시간 단위 · 선택) ────────────────
+//
+// ★ **분은 묻지 않는다.** 시간 단위면 경과 계산에 충분하고, 분까지 고르게
+//   하면 모르는 값을 지어내게 만든다. `<input type="time" step="3600">`을
+//   쓰지 않는 이유는 iOS가 step을 무시해 분까지 굴리기 때문이다.
+t("시각 필드가 확정 문구다",
+  bc.time.label === "대략 몇 시쯤이었나요?" && bc.time.help === "모르면 비워두셔도 됩니다.",
+  `${bc.time.label} / ${bc.time.help}`);
+t("선택지가 24개이고 비울 수 있다",
+  bc.time.options.length === 24 && bc.time.empty === "선택 안 함", String(bc.time.options.length));
+t("라벨이 오전 0시 ~ 오후 11시다",
+  bc.time.options[0].label === "오전 0시" &&
+    bc.time.options[12].label === "오후 0시" &&
+    bc.time.options[23].label === "오후 11시",
+  `${bc.time.options[0].label} … ${bc.time.options[23].label}`);
+// ★ **채운 값 ≠ 확인한 값.** 근사로 들어간 시각을 고른 것처럼 보여주면
+//   재방문·QR 진입자가 "내가 답했다"고 읽는다(날짜의 answered와 같은 규칙).
+t("근사로 채워진 시각은 선택 상태가 아니다",
+  bc.time.value === null && bc.time.answered === false, String(bc.time.value));
+t("사용자가 고른 시각만 선택 상태다",
+  basicCheckView({ state: { district: "mapo", fire_at: FIRE, fire_hour: 15 }, data, now: NOW }).time.value === 15);
+t("시각을 비워도 [다음]은 열린다 (선택이다)", bc.ready === true && bc.time.value === null);
+
+// 저장 규칙 — 순수함수 하나가 정한다.
+{
+  const 정각 = fireAtOf("2026-08-30", 15);
+  t("① 시각을 고르면 그 날 그 시 정각이다",
+    /T15:00:00/.test(new Date(정각).toLocaleString("sv-SE").replace(" ", "T") + ":00") ||
+      new Date(정각).getHours() === 15,
+    정각);
+  t("① 분·초는 0이다", new Date(정각).getMinutes() === 0 && new Date(정각).getSeconds() === 0);
+  // ② 비우면 근사 — 그 날의 정오다. 자정이면 하루가 통째로 더 지난 것처럼 계산된다.
+  t("② 비우면 그 날 정오로 근사한다", new Date(fireAtOf("2026-08-30", null)).getHours() === 12);
+  t("② 오늘도 과거도 같은 근사다", new Date(fireAtOf(bc빈.date.inputValue, null)).getHours() === 12);
+  // ③ 날짜를 바꿔도 고른 시각은 유지된다 — 조용히 정오로 되돌리지 않는다.
+  t("③ 날짜를 바꿔도 고른 시각이 유지된다",
+    new Date(fireAtOf("2026-08-25", 15)).getHours() === 15 &&
+      new Date(fireAtOf("2026-08-25", 15)).getDate() === 25);
+  // ④ '선택 안 함'으로 되돌리면 근사로 복귀.
+  t("④ 선택 안 함으로 되돌리면 근사로 복귀한다",
+    new Date(fireAtOf("2026-08-25", null)).getHours() === 12);
+  t("날짜가 없으면 만들어내지 않는다", fireAtOf(null, 15) === null);
+}
 
 // 질문 MASTER 문법 — 모든 질문 화면이 같은 문법을 쓴다.
 const mv = masterView({ questions, state: { district: "mapo", fire_at: FIRE }, data, now: NOW });
