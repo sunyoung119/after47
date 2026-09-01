@@ -290,7 +290,7 @@ export function renderRevisit(main, rv, onGo) {
   box.appendChild(lines);
 
   // 탭 단서 — 누르면 다음으로 간다는 것을 형태로 말한다(허브 진입 버튼과 같다).
-  const go = el("button", "btn btn--primary pg__cta pg__cta--tap", rv.cta);
+  const go = el("button", "btn btn--primary pg__cta btn--tap", rv.cta);
   go.type = "button";
   go.appendChild(chev());
   go.addEventListener("click", onGo);

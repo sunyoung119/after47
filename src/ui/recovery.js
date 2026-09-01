@@ -12,7 +12,7 @@
 //   연출이 있다면 @keyframes의 from에만 둔다. 실기기 사고(cc6a865)의 교훈이다.
 
 import { COPY } from "./copy.js";
-import { el, clear, telIcon } from "./render.js";
+import { el, clear, telIcon, chev } from "./render.js";
 
 // 상태 배지. **갈래는 뷰모델이 정한다** — 여기서 라벨 문자열을 읽어
 // 색을 고르지 않는다.
@@ -146,7 +146,10 @@ export function renderTimelinePage(main, tv, { onOpen, onHub }) {
   // 맞춤 안내로 가는 문. **제목 바로 아래, 본문이 시작되기 전이다** —
   // 헤더에 숨기면 도착한 사람이 다음 자리를 못 찾는다.
   if (tv.toHub && onHub) {
-    const go = btn("btn btn--primary hub__go", tv.toHub, onHub);
+    // 탭 단서는 브릿지 CTA와 **같은 클래스·같은 글자**다(`btn--tap` + `chev`).
+    // 같은 약속을 하는 자리가 다른 모양이면 손가락이 매번 다시 배운다.
+    const go = btn("btn btn--primary hub__go btn--tap", tv.toHub, onHub);
+    go.appendChild(chev());
     main.appendChild(go);
   }
 

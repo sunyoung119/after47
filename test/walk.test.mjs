@@ -285,7 +285,7 @@ t("타임라인 우상단이 [상황 다시 알리기] 하나다 (도착 화면�
   texts($("top-right")).join(" | "));
 // 허브로 가는 문은 **제목 바로 아래, 본문(타임라인 축) 앞**이다.
 {
-  const 문 = button(main(), "나를 위한 안내 보기");
+  const 문 = buttonLike(main(), "나를 위한 안내 보기");
   const 순 = texts(main());
   t("허브로 가는 문이 제목 아래·본문 앞에 있다",
     Boolean(문) && 순.indexOf("나를 위한 안내 보기") < 순.indexOf("화재 발생일"),
@@ -534,7 +534,7 @@ await tick(30);
 t("게이트를 지나면 타임라인이다",
   has(main(), "내 회복 경로") && all(main(), (n) => hasClass(n, "tline__node")).length === 5,
   texts(main()).slice(0, 3).join(" | "));
-button(main(), "나를 위한 안내 보기").click();
+buttonLike(main(), "나를 위한 안내 보기").click();
 await tick(20);
 t("답한 내용이 이어진다 (체크한 것이 남아 있다)",
   Number((all(main(), (n) => hasClass(n, "hcard"))[1].textContent.match(/(\d+)개/) || [])[1]) > 0);
@@ -627,7 +627,7 @@ async function 허브로() {
   for (let i = 0; i < 8 && !허브인가(); i++) {
     // 타임라인에서는 **앞으로** 간다 — 도착 화면에는 [이전]이 없고(D-023),
     // 거기서 뒤로 밀면 설문까지 거슬러 올라가 버린다.
-    const 문 = button(main(), "나를 위한 안내 보기");
+    const 문 = buttonLike(main(), "나를 위한 안내 보기");
     if (문) {
       문.click();
       await tick(20);
@@ -742,7 +742,7 @@ t("① 되돌아왔다가 진행해도 전환에 닿는다", has(main(), "확인
 await tick(30);
 t("① 전환을 지나면 타임라인이다",
   all(main(), (n) => hasClass(n, "tline__node")).length === 5, texts(main()).slice(0, 3).join(" | "));
-button(main(), "나를 위한 안내 보기").click();
+buttonLike(main(), "나를 위한 안내 보기").click();
 await tick(20);
 t("① 타임라인의 문이 허브로 잇는다", has(main(), "나를 위한 안내"));
 
@@ -1010,7 +1010,7 @@ const 첫질문 = 질문중().own;
 await 설문끝까지();
 결과로().click();
 await tick(30);
-button(main(), "나를 위한 안내 보기").click();
+buttonLike(main(), "나를 위한 안내 보기").click();
 await tick(20);
 
 // 완료 체크를 하나 남긴다 — 재설문이 이것을 건드리면 안 된다.
@@ -1081,7 +1081,7 @@ t("① 발화 위치를 그대로 두면 제품 질문을 지나간다",
 await tick(30);
 t("① 전환을 지나면 타임라인이다",
   all(main(), (n) => hasClass(n, "tline__node")).length === 5, texts(main()).slice(0, 3).join(" | "));
-button(main(), "나를 위한 안내 보기").click();
+buttonLike(main(), "나를 위한 안내 보기").click();
 await tick(20);
 t("① 바꾼 답이 결과에 반영된다 (금지 하나가 빠진다)",
   먼저볼() === 처음먼저볼 - 1, `${처음먼저볼} → ${먼저볼()}`);
