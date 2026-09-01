@@ -910,7 +910,7 @@ t(
   const refs = html.match(/(?:href|src)="src\/ui\/[^"]+"/g) || [];
   // ★ 값까지 본다. 존재만 보면 "올리는 것을 잊은 배포"를 못 잡는다 —
   //   화면 파일을 고치면서 v를 올리면 **이 줄의 숫자도 함께 올린다.**
-  const V = "?v=23";
+  const V = "?v=24";
   t(
     `화면 파일 참조가 전부 ${V}다 (${refs.length}개)`,
     refs.length >= 3 && refs.every((r) => r.includes(V)),
@@ -941,7 +941,7 @@ t("CTA가 확정 문구다", lv.cta === "회복 시작하기");
 {
   const 있 = landingView({ fire_at: FIRE }, { saved: { token: "t" }, again: "basic" });
   t("[처음으로]로 왔고 저장 기록이 있으면 되돌아가기가 뜬다",
-    있.resume === "그대로 두고 돌아가기", 있.resume);
+    있.resume === "저장된 회복 경로 보기", 있.resume);
   t("★그냥 랜딩에는 뜨지 않는다 (재설문 중이 아니다)",
     landingView({ fire_at: FIRE }, { saved: { token: "t" } }).resume === null);
   t("저장 기록이 없으면 없다 (없는 것은 없다)",

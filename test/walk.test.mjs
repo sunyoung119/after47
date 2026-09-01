@@ -958,14 +958,14 @@ t("③ 브릿지 CTA는 그대로 타임라인이다 (재설문 플래그가 안
   await 열기(); // 재방문 = 브릿지
   $("top-right").children[0].click(); // [처음으로] → 랜딩
   await tick(20);
-  const 보조 = button($("intro"), "그대로 두고 돌아가기");
+  const 보조 = button($("intro"), "저장된 회복 경로 보기");
   t("④ [처음으로]로 온 랜딩에 되돌아가기가 있다", Boolean(보조),
     texts($("intro")).join(" | "));
   // 위계 — 주 CTA는 그대로 있고, 이 버튼이 그 위에 선다.
   {
     const 순 = texts($("intro"));
     t("④ [회복 시작하기]보다 위다",
-      순.indexOf("그대로 두고 돌아가기") < 순.indexOf("회복 시작하기"), 순.join(" | "));
+      순.indexOf("저장된 회복 경로 보기") < 순.indexOf("회복 시작하기"), 순.join(" | "));
   }
   // ★ 버튼이 둘이면 **화면 전체 탭은 끈다.** 윤곽뿐인 보조 버튼을 살짝
   //   빗나간 탭이 조용히 다른 곳으로 데려가면 안 된다.
@@ -995,7 +995,7 @@ t("③ 브릿지 CTA는 그대로 타임라인이다 (재설문 플래그가 안
   configureStorage({ ...memoryBackend(), readJson }); // 새 사람
   await 열기();
   t("④ 저장이 없으면 되돌아가기가 없다",
-    !button($("intro"), "그대로 두고 돌아가기") && Boolean(button($("intro"), "회복 시작하기")),
+    !button($("intro"), "저장된 회복 경로 보기") && Boolean(button($("intro"), "회복 시작하기")),
     texts($("intro")).join(" | "));
 }
 
