@@ -1194,7 +1194,7 @@ t(
   const refs = html.match(/(?:href|src)="src\/ui\/[^"]+"/g) || [];
   // ★ 값까지 본다. 존재만 보면 "올리는 것을 잊은 배포"를 못 잡는다 —
   //   화면 파일을 고치면서 v를 올리면 **이 줄의 숫자도 함께 올린다.**
-  const V = "?v=35";
+  const V = "?v=36";
   t(
     `화면 파일 참조가 전부 ${V}다 (${refs.length}개)`,
     refs.length >= 3 && refs.every((r) => r.includes(V)),
@@ -1460,15 +1460,29 @@ t(
   // 규칙(아래 하드코딩 검사)과 같은 뜻이다.
   t("강조에 리터럴 색을 쓰지 않는다", !/#[0-9a-f]{3,8}|rgba?\(/i.test(basis), basis.replace(/\s+/g, " "));
 
+  // ★ **제목은 위아래 사이의 가운데다**(2026-09-02 · 사용자 결정).
+  //   고정 간격(`--s7`의 3배)을 주면 화면 높이에 따라 아래로 치우친다.
+  //   auto 마진 **둘**이 남는 공간을 반씩 나눠야 가운데가 나온다 —
+  //   아래 문장이 auto를 다시 쓰면 셋이 되어 3등분된다(그래서 짝검사다).
   const title = 규칙("gate__title");
-  t("제목과의 간격이 --s7의 3배 계산식이다",
-    /margin-top:\s*calc\(var\(--s7\)\s*\*\s*3\)/.test(title), title.replace(/\s+/g, " "));
+  t("제목이 위아래 auto로 가운데 선다",
+    /margin-top:\s*auto/.test(title) && /margin-bottom:\s*auto/.test(title), title.replace(/\s+/g, " "));
   t("간격을 픽셀로 박지 않는다", !/margin-top:\s*\d+px/.test(title), title.replace(/\s+/g, " "));
 
-  // 안내 문장은 아래로, CTA는 그 바로 아래. 둘 다 auto면 남는 공간을
-  // 반씩 나눠 문장이 가운데에 뜬다 — CTA의 auto를 걷는 것이 짝이다.
+  // 기준 세 줄의 행간은 공유 규칙의 **2배**다. 값이 아니라 관계를 본다 —
+  // 공유 규칙을 손대면 여기도 따라와야 한다.
+  {
+    // 파일에서 먼저 나오는 `.gate__basis` 규칙이 공유 규칙이다.
+    const 공유 = (css.match(new RegExp("[.]gate__basis[ ]*[{][^}]*[}]", "g")) || [""])[0];
+    const 기본 = Number((공유.match(/line-height:\s*([0-9.]+)/) || [])[1]);
+    const 배수 = (basis.match(/line-height:\s*calc\(([0-9.]+)\s*\*\s*2\)/) || [])[1];
+    t("세 줄의 행간이 공유 규칙의 2배 계산식이다",
+      Number(배수) === 기본 && 기본 > 0, `공유 ${기본} / 전용 calc(${배수} * 2)`);
+  }
+
   const lines = 규칙("gate__lines");
-  t("안내 문장이 아래로 밀린다 (margin-top: auto)", /margin-top:\s*auto/.test(lines), lines.replace(/\s+/g, " "));
+  t("안내 문장이 auto를 쓰지 않는다 (제목의 가운데가 깨진다)",
+    /margin-top:\s*0/.test(lines) && !/margin-top:\s*auto/.test(lines), lines.replace(/\s+/g, " "));
   t("전환 CTA는 auto를 걷었다", /margin-top:\s*0/.test(규칙("pg__cta")), 규칙("pg__cta").replace(/\s+/g, " "));
 
   // ★ 같은 선택자를 두 번 선언하면 **뒤엣것이 앞엣것을 죽인다.**
