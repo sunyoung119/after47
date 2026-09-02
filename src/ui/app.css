@@ -1313,9 +1313,10 @@ a {
 .tline__node:last-child {
   border-left-color: transparent;
 }
-/* 점도 축도 **구간 면과 같은 보라 계열**이다 — 왼쪽 세로선만 다른
-   색으로 남으면 구간과 따로 논다. 점은 면과 같은 값이고 축은 그 연한
-   쪽이다. */
+/* ★ **개편 이전 모양으로 복원했다**(2026-09-02 · 사용자 결정. 원값은
+   `f21492b^`에서 가져왔고 추측으로 재구성하지 않았다). 축은 `--c-axis`,
+   점은 `--c-line-strong`이고 **`화재 발생일`의 점만 하늘색**이다 —
+   기준점과 구간을 가르는 두 톤이 원래 모양이다. */
 .tline__dot {
   position: absolute;
   left: -4px;
@@ -1323,11 +1324,11 @@ a {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--c-node);
+  background: var(--c-line-strong);
 }
-/* ★ **점 하나로 통일했다**(2026-09-02 · 사용자 결정). 기준점(화재 발생일)만
-   하늘색이던 것을 걷었다 — 구간 면·점·축이 한 계열로 서고, 기준점과
-   구간의 구분은 면 안의 글자(날짜)와 자리가 이미 하고 있다. */
+.tline__node--info .tline__dot {
+  background: var(--c-accent);
+}
 /* ★ **행이 스스로 면을 갖는다.** 타임라인은 사진 배경 위에만 서는데
    전면 베일 0.50 위에서는 뮤트가 1.56이고, 화면 가운데는 국소 보정이
    닿지 않는다. **불투명 흰 면**이라야 AA가 나온다(뮤트 6.16) —
@@ -1336,14 +1337,13 @@ a {
    면 안에 면이 겹치면 층이 하나 더 생긴다. */
 .tline__sum,
 .tline__info {
-  /* ★ **구간의 면은 보라이고 안내 카드는 흰색이다**(2026-09-02 · 사용자
-     결정). 앞서 연한 푸른 면이었는데 사진 배경 위에서 흰 카드와 층이 잘
-     안 갈렸다 — 이제 면이 진하고 글자가 희어서 명도로 단번에 갈린다.
-     **허브 파랑과 같은 진하기(휘도)이고 색상만 보라다.** 대비 실측은
-     tokens.css의 `--c-band-fill` 주석에 적었다. */
-  background: var(--c-band-fill);
-  border: 1px solid var(--c-band-edge);
-  color: var(--c-band-ink);
+  /* ★ **면의 색이 뒤집혔다**(2026-09-02 · 사용자 결정). 구간 요약은
+     **흰 카드**로 돌아가고, 색면은 그 안의 안내 카드가 맡는다(아래).
+     사진 배경 위에서 이 면이 불투명해야 하는 이유는 그대로다 —
+     전면 베일 0.50 위에서는 뮤트가 1.56이고 화면 가운데는 국소 보정이
+     닿지 않는다. 흰 면에서 본문 13.14 · 뮤트 6.16(AA). */
+  background: var(--c-surface);
+  border: 1px solid var(--c-line-strong);
   border-radius: var(--r2);
   box-shadow: var(--shadow-card);
   padding: var(--s3) var(--s4);
@@ -1366,13 +1366,15 @@ a {
   border-radius: var(--r2);
   background: var(--c-surface);
 }
-/* 보라 면 위에서는 보조 글자도 흰 계열이다 — 어두운 뮤트(1.7)는 안 읽힌다. */
+/* 흰 면 위 보조 글자는 뮤트다(6.16 · AA). 사진 위에서도 이 면이
+   불투명하므로 보조뮤트(#5F7383 · 4.92)까지 쓸 수 있지만, 한 단계
+   진한 쪽을 유지한다 — 구간은 훑어 읽는 자리다. */
 .tline__note,
 .tline__count,
 .tline__stamp,
 .tline__sum .chev,
 .tline__node--empty .tline__label {
-  color: var(--c-band-ink-soft);
+  color: var(--c-ink-soft);
 }
 /* 조사서가 나온 뒤 — 잠김은 **보조문구 한 줄로만** 말한다. 자물쇠 그림도
    경고색도 없다. 조사서를 받으면 열리는 자리이지 막힌 곳이 아니다.
@@ -1395,6 +1397,27 @@ a {
 /* 펼치면 카드가 요약 면 아래로 붙는다 — 사이를 벌려 둘이 다른 층으로 읽힌다. */
 .tline__body .cards {
   margin-top: var(--s3);
+}
+/* ★ **펼친 안내는 파란 면이다**(2026-09-02 · 사용자 결정).
+   구간 요약이 흰 카드로 돌아가면서, 그 안의 안내까지 흰색이면 층이 다시
+   안 갈린다. 색은 **`나를 위한 안내 보기` 버튼과 같은 `--c-entry`**이고
+   문법도 허브 카드 그대로다 — 면 `--c-entry` · 테두리 `--c-entry-line` ·
+   글자 `--c-entry-ink`(6.22 AA) · 보조 `--c-entry-soft`(5.33 AA).
+   **이 자리에 새 색을 만들지 마라** — 누르면 안내로 들어가는 면은
+   앱 전체에서 이 색 하나다.
+
+   타임라인 카드가 담는 것은 **제목 · 요약 · 화살표 셋뿐이다**(실측:
+   배지 0건 · 출처 줄은 주제 상세 전용). 배지가 생기면 기본 배지가
+   파란 면 위에서 1.3까지 떨어지므로 그때 규칙을 함께 만들어야 한다 —
+   그 사실을 `view.test.mjs`가 지킨다. */
+.tline__body .cards .card {
+  background: var(--c-entry);
+  border-color: var(--c-entry-line);
+  color: var(--c-entry-ink);
+}
+.tline__body .cards .card__summary,
+.tline__body .cards .card__hit .chev {
+  color: var(--c-entry-soft);
 }
 .tline__sum {
   display: flex;
