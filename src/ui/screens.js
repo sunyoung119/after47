@@ -237,7 +237,10 @@ export function renderScopeNotice(main, sv, { onContinue, onBack }) {
 // ── 질문 종료 전환 ─────────────────────────────────
 // 'AI 분석 중'류 표현 금지. 중앙 체크 하나와 두 줄.
 export function renderTransition(main, tv, onGo) {
-  const box = el("section", "gate");
+  // 전환 전용 클래스 — 기준 세 줄의 강조와 간격이 이 화면에만 선다.
+  // 재방문 브릿지(`gate--revisit`)는 같은 `.gate` 뼈대를 쓰지만 배치가
+  // 다르므로, 여기 규칙이 그쪽으로 새면 안 된다.
+  const box = el("section", "gate gate--transition");
   const mark = el("p", "gate__mark", "✓");
   mark.setAttribute("aria-hidden", "true");
   box.appendChild(mark);

@@ -1098,7 +1098,7 @@ t(
   const refs = html.match(/(?:href|src)="src\/ui\/[^"]+"/g) || [];
   // ★ 값까지 본다. 존재만 보면 "올리는 것을 잊은 배포"를 못 잡는다 —
   //   화면 파일을 고치면서 v를 올리면 **이 줄의 숫자도 함께 올린다.**
-  const V = "?v=30";
+  const V = "?v=31";
   t(
     `화면 파일 참조가 전부 ${V}다 (${refs.length}개)`,
     refs.length >= 3 && refs.every((r) => r.includes(V)),
@@ -1342,6 +1342,62 @@ t(
   "'AI 분석 중'·'결과 생성 중'류 표현이 없다",
   ![tr.title, ...tr.basis, tr.message, tr.cta].some((s) => /AI|분석 중|생성 중|처리 중/.test(s))
 );
+
+// ── 전환 화면의 강조와 간격 (2026-09-02 · 사용자 결정) ──────────
+//
+// 기준 세 줄이 **주인공이 됐다.** 뮤트색 보통 굵기이던 것을 강조색 굵은
+// 글씨로 올리고, 제목과의 사이를 `--s7`의 3배로 벌리고, 안내 문장을
+// 화면 아래쪽으로 내렸다.
+//
+// **재방문 브릿지는 이 커밋의 대상이 아니다.** 같은 `.gate` 뼈대를 쓰므로
+// 규칙이 그리로 새면 손대지 않기로 한 화면이 함께 바뀐다 — 전용 클래스
+// 스코프를 검사가 지킨다.
+{
+  const css = readFileSync(join(D, "src/ui/app.css"), "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+  // `new RegExp` 문자열 안에서는 백슬래시가 한 겹 벗겨진다 — 문자 클래스로 우회한다.
+  const 규칙 = (name) => (css.match(new RegExp("[.]gate--transition [.]?" + name + "[ ]*[{][^}]*[}]")) || [""])[0];
+
+  const basis = 규칙("gate__basis");
+  t("기준 세 줄이 강조 토큰 색이다", /color:\s*var\(--c-accent\)/.test(basis), basis.replace(/\s+/g, " "));
+  t("기준 세 줄이 굵다", /font-weight:\s*var\(--w-bold\)/.test(basis), basis.replace(/\s+/g, " "));
+  // 색은 토큰이어야 한다 — 이 파일 어디에도 리터럴 색을 쓰지 않는다는
+  // 규칙(아래 하드코딩 검사)과 같은 뜻이다.
+  t("강조에 리터럴 색을 쓰지 않는다", !/#[0-9a-f]{3,8}|rgba?\(/i.test(basis), basis.replace(/\s+/g, " "));
+
+  const title = 규칙("gate__title");
+  t("제목과의 간격이 --s7의 3배 계산식이다",
+    /margin-top:\s*calc\(var\(--s7\)\s*\*\s*3\)/.test(title), title.replace(/\s+/g, " "));
+  t("간격을 픽셀로 박지 않는다", !/margin-top:\s*\d+px/.test(title), title.replace(/\s+/g, " "));
+
+  // 안내 문장은 아래로, CTA는 그 바로 아래. 둘 다 auto면 남는 공간을
+  // 반씩 나눠 문장이 가운데에 뜬다 — CTA의 auto를 걷는 것이 짝이다.
+  const lines = 규칙("gate__lines");
+  t("안내 문장이 아래로 밀린다 (margin-top: auto)", /margin-top:\s*auto/.test(lines), lines.replace(/\s+/g, " "));
+  t("전환 CTA는 auto를 걷었다", /margin-top:\s*0/.test(규칙("pg__cta")), 규칙("pg__cta").replace(/\s+/g, " "));
+
+  // ★ 같은 선택자를 두 번 선언하면 **뒤엣것이 앞엣것을 죽인다.**
+  //   `.gate__title`이 실제로 그랬다(`margin: var(--s7) 0 0`이 `margin: 0`에
+  //   덮여 기준 줄과 제목이 붙어 있었다). `min-height`가 두 번 선언돼
+  //   구간 높이가 죽었던 것과 같은 부류다.
+  const NL = String.fromCharCode(10);
+  const 단독선언 = css.split(NL).filter((l) => l.trim().indexOf(".gate__title") === 0).length;
+  t("`.gate__title` 단독 선언이 하나뿐이다", 단독선언 === 1, String(단독선언));
+
+  // 브릿지로 새지 않는다 — 이 커밋이 건드리지 않기로 한 화면이다.
+  const 브릿지 = (css.match(/\.gate--revisit[^{]*\{[^}]*\}/g) || []).join(" ");
+  t("브릿지에 전환의 간격·기준줄 규칙이 없다",
+    !/gate__basis/.test(브릿지) && !/var\(--s7\)\s*\*\s*3/.test(브릿지),
+    브릿지.replace(/\s+/g, " ").slice(0, 200));
+}
+
+// 그리는 쪽도 함께 본다 — CSS만 있고 클래스를 안 달면 아무 일도 안 일어난다.
+{
+  const src = readFileSync(join(D, "src/ui/screens.js"), "utf8");
+  const fn = src.slice(src.indexOf("export function renderTransition"), src.indexOf("export function renderRevisit"));
+  t("전환 화면이 gate--transition을 단다", /"gate gate--transition"/.test(fn));
+  const rv = src.slice(src.indexOf("export function renderRevisit"));
+  t("브릿지는 그 클래스를 달지 않는다", !/gate--transition/.test(rv));
+}
 
 // 재방문 경과시간 게이트 — 모든 재방문이 항상 거친다.
 const 게이트 = revisitView({

@@ -293,6 +293,12 @@ t("전환 문구가 확정 문구다",
     t2.join(" | "));
 }
 t("'AI 분석 중'류 표현이 없다", !texts(main()).some((s) => /AI|분석 중|생성 중/.test(s)));
+// ★ 전환 전용 클래스 — 기준 세 줄의 강조·간격이 이 화면에만 선다.
+//   같은 `.gate` 뼈대를 브릿지가 나눠 쓰므로, 클래스가 빠지면 규칙이
+//   그리로 새거나(반대로) 여기서 통째로 안 걸린다.
+t("전환 화면이 전용 클래스를 단다",
+  all(main(), (n) => hasClass(n, "gate--transition")).length === 1,
+  all(main(), (n) => hasClass(n, "gate")).map((n) => n.className).join(" | "));
 
 결과로().click();
 await tick(30);
