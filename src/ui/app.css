@@ -1271,6 +1271,19 @@ a {
      탭 단서가 오른쪽 끝으로 밀리지 않는다(뒤에서 덮는 선언 금지). */
   width: 100%;
   margin-top: var(--s5);
+  /* 화살표를 흐름에서 빼기 위한 기준점. 아래 규칙과 한 짝이다. */
+  position: relative;
+}
+/* ★ **라벨이 가로 가운데다**(2026-09-02 · 사용자 결정).
+   `.btn--tap .chev`의 `margin-left: auto`가 화살표를 오른쪽 끝으로 밀면
+   **auto 마진이 `justify-content: center`를 무력화해** 라벨이 왼쪽에
+   붙는다. 화살표를 흐름 밖으로 빼면 남는 것은 라벨 하나뿐이라 가운데로
+   선다 — 오른쪽 끝이라는 화살표의 약속은 그대로다.
+   여백은 버튼의 좌우 패딩(`--s4`)과 같은 값이라 라벨과 대칭이 된다. */
+.hub__go .chev {
+  position: absolute;
+  right: var(--s4);
+  margin-left: 0;
 }
 
 .tline {
@@ -1287,9 +1300,9 @@ a {
 .tline__node:last-child {
   border-left-color: transparent;
 }
-/* 점도 축도 **파란 계열**이다 — 회색 점 하나만 계열 밖이면 그 자리가
-   비활성처럼 읽힌다. 두 톤을 두는 것은 `화재 발생일`(기준점)과 나머지
-   구간을 가르기 위해서다. */
+/* 점도 축도 **구간 면과 같은 보라 계열**이다 — 왼쪽 세로선만 다른
+   색으로 남으면 구간과 따로 논다. 점은 면과 같은 값이고 축은 그 연한
+   쪽이다. */
 .tline__dot {
   position: absolute;
   left: -4px;
@@ -1299,9 +1312,9 @@ a {
   border-radius: 50%;
   background: var(--c-node);
 }
-.tline__node--info .tline__dot {
-  background: var(--c-accent);
-}
+/* ★ **점 하나로 통일했다**(2026-09-02 · 사용자 결정). 기준점(화재 발생일)만
+   하늘색이던 것을 걷었다 — 구간 면·점·축이 한 계열로 서고, 기준점과
+   구간의 구분은 면 안의 글자(날짜)와 자리가 이미 하고 있다. */
 /* ★ **행이 스스로 면을 갖는다.** 타임라인은 사진 배경 위에만 서는데
    전면 베일 0.50 위에서는 뮤트가 1.56이고, 화면 가운데는 국소 보정이
    닿지 않는다. **불투명 흰 면**이라야 AA가 나온다(뮤트 6.16) —
@@ -1310,11 +1323,14 @@ a {
    면 안에 면이 겹치면 층이 하나 더 생긴다. */
 .tline__sum,
 .tline__info {
-  /* ★ **구간의 면은 푸른색이고 안내 카드는 흰색이다**(사용자 결정).
-     둘 다 흰색이던 동안에는 펼친 안내가 구간의 일부인지 다음 구간인지
-     면으로는 안 갈렸다. 대비는 tokens.css의 `--c-band` 주석에 적었다. */
-  background: var(--c-band);
-  border: 1px solid var(--c-band-line);
+  /* ★ **구간의 면은 보라이고 안내 카드는 흰색이다**(2026-09-02 · 사용자
+     결정). 앞서 연한 푸른 면이었는데 사진 배경 위에서 흰 카드와 층이 잘
+     안 갈렸다 — 이제 면이 진하고 글자가 희어서 명도로 단번에 갈린다.
+     **허브 파랑과 같은 진하기(휘도)이고 색상만 보라다.** 대비 실측은
+     tokens.css의 `--c-band-fill` 주석에 적었다. */
+  background: var(--c-band-fill);
+  border: 1px solid var(--c-band-edge);
+  color: var(--c-band-ink);
   border-radius: var(--r2);
   box-shadow: var(--shadow-card);
   padding: var(--s3) var(--s4);
@@ -1337,6 +1353,14 @@ a {
   border-radius: var(--r2);
   background: var(--c-surface);
 }
+/* 보라 면 위에서는 보조 글자도 흰 계열이다 — 어두운 뮤트(1.7)는 안 읽힌다. */
+.tline__note,
+.tline__count,
+.tline__stamp,
+.tline__sum .chev,
+.tline__node--empty .tline__label {
+  color: var(--c-band-ink-soft);
+}
 /* 조사서가 나온 뒤 — 잠김은 **보조문구 한 줄로만** 말한다. 자물쇠 그림도
    경고색도 없다. 조사서를 받으면 열리는 자리이지 막힌 곳이 아니다.
    ★ **면으로도 말하지 않는다**(2026-09-02) — 다섯 구간이 같은 면을 쓰게
@@ -1347,7 +1371,6 @@ a {
 }
 .tline__stamp {
   margin: var(--s1) 0 0;
-  color: var(--c-ink-soft);
   font-variant-numeric: tabular-nums;
 }
 .tline__clock {
@@ -1374,7 +1397,6 @@ a {
   flex-direction: column;
 }
 .tline__note {
-  color: var(--c-ink-soft);
   font-size: var(--f-sm);
 }
 .tline__tail {
@@ -1383,16 +1405,11 @@ a {
   flex: none;
 }
 .tline__count {
-  color: var(--c-ink-soft);
   font-variant-numeric: tabular-nums;
 }
-/* 푸른 면 위에서는 보조뮤트(3.89)를 쓰지 않는다 — 한 단계 올린다.
-   사진 위에서 뮤트를 올리던 것과 같은 규칙이다(D-022의 층 셋). */
-.tline__sum .chev {
-  color: var(--c-ink-soft);
-}
+/* 빈 구간의 라벨은 굵기만 내린다 — 색은 위 공유 규칙이 정한다.
+   여기서 색을 다시 쓰면 **뒤에서 덮어** 보라 면 위에 어두운 글자가 남는다. */
 .tline__node--empty .tline__label {
-  color: var(--c-ink-soft);
   font-weight: 400;
 }
 

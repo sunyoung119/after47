@@ -1061,6 +1061,76 @@ t(
       !/rgba|opacity/.test(규칙)
     );
   }
+
+  // ── 구간 면이 허브 파랑과 **같은 진하기**인가 (2026-09-02) ────────
+  //
+  // 사용자 결정 — 구간 다섯의 면이 보라가 됐고, 진하기는 허브 진입
+  // 버튼의 파랑과 같아야 한다. **명도를 HSL L이 아니라 상대휘도로 맞췄다**:
+  // 같은 L(40.4%)의 보라는 휘도가 0.069로 떨어져 화면에서 눈에 띄게
+  // 어둡다(흰 글자 8.8). "같은 진하기로 보이는" 것은 휘도 쪽이다.
+  //
+  // 값이 하나라도 바뀌면 여기서 걸린다 — 색을 손대는 사람이 대비를
+  // 다시 재지 않고 지나가는 것을 막는다.
+  {
+    const tk = readFileSync(join(D, "src/ui/tokens.css"), "utf8");
+    const 값 = (name) =>
+      ((tk.match(new RegExp("[-][-]" + name + ":[ ]*(#[0-9a-fA-F]{6})")) || [])[1] || "").toLowerCase();
+    const rgb = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+    const lin = (c) => {
+      const v = c / 255;
+      return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+    };
+    const Y = (h) => {
+      const [r, g, b] = rgb(h);
+      return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+    };
+    const 대비 = (a, b) => {
+      const [hi, lo] = [Y(a), Y(b)].sort((x, y) => y - x);
+      return (hi + 0.05) / (lo + 0.05);
+    };
+
+    const 면 = 값("c-band-fill");
+    const 파랑 = 값("c-entry");
+    t("구간 면과 허브 진입 색을 둘 다 읽었다", Boolean(면 && 파랑), 면 + " / " + 파랑);
+    t(
+      "구간 보라가 허브 파랑과 같은 진하기다 (상대휘도 차 0.01 미만)",
+      Math.abs(Y(면) - Y(파랑)) < 0.01,
+      Y(면).toFixed(4) + " / " + Y(파랑).toFixed(4)
+    );
+    t("면 위 글자가 AA다 (4.5 이상)", 대비(면, 값("c-band-ink")) >= 4.5, 대비(면, 값("c-band-ink")).toFixed(2));
+    t(
+      "면 위 보조 글자가 AA다 (4.5 이상)",
+      대비(면, 값("c-band-ink-soft")) >= 4.5,
+      대비(면, 값("c-band-ink-soft")).toFixed(2)
+    );
+    // 사진 배경 위에 서는 면이다 — 화면 바탕과도 갈려야 한다(비텍스트 3:1).
+    t("면이 화면 바탕과 갈린다 (3:1 이상)", 대비(면, 값("c-bg")) >= 3, 대비(면, 값("c-bg")).toFixed(2));
+    // 점은 면과 **같은 값**이다. 축은 그 연한 쪽이라 값이 다르다.
+    t("구간 점이 면과 같은 색이다", 값("c-node") === 면, 값("c-node") + " / " + 면);
+    // 대체된 옛 토큰이 남아 있으면 다음 사람이 어느 것이 사는지 못 가린다.
+    t("옛 푸른 면 토큰이 지워졌다", !/[-][-]c-band:|[-][-]c-band-line:/.test(tk));
+  }
+
+  // 그리는 쪽 — 면만 보라로 바꾸고 글자를 그대로 두면 본문색이 보라 위에
+  // 남는다(1.7 : 1). **면과 글자는 한 짝이다.**
+  {
+    const 공유 = (css.match(/\.tline__sum,\s*\.tline__info\s*\{[^}]*\}/) || [""])[0];
+    t("구간 면 위 글자가 토큰으로 흰 계열이다", /color:\s*var\(--c-band-ink\)/.test(공유), 공유.replace(/\s+/g, " "));
+    const tline = (css.match(/\.tline[^{]*\{[^}]*\}/g) || []).join(" ");
+    t(
+      "구간 규칙에 어두운 뮤트가 남아 있지 않다",
+      !/--c-ink-soft|--c-ink-faint/.test(tline),
+      (tline.match(/[^{;]*--c-ink-(soft|faint)[^;]*/g) || []).join(" | ")
+    );
+    // 라벨을 가운데 세우는 짝 — 화살표를 흐름 밖으로 뺀다.
+    const 화살표 = (css.match(/\.hub__go \.chev\s*\{[^}]*\}/) || [""])[0];
+    t(
+      "허브 진입 버튼의 화살표가 흐름 밖이다 (라벨이 가운데로 선다)",
+      /position:\s*absolute/.test(화살표) && /margin-left:\s*0/.test(화살표),
+      화살표.replace(/\s+/g, " ")
+    );
+    t("그 버튼이 기준점을 갖는다", /\.hub__go\s*\{[^}]*position:\s*relative/.test(css));
+  }
   // ★ **타임라인 네 구간의 높이는 한 곳에서 정한다.**
   //
   // `min-height: 56px`가 그 뜻으로 있었는데 **아래 flex 규칙의
@@ -1098,7 +1168,7 @@ t(
   const refs = html.match(/(?:href|src)="src\/ui\/[^"]+"/g) || [];
   // ★ 값까지 본다. 존재만 보면 "올리는 것을 잊은 배포"를 못 잡는다 —
   //   화면 파일을 고치면서 v를 올리면 **이 줄의 숫자도 함께 올린다.**
-  const V = "?v=31";
+  const V = "?v=32";
   t(
     `화면 파일 참조가 전부 ${V}다 (${refs.length}개)`,
     refs.length >= 3 && refs.every((r) => r.includes(V)),
