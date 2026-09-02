@@ -683,7 +683,10 @@ section("6. 연락처 — 라우팅에서 분리했고 판단은 살아 있다")
     /^\d{2}-\d{3,4}-\d{4}$/.test(dv.district.tel) &&
       dv.district.telHref === `tel:${dv.district.tel}`);
   t("보조 한 줄이 확정 문구다",
-    dv.district.note === "화재증명원 발급·조사 진행 문의 (주간)", dv.district.note);
+    dv.district.note === "화재증명원 발급·조사 진행 문의", dv.district.note);
+  // ★ 시간대를 말하지 않는다 — `(주간)`은 사실이 아니었고(교대근무),
+  //   `24시간`은 확인한 것보다 넓은 약속이다.
+  t("응대 시간대를 적지 않는다", !/주간|야간|24시간|상시/.test(dv.district.note), dv.district.note);
   // 중구만 관할 이름이 다르다.
   const dvJung = directoryView(바탕({ ...전.state, district: "jung" }));
   t("중구는 중부소방서다", dvJung.district.org === "중부소방서 화재조사", dvJung.district.org);
@@ -1191,7 +1194,7 @@ t(
   const refs = html.match(/(?:href|src)="src\/ui\/[^"]+"/g) || [];
   // ★ 값까지 본다. 존재만 보면 "올리는 것을 잊은 배포"를 못 잡는다 —
   //   화면 파일을 고치면서 v를 올리면 **이 줄의 숫자도 함께 올린다.**
-  const V = "?v=34";
+  const V = "?v=35";
   t(
     `화면 파일 참조가 전부 ${V}다 (${refs.length}개)`,
     refs.length >= 3 && refs.every((r) => r.includes(V)),
