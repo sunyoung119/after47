@@ -1139,6 +1139,31 @@ t(
       배지.length === 0, 배지.map((it) => it.stateLabel || it.statusLabel).join(" | "));
   }
 
+  // ── 탭 단서와 브릿지의 색 (2026-09-02 · 사용자 결정) ────────────
+  //
+  // ★ **auto 마진이 `justify-content: center`를 무력화한다.** 화살표를
+  //   `margin-left: auto`로 밀면 라벨이 왼쪽에 붙는다 — 허브 진입 버튼에서
+  //   먼저 겪었고 브릿지 CTA가 같은 부류였다. 고침도 하나여야 한다:
+  //   **`.btn--tap` 공통 규칙**이 맡고 자리별 전용 규칙을 두지 않는다.
+  {
+    const tap = (css.match(/\.btn--tap \.chev\s*\{[^}]*\}/) || [""])[0];
+    t("탭 단서가 흐름 밖이다 (라벨이 가운데로 선다)",
+      /position:\s*absolute/.test(tap) && /right:\s*var\(--s4\)/.test(tap), tap.replace(/\s+/g, " "));
+    t("auto 마진으로 밀지 않는다", !/margin-left:\s*auto/.test(tap), tap.replace(/\s+/g, " "));
+    t("그 버튼이 기준점을 갖는다", /\.btn--tap\s*\{[^}]*position:\s*relative/.test(css));
+    // 자리별 전용 규칙이 다시 생기면 두 문의 모양이 갈린다.
+    t("자리별 전용 화살표 규칙이 없다", !/\.hub__go \.chev\s*\{/.test(css));
+
+    // 브릿지 — **색 둘이 자리를 맞바꿨다.** 라벨 둘은 같은 뮤트가 되고,
+    // 강조는 `지금 시점에 맞는 안내로…` 문장이 가져갔다.
+    const 첫라벨 = (css.match(/\.gate--revisit \.gate__label:first-child\s*\{[^}]*\}/) || [""])[0];
+    t("`화재 발생일`이 색을 따로 갖지 않는다 (라벨 둘이 같은 색)",
+      !/color:/.test(첫라벨), 첫라벨.replace(/\s+/g, " "));
+    const 문장 = (css.match(/\.gate--revisit \.gate__lines\s*\{[^}]*\}/) || [""])[0];
+    t("브릿지 문장이 강조색이다", /color:\s*var\(--c-accent\)/.test(문장), 문장.replace(/\s+/g, " "));
+    t("브릿지 문장에 리터럴 색을 쓰지 않는다", !/#[0-9a-f]{3,8}|rgba?\(/i.test(문장));
+  }
+
   // 기본 확인의 보조 한 줄 — **두 필드 아래 한 번만 서므로 가운데다**
   // (2026-09-02 · 사용자 결정). 왼쪽에 붙으면 날짜 칸의 설명으로 읽힌다.
   {
@@ -1198,7 +1223,7 @@ t(
   const refs = html.match(/(?:href|src)="src\/ui\/[^"]+"/g) || [];
   // ★ 값까지 본다. 존재만 보면 "올리는 것을 잊은 배포"를 못 잡는다 —
   //   화면 파일을 고치면서 v를 올리면 **이 줄의 숫자도 함께 올린다.**
-  const V = "?v=37";
+  const V = "?v=38";
   t(
     `화면 파일 참조가 전부 ${V}다 (${refs.length}개)`,
     refs.length >= 3 && refs.every((r) => r.includes(V)),
