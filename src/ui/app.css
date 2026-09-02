@@ -1317,10 +1317,11 @@ a {
 .tline__node:last-child {
   border-left-color: transparent;
 }
-/* ★ **개편 이전 모양으로 복원했다**(2026-09-02 · 사용자 결정. 원값은
-   `f21492b^`에서 가져왔고 추측으로 재구성하지 않았다). 축은 `--c-axis`,
-   점은 `--c-line-strong`이고 **`화재 발생일`의 점만 하늘색**이다 —
-   기준점과 구간을 가르는 두 톤이 원래 모양이다. */
+/* ★ **점은 전부 하늘색 하나다**(2026-09-02 · 사용자 결정).
+   `화재 발생일`의 점이 쓰던 색(`--c-accent`)으로 통일했다 — 복원했던
+   두 톤 중 **진한 쪽으로 맞춘 것**이고 신규 색은 없다. 회색 점이 섞여
+   있으면 그 구간만 비활성처럼 읽힌다.
+   **축은 복원된 값 그대로다**(`--c-axis` — 점과 축은 위계가 다르다). */
 .tline__dot {
   position: absolute;
   left: -4px;
@@ -1328,9 +1329,6 @@ a {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--c-line-strong);
-}
-.tline__node--info .tline__dot {
   background: var(--c-accent);
 }
 /* ★ **행이 스스로 면을 갖는다.** 타임라인은 사진 배경 위에만 서는데
@@ -1402,26 +1400,24 @@ a {
 .tline__body .cards {
   margin-top: var(--s3);
 }
-/* ★ **펼친 안내는 파란 면이다**(2026-09-02 · 사용자 결정).
-   구간 요약이 흰 카드로 돌아가면서, 그 안의 안내까지 흰색이면 층이 다시
-   안 갈린다. 색은 **`나를 위한 안내 보기` 버튼과 같은 `--c-entry`**이고
-   문법도 허브 카드 그대로다 — 면 `--c-entry` · 테두리 `--c-entry-line` ·
-   글자 `--c-entry-ink`(6.22 AA) · 보조 `--c-entry-soft`(5.33 AA).
-   **이 자리에 새 색을 만들지 마라** — 누르면 안내로 들어가는 면은
-   앱 전체에서 이 색 하나다.
+/* ★ **펼친 안내는 연한 틴트 + 왼쪽 파란 선이다**(2026-09-02 · 사용자
+   결정 · A안). 앞서 진한 파랑 면이었는데 **면이 너무 무거웠다** —
+   구간을 하나 펼칠 때마다 화면의 절반이 색면이 된다.
+
+   남은 일은 **소속의 표시**다: "이 카드들은 방금 누른 그 구간에서 나온
+   것"이라는 말을 **왼쪽 3px 선**이 한다. 선의 색은 `--c-entry` —
+   그 구간을 여는 문과 같은 색이고 **새 색을 만들지 않았다.**
+   면은 거들 뿐이라 아주 연하다(`--c-nested-bg` #E7F0FA).
+
+   글자는 **원래의 진한 기본색**으로 돌아간다 — 본문 11.41 · 뮤트 5.35
+   (둘 다 AA). **보조뮤트(`--c-ink-faint`)는 이 면 위에서 4.28로 미달이라
+   쓰지 마라** — 사진 위에서 쓰지 않는 것과 같은 규칙이다.
 
    타임라인 카드가 담는 것은 **제목 · 요약 · 화살표 셋뿐이다**(실측:
-   배지 0건 · 출처 줄은 주제 상세 전용). 배지가 생기면 기본 배지가
-   파란 면 위에서 1.3까지 떨어지므로 그때 규칙을 함께 만들어야 한다 —
-   그 사실을 `view.test.mjs`가 지킨다. */
+   배지 0건 · 출처 줄은 주제 상세 전용). */
 .tline__body .cards .card {
-  background: var(--c-entry);
-  border-color: var(--c-entry-line);
-  color: var(--c-entry-ink);
-}
-.tline__body .cards .card__summary,
-.tline__body .cards .card__hit .chev {
-  color: var(--c-entry-soft);
+  background: var(--c-nested-bg);
+  border-left: 3px solid var(--c-entry);
 }
 .tline__sum {
   display: flex;

@@ -1099,29 +1099,44 @@ t(
     // 테두리·그림자가 함께 맡으므로 여기서는 값이 다른지까지).
     t("구간 면이 화면 바탕과 다른 값이다", 값("c-surface") !== 값("c-bg"), 값("c-surface") + " / " + 값("c-bg"));
 
-    // 펼친 안내 = 파란 면. 허브 진입 버튼과 같은 토큰이라야 한다.
+    // 펼친 안내 = **연한 틴트 + 왼쪽 파란 선**(A안). 면이 아니라 **선**이
+    // 소속을 말한다 — 면을 진하게 해서 푸는 방향으로 되돌리지 않는다.
     const 안내 = (css.match(/\.tline__body \.cards \.card\s*\{[^}]*\}/) || [""])[0];
-    t("펼친 안내 카드가 진입 파랑 면이다", /background:\s*var\(--c-entry\)/.test(안내), 안내.replace(/\s+/g, " "));
-    t("그 면의 테두리·글자도 진입 문법이다",
-      /border-color:\s*var\(--c-entry-line\)/.test(안내) && /color:\s*var\(--c-entry-ink\)/.test(안내),
-      안내.replace(/\s+/g, " "));
-    const 보조 = (css.match(/\.tline__body \.cards \.card__summary[^{]*\{[^}]*\}/) || [""])[0];
-    t("요약·화살표가 진입 보조색이다", /color:\s*var\(--c-entry-soft\)/.test(보조), 보조.replace(/\s+/g, " "));
+    t("펼친 안내 카드가 틴트 면이다", /background:\s*var\(--c-nested-bg\)/.test(안내), 안내.replace(/\s+/g, " "));
+    t("왼쪽에 진입색 3px 선이 선다",
+      /border-left:\s*3px solid var\(--c-entry\)/.test(안내), 안내.replace(/\s+/g, " "));
+    // 글자는 기본색으로 돌아갔다 — 면 위에서 색을 따로 지정하지 않는다.
+    t("카드 글자색을 따로 지정하지 않는다", !/color:/.test(안내), 안내.replace(/\s+/g, " "));
+    t("흰 글자 처리가 남아 있지 않다",
+      !/\.tline__body \.cards[^{]*\{[^}]*--c-entry-(ink|soft)/.test(css));
 
-    const 파랑 = 값("c-entry");
-    t("파란 면 위 글자가 AA다", 대비(파랑, 값("c-entry-ink")) >= 4.5, 대비(파랑, 값("c-entry-ink")).toFixed(2));
-    t("파란 면 위 보조 글자가 AA다", 대비(파랑, 값("c-entry-soft")) >= 4.5, 대비(파랑, 값("c-entry-soft")).toFixed(2));
-    // 두 면이 서로 갈려야 층이 읽힌다(비텍스트 3:1).
-    t("파란 안내 면이 흰 구간 면과 갈린다 (3:1 이상)",
-      대비(파랑, 값("c-surface")) >= 3, 대비(파랑, 값("c-surface")).toFixed(2));
+    const 틴트 = 값("c-nested-bg");
+    t("면 위 본문이 AA다", 대비(틴트, 값("c-ink")) >= 4.5, 대비(틴트, 값("c-ink")).toFixed(2));
+    t("면 위 뮤트가 AA다", 대비(틴트, 값("c-ink-soft")) >= 4.5, 대비(틴트, 값("c-ink-soft")).toFixed(2));
+    // ★ **보조뮤트는 이 면 위에서 4.28로 미달이다.** 사진 위에서 쓰지 않는
+    //   것과 같은 규칙 — 값이 바뀌어 AA가 되면 이 검사부터 다시 본다.
+    t("보조뮤트는 이 면 위에서 미달이다 (그래서 쓰지 않는다)",
+      대비(틴트, 값("c-ink-faint")) < 4.5, 대비(틴트, 값("c-ink-faint")).toFixed(2));
+    t("타임라인 규칙이 보조뮤트를 쓰지 않는다",
+      !/\.tline[^{]*\{[^}]*--c-ink-faint/.test(css));
+    // 왼쪽 선은 비텍스트 3:1을 넘어야 면 위에서 보인다.
+    t("왼쪽 선이 면 위에서 보인다 (3:1 이상)", 대비(틴트, 값("c-entry")) >= 3, 대비(틴트, 값("c-entry")).toFixed(2));
+
+    // ★ **구간 버튼 면과 펼침 카드 면은 서로 다른 값이어야 한다**(사용자
+    //   지시 · 구분 회귀 방지). 같아지면 무엇이 구간이고 무엇이 그 안의
+    //   안내인지가 면으로는 사라진다.
+    t("흰 구간 면과 펼침 면이 다른 값이다", 값("c-surface") !== 틴트, 값("c-surface") + " / " + 틴트);
 
     // ★ 축과 점은 **개편 이전 값**이다(`f21492b^`). 추측으로 재구성하지 않았다.
     t("세로축이 원값이다 (#c7d3de)", 값("c-axis") === "#c7d3de", 값("c-axis"));
     t("점이 자기 토큰을 갖지 않는다 (--c-node 없음)", !/[-][-]c-node:/.test(tk));
+    // ★ **점은 전부 하늘색 하나다**(2026-09-02 · 사용자 결정) — 복원했던
+    //   두 톤 중 진한 쪽으로 맞췄다. 자리별 예외 규칙이 다시 생기면 걸린다.
     const 점 = (css.match(/(^|\})\s*\.tline__dot\s*\{[^}]*\}/) || [""])[0];
-    t("점이 카드 테두리색이다", /background:\s*var\(--c-line-strong\)/.test(점), 점.replace(/\s+/g, " "));
-    t("`화재 발생일`의 점만 하늘색으로 갈린다",
-      /\.tline__node--info \.tline__dot\s*\{\s*background:\s*var\(--c-accent\)/.test(css));
+    t("점이 하늘색이다", /background:\s*var\(--c-accent\)/.test(점), 점.replace(/\s+/g, " "));
+    t("자리별 점 예외 규칙이 없다", !/\.tline__node--info \.tline__dot/.test(css));
+    t("점이 화면 바탕 위에서 보인다 (3:1 이상)",
+      대비(값("c-accent"), 값("c-bg")) >= 3, 대비(값("c-accent"), 값("c-bg")).toFixed(2));
 
     // 보라는 폐기됐다 — 토큰도 사용처도 남기지 않는다.
     t("보라 토큰이 지워졌다", !/[-][-]c-band-/.test(tk));
@@ -1223,7 +1238,7 @@ t(
   const refs = html.match(/(?:href|src)="src\/ui\/[^"]+"/g) || [];
   // ★ 값까지 본다. 존재만 보면 "올리는 것을 잊은 배포"를 못 잡는다 —
   //   화면 파일을 고치면서 v를 올리면 **이 줄의 숫자도 함께 올린다.**
-  const V = "?v=38";
+  const V = "?v=39";
   t(
     `화면 파일 참조가 전부 ${V}다 (${refs.length}개)`,
     refs.length >= 3 && refs.every((r) => r.includes(V)),
