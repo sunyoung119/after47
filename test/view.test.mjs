@@ -1238,7 +1238,7 @@ t(
   const refs = html.match(/(?:href|src)="src\/ui\/[^"]+"/g) || [];
   // ★ 값까지 본다. 존재만 보면 "올리는 것을 잊은 배포"를 못 잡는다 —
   //   화면 파일을 고치면서 v를 올리면 **이 줄의 숫자도 함께 올린다.**
-  const V = "?v=40";
+  const V = "?v=41";
   t(
     `화면 파일 참조가 전부 ${V}다 (${refs.length}개)`,
     refs.length >= 3 && refs.every((r) => r.includes(V)),
@@ -1787,7 +1787,14 @@ t("missed와 standing은 타임라인에 없다",
   tlv.nodes.every((n) => n.key !== "missed" && n.key !== "standing") &&
     tlv.nodes.slice(1).every((n) => n.items.every((i) => i.section !== "missed" && i.section !== "standing")));
 t("하단 문구가 확정 문구다",
-  tlv.footer === "타임라인에서는 전체 흐름을 보고, 완료 처리는 체크리스트에서 합니다.");
+  tlv.footer ===
+    "타임라인에서는 전체 흐름을 보고, 완료 처리는 체크리스트에서 합니다. " +
+      "체크리스트는 [나를 위한 안내 보기]를 누르면 나옵니다.",
+  tlv.footer);
+// ★ 앞문장이 가리키는 체크리스트로 **가는 길**이 같은 문단에 있어야 한다 —
+//   그 화면은 여기가 아니라 허브 아래이고, 문 이름은 버튼 라벨과 같은 값이다.
+t("하단 문구가 허브로 가는 문을 그 이름 그대로 부른다",
+  tlv.footer.includes(tlv.toHub), `${tlv.toHub} / ${tlv.footer}`);
 {
   const 전조사 = tlv.nodes.find((n) => n.key === "after_report");
   const 후조사 = 결과({ ...전.state, report_received: true }, Date.parse(FIRE) + 8 * 24 * 36e5)
