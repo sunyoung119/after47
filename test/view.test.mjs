@@ -1131,6 +1131,13 @@ t(
     );
     t("그 버튼이 기준점을 갖는다", /\.hub__go\s*\{[^}]*position:\s*relative/.test(css));
   }
+
+  // 기본 확인의 보조 한 줄 — **두 필드 아래 한 번만 서므로 가운데다**
+  // (2026-09-02 · 사용자 결정). 왼쪽에 붙으면 날짜 칸의 설명으로 읽힌다.
+  {
+    const help = (css.match(/\.field__help\s*\{[^}]*\}/) || [""])[0];
+    t("보조 한 줄이 가로 가운데다", /text-align:\s*center/.test(help), help.replace(/\s+/g, " "));
+  }
   // ★ **타임라인 네 구간의 높이는 한 곳에서 정한다.**
   //
   // `min-height: 56px`가 그 뜻으로 있었는데 **아래 flex 규칙의
@@ -1168,7 +1175,7 @@ t(
   const refs = html.match(/(?:href|src)="src\/ui\/[^"]+"/g) || [];
   // ★ 값까지 본다. 존재만 보면 "올리는 것을 잊은 배포"를 못 잡는다 —
   //   화면 파일을 고치면서 v를 올리면 **이 줄의 숫자도 함께 올린다.**
-  const V = "?v=32";
+  const V = "?v=33";
   t(
     `화면 파일 참조가 전부 ${V}다 (${refs.length}개)`,
     refs.length >= 3 && refs.every((r) => r.includes(V)),
@@ -1262,7 +1269,7 @@ t("채운 날짜를 '답했다'고 세지 않는다", bc빈.date.answered === fa
 //   하면 모르는 값을 지어내게 만든다. `<input type="time" step="3600">`을
 //   쓰지 않는 이유는 iOS가 step을 무시해 분까지 굴리기 때문이다.
 t("시각 필드가 확정 문구다",
-  bc.time.label === "대략 몇 시쯤이었나요?" && bc.time.help === "모르면 비워두셔도 됩니다.",
+  bc.time.label === "대략 몇 시쯤이었나요?" && bc.time.help === "시각은 모르면 비워두셔도 됩니다.",
   `${bc.time.label} / ${bc.time.help}`);
 t("선택지가 24개이고 비울 수 있다",
   bc.time.options.length === 24 && bc.time.empty === "선택 안 함", String(bc.time.options.length));

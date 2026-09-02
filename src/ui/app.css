@@ -498,8 +498,11 @@ a {
   flex: 2 1 150px;
 }
 /* 비워 둘 수 있다는 한 줄. 두 필드 아래에 한 번만 선다. */
+/* 두 필드 아래 한 줄. **가로 가운데다**(2026-09-02 · 사용자 결정) —
+   왼쪽에 붙으면 날짜 칸에만 딸린 설명으로 읽힌다. */
 .field__help {
   margin: var(--s2) 0 0;
+  text-align: center;
   color: var(--c-ink-soft);
   font-size: var(--f-sm);
   line-height: var(--lh);
