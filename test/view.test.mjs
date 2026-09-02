@@ -844,7 +844,7 @@ t(
   // 검사를 좁히는 대신 촘촘하게 했다.
   const 신설 = [
     "--c-landing-bg", "--c-landing-ink", "--c-landing-ink-soft", "--c-landing-ink-dim",
-    "--c-landing-ink-faint", "--c-veil-top-0", "--c-veil-bottom-2", "--c-landing-shadow",
+    "--c-veil-top-0", "--c-veil-bottom-2", "--c-landing-shadow",
     "--f-landing-title", "--f-landing-sub", "--f-landing-cta", "--s-landing-edge",
     "--ls", "--ls-tight",
   ];
@@ -1238,7 +1238,7 @@ t(
   const refs = html.match(/(?:href|src)="src\/ui\/[^"]+"/g) || [];
   // ★ 값까지 본다. 존재만 보면 "올리는 것을 잊은 배포"를 못 잡는다 —
   //   화면 파일을 고치면서 v를 올리면 **이 줄의 숫자도 함께 올린다.**
-  const V = "?v=39";
+  const V = "?v=40";
   t(
     `화면 파일 참조가 전부 ${V}다 (${refs.length}개)`,
     refs.length >= 3 && refs.every((r) => r.includes(V)),
@@ -1513,15 +1513,14 @@ t(
     /margin-top:\s*auto/.test(title) && /margin-bottom:\s*auto/.test(title), title.replace(/\s+/g, " "));
   t("간격을 픽셀로 박지 않는다", !/margin-top:\s*\d+px/.test(title), title.replace(/\s+/g, " "));
 
-  // 기준 세 줄의 행간은 공유 규칙의 **2배**다. 값이 아니라 관계를 본다 —
-  // 공유 규칙을 손대면 여기도 따라와야 한다.
+  // ★ **행간은 공유 규칙(1.45)을 그대로 쓴다**(2026-09-02 · 사용자 결정).
+  //   2배(2.9)로 벌렸다가 세 줄이 한 덩어리로 안 읽혀 절반으로 되돌렸고,
+  //   그 값이 곧 공유 규칙의 값이다 — **전용 선언을 두지 않는 것**이
+  //   그 뜻이다. 같은 값을 다시 적으면 공유 규칙을 손댈 때 한쪽만 움직인다.
   {
-    // 파일에서 먼저 나오는 `.gate__basis` 규칙이 공유 규칙이다.
     const 공유 = (css.match(new RegExp("[.]gate__basis[ ]*[{][^}]*[}]", "g")) || [""])[0];
-    const 기본 = Number((공유.match(/line-height:\s*([0-9.]+)/) || [])[1]);
-    const 배수 = (basis.match(/line-height:\s*calc\(([0-9.]+)\s*\*\s*2\)/) || [])[1];
-    t("세 줄의 행간이 공유 규칙의 2배 계산식이다",
-      Number(배수) === 기본 && 기본 > 0, `공유 ${기본} / 전용 calc(${배수} * 2)`);
+    t("공유 규칙이 행간을 정한다", /line-height:\s*1\.45/.test(공유), 공유.replace(/\s+/g, " "));
+    t("전환 전용 규칙이 행간을 다시 쓰지 않는다", !/line-height/.test(basis), basis.replace(/\s+/g, " "));
   }
 
   const lines = 규칙("gate__lines");

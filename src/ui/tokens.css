@@ -114,7 +114,6 @@
   --c-accent: #2261ac;
   --c-cta: #2261ac;
   --c-cta-ink: #ffffff;
-  --c-cta-hover: #2261ac;
   --c-focus: #2261ac;
   /* 질문 선택지에 손이 닿았을 때. 테두리는 하늘색으로 바뀐다. */
   --c-selected: #eef4fa;
@@ -254,7 +253,6 @@
   --c-landing-ink: #ffffff;
   --c-landing-ink-soft: rgba(255, 255, 255, 0.96);
   --c-landing-ink-dim: rgba(255, 255, 255, 0.92);
-  --c-landing-ink-faint: rgba(255, 255, 255, 0.82);
   /* 위아래 그라데이션 — 글자가 얹히는 자리만 눌러 준다. */
   --c-veil-top-0: rgba(5, 33, 66, 0.17);
   --c-veil-top-1: rgba(5, 33, 66, 0.04);
