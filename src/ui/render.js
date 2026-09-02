@@ -47,6 +47,31 @@ const HANDSET =
   ".6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1" +
   " 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1l-2.3 2.2z";
 
+// 집 아이콘 — **홈페이지로 가는 링크에만 붙는다.**
+//
+// 전화기 아이콘과 같은 약속 구조다: 아이콘이 "누르면 무엇이 열리는가"를
+// 말한다. 전화기는 전화 앱, 이것은 그 기관의 홈페이지다. 링크가 아닌
+// 기관명(URL을 확인 못 한 곳)에는 달지 않는다 — 달면 거짓말이 된다.
+//
+// 규칙은 전화기와 같다 — 인라인 SVG · 1em · `currentColor` · 이모지 금지.
+const HOUSE = "M12 3.4 3 10.7V20c0 .6.4 1 1 1h5v-6h6v6h5c.6 0 1-.4 1-1v-9.3L12 3.4z";
+
+export const homeIcon = () => {
+  const svg = document.createElementNS(SVG_NS, "svg");
+  svg.setAttribute("class", "homeicon");
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("width", "1em");
+  svg.setAttribute("height", "1em");
+  svg.setAttribute("fill", "currentColor");
+  // 기관명이 이미 링크 라벨이다. 아이콘은 읽지 않는다.
+  svg.setAttribute("aria-hidden", "true");
+  svg.setAttribute("focusable", "false");
+  const path = document.createElementNS(SVG_NS, "path");
+  path.setAttribute("d", HOUSE);
+  svg.appendChild(path);
+  return svg;
+};
+
 export const telIcon = () => {
   const svg = document.createElementNS(SVG_NS, "svg");
   svg.setAttribute("class", "telicon");

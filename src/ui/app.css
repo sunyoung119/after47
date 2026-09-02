@@ -1562,13 +1562,30 @@ a {
   font-variant-numeric: tabular-nums;
 }
 /* 전화기 아이콘 — 글자 높이에 맞추고 색은 `currentColor`를 따라간다.
-   **`tel:` 링크에만 붙는다**(아이콘 = "누르면 걸린다"는 약속이다). */
-.telicon {
+   **`tel:` 링크에만 붙는다**(아이콘 = "누르면 걸린다"는 약속이다).
+   집 아이콘도 같은 크기 규칙을 쓴다 — 두 약속이 한 화면에 나란히 선다. */
+.telicon,
+.homeicon {
   flex: none;
   width: 1em;
   height: 1em;
+}
+.telicon {
   /* 수화기 무게중심이 글자보다 위라 살짝 내린다. */
   transform: translateY(0.06em);
+}
+/* 연락처의 기관명 — **홈페이지로 가는 링크**이고 오른쪽 집 아이콘이
+   그것을 말한다. 밑줄은 **글자에만** 긋는다: 아이콘 아래까지 이어지면
+   아이콘이 글자의 일부처럼 보인다. */
+.tel__org .src__org {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s1);
+  text-decoration: none;
+}
+.tel__org .src__org > span {
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 /* Action 상세의 문의처 줄 — 같은 아이콘, 작은 크기. */
 .contact-line__tel .src__link {

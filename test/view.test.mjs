@@ -1138,6 +1138,22 @@ t(
     const help = (css.match(/\.field__help\s*\{[^}]*\}/) || [""])[0];
     t("보조 한 줄이 가로 가운데다", /text-align:\s*center/.test(help), help.replace(/\s+/g, " "));
   }
+
+  // 아이콘 둘 — **약속이 다르면 아이콘도 다르다**(전화기 = 걸린다,
+  // 집 = 홈페이지가 열린다). 규칙은 같다: 인라인 SVG · 1em ·
+  // `currentColor`. 이모지를 쓰면 같은 화면이 사람마다 달라진다.
+  {
+    const r = readFileSync(join(D, "src/ui/render.js"), "utf8");
+    t("집 아이콘이 인라인 SVG다", /createElementNS\(SVG_NS, "svg"\)/.test(r.slice(r.indexOf("homeIcon"))));
+    const 두아이콘 = (r.match(/fill", "currentColor"/g) || []).length;
+    t("두 아이콘 다 currentColor를 따른다", 두아이콘 === 2, String(두아이콘));
+    const 크기 = (css.match(/\.telicon,\s*\.homeicon\s*\{[^}]*\}/) || [""])[0];
+    t("두 아이콘이 같은 크기 규칙을 쓴다", /width:\s*1em/.test(크기) && /height:\s*1em/.test(크기), 크기.replace(/\s+/g, " "));
+    // 밑줄은 글자에만 — 아이콘 아래까지 이어지면 글자의 일부처럼 보인다.
+    t("기관명 링크의 밑줄이 글자에만 그어진다",
+      /\.tel__org \.src__org\s*\{[^}]*text-decoration:\s*none/.test(css) &&
+        /\.tel__org \.src__org > span\s*\{[^}]*text-decoration:\s*underline/.test(css));
+  }
   // ★ **타임라인 네 구간의 높이는 한 곳에서 정한다.**
   //
   // `min-height: 56px`가 그 뜻으로 있었는데 **아래 flex 규칙의
@@ -1175,7 +1191,7 @@ t(
   const refs = html.match(/(?:href|src)="src\/ui\/[^"]+"/g) || [];
   // ★ 값까지 본다. 존재만 보면 "올리는 것을 잊은 배포"를 못 잡는다 —
   //   화면 파일을 고치면서 v를 올리면 **이 줄의 숫자도 함께 올린다.**
-  const V = "?v=33";
+  const V = "?v=34";
   t(
     `화면 파일 참조가 전부 ${V}다 (${refs.length}개)`,
     refs.length >= 3 && refs.every((r) => r.includes(V)),

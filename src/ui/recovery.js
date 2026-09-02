@@ -12,7 +12,7 @@
 //   연출이 있다면 @keyframes의 from에만 둔다. 실기기 사고(cc6a865)의 교훈이다.
 
 import { COPY } from "./copy.js";
-import { el, clear, telIcon, chev } from "./render.js";
+import { el, clear, telIcon, homeIcon, chev } from "./render.js";
 
 // 상태 배지. **갈래는 뷰모델이 정한다** — 여기서 라벨 문자열을 읽어
 // 색을 고르지 않는다.
@@ -343,7 +343,12 @@ function telCard(c) {
   const box = el("div", "tel__box");
   if (c.url) {
     const p = el("p", "tel__org");
-    const a = el("a", "src__org", c.org);
+    // 기관명이 홈페이지로 가는 링크다. **집 아이콘이 오른쪽에 붙어** 그것이
+    // 전화가 아니라 홈페이지라는 것을 말한다 — 전화기 아이콘이 `tel:`에만
+    // 붙는 것과 같은 문법이다. 밑줄은 글자에만 긋기 위해 텍스트를 감싼다.
+    const a = el("a", "src__org");
+    a.appendChild(el("span", null, c.org));
+    a.appendChild(homeIcon());
     a.href = c.url;
     a.target = "_blank";
     a.rel = "noopener noreferrer";

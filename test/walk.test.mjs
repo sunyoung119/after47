@@ -487,6 +487,20 @@ await tick(10);
     String(tel.filter((a) => !a.children.some((c) => hasClass(c, "telicon"))).length));
   t("아이콘은 보조기술에서 건너뛴다",
     all(main(), (n) => hasClass(n, "telicon")).every((n) => n.getAttribute("aria-hidden") === "true"));
+  // ★ **집 아이콘은 홈페이지 링크에만 붙는다**(2026-09-02 · 사용자 결정).
+  //   전화기와 같은 약속 구조다 — 아이콘이 "누르면 무엇이 열리는가"를
+  //   말한다. 번호가 아니라 기관명 쪽에 붙는 것이 이 규칙의 전부다.
+  const 홈링크 = all(main(), (n) => n.tagName === "A" && hasClass(n, "src__org"));
+  t("기관명 링크마다 집 아이콘이 있다",
+    홈링크.length > 0 && 홈링크.every((a) => a.children.some((c) => hasClass(c, "homeicon"))),
+    홈링크.length + "개 중 " + 홈링크.filter((a) => !a.children.some((c) => hasClass(c, "homeicon"))).length + "개 없음");
+  t("집 아이콘이 tel: 링크에는 없다",
+    tel.every((a) => !a.children.some((c) => hasClass(c, "homeicon"))));
+  t("집 아이콘도 보조기술에서 건너뛴다",
+    all(main(), (n) => hasClass(n, "homeicon")).every((n) => n.getAttribute("aria-hidden") === "true"));
+  // 아이콘은 글자 오른쪽이다 — 라벨보다 앞서면 무엇의 아이콘인지 흐려진다.
+  t("집 아이콘이 기관명 뒤에 온다",
+    홈링크.every((a) => a.children.findIndex((c) => hasClass(c, "homeicon")) === a.children.length - 1));
   t("119와 1670-9512가 있다",
     tel.some((a) => a.href === "tel:119") && tel.some((a) => a.href === "tel:1670-9512"),
     tel.map((a) => a.href).join(" "));
